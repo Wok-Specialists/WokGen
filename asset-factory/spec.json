@@ -1,0 +1,103 @@
+{
+  "baseSize": 32,
+  "exportSizes": [32, 64, 128, 256],
+  "profiles": {
+    "standard": {
+      "baseSize": 32,
+      "exportSizes": [32, 64, 128, 256],
+      "limits": {
+        "maxFileKB": {
+          "32": 16,
+          "64": 40,
+          "128": 120,
+          "256": 320
+        },
+        "alphaRequired": true
+      }
+    },
+    "detailed": {
+      "baseSize": 64,
+      "exportSizes": [32, 64, 128, 256, 512],
+      "limits": {
+        "maxFileKB": {
+          "32": 24,
+          "64": 72,
+          "128": 220,
+          "256": 640,
+          "512": 1400
+        },
+        "alphaRequired": true
+      }
+    }
+  },
+  "palette": [
+    "#000000",
+    "#1A1C2C",
+    "#5D275D",
+    "#B13E53",
+    "#EF7D57",
+    "#FFCD75",
+    "#A7F070",
+    "#38B764",
+    "#257179",
+    "#29366F",
+    "#3B5DC9",
+    "#41A6F6",
+    "#73EFF7",
+    "#F4F4F4",
+    "#94B0C2",
+    "#566C86",
+    "#333C57",
+    "#2E222F",
+    "#3F3F74",
+    "#45283C",
+    "#663931",
+    "#8F563B",
+    "#DF7126",
+    "#D9A066",
+    "#EEC39A",
+    "#FBF236",
+    "#99E550",
+    "#6ABE30",
+    "#37946E",
+    "#4B692F",
+    "#524B24",
+    "#323C39"
+  ],
+  "rarities": [
+    {
+      "id": "common",
+      "weight": 48,
+      "extrasTokens": ["plain", "simple trim", "utility design"]
+    },
+    {
+      "id": "uncommon",
+      "weight": 27,
+      "extrasTokens": ["accent stitch", "small rune", "metal clasp"]
+    },
+    {
+      "id": "rare",
+      "weight": 15,
+      "extrasTokens": ["engraved glyph", "gem inset", "ornate silhouette"]
+    },
+    {
+      "id": "epic",
+      "weight": 7,
+      "extrasTokens": ["arcane glow edge", "floating shard motif", "royal filigree"]
+    },
+    {
+      "id": "legendary",
+      "weight": 3,
+      "extrasTokens": ["ancient sigil", "mythic aura ring", "heroic relic detail"]
+    }
+  ],
+  "limits": {
+    "maxFileKB": {
+      "32": 16,
+      "64": 40,
+      "128": 120,
+      "256": 320
+    },
+    "alphaRequired": true
+  }
+}

@@ -1,0 +1,1856 @@
+{
+  "categories": [
+    "items/weapons",
+    "items/armor",
+    "items/consumables",
+    "items/materials",
+    "items/quest",
+    "ui/icons",
+    "world/furniture",
+    "world/rooms",
+    "world/electronics",
+    "world/instruments",
+    "world/utensils",
+    "world/food",
+    "world/appliances",
+    "world/chess",
+    "game/fishing",
+    "game/pets",
+    "game/farming",
+    "game/upgrades",
+    "game/skins",
+    "game/combat",
+    "game/progression",
+    "game/security",
+    "game/events",
+    "world/animals",
+    "world/plants",
+    "world/vehicles-advanced",
+    "world/science",
+    "world/space",
+    "world/sports",
+    "world/medical",
+    "world/construction"
+  ],
+  "defaultBatchSize": 12,
+  "items": [
+    {
+      "id": "iron_sword",
+      "name": "iron sword",
+      "category": "items/weapons",
+      "icon_key": "sword"
+    },
+    {
+      "id": "war_axe",
+      "name": "war axe",
+      "category": "items/weapons",
+      "icon_key": "axe"
+    },
+    {
+      "id": "short_bow",
+      "name": "short bow",
+      "category": "items/weapons",
+      "icon_key": "bow"
+    },
+    {
+      "id": "spear",
+      "name": "spear",
+      "category": "items/weapons",
+      "icon_key": "spear"
+    },
+    {
+      "id": "dagger",
+      "name": "dagger",
+      "category": "items/weapons",
+      "icon_key": "dagger"
+    },
+    {
+      "id": "mace",
+      "name": "mace",
+      "category": "items/weapons",
+      "icon_key": "mace"
+    },
+    {
+      "id": "crossbow",
+      "name": "crossbow",
+      "category": "items/weapons",
+      "icon_key": "crossbow"
+    },
+    {
+      "id": "war_hammer",
+      "name": "war hammer",
+      "category": "items/weapons",
+      "icon_key": "war_hammer"
+    },
+    {
+      "id": "wizard_staff",
+      "name": "wizard staff",
+      "category": "items/weapons",
+      "icon_key": "staff"
+    },
+    {
+      "id": "magic_wand",
+      "name": "magic wand",
+      "category": "items/weapons",
+      "icon_key": "wand"
+    },
+    {
+      "id": "wood_shield",
+      "name": "wood shield",
+      "category": "items/armor",
+      "icon_key": "shield"
+    },
+    {
+      "id": "iron_helm",
+      "name": "iron helm",
+      "category": "items/armor",
+      "icon_key": "helmet"
+    },
+    {
+      "id": "leather_armor",
+      "name": "leather armor",
+      "category": "items/armor",
+      "icon_key": "armor"
+    },
+    {
+      "id": "leather_boots",
+      "name": "leather boots",
+      "category": "items/armor",
+      "icon_key": "boots"
+    },
+    {
+      "id": "health_potion",
+      "name": "health potion",
+      "category": "items/consumables",
+      "icon_key": "potion_red"
+    },
+    {
+      "id": "mana_potion",
+      "name": "mana potion",
+      "category": "items/consumables",
+      "icon_key": "potion_blue"
+    },
+    {
+      "id": "bomb",
+      "name": "bomb",
+      "category": "items/consumables",
+      "icon_key": "bomb"
+    },
+    {
+      "id": "map_scroll",
+      "name": "map scroll",
+      "category": "items/quest",
+      "icon_key": "scroll"
+    },
+    {
+      "id": "dungeon_key",
+      "name": "dungeon key",
+      "category": "items/quest",
+      "icon_key": "key"
+    },
+    {
+      "id": "ancient_coin",
+      "name": "ancient coin",
+      "category": "items/quest",
+      "icon_key": "coin"
+    },
+    {
+      "id": "crystal_shard",
+      "name": "crystal shard",
+      "category": "items/materials",
+      "icon_key": "gem"
+    },
+    {
+      "id": "iron_ore",
+      "name": "iron ore",
+      "category": "items/materials",
+      "icon_key": "ore"
+    },
+    {
+      "id": "wood_log",
+      "name": "wood log",
+      "category": "items/materials",
+      "icon_key": "log"
+    },
+    {
+      "id": "herb_bundle",
+      "name": "herb bundle",
+      "category": "items/materials",
+      "icon_key": "herb"
+    },
+    {
+      "id": "pet_whistle",
+      "name": "pet whistle",
+      "category": "ui/icons",
+      "icon_key": "whistle"
+    },
+    {
+      "id": "guild_badge",
+      "name": "guild badge",
+      "category": "ui/icons",
+      "icon_key": "badge"
+    },
+    {
+      "id": "wooden_chair",
+      "name": "wooden chair",
+      "category": "world/furniture",
+      "icon_key": "chair"
+    },
+    {
+      "id": "dining_table",
+      "name": "dining table",
+      "category": "world/furniture",
+      "icon_key": "table"
+    },
+    {
+      "id": "red_sofa",
+      "name": "red sofa",
+      "category": "world/furniture",
+      "icon_key": "sofa"
+    },
+    {
+      "id": "single_bed",
+      "name": "single bed",
+      "category": "world/furniture",
+      "icon_key": "bed"
+    },
+    {
+      "id": "floor_lamp",
+      "name": "floor lamp",
+      "category": "world/furniture",
+      "icon_key": "lamp"
+    },
+    {
+      "id": "bookshelf",
+      "name": "bookshelf",
+      "category": "world/furniture",
+      "icon_key": "bookshelf"
+    },
+    {
+      "id": "cabinet",
+      "name": "cabinet",
+      "category": "world/furniture",
+      "icon_key": "cabinet"
+    },
+    {
+      "id": "potted_plant",
+      "name": "potted plant",
+      "category": "world/furniture",
+      "icon_key": "plant"
+    },
+    {
+      "id": "kitchen_room",
+      "name": "kitchen room",
+      "category": "world/rooms",
+      "icon_key": "room_kitchen"
+    },
+    {
+      "id": "bedroom_room",
+      "name": "bedroom room",
+      "category": "world/rooms",
+      "icon_key": "room_bedroom"
+    },
+    {
+      "id": "bathroom_room",
+      "name": "bathroom room",
+      "category": "world/rooms",
+      "icon_key": "room_bathroom"
+    },
+    {
+      "id": "living_room",
+      "name": "living room",
+      "category": "world/rooms",
+      "icon_key": "room_living"
+    },
+    {
+      "id": "game_room",
+      "name": "game room",
+      "category": "world/rooms",
+      "icon_key": "room_game"
+    },
+    {
+      "id": "music_room",
+      "name": "music room",
+      "category": "world/rooms",
+      "icon_key": "room_music"
+    },
+    {
+      "id": "tv",
+      "name": "television",
+      "category": "world/electronics",
+      "icon_key": "tv"
+    },
+    {
+      "id": "game_console",
+      "name": "game console",
+      "category": "world/electronics",
+      "icon_key": "console"
+    },
+    {
+      "id": "computer_monitor",
+      "name": "computer monitor",
+      "category": "world/electronics",
+      "icon_key": "monitor"
+    },
+    {
+      "id": "laptop",
+      "name": "laptop",
+      "category": "world/electronics",
+      "icon_key": "laptop"
+    },
+    {
+      "id": "smartphone",
+      "name": "smartphone",
+      "category": "world/electronics",
+      "icon_key": "phone"
+    },
+    {
+      "id": "camera",
+      "name": "camera",
+      "category": "world/electronics",
+      "icon_key": "camera"
+    },
+    {
+      "id": "headphones",
+      "name": "headphones",
+      "category": "world/electronics",
+      "icon_key": "headphones"
+    },
+    {
+      "id": "speaker",
+      "name": "speaker",
+      "category": "world/electronics",
+      "icon_key": "speaker"
+    },
+    {
+      "id": "guitar",
+      "name": "guitar",
+      "category": "world/instruments",
+      "icon_key": "guitar"
+    },
+    {
+      "id": "piano",
+      "name": "piano",
+      "category": "world/instruments",
+      "icon_key": "piano"
+    },
+    {
+      "id": "drum",
+      "name": "drum",
+      "category": "world/instruments",
+      "icon_key": "drum"
+    },
+    {
+      "id": "violin",
+      "name": "violin",
+      "category": "world/instruments",
+      "icon_key": "violin"
+    },
+    {
+      "id": "flute",
+      "name": "flute",
+      "category": "world/instruments",
+      "icon_key": "flute"
+    },
+    {
+      "id": "trumpet",
+      "name": "trumpet",
+      "category": "world/instruments",
+      "icon_key": "trumpet"
+    },
+    {
+      "id": "microphone",
+      "name": "microphone",
+      "category": "world/instruments",
+      "icon_key": "microphone"
+    },
+    {
+      "id": "fork",
+      "name": "fork",
+      "category": "world/utensils",
+      "icon_key": "fork"
+    },
+    {
+      "id": "knife",
+      "name": "knife",
+      "category": "world/utensils",
+      "icon_key": "knife"
+    },
+    {
+      "id": "spoon",
+      "name": "spoon",
+      "category": "world/utensils",
+      "icon_key": "spoon"
+    },
+    {
+      "id": "chopsticks",
+      "name": "chopsticks",
+      "category": "world/utensils",
+      "icon_key": "chopsticks"
+    },
+    {
+      "id": "plate",
+      "name": "plate",
+      "category": "world/utensils",
+      "icon_key": "plate"
+    },
+    {
+      "id": "bowl",
+      "name": "bowl",
+      "category": "world/utensils",
+      "icon_key": "bowl"
+    },
+    {
+      "id": "cup",
+      "name": "cup",
+      "category": "world/utensils",
+      "icon_key": "cup"
+    },
+    {
+      "id": "kettle",
+      "name": "kettle",
+      "category": "world/utensils",
+      "icon_key": "kettle"
+    },
+    {
+      "id": "pan",
+      "name": "pan",
+      "category": "world/utensils",
+      "icon_key": "pan"
+    },
+    {
+      "id": "pot",
+      "name": "pot",
+      "category": "world/utensils",
+      "icon_key": "pot"
+    },
+    {
+      "id": "spatula",
+      "name": "spatula",
+      "category": "world/utensils",
+      "icon_key": "spatula"
+    },
+    {
+      "id": "apple",
+      "name": "apple",
+      "category": "world/food",
+      "icon_key": "food_apple"
+    },
+    {
+      "id": "banana",
+      "name": "banana",
+      "category": "world/food",
+      "icon_key": "food_banana"
+    },
+    {
+      "id": "bread_loaf",
+      "name": "bread loaf",
+      "category": "world/food",
+      "icon_key": "food_bread"
+    },
+    {
+      "id": "cheese_wedge",
+      "name": "cheese wedge",
+      "category": "world/food",
+      "icon_key": "food_cheese"
+    },
+    {
+      "id": "steak",
+      "name": "steak",
+      "category": "world/food",
+      "icon_key": "food_steak"
+    },
+    {
+      "id": "fish_fillet",
+      "name": "fish fillet",
+      "category": "world/food",
+      "icon_key": "food_fish"
+    },
+    {
+      "id": "burger",
+      "name": "burger",
+      "category": "world/food",
+      "icon_key": "food_burger"
+    },
+    {
+      "id": "pizza_slice",
+      "name": "pizza slice",
+      "category": "world/food",
+      "icon_key": "food_pizza"
+    },
+    {
+      "id": "noodle_bowl",
+      "name": "noodle bowl",
+      "category": "world/food",
+      "icon_key": "food_noodles"
+    },
+    {
+      "id": "sushi_roll",
+      "name": "sushi roll",
+      "category": "world/food",
+      "icon_key": "food_sushi"
+    },
+    {
+      "id": "cake_slice",
+      "name": "cake slice",
+      "category": "world/food",
+      "icon_key": "food_cake"
+    },
+    {
+      "id": "cookie",
+      "name": "cookie",
+      "category": "world/food",
+      "icon_key": "food_cookie"
+    },
+    {
+      "id": "fried_egg",
+      "name": "fried egg",
+      "category": "world/food",
+      "icon_key": "food_egg"
+    },
+    {
+      "id": "carrot",
+      "name": "carrot",
+      "category": "world/food",
+      "icon_key": "food_carrot"
+    },
+    {
+      "id": "chili_pepper",
+      "name": "chili pepper",
+      "category": "world/food",
+      "icon_key": "food_chili"
+    },
+    {
+      "id": "mushroom",
+      "name": "mushroom",
+      "category": "world/food",
+      "icon_key": "food_mushroom"
+    },
+    {
+      "id": "fridge",
+      "name": "fridge",
+      "category": "world/appliances",
+      "icon_key": "fridge"
+    },
+    {
+      "id": "stove",
+      "name": "stove",
+      "category": "world/appliances",
+      "icon_key": "stove"
+    },
+    {
+      "id": "sink",
+      "name": "sink",
+      "category": "world/appliances",
+      "icon_key": "sink"
+    },
+    {
+      "id": "toaster",
+      "name": "toaster",
+      "category": "world/appliances",
+      "icon_key": "toaster"
+    },
+    {
+      "id": "microwave",
+      "name": "microwave",
+      "category": "world/appliances",
+      "icon_key": "microwave"
+    },
+    {
+      "id": "washer",
+      "name": "washer",
+      "category": "world/appliances",
+      "icon_key": "washer"
+    },
+    {
+      "id": "toilet",
+      "name": "toilet",
+      "category": "world/appliances",
+      "icon_key": "toilet"
+    },
+    {
+      "id": "shower",
+      "name": "shower",
+      "category": "world/appliances",
+      "icon_key": "shower"
+    },
+    {
+      "id": "chess_king",
+      "name": "chess king",
+      "category": "world/chess",
+      "icon_key": "chess_king"
+    },
+    {
+      "id": "chess_queen",
+      "name": "chess queen",
+      "category": "world/chess",
+      "icon_key": "chess_queen"
+    },
+    {
+      "id": "chess_rook",
+      "name": "chess rook",
+      "category": "world/chess",
+      "icon_key": "chess_rook"
+    },
+    {
+      "id": "chess_bishop",
+      "name": "chess bishop",
+      "category": "world/chess",
+      "icon_key": "chess_bishop"
+    },
+    {
+      "id": "chess_knight",
+      "name": "chess knight",
+      "category": "world/chess",
+      "icon_key": "chess_knight"
+    },
+    {
+      "id": "chess_pawn",
+      "name": "chess pawn",
+      "category": "world/chess",
+      "icon_key": "chess_pawn"
+    },
+    {
+      "id": "fishing_rod",
+      "name": "fishing rod",
+      "category": "game/fishing",
+      "icon_key": "spear"
+    },
+    {
+      "id": "bait_box",
+      "name": "bait box",
+      "category": "game/fishing",
+      "icon_key": "crate"
+    },
+    {
+      "id": "small_bucket",
+      "name": "small bucket",
+      "category": "game/fishing",
+      "icon_key": "bucket"
+    },
+    {
+      "id": "large_bucket",
+      "name": "large bucket",
+      "category": "game/fishing",
+      "icon_key": "bucket"
+    },
+    {
+      "id": "fish_tank",
+      "name": "fish tank",
+      "category": "game/fishing",
+      "icon_key": "tank"
+    },
+    {
+      "id": "tank_decor_plant",
+      "name": "tank plant decor",
+      "category": "game/fishing",
+      "icon_key": "plant"
+    },
+    {
+      "id": "tank_decor_rock",
+      "name": "tank rock decor",
+      "category": "game/fishing",
+      "icon_key": "ore"
+    },
+    {
+      "id": "common_fish",
+      "name": "common fish",
+      "category": "game/fishing",
+      "icon_key": "fish"
+    },
+    {
+      "id": "rare_fish",
+      "name": "rare fish",
+      "category": "game/fishing",
+      "icon_key": "fish"
+    },
+    {
+      "id": "legendary_fish",
+      "name": "legendary fish",
+      "category": "game/fishing",
+      "icon_key": "fish"
+    },
+    {
+      "id": "pet_food",
+      "name": "pet food",
+      "category": "game/pets",
+      "icon_key": "bowl"
+    },
+    {
+      "id": "pet_treat",
+      "name": "pet treat",
+      "category": "game/pets",
+      "icon_key": "bone"
+    },
+    {
+      "id": "pet_bed",
+      "name": "pet bed",
+      "category": "game/pets",
+      "icon_key": "bed"
+    },
+    {
+      "id": "pet_room",
+      "name": "pet room",
+      "category": "game/pets",
+      "icon_key": "room_bedroom"
+    },
+    {
+      "id": "pet_stasis",
+      "name": "pet stasis",
+      "category": "game/pets",
+      "icon_key": "hourglass"
+    },
+    {
+      "id": "pet_sitter",
+      "name": "pet sitter",
+      "category": "game/pets",
+      "icon_key": "paw"
+    },
+    {
+      "id": "pet_training",
+      "name": "pet training",
+      "category": "game/pets",
+      "icon_key": "trophy"
+    },
+    {
+      "id": "pet_skill_token",
+      "name": "pet skill token",
+      "category": "game/pets",
+      "icon_key": "badge"
+    },
+    {
+      "id": "pet_skin",
+      "name": "pet skin",
+      "category": "game/pets",
+      "icon_key": "badge"
+    },
+    {
+      "id": "pet_collar",
+      "name": "pet collar",
+      "category": "game/pets",
+      "icon_key": "collar"
+    },
+    {
+      "id": "carrot_seed",
+      "name": "carrot seed",
+      "category": "game/farming",
+      "icon_key": "seed"
+    },
+    {
+      "id": "potato_seed",
+      "name": "potato seed",
+      "category": "game/farming",
+      "icon_key": "seed"
+    },
+    {
+      "id": "corn_seed",
+      "name": "corn seed",
+      "category": "game/farming",
+      "icon_key": "seed"
+    },
+    {
+      "id": "watering_can",
+      "name": "watering can",
+      "category": "game/farming",
+      "icon_key": "kettle"
+    },
+    {
+      "id": "fertilizer",
+      "name": "fertilizer",
+      "category": "game/farming",
+      "icon_key": "crate"
+    },
+    {
+      "id": "crop_sprout",
+      "name": "crop sprout",
+      "category": "game/farming",
+      "icon_key": "sprout"
+    },
+    {
+      "id": "harvest_crate",
+      "name": "harvest crate",
+      "category": "game/farming",
+      "icon_key": "crate"
+    },
+    {
+      "id": "coin_multiplier",
+      "name": "coin multiplier",
+      "category": "game/upgrades",
+      "icon_key": "badge"
+    },
+    {
+      "id": "xp_multiplier",
+      "name": "xp multiplier",
+      "category": "game/upgrades",
+      "icon_key": "badge"
+    },
+    {
+      "id": "bank_upgrade",
+      "name": "bank upgrade",
+      "category": "game/upgrades",
+      "icon_key": "coin"
+    },
+    {
+      "id": "inventory_upgrade",
+      "name": "inventory upgrade",
+      "category": "game/upgrades",
+      "icon_key": "crate"
+    },
+    {
+      "id": "luck_upgrade",
+      "name": "luck upgrade",
+      "category": "game/upgrades",
+      "icon_key": "gem"
+    },
+    {
+      "id": "fish_upgrade",
+      "name": "fish upgrade",
+      "category": "game/upgrades",
+      "icon_key": "fish"
+    },
+    {
+      "id": "weapon_skin",
+      "name": "weapon skin",
+      "category": "game/skins",
+      "icon_key": "sword"
+    },
+    {
+      "id": "pet_skin_token",
+      "name": "pet skin token",
+      "category": "game/skins",
+      "icon_key": "badge"
+    },
+    {
+      "id": "profile_skin",
+      "name": "profile skin",
+      "category": "game/skins",
+      "icon_key": "monitor"
+    },
+    {
+      "id": "theme_skin",
+      "name": "theme skin",
+      "category": "game/skins",
+      "icon_key": "badge"
+    },
+    {
+      "id": "fight_ticket",
+      "name": "fight ticket",
+      "category": "game/combat",
+      "icon_key": "ticket"
+    },
+    {
+      "id": "wager_chip",
+      "name": "wager chip",
+      "category": "game/combat",
+      "icon_key": "coin"
+    },
+    {
+      "id": "fight_gloves",
+      "name": "fight gloves",
+      "category": "game/combat",
+      "icon_key": "armor"
+    },
+    {
+      "id": "arena_badge",
+      "name": "arena badge",
+      "category": "game/combat",
+      "icon_key": "badge"
+    },
+    {
+      "id": "duel_swords",
+      "name": "duel swords",
+      "category": "game/combat",
+      "icon_key": "sword_cross"
+    },
+    {
+      "id": "streak_flame",
+      "name": "streak emblem",
+      "category": "game/progression",
+      "icon_key": "star_pass"
+    },
+    {
+      "id": "streak_calendar",
+      "name": "streak board",
+      "category": "game/progression",
+      "icon_key": "room_kitchen"
+    },
+    {
+      "id": "streak_reward",
+      "name": "streak reward",
+      "category": "game/progression",
+      "icon_key": "trophy"
+    },
+    {
+      "id": "anti_rob_lock",
+      "name": "anti theft lock",
+      "category": "game/security",
+      "icon_key": "shield_lock"
+    },
+    {
+      "id": "skeleton_key",
+      "name": "skeleton key",
+      "category": "game/security",
+      "icon_key": "key"
+    },
+    {
+      "id": "vault",
+      "name": "vault",
+      "category": "game/security",
+      "icon_key": "cabinet"
+    },
+    {
+      "id": "security_camera",
+      "name": "security camera",
+      "category": "game/security",
+      "icon_key": "camera"
+    },
+    {
+      "id": "season_pass",
+      "name": "event pass",
+      "category": "game/events",
+      "icon_key": "star_pass"
+    },
+    {
+      "id": "premium_reward",
+      "name": "premium reward",
+      "category": "game/events",
+      "icon_key": "ticket"
+    },
+    {
+      "id": "leaderboard_trophy",
+      "name": "leaderboard trophy",
+      "category": "game/events",
+      "icon_key": "trophy"
+    },
+    {
+      "id": "season_crate",
+      "name": "season crate",
+      "category": "game/events",
+      "icon_key": "crate"
+    },
+    {
+      "id": "cat_pet",
+      "name": "cat",
+      "category": "world/animals",
+      "icon_key": "animal_cat"
+    },
+    {
+      "id": "dog_pet",
+      "name": "dog",
+      "category": "world/animals",
+      "icon_key": "animal_dog"
+    },
+    {
+      "id": "bird",
+      "name": "bird",
+      "category": "world/animals",
+      "icon_key": "animal_bird"
+    },
+    {
+      "id": "rabbit",
+      "name": "rabbit",
+      "category": "world/animals",
+      "icon_key": "animal_rabbit"
+    },
+    {
+      "id": "horse",
+      "name": "horse",
+      "category": "world/animals",
+      "icon_key": "animal_horse"
+    },
+    {
+      "id": "cow",
+      "name": "cow",
+      "category": "world/animals",
+      "icon_key": "animal_cow"
+    },
+    {
+      "id": "butterfly",
+      "name": "butterfly",
+      "category": "world/animals",
+      "icon_key": "animal_butterfly"
+    },
+    {
+      "id": "turtle",
+      "name": "turtle",
+      "category": "world/animals",
+      "icon_key": "animal_turtle"
+    },
+    {
+      "id": "oak_tree",
+      "name": "oak tree",
+      "category": "world/plants",
+      "icon_key": "plant_tree"
+    },
+    {
+      "id": "pine_tree",
+      "name": "pine tree",
+      "category": "world/plants",
+      "icon_key": "plant_tree"
+    },
+    {
+      "id": "rose",
+      "name": "rose flower",
+      "category": "world/plants",
+      "icon_key": "plant_flower"
+    },
+    {
+      "id": "sunflower",
+      "name": "sunflower",
+      "category": "world/plants",
+      "icon_key": "plant_flower"
+    },
+    {
+      "id": "cactus",
+      "name": "cactus",
+      "category": "world/plants",
+      "icon_key": "plant_cactus"
+    },
+    {
+      "id": "bamboo",
+      "name": "bamboo",
+      "category": "world/plants",
+      "icon_key": "plant_bamboo"
+    },
+    {
+      "id": "leaf_bundle",
+      "name": "leaf bundle",
+      "category": "world/plants",
+      "icon_key": "plant_leaf"
+    },
+    {
+      "id": "fruit_basket",
+      "name": "fruit basket",
+      "category": "world/plants",
+      "icon_key": "plant_fruit"
+    },
+    {
+      "id": "car",
+      "name": "car",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_car"
+    },
+    {
+      "id": "truck",
+      "name": "truck",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_truck"
+    },
+    {
+      "id": "bus",
+      "name": "bus",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_bus"
+    },
+    {
+      "id": "motorcycle",
+      "name": "motorcycle",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_bike"
+    },
+    {
+      "id": "bicycle",
+      "name": "bicycle",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_bike"
+    },
+    {
+      "id": "train",
+      "name": "train",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_train"
+    },
+    {
+      "id": "airplane",
+      "name": "airplane",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_plane"
+    },
+    {
+      "id": "ship",
+      "name": "ship",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_ship"
+    },
+    {
+      "id": "lab_flask",
+      "name": "lab flask",
+      "category": "world/science",
+      "icon_key": "science_flask"
+    },
+    {
+      "id": "beaker",
+      "name": "beaker",
+      "category": "world/science",
+      "icon_key": "science_flask"
+    },
+    {
+      "id": "atom_model",
+      "name": "atom model",
+      "category": "world/science",
+      "icon_key": "science_atom"
+    },
+    {
+      "id": "microscope",
+      "name": "microscope",
+      "category": "world/science",
+      "icon_key": "science_microscope"
+    },
+    {
+      "id": "dna_helix",
+      "name": "dna helix",
+      "category": "world/science",
+      "icon_key": "science_dna"
+    },
+    {
+      "id": "telescope",
+      "name": "telescope",
+      "category": "world/science",
+      "icon_key": "science_telescope"
+    },
+    {
+      "id": "test_tube",
+      "name": "test tube",
+      "category": "world/science",
+      "icon_key": "science_tube"
+    },
+    {
+      "id": "circuit_chip",
+      "name": "circuit chip",
+      "category": "world/science",
+      "icon_key": "science_chip"
+    },
+    {
+      "id": "planet",
+      "name": "planet",
+      "category": "world/space",
+      "icon_key": "space_planet"
+    },
+    {
+      "id": "rocket",
+      "name": "rocket",
+      "category": "world/space",
+      "icon_key": "space_rocket"
+    },
+    {
+      "id": "satellite",
+      "name": "satellite",
+      "category": "world/space",
+      "icon_key": "space_satellite"
+    },
+    {
+      "id": "asteroid",
+      "name": "asteroid",
+      "category": "world/space",
+      "icon_key": "space_asteroid"
+    },
+    {
+      "id": "moon",
+      "name": "moon",
+      "category": "world/space",
+      "icon_key": "space_moon"
+    },
+    {
+      "id": "star",
+      "name": "star",
+      "category": "world/space",
+      "icon_key": "space_star"
+    },
+    {
+      "id": "ufo",
+      "name": "ufo",
+      "category": "world/space",
+      "icon_key": "space_ufo"
+    },
+    {
+      "id": "astronaut_helmet",
+      "name": "astronaut helmet",
+      "category": "world/space",
+      "icon_key": "space_helmet"
+    },
+    {
+      "id": "soccer_ball",
+      "name": "soccer ball",
+      "category": "world/sports",
+      "icon_key": "sports_ball"
+    },
+    {
+      "id": "basketball",
+      "name": "basketball",
+      "category": "world/sports",
+      "icon_key": "sports_ball"
+    },
+    {
+      "id": "tennis_ball",
+      "name": "tennis ball",
+      "category": "world/sports",
+      "icon_key": "sports_ball"
+    },
+    {
+      "id": "trophy_cup",
+      "name": "trophy cup",
+      "category": "world/sports",
+      "icon_key": "sports_trophy"
+    },
+    {
+      "id": "baseball_bat",
+      "name": "baseball bat",
+      "category": "world/sports",
+      "icon_key": "sports_bat"
+    },
+    {
+      "id": "tennis_racket",
+      "name": "tennis racket",
+      "category": "world/sports",
+      "icon_key": "sports_racket"
+    },
+    {
+      "id": "boxing_glove",
+      "name": "boxing glove",
+      "category": "world/sports",
+      "icon_key": "sports_glove"
+    },
+    {
+      "id": "running_shoe",
+      "name": "running shoe",
+      "category": "world/sports",
+      "icon_key": "sports_shoe"
+    },
+    {
+      "id": "medkit",
+      "name": "medkit",
+      "category": "world/medical",
+      "icon_key": "medical_cross"
+    },
+    {
+      "id": "pill_bottle",
+      "name": "pill bottle",
+      "category": "world/medical",
+      "icon_key": "medical_pill"
+    },
+    {
+      "id": "syringe",
+      "name": "syringe",
+      "category": "world/medical",
+      "icon_key": "medical_syringe"
+    },
+    {
+      "id": "stethoscope",
+      "name": "stethoscope",
+      "category": "world/medical",
+      "icon_key": "medical_stethoscope"
+    },
+    {
+      "id": "bandage",
+      "name": "bandage",
+      "category": "world/medical",
+      "icon_key": "medical_bandage"
+    },
+    {
+      "id": "thermometer",
+      "name": "thermometer",
+      "category": "world/medical",
+      "icon_key": "medical_thermometer"
+    },
+    {
+      "id": "hospital_bed",
+      "name": "hospital bed",
+      "category": "world/medical",
+      "icon_key": "medical_bed"
+    },
+    {
+      "id": "heart_monitor",
+      "name": "heart monitor",
+      "category": "world/medical",
+      "icon_key": "medical_monitor"
+    },
+    {
+      "id": "hammer_tool",
+      "name": "hammer",
+      "category": "world/construction",
+      "icon_key": "construction_hammer"
+    },
+    {
+      "id": "wrench",
+      "name": "wrench",
+      "category": "world/construction",
+      "icon_key": "construction_wrench"
+    },
+    {
+      "id": "screwdriver",
+      "name": "screwdriver",
+      "category": "world/construction",
+      "icon_key": "construction_screwdriver"
+    },
+    {
+      "id": "brick",
+      "name": "brick",
+      "category": "world/construction",
+      "icon_key": "construction_brick"
+    },
+    {
+      "id": "traffic_cone",
+      "name": "traffic cone",
+      "category": "world/construction",
+      "icon_key": "construction_cone"
+    },
+    {
+      "id": "toolbox",
+      "name": "toolbox",
+      "category": "world/construction",
+      "icon_key": "construction_toolbox"
+    },
+    {
+      "id": "hard_hat",
+      "name": "hard hat",
+      "category": "world/construction",
+      "icon_key": "construction_helmet"
+    },
+    {
+      "id": "blueprint",
+      "name": "blueprint",
+      "category": "world/construction",
+      "icon_key": "construction_blueprint"
+    },
+    {
+      "id": "chef_knife",
+      "name": "chef knife",
+      "category": "world/utensils",
+      "icon_key": "knife"
+    },
+    {
+      "id": "paring_knife",
+      "name": "paring knife",
+      "category": "world/utensils",
+      "icon_key": "knife"
+    },
+    {
+      "id": "rolling_pin",
+      "name": "rolling pin",
+      "category": "world/utensils",
+      "icon_key": "spatula"
+    },
+    {
+      "id": "ladle",
+      "name": "ladle",
+      "category": "world/utensils",
+      "icon_key": "spoon"
+    },
+    {
+      "id": "whisk",
+      "name": "whisk",
+      "category": "world/utensils",
+      "icon_key": "fork"
+    },
+    {
+      "id": "measuring_cup",
+      "name": "measuring cup",
+      "category": "world/utensils",
+      "icon_key": "cup"
+    },
+    {
+      "id": "cutting_board",
+      "name": "cutting board",
+      "category": "world/utensils",
+      "icon_key": "plate"
+    },
+    {
+      "id": "rice_cooker",
+      "name": "rice cooker",
+      "category": "world/appliances",
+      "icon_key": "pot"
+    },
+    {
+      "id": "blender",
+      "name": "blender",
+      "category": "world/appliances",
+      "icon_key": "science_tube"
+    },
+    {
+      "id": "dishwasher",
+      "name": "dishwasher",
+      "category": "world/appliances",
+      "icon_key": "washer"
+    },
+    {
+      "id": "oven",
+      "name": "oven",
+      "category": "world/appliances",
+      "icon_key": "stove"
+    },
+    {
+      "id": "desk",
+      "name": "office desk",
+      "category": "world/furniture",
+      "icon_key": "table"
+    },
+    {
+      "id": "stool",
+      "name": "stool",
+      "category": "world/furniture",
+      "icon_key": "chair"
+    },
+    {
+      "id": "bench",
+      "name": "bench",
+      "category": "world/furniture",
+      "icon_key": "sofa"
+    },
+    {
+      "id": "dresser",
+      "name": "dresser",
+      "category": "world/furniture",
+      "icon_key": "cabinet"
+    },
+    {
+      "id": "wardrobe",
+      "name": "wardrobe",
+      "category": "world/furniture",
+      "icon_key": "cabinet"
+    },
+    {
+      "id": "nightstand",
+      "name": "nightstand",
+      "category": "world/furniture",
+      "icon_key": "cabinet"
+    },
+    {
+      "id": "desk_lamp",
+      "name": "desk lamp",
+      "category": "world/furniture",
+      "icon_key": "lamp"
+    },
+    {
+      "id": "server_rack",
+      "name": "server rack",
+      "category": "world/electronics",
+      "icon_key": "speaker"
+    },
+    {
+      "id": "tablet",
+      "name": "tablet",
+      "category": "world/electronics",
+      "icon_key": "phone"
+    },
+    {
+      "id": "smartwatch",
+      "name": "smartwatch",
+      "category": "world/electronics",
+      "icon_key": "phone"
+    },
+    {
+      "id": "router",
+      "name": "wifi router",
+      "category": "world/electronics",
+      "icon_key": "console"
+    },
+    {
+      "id": "game_controller",
+      "name": "game controller",
+      "category": "world/electronics",
+      "icon_key": "console"
+    },
+    {
+      "id": "webcam",
+      "name": "webcam",
+      "category": "world/electronics",
+      "icon_key": "camera"
+    },
+    {
+      "id": "keyboard",
+      "name": "keyboard",
+      "category": "world/electronics",
+      "icon_key": "piano"
+    },
+    {
+      "id": "mouse_device",
+      "name": "computer mouse",
+      "category": "world/electronics",
+      "icon_key": "medical_pill"
+    },
+    {
+      "id": "saxophone",
+      "name": "saxophone",
+      "category": "world/instruments",
+      "icon_key": "trumpet"
+    },
+    {
+      "id": "harp",
+      "name": "harp",
+      "category": "world/instruments",
+      "icon_key": "violin"
+    },
+    {
+      "id": "cello",
+      "name": "cello",
+      "category": "world/instruments",
+      "icon_key": "violin"
+    },
+    {
+      "id": "ukulele",
+      "name": "ukulele",
+      "category": "world/instruments",
+      "icon_key": "guitar"
+    },
+    {
+      "id": "clarinet",
+      "name": "clarinet",
+      "category": "world/instruments",
+      "icon_key": "flute"
+    },
+    {
+      "id": "orange",
+      "name": "orange fruit",
+      "category": "world/food",
+      "icon_key": "food_apple"
+    },
+    {
+      "id": "pear",
+      "name": "pear",
+      "category": "world/food",
+      "icon_key": "food_apple"
+    },
+    {
+      "id": "grapes",
+      "name": "grapes",
+      "category": "world/food",
+      "icon_key": "plant_fruit"
+    },
+    {
+      "id": "strawberry",
+      "name": "strawberry",
+      "category": "world/food",
+      "icon_key": "food_chili"
+    },
+    {
+      "id": "donut",
+      "name": "donut",
+      "category": "world/food",
+      "icon_key": "food_cookie"
+    },
+    {
+      "id": "french_fries",
+      "name": "french fries",
+      "category": "world/food",
+      "icon_key": "food_bread"
+    },
+    {
+      "id": "ramen",
+      "name": "ramen bowl",
+      "category": "world/food",
+      "icon_key": "food_noodles"
+    },
+    {
+      "id": "dumplings",
+      "name": "dumplings",
+      "category": "world/food",
+      "icon_key": "food_sushi"
+    },
+    {
+      "id": "taco",
+      "name": "taco",
+      "category": "world/food",
+      "icon_key": "food_pizza"
+    },
+    {
+      "id": "ice_cream",
+      "name": "ice cream",
+      "category": "world/food",
+      "icon_key": "food_cake"
+    },
+    {
+      "id": "coffee",
+      "name": "coffee cup",
+      "category": "world/food",
+      "icon_key": "cup"
+    },
+    {
+      "id": "tea",
+      "name": "tea cup",
+      "category": "world/food",
+      "icon_key": "cup"
+    },
+    {
+      "id": "smoothie",
+      "name": "fruit smoothie",
+      "category": "world/food",
+      "icon_key": "science_flask"
+    },
+    {
+      "id": "pizza_box",
+      "name": "pizza box",
+      "category": "world/food",
+      "icon_key": "crate"
+    },
+    {
+      "id": "bakery_box",
+      "name": "bakery box",
+      "category": "world/food",
+      "icon_key": "crate"
+    },
+    {
+      "id": "chicken_leg",
+      "name": "chicken leg",
+      "category": "world/food",
+      "icon_key": "food_steak"
+    },
+    {
+      "id": "salad",
+      "name": "salad bowl",
+      "category": "world/food",
+      "icon_key": "bowl"
+    },
+    {
+      "id": "broccoli",
+      "name": "broccoli",
+      "category": "world/food",
+      "icon_key": "plant_tree"
+    },
+    {
+      "id": "pepper_bell",
+      "name": "bell pepper",
+      "category": "world/food",
+      "icon_key": "food_chili"
+    },
+    {
+      "id": "onion",
+      "name": "onion",
+      "category": "world/food",
+      "icon_key": "food_apple"
+    },
+    {
+      "id": "garlic",
+      "name": "garlic bulb",
+      "category": "world/food",
+      "icon_key": "food_mushroom"
+    },
+    {
+      "id": "goat",
+      "name": "goat",
+      "category": "world/animals",
+      "icon_key": "animal_horse"
+    },
+    {
+      "id": "fox",
+      "name": "fox",
+      "category": "world/animals",
+      "icon_key": "animal_cat"
+    },
+    {
+      "id": "wolf",
+      "name": "wolf",
+      "category": "world/animals",
+      "icon_key": "animal_dog"
+    },
+    {
+      "id": "deer",
+      "name": "deer",
+      "category": "world/animals",
+      "icon_key": "animal_horse"
+    },
+    {
+      "id": "panda",
+      "name": "panda",
+      "category": "world/animals",
+      "icon_key": "animal_cow"
+    },
+    {
+      "id": "penguin",
+      "name": "penguin",
+      "category": "world/animals",
+      "icon_key": "animal_bird"
+    },
+    {
+      "id": "owl",
+      "name": "owl",
+      "category": "world/animals",
+      "icon_key": "animal_bird"
+    },
+    {
+      "id": "parrot",
+      "name": "parrot",
+      "category": "world/animals",
+      "icon_key": "animal_bird"
+    },
+    {
+      "id": "dolphin",
+      "name": "dolphin",
+      "category": "world/animals",
+      "icon_key": "fish"
+    },
+    {
+      "id": "shark",
+      "name": "shark",
+      "category": "world/animals",
+      "icon_key": "fish"
+    },
+    {
+      "id": "maple_tree",
+      "name": "maple tree",
+      "category": "world/plants",
+      "icon_key": "plant_tree"
+    },
+    {
+      "id": "palm_tree",
+      "name": "palm tree",
+      "category": "world/plants",
+      "icon_key": "plant_tree"
+    },
+    {
+      "id": "lotus",
+      "name": "lotus flower",
+      "category": "world/plants",
+      "icon_key": "plant_flower"
+    },
+    {
+      "id": "orchid",
+      "name": "orchid flower",
+      "category": "world/plants",
+      "icon_key": "plant_flower"
+    },
+    {
+      "id": "fern",
+      "name": "fern plant",
+      "category": "world/plants",
+      "icon_key": "plant_leaf"
+    },
+    {
+      "id": "grapevine",
+      "name": "grapevine",
+      "category": "world/plants",
+      "icon_key": "plant_fruit"
+    },
+    {
+      "id": "tractor",
+      "name": "tractor",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_truck"
+    },
+    {
+      "id": "van",
+      "name": "delivery van",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_truck"
+    },
+    {
+      "id": "subway_train",
+      "name": "subway train",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_train"
+    },
+    {
+      "id": "helicopter",
+      "name": "helicopter",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_plane"
+    },
+    {
+      "id": "submarine",
+      "name": "submarine",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_ship"
+    },
+    {
+      "id": "ambulance",
+      "name": "ambulance",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_truck"
+    },
+    {
+      "id": "fire_truck",
+      "name": "fire truck",
+      "category": "world/vehicles-advanced",
+      "icon_key": "vehicle_truck"
+    },
+    {
+      "id": "bulldozer",
+      "name": "bulldozer",
+      "category": "world/construction",
+      "icon_key": "construction_toolbox"
+    },
+    {
+      "id": "power_drill",
+      "name": "power drill",
+      "category": "world/construction",
+      "icon_key": "construction_screwdriver"
+    },
+    {
+      "id": "safety_vest",
+      "name": "safety vest",
+      "category": "world/construction",
+      "icon_key": "construction_helmet"
+    },
+    {
+      "id": "hardhat_lamp",
+      "name": "hardhat with lamp",
+      "category": "world/construction",
+      "icon_key": "construction_helmet"
+    },
+    {
+      "id": "xray_scan",
+      "name": "xray scan",
+      "category": "world/medical",
+      "icon_key": "medical_monitor"
+    },
+    {
+      "id": "first_aid_box",
+      "name": "first aid box",
+      "category": "world/medical",
+      "icon_key": "medical_cross"
+    },
+    {
+      "id": "oxygen_tank",
+      "name": "oxygen tank",
+      "category": "world/medical",
+      "icon_key": "science_tube"
+    },
+    {
+      "id": "saturn",
+      "name": "saturn planet",
+      "category": "world/space",
+      "icon_key": "space_planet"
+    },
+    {
+      "id": "comet",
+      "name": "comet",
+      "category": "world/space",
+      "icon_key": "space_asteroid"
+    },
+    {
+      "id": "space_station",
+      "name": "space station",
+      "category": "world/space",
+      "icon_key": "space_satellite"
+    },
+    {
+      "id": "galaxy_token",
+      "name": "galaxy token",
+      "category": "world/space",
+      "icon_key": "space_star"
+    },
+    {
+      "id": "basketball_hoop",
+      "name": "basketball hoop",
+      "category": "world/sports",
+      "icon_key": "sports_racket"
+    },
+    {
+      "id": "soccer_goal",
+      "name": "soccer goal",
+      "category": "world/sports",
+      "icon_key": "sports_racket"
+    },
+    {
+      "id": "dumbbell",
+      "name": "dumbbell",
+      "category": "world/sports",
+      "icon_key": "sports_bat"
+    },
+    {
+      "id": "jump_rope",
+      "name": "jump rope",
+      "category": "world/sports",
+      "icon_key": "sports_racket"
+    }
+  ]
+}
