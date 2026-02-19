@@ -1,10 +1,6 @@
 # Quality-First Commands (5 Items Per Cycle)
 
-Run from project root:
-
-```bash
-cd /home/user9007/asset-factory
-```
+Run from project root (WokGen directory):
 
 ## 1) Clean Generated Outputs
 
