@@ -1,7 +1,75 @@
-# WokGen — Deployment Checklist (`wokspec.org/wokgen`)
+# WokGen — Deployment Checklist
 
-This document walks through every manual step needed to go from this repository
-to a running production instance. Follow the steps in order.
+This document covers two deployment paths:
+1. **Render (recommended free option)** — see Section 0 below
+2. **Self-hosted Docker** — see Sections 1–8 (original checklist)
+
+---
+
+## 0. Deploy to Render (free tier) — `wokgen.wokspec.org`
+
+### Prerequisites
+- GitHub repo: `WokSpec/WokGen` (must be public or Render must have access)
+- DNS access for `wokspec.org`
+
+### Step 1 — Create Render account
+Go to https://render.com and sign up (no credit card needed for free tier).
+
+### Step 2 — Deploy via Blueprint (one click)
+1. In Render dashboard: **New → Blueprint**
+2. Connect your GitHub account and select the `WokSpec/WokGen` repo
+3. Render will detect `render.yaml` and show a preview of what will be created:
+   - **wokgen-web** (free web service, Node.js)
+   - **wokgen-db** (free PostgreSQL database)
+4. Click **Apply** — Render creates both services and links the DB automatically
+
+### Step 3 — Wait for first deploy (~5 min)
+The build runs: `npm install → prisma generate → next build`.
+The start command runs: `prisma db push → node server.js`.
+Watch the deploy log in the Render dashboard.
+
+### Step 4 — Add custom domain
+1. In Render dashboard → **wokgen-web** → **Settings → Custom Domains**
+2. Add `wokgen.wokspec.org`
+3. Render shows you a CNAME target like: `wokgen-web.onrender.com`
+
+### Step 5 — DNS CNAME
+In your DNS registrar (where `wokspec.org` is managed):
+```
+Type:  CNAME
+Name:  wokgen
+Value: wokgen-web.onrender.com   ← use the exact value from Render
+TTL:   300
+```
+Wait ~5 minutes for DNS to propagate. Your app is live at https://wokgen.wokspec.org
+
+### Step 6 — Optional: add AI provider keys
+If you want server-side centralized API keys (instead of BYOK):
+- Render dashboard → **wokgen-web** → **Environment** → Add:
+  - `TOGETHER_API_KEY`
+  - `REPLICATE_API_TOKEN`
+  - `FAL_API_KEY`
+
+### ⚠️ Important caveats (free tier)
+- **Sleep**: Free web service sleeps after 15 min idle. First request after wake takes ~30s.
+  Upgrade to Starter plan ($7/mo) to disable sleep.
+- **Database expiry**: Free PostgreSQL is **deleted after 90 days**. Set a calendar reminder
+  to either upgrade the plan or recreate the DB (and re-run `prisma db push`) before expiry.
+
+### Local dev after this change
+The Prisma schema now uses `postgresql` provider. Update your local `apps/web/.env`:
+```bash
+# Option A: copy the Render external DB URL from Render dashboard → wokgen-db → Info
+DATABASE_URL="postgresql://wokgen:<password>@<host>.render.com:5432/wokgen?sslmode=require"
+
+# Option B: free Neon dev DB (https://neon.tech → create project → copy connection string)
+DATABASE_URL="postgresql://..."
+
+# Option C: local Docker Postgres
+docker run -d -p 5432:5432 -e POSTGRES_USER=wokgen -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=wokgen postgres:15
+DATABASE_URL="postgresql://wokgen:dev@localhost:5432/wokgen"
+```
+Then: `cd apps/web && npx prisma db push`
 
 ---
 
