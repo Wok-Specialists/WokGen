@@ -982,3 +982,6 @@
     color: black;
   }
 }
+
+/* Nav backlink hover (JS-free, works in RSC layout) */
+.nav-backlink:hover { color: var(--text-primary) !important; }

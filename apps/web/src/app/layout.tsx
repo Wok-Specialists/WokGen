@@ -3,11 +3,10 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
 import { NavLink } from './_components/NavLink';
+import { Footer } from './_components/Footer';
 
 export const dynamic = 'force-dynamic';
 
-// ---------------------------------------------------------------------------
-// Fonts
 // ---------------------------------------------------------------------------
 const inter = Inter({
   subsets: ['latin'],
@@ -79,10 +78,8 @@ function NavBar() {
       {/* Wokspec backlink — subtle, left edge */}
       <a
         href="https://wokspec.org"
-        className="hidden sm:inline-flex items-center gap-1 mr-4 flex-shrink-0"
+        className="hidden sm:inline-flex items-center gap-1 mr-4 flex-shrink-0 nav-backlink"
         style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textDecoration: 'none', fontFamily: 'var(--font-heading)', letterSpacing: '0.02em', transition: 'color 0.15s' }}
-        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; }}
       >
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         wokspec.org
@@ -186,86 +183,6 @@ function NavBar() {
         </Link>
       </div>
     </nav>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Footer
-// ---------------------------------------------------------------------------
-function Footer() {
-  return (
-    <footer
-      style={{
-        borderTop: '1px solid var(--surface-border)',
-        background: 'var(--surface-base)',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '72rem',
-          margin: '0 auto',
-          padding: '1.25rem 1.5rem',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '0.75rem',
-        }}
-      >
-        {/* Left — attribution */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <a
-            href="https://wokspec.org"
-            style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textDecoration: 'none', fontFamily: 'var(--font-heading)', transition: 'color 0.15s' }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; }}
-          >
-            Wok Specialists
-          </a>
-          <span style={{ color: 'var(--text-disabled)', fontSize: '0.75rem' }}>/</span>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6ee7b7', fontFamily: 'var(--font-heading)' }}>WokGen</span>
-          <span
-            style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-disabled)', background: 'var(--surface-raised)', border: '1px solid var(--surface-border)', borderRadius: '0.25rem', padding: '0.15rem 0.4rem', fontFamily: 'var(--font-heading)' }}
-          >
-            Early Preview · v0.1
-          </span>
-        </div>
-
-        {/* Right — links */}
-        <nav aria-label="Footer navigation" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          {[
-            { label: 'wokspec.org', href: 'https://wokspec.org', external: true },
-            { label: 'Docs', href: '/docs', external: false },
-            { label: 'Gallery', href: '/gallery', external: false },
-            { label: 'GitHub', href: 'https://github.com/WokSpec/WokGen', external: true },
-          ].map(({ label, href, external }) => (
-            external ? (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textDecoration: 'none', fontFamily: 'var(--font-heading)', transition: 'color 0.15s' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; }}
-              >
-                {label}
-              </a>
-            ) : (
-              <Link
-                key={label}
-                href={href}
-                style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textDecoration: 'none', fontFamily: 'var(--font-heading)', transition: 'color 0.15s' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; }}
-              >
-                {label}
-              </Link>
-            )
-          ))}
-        </nav>
-      </div>
-    </footer>
   );
 }
 
