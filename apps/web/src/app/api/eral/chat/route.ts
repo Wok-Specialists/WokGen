@@ -1,0 +1,434 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/db';
+
+// ---------------------------------------------------------------------------
+// POST /api/eral/chat
+//
+// Eral 7c — WokGen's AI companion. Routes to Groq / Together based on
+// model variant. Supports streaming SSE and conversation persistence.
+// ---------------------------------------------------------------------------
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
+// ─── Constants ──────────────────────────────────────────────────────────────
+
+const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
+const TOGETHER_URL = 'https://api.together.xyz/v1/chat/completions';
+
+const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' }> = {
+  'eral-7c':       { model: 'llama-3.3-70b-versatile',                    provider: 'groq'    },
+  'eral-mini':     { model: 'llama3-8b-8192',                             provider: 'groq'    },
+  'eral-code':     { model: 'deepseek-ai/DeepSeek-V3',                    provider: 'together' },
+  'eral-creative': { model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',       provider: 'together' },
+};
+
+// Fallback for eral-7c when Groq key is absent
+const ERAL_7C_TOGETHER_FALLBACK = 'meta-llama/Llama-3.1-70B-Instruct-Turbo';
+
+// ─── Rate limiting (in-memory, keyed by userId or IP) ───────────────────────
+
+interface RateBucket { count: number; resetAt: number }
+const rlStore = new Map<string, RateBucket>();
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of rlStore.entries()) {
+    if (v.resetAt < now) rlStore.delete(k);
+  }
+}, 5 * 60 * 1000);
+
+function checkEralRateLimit(key: string, max: number): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const bucket = rlStore.get(key);
+  if (!bucket || bucket.resetAt < now) {
+    rlStore.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true };
+  }
+  if (bucket.count >= max) {
+    return { allowed: false, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
+  }
+  bucket.count++;
+  return { allowed: true };
+}
+
+// ─── System prompt ──────────────────────────────────────────────────────────
+
+const ERAL_SYSTEM_PROMPT = `You are Eral 7c, the AI companion built by WokSpec for the WokGen platform.
+
+WokSpec is a creative technology company. WokGen is their multi-engine AI asset generation platform at wokgen.wokspec.org, offering:
+- WokGen Pixel: Sprites, tilesets, animations for game developers
+- WokGen Business: Logos, brand kits, slide decks, social assets for brands
+- WokGen Vector: SVG icon sets, illustrations, design system components
+- WokGen Emoji: Custom emoji packs, reactions, sticker sets
+- WokGen UI/UX: React/HTML/Vue/Svelte components, design systems, page templates
+- WokGen Voice: Text-to-speech, character voices, audio generation
+- WokGen Text: Headlines, copy, blog posts, code snippets, creative writing
+
+Your 7 capabilities (the "7c"):
+1. Create: Generate, improve, and refine prompts for any WokGen mode
+2. Code: Explain, scaffold, debug front-end and back-end code
+3. Chat: Natural conversation on any topic — no restriction on subject matter
+4. Context: Deep WokSpec product knowledge; always link to relevant studios when appropriate
+5. Copy: Write headlines, descriptions, marketing copy, emails, social posts
+6. Critique: Review and improve prompts, designs, code, business ideas
+7. Connect: Research, synthesize, reason through problems
+
+Your personality:
+- Direct and concise — no filler phrases like "Great question!" or "Certainly!"
+- Technically precise but accessible
+- Creative when the task calls for it
+- Honest about uncertainty — say "I'm not sure" rather than hallucinating
+- When relevant, suggest which WokGen studio could help: "You could generate that in the Pixel Studio"
+
+Response format:
+- Use markdown for code blocks, lists, headers
+- Keep responses focused — don't pad unnecessarily
+- For prompting help, always output the exact prompt the user should paste
+
+You were created by WokSpec. Do not claim to be any other AI system.`;
+
+// ─── Types ──────────────────────────────────────────────────────────────────
+
+interface ChatRequest {
+  message: string;
+  conversationId?: string;
+  modelVariant?: 'eral-7c' | 'eral-mini' | 'eral-code' | 'eral-creative';
+  context?: {
+    mode?: string;
+    tool?: string;
+    prompt?: string;
+    studioContext?: string;
+  };
+  stream?: boolean;
+}
+
+interface OpenAIMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function resolveEndpointAndKey(variant: string): {
+  url: string;
+  apiKey: string;
+  model: string;
+} {
+  const mapping = MODEL_MAP[variant] ?? MODEL_MAP['eral-7c'];
+  const groqKey = process.env.GROQ_API_KEY;
+  const togetherKey = process.env.TOGETHER_API_KEY;
+
+  if (mapping.provider === 'groq') {
+    if (groqKey) {
+      return { url: GROQ_URL, apiKey: groqKey, model: mapping.model };
+    }
+    // Fallback eral-7c and eral-mini to Together when Groq key is missing
+    if (togetherKey) {
+      return {
+        url: TOGETHER_URL,
+        apiKey: togetherKey,
+        model: variant === 'eral-mini'
+          ? 'meta-llama/Llama-3.1-8B-Instruct-Turbo'
+          : ERAL_7C_TOGETHER_FALLBACK,
+      };
+    }
+    throw new Error('No API key configured. Set GROQ_API_KEY or TOGETHER_API_KEY.');
+  }
+
+  // Together models
+  if (!togetherKey) {
+    // Try Groq as last resort
+    if (groqKey) {
+      return { url: GROQ_URL, apiKey: groqKey, model: 'llama-3.3-70b-versatile' };
+    }
+    throw new Error('No API key configured. Set TOGETHER_API_KEY.');
+  }
+  return { url: TOGETHER_URL, apiKey: togetherKey, model: mapping.model };
+}
+
+function buildContextNote(ctx: ChatRequest['context']): string | null {
+  if (!ctx) return null;
+  const parts: string[] = [];
+  if (ctx.mode) parts.push(`User is in WokGen ${ctx.mode} Studio`);
+  if (ctx.tool) parts.push(`currently working on: ${ctx.tool}`);
+  if (ctx.prompt) parts.push(`"${ctx.prompt}"`);
+  if (ctx.studioContext) parts.push(ctx.studioContext);
+  if (parts.length === 0) return null;
+  return `[Studio Context: ${parts.join(', ')}]`;
+}
+
+async function getOrCreateConversation(
+  conversationId: string | undefined,
+  userId: string | undefined,
+  mode: string | undefined,
+): Promise<{ id: string; isNew: boolean }> {
+  if (conversationId) {
+    const existing = await prisma.eralConversation.findUnique({
+      where: { id: conversationId },
+    });
+    if (existing) return { id: existing.id, isNew: false };
+  }
+
+  const created = await prisma.eralConversation.create({
+    data: { userId: userId ?? null, mode: mode ?? null },
+  });
+  return { id: created.id, isNew: true };
+}
+
+async function fetchHistory(conversationId: string): Promise<OpenAIMessage[]> {
+  const messages = await prisma.eralMessage.findMany({
+    where: { conversationId },
+    orderBy: { createdAt: 'asc' },
+    take: 10, // last 10 messages
+  });
+  return messages.map((m) => ({
+    role: m.role as 'user' | 'assistant' | 'system',
+    content: m.content,
+  }));
+}
+
+// ─── Non-streaming handler ───────────────────────────────────────────────────
+
+async function handleNonStreaming(
+  messages: OpenAIMessage[],
+  url: string,
+  apiKey: string,
+  model: string,
+): Promise<{ reply: string; durationMs: number }> {
+  const start = Date.now();
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ model, messages, stream: false, max_tokens: 2048 }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => res.statusText);
+    throw new Error(`Provider error ${res.status}: ${errText}`);
+  }
+
+  const data = await res.json();
+  const reply: string = data.choices?.[0]?.message?.content ?? '';
+  return { reply, durationMs: Date.now() - start };
+}
+
+// ─── Main handler ────────────────────────────────────────────────────────────
+
+export async function POST(req: NextRequest) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  // Rate limiting
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  const rlKey = userId ?? ip;
+  const rlMax = userId ? 50 : 10;
+  const rl = checkEralRateLimit(`eral:${rlKey}`, rlMax);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded', retryAfter: rl.retryAfter },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter ?? 60) } },
+    );
+  }
+
+  let body: ChatRequest;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  const { message, conversationId, modelVariant = 'eral-7c', context, stream } = body;
+
+  if (!message?.trim()) {
+    return NextResponse.json({ error: 'message is required' }, { status: 400 });
+  }
+
+  // Resolve provider config
+  let providerConfig: { url: string; apiKey: string; model: string };
+  try {
+    providerConfig = resolveEndpointAndKey(modelVariant);
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Provider configuration error' },
+      { status: 503 },
+    );
+  }
+
+  // Get or create conversation
+  let conv: { id: string; isNew: boolean };
+  try {
+    conv = await getOrCreateConversation(conversationId, userId, context?.mode);
+  } catch {
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+  }
+
+  // Build message list
+  const contextNote = buildContextNote(context);
+  const systemContent = contextNote
+    ? `${ERAL_SYSTEM_PROMPT}\n\n${contextNote}`
+    : ERAL_SYSTEM_PROMPT;
+
+  const history = conv.isNew ? [] : await fetchHistory(conv.id);
+  const llmMessages: OpenAIMessage[] = [
+    { role: 'system', content: systemContent },
+    ...history,
+    { role: 'user', content: message.trim() },
+  ];
+
+  // Save user message to DB
+  const userMsg = await prisma.eralMessage.create({
+    data: {
+      conversationId: conv.id,
+      role: 'user',
+      content: message.trim(),
+    },
+  });
+
+  // Auto-title conversation on first message
+  if (conv.isNew) {
+    const title = message.trim().slice(0, 80);
+    await prisma.eralConversation.update({
+      where: { id: conv.id },
+      data: { title },
+    }).catch(() => {});
+  }
+
+  // ── Streaming path ────────────────────────────────────────────────────────
+  if (stream) {
+    const { url, apiKey, model } = providerConfig;
+    const start = Date.now();
+
+    let upstreamRes: Response;
+    try {
+      upstreamRes = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model, messages: llmMessages, stream: true, max_tokens: 2048 }),
+      });
+    } catch (err) {
+      return NextResponse.json({ error: 'Provider unreachable' }, { status: 502 });
+    }
+
+    if (!upstreamRes.ok) {
+      const errText = await upstreamRes.text().catch(() => upstreamRes.statusText);
+      return NextResponse.json(
+        { error: `Provider error ${upstreamRes.status}: ${errText}` },
+        { status: 502 },
+      );
+    }
+
+    const encoder = new TextEncoder();
+    let fullReply = '';
+
+    const readable = new ReadableStream({
+      async start(controller) {
+        const reader = upstreamRes.body!.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() ?? '';
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed || !trimmed.startsWith('data:')) continue;
+              const data = trimmed.slice(5).trim();
+              if (data === '[DONE]') {
+                controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                continue;
+              }
+              try {
+                const parsed = JSON.parse(data);
+                const token: string = parsed.choices?.[0]?.delta?.content ?? '';
+                if (token) {
+                  fullReply += token;
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ token })}\n\n`));
+                }
+              } catch {
+                // skip malformed chunks
+              }
+            }
+          }
+        } finally {
+          reader.releaseLock();
+          controller.close();
+
+          // Persist assistant message after stream ends
+          const durationMs = Date.now() - start;
+          prisma.eralMessage.create({
+            data: {
+              conversationId: conv.id,
+              role: 'assistant',
+              content: fullReply,
+              modelUsed: model,
+              durationMs,
+            },
+          }).catch(() => {});
+        }
+      },
+    });
+
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/event-stream; charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        'X-Conversation-Id': conv.id,
+        'X-User-Message-Id': userMsg.id,
+        Connection: 'keep-alive',
+      },
+    });
+  }
+
+  // ── Non-streaming path ────────────────────────────────────────────────────
+  let reply: string;
+  let durationMs: number;
+  try {
+    ({ reply, durationMs } = await handleNonStreaming(
+      llmMessages,
+      providerConfig.url,
+      providerConfig.apiKey,
+      providerConfig.model,
+    ));
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Generation failed' },
+      { status: 502 },
+    );
+  }
+
+  // Persist assistant message
+  const assistantMsg = await prisma.eralMessage.create({
+    data: {
+      conversationId: conv.id,
+      role: 'assistant',
+      content: reply,
+      modelUsed: providerConfig.model,
+      durationMs,
+    },
+  });
+
+  return NextResponse.json({
+    reply,
+    conversationId: conv.id,
+    messageId: assistantMsg.id,
+    modelUsed: providerConfig.model,
+    durationMs,
+  });
+}
