@@ -6,7 +6,7 @@
 export type Tool = 'generate' | 'animate' | 'rotate' | 'inpaint' | 'scene';
 
 // Provider identifiers
-export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui' | 'pollinations';
+export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui' | 'pollinations' | 'huggingface';
 
 // Canonical export pixel sizes
 export type PixelSize = 32 | 64 | 128 | 256 | 512;
@@ -241,6 +241,19 @@ export const PROVIDER_CAPABILITIES: Record<ProviderName, ProviderCapability> = {
     free: true,
     requiresKey: false,
   },
+  huggingface: {
+    generate: true,
+    animate: false,
+    rotate: false,
+    inpaint: false,
+    scene: false,
+    maxWidth: 1024,
+    maxHeight: 1024,
+    supportsSeed: true,
+    supportsNegativePrompt: true,
+    free: true,
+    requiresKey: false,
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -313,5 +326,16 @@ export const PROVIDER_META: Record<ProviderName, ProviderMeta> = {
     freeCredits: true,
     freeCreditsNote: 'Completely free — no account needed',
     color: '#22c55e',
+  },
+  huggingface: {
+    id: 'huggingface',
+    label: 'Hugging Face',
+    description: 'Free FLUX.1-schnell via HF Inference API. Free account token required.',
+    docsUrl: 'https://huggingface.co/settings/tokens',
+    keyEnvVar: 'HF_TOKEN',
+    keyLabel: 'Access Token',
+    freeCredits: true,
+    freeCreditsNote: 'Free with a free HF account',
+    color: '#ff9d00',
   },
 };

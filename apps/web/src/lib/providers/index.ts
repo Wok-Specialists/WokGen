@@ -9,6 +9,7 @@ import { falGenerate } from './fal';
 import { togetherGenerate } from './together';
 import { comfyuiGenerate } from './comfyui';
 import { pollinationsGenerate } from './pollinations';
+import { huggingfaceGenerate } from './huggingface';
 
 // ---------------------------------------------------------------------------
 // Re-exports for convenience
@@ -19,6 +20,7 @@ export { falGenerate } from './fal';
 export { togetherGenerate } from './together';
 export { comfyuiGenerate } from './comfyui';
 export { pollinationsGenerate } from './pollinations';
+export { huggingfaceGenerate } from './huggingface';
 export { REPLICATE_MODELS } from './replicate';
 export { FAL_MODELS } from './fal';
 export { TOGETHER_MODELS } from './together';
@@ -42,6 +44,7 @@ export function resolveProviderConfig(
       case 'together':     return process.env.TOGETHER_API_KEY ?? '';
       case 'comfyui':      return ''; // no key needed
       case 'pollinations': return ''; // no key needed
+      case 'huggingface':  return process.env.HF_TOKEN ?? '';
     }
   })();
 
@@ -65,15 +68,15 @@ export function assertKeyPresent(
   provider: ProviderName,
   config: ProviderConfig,
 ): void {
-  if (provider === 'comfyui' || provider === 'pollinations') return; // no key needed
+  if (provider === 'comfyui' || provider === 'pollinations' || provider === 'huggingface') return; // no key needed (huggingface works with or without token)
 
   if (!config.apiKey) {
-    const envVarNames: Record<Exclude<ProviderName, 'comfyui' | 'pollinations'>, string> = {
+    const envVarNames: Record<Exclude<ProviderName, 'comfyui' | 'pollinations' | 'huggingface'>, string> = {
       replicate: 'REPLICATE_API_TOKEN',
       fal:       'FAL_KEY',
       together:  'TOGETHER_API_KEY',
     };
-    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui' | 'pollinations'>];
+    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui' | 'pollinations' | 'huggingface'>];
     throw new Error(
       `No API key configured for provider "${provider}". ` +
         `Set ${envVar} in your .env.local file, or supply your key in the ` +
@@ -94,6 +97,7 @@ export function detectAvailableProvider(): ProviderName {
   if (process.env.REPLICATE_API_TOKEN) return 'replicate';
   if (process.env.FAL_KEY)             return 'fal';
   if (process.env.TOGETHER_API_KEY)    return 'together';
+  if (process.env.HF_TOKEN)            return 'huggingface';
   // Pollinations is always available — no key needed
   return 'pollinations';
 }
@@ -145,6 +149,13 @@ export function listProviderStatus(): ProviderStatus[] {
       free: true,
     },
     {
+      provider: 'huggingface' as ProviderName,
+      configured: Boolean(process.env.HF_TOKEN),
+      docsUrl: 'https://huggingface.co/settings/tokens',
+      envVar: 'HF_TOKEN',
+      free: true,
+    },
+    {
       provider: 'comfyui',
       configured: true, // always "available" — reachability is checked at generate time
       docsUrl: 'https://github.com/comfyanonymous/ComfyUI',
@@ -180,6 +191,9 @@ export async function generate(
 
     case 'pollinations':
       return pollinationsGenerate(params, config);
+
+    case 'huggingface':
+      return huggingfaceGenerate(params, config);
 
     default: {
       // TypeScript exhaustiveness guard — should never reach this at runtime

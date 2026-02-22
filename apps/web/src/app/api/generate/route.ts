@@ -139,13 +139,13 @@ export async function POST(req: NextRequest) {
   const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
   const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
   // In hosted mode: use Replicate for HD requests.
-  // For standard: prefer Together.ai (free FLUX, more reliable) if key is set, else Pollinations.
+  // For standard: prefer Together.ai → HuggingFace (works with/without token) → Pollinations.
   const resolvedProvider: ProviderName = isSelfHosted
     ? (provider as ProviderName)
     : useHD ? 'replicate'
     : process.env.TOGETHER_API_KEY ? 'together'
     : process.env.FAL_KEY ? 'fal'
-    : 'pollinations';
+    : 'huggingface'; // works with HF_TOKEN (FLUX) or anonymously (SDXL-Turbo)
 
   // Guard: HD requires REPLICATE_API_TOKEN on server
   if (useHD && !process.env.REPLICATE_API_TOKEN) {
@@ -250,15 +250,27 @@ export async function POST(req: NextRequest) {
   try {
     let actualProvider: ProviderName = resolvedProvider;
     const result = await generate(resolvedProvider, genParams, config).catch(async (err: unknown) => {
-      // If Pollinations fails and Replicate is available, fall back automatically
-      if (
-        resolvedProvider === 'pollinations' &&
-        !isSelfHosted &&
-        process.env.REPLICATE_API_TOKEN
-      ) {
-        console.warn('[generate] Pollinations failed, falling back to Replicate:', (err as Error).message);
-        actualProvider = 'replicate';
-        return generate('replicate', genParams, resolveProviderConfig('replicate', null, null));
+      if (!isSelfHosted) {
+        // HuggingFace/Pollinations failed → try the other free one, then Replicate
+        if (resolvedProvider === 'huggingface') {
+          if (process.env.REPLICATE_API_TOKEN) {
+            console.warn('[generate] HuggingFace failed, falling back to Replicate:', (err as Error).message);
+            actualProvider = 'replicate';
+            return generate('replicate', genParams, resolveProviderConfig('replicate', null, null));
+          }
+        }
+        if (resolvedProvider === 'pollinations') {
+          if (process.env.HF_TOKEN || true) { // HF works without token too
+            console.warn('[generate] Pollinations failed, falling back to HuggingFace:', (err as Error).message);
+            actualProvider = 'huggingface';
+            return generate('huggingface', genParams, resolveProviderConfig('huggingface', null, null));
+          }
+          if (process.env.REPLICATE_API_TOKEN) {
+            console.warn('[generate] Pollinations failed, falling back to Replicate:', (err as Error).message);
+            actualProvider = 'replicate';
+            return generate('replicate', genParams, resolveProviderConfig('replicate', null, null));
+          }
+        }
       }
       throw err;
     });
@@ -454,7 +466,7 @@ function detectProvider(): ProviderName {
 }
 
 const VALID_TOOLS    = new Set(['generate', 'animate', 'rotate', 'inpaint', 'scene']);
-const VALID_PROVIDERS = new Set(['replicate', 'fal', 'together', 'comfyui', 'pollinations']);
+const VALID_PROVIDERS = new Set(['replicate', 'fal', 'together', 'comfyui', 'pollinations', 'huggingface']);
 const VALID_PRESETS  = new Set(['rpg_icon', 'emoji', 'tileset', 'sprite_sheet', 'raw', 'game_ui']);
 
 function isValidTool(v: unknown): v is Tool {
