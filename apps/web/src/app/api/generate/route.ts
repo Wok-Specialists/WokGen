@@ -248,7 +248,23 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const result = await generate(resolvedProvider, genParams, config);
+    let actualProvider: ProviderName = resolvedProvider;
+    const result = await generate(resolvedProvider, genParams, config).catch(async (err: unknown) => {
+      // If Pollinations fails and Replicate is available, fall back automatically
+      if (
+        resolvedProvider === 'pollinations' &&
+        !isSelfHosted &&
+        process.env.REPLICATE_API_TOKEN
+      ) {
+        console.warn('[generate] Pollinations failed, falling back to Replicate:', (err as Error).message);
+        actualProvider = 'replicate';
+        return generate('replicate', genParams, config);
+      }
+      throw err;
+    });
+
+    // actual provider used (may differ from resolvedProvider if fallback occurred)
+    const usedProvider: ProviderName = actualProvider;
 
     // ------------------------------------------------------------------------
     // 5a. Update Job as succeeded
@@ -329,7 +345,7 @@ export async function POST(req: NextRequest) {
           thumbUrl: result.resultUrl,
           size:     clampSize(Number(width) || 512),
           tool:     tool as Tool,
-          provider: resolvedProvider,
+          provider: usedProvider,
           prompt:   String(prompt).trim(),
           isPublic: true,
         },
