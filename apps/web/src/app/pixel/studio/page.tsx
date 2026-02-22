@@ -62,12 +62,110 @@ interface HistoryItem {
 // ---------------------------------------------------------------------------
 
 const TOOLS: { id: Tool; icon: string; label: string; shortLabel: string; kbd: string }[] = [
-  { id: 'generate', icon: '✦', label: 'Generate',      shortLabel: 'Gen',    kbd: '1' },
-  { id: 'animate',  icon: '▶', label: 'Animate',       shortLabel: 'Anim',   kbd: '2' },
-  { id: 'rotate',   icon: '↻', label: 'Rotate',        shortLabel: 'Rot',    kbd: '3' },
-  { id: 'inpaint',  icon: '⬛', label: 'Inpaint',      shortLabel: 'Paint',  kbd: '4' },
-  { id: 'scene',    icon: '⊞', label: 'Scenes & Maps', shortLabel: 'Scene',  kbd: '5' },
+  { id: 'generate', icon: '✦', label: 'Sprite',      shortLabel: 'Sprite',  kbd: '1' },
+  { id: 'animate',  icon: '▶', label: 'Animate',     shortLabel: 'Anim',    kbd: '2' },
+  { id: 'rotate',   icon: '⊕', label: 'Directions',  shortLabel: 'Dir',     kbd: '3' },
+  { id: 'inpaint',  icon: '⬛', label: 'Edit',        shortLabel: 'Edit',    kbd: '4' },
+  { id: 'scene',    icon: '⊞', label: 'Tileset',     shortLabel: 'Tile',    kbd: '5' },
 ];
+
+// Preset categories
+const PRESET_CATEGORIES = [
+  { id: 'characters',   label: 'Characters' },
+  { id: 'items',        label: 'Items'       },
+  { id: 'environments', label: 'Environments'},
+  { id: 'fx_ui',        label: 'FX & UI'     },
+  { id: 'advanced',     label: 'Advanced'    },
+] as const;
+type PresetCategory = (typeof PRESET_CATEGORIES)[number]['id'];
+
+const PRESETS_BY_CATEGORY: Record<PresetCategory, StylePreset[]> = {
+  characters:   ['character_idle', 'character_side', 'top_down_char', 'chibi', 'portrait'],
+  items:        ['rpg_icon', 'weapon_icon', 'badge_icon', 'emoji'],
+  environments: ['tileset', 'nature_tile', 'isometric'],
+  fx_ui:        ['animated_effect', 'game_ui', 'sci_fi', 'horror'],
+  advanced:     ['sprite_sheet', 'raw'],
+};
+
+// Smart preset config — auto-sets controls when a preset is selected
+const PRESET_CONFIG: Record<StylePreset, {
+  size: PixelSize;
+  category: import('@/lib/prompt-builder').AssetCategory;
+  bgMode: import('@/lib/prompt-builder').BackgroundMode;
+  paletteSize: import('@/lib/prompt-builder').PaletteSize;
+  outlineStyle: import('@/lib/prompt-builder').OutlineStyle;
+}> = {
+  rpg_icon:        { size: 64,  category: 'weapon',    bgMode: 'transparent', paletteSize: 32,  outlineStyle: 'bold'   },
+  weapon_icon:     { size: 64,  category: 'weapon',    bgMode: 'transparent', paletteSize: 32,  outlineStyle: 'bold'   },
+  character_idle:  { size: 64,  category: 'character', bgMode: 'transparent', paletteSize: 64,  outlineStyle: 'bold'   },
+  character_side:  { size: 64,  category: 'character', bgMode: 'transparent', paletteSize: 64,  outlineStyle: 'bold'   },
+  top_down_char:   { size: 64,  category: 'character', bgMode: 'transparent', paletteSize: 32,  outlineStyle: 'bold'   },
+  isometric:       { size: 128, category: 'structure', bgMode: 'scene',       paletteSize: 64,  outlineStyle: 'soft'   },
+  chibi:           { size: 64,  category: 'character', bgMode: 'transparent', paletteSize: 32,  outlineStyle: 'bold'   },
+  portrait:        { size: 128, category: 'portrait',  bgMode: 'scene',       paletteSize: 64,  outlineStyle: 'none'   },
+  emoji:           { size: 64,  category: 'none',      bgMode: 'transparent', paletteSize: 16,  outlineStyle: 'bold'   },
+  tileset:         { size: 256, category: 'tile',      bgMode: 'scene',       paletteSize: 32,  outlineStyle: 'none'   },
+  nature_tile:     { size: 256, category: 'nature',    bgMode: 'scene',       paletteSize: 32,  outlineStyle: 'none'   },
+  sprite_sheet:    { size: 512, category: 'character', bgMode: 'transparent', paletteSize: 64,  outlineStyle: 'bold'   },
+  animated_effect: { size: 64,  category: 'effect',    bgMode: 'transparent', paletteSize: 16,  outlineStyle: 'none'   },
+  game_ui:         { size: 128, category: 'ui',        bgMode: 'transparent', paletteSize: 32,  outlineStyle: 'soft'   },
+  badge_icon:      { size: 64,  category: 'none',      bgMode: 'transparent', paletteSize: 16,  outlineStyle: 'bold'   },
+  sci_fi:          { size: 128, category: 'none',      bgMode: 'scene',       paletteSize: 32,  outlineStyle: 'soft'   },
+  horror:          { size: 128, category: 'none',      bgMode: 'scene',       paletteSize: 32,  outlineStyle: 'bold'   },
+  raw:             { size: 512, category: 'none',      bgMode: 'dark',        paletteSize: 64,  outlineStyle: 'none'   },
+};
+
+// Placeholder text per preset — eliminates blank textarea for new users
+const PRESET_PLACEHOLDERS: Record<StylePreset, string> = {
+  rpg_icon:        'e.g. iron sword, serrated edge, battle damage',
+  weapon_icon:     'e.g. obsidian dagger, curved black blade',
+  character_idle:  'e.g. knight in plate armor, friendly face',
+  character_side:  'e.g. rogue in leather armor, side view',
+  top_down_char:   'e.g. warrior holding sword, top-down view',
+  isometric:       'e.g. stone tower with battlements, isometric',
+  chibi:           'e.g. cute mage with staff, chibi style',
+  portrait:        'e.g. elven ranger, expressive eyes, detailed face',
+  emoji:           'e.g. fire explosion, simple and bold',
+  tileset:         'e.g. stone dungeon floor, cracked and mossy',
+  nature_tile:     'e.g. lush forest floor with scattered wildflowers',
+  sprite_sheet:    'e.g. warrior character, multiple poses',
+  animated_effect: 'e.g. magic explosion, orange and gold burst',
+  game_ui:         'e.g. health bar frame, stone and gold border',
+  badge_icon:      'e.g. shield icon, flat design, dark theme',
+  sci_fi:          'e.g. energy cannon, neon blue accents',
+  horror:          'e.g. haunted grave, eerie fog, dark atmosphere',
+  raw:             'Describe exactly what you want to generate…',
+};
+
+// Controls visible per tool
+const TOOL_CONTROLS: Record<Tool, {
+  showPresets:      boolean;
+  showCategory:     boolean;
+  showEra:          boolean;
+  showPalette:      boolean;
+  showOutline:      boolean;
+  showBgMode:       boolean;
+  showAnimControls: boolean;
+  showDirControls:  boolean;
+  showMaskUpload:   boolean;
+  showRefImage:     boolean;
+  showMapSize:      boolean;
+}> = {
+  generate: { showPresets: true,  showCategory: true,  showEra: true,  showPalette: true,  showOutline: true,  showBgMode: true,  showAnimControls: false, showDirControls: false, showMaskUpload: false, showRefImage: false, showMapSize: false },
+  animate:  { showPresets: true,  showCategory: false, showEra: true,  showPalette: false, showOutline: false, showBgMode: true,  showAnimControls: true,  showDirControls: false, showMaskUpload: false, showRefImage: true,  showMapSize: false },
+  rotate:   { showPresets: true,  showCategory: false, showEra: true,  showPalette: false, showOutline: false, showBgMode: true,  showAnimControls: false, showDirControls: true,  showMaskUpload: false, showRefImage: true,  showMapSize: false },
+  inpaint:  { showPresets: true,  showCategory: true,  showEra: false, showPalette: false, showOutline: false, showBgMode: false, showAnimControls: false, showDirControls: false, showMaskUpload: true,  showRefImage: true,  showMapSize: false },
+  scene:    { showPresets: true,  showCategory: false, showEra: true,  showPalette: true,  showOutline: false, showBgMode: false, showAnimControls: false, showDirControls: false, showMaskUpload: false, showRefImage: false, showMapSize: true  },
+};
+
+// Size display labels
+const SIZE_LABELS: Record<PixelSize, string> = {
+  32:  'Tiny',
+  64:  'Standard',
+  128: 'Detailed',
+  256: 'Large',
+  512: 'Full',
+};
 
 const STYLE_PRESETS: { id: StylePreset; label: string; description: string }[] = [
   { id: 'rpg_icon',       label: 'RPG Icon',        description: 'Dark bg, bold silhouette'       },
@@ -1048,12 +1146,17 @@ function GenerateForm({
   setPrompt,
   negPrompt,
   setNegPrompt,
+  showAdvanced,
+  setShowAdvanced,
   size,
   setSize,
   aspectRatio,
   setAspectRatio,
   stylePreset,
   setStylePreset,
+  onPresetSelect,
+  presetCategory,
+  setPresetCategory,
   assetCategory,
   setAssetCategory,
   pixelEra,
@@ -1091,12 +1194,17 @@ function GenerateForm({
   setPrompt: (v: string) => void;
   negPrompt: string;
   setNegPrompt: (v: string) => void;
+  showAdvanced: boolean;
+  setShowAdvanced: (v: boolean) => void;
   size: PixelSize;
   setSize: (v: PixelSize) => void;
   aspectRatio: AspectRatio;
   setAspectRatio: (v: AspectRatio) => void;
   stylePreset: StylePreset;
   setStylePreset: (v: StylePreset) => void;
+  onPresetSelect: (v: StylePreset) => void;
+  presetCategory: PresetCategory;
+  setPresetCategory: (v: PresetCategory) => void;
   assetCategory: import('@/lib/prompt-builder').AssetCategory;
   setAssetCategory: (v: import('@/lib/prompt-builder').AssetCategory) => void;
   pixelEra: import('@/lib/prompt-builder').PixelEra;
@@ -1130,9 +1238,12 @@ function GenerateForm({
   onGenerate: () => void;
   isLoading: boolean;
 }) {
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [showNeg, setShowNeg] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // Derived control visibility for the active tool
+  const toolControls = TOOL_CONTROLS[tool];
+  // Prompt length color — yellow at 160, red at 190+
+  const promptLen = prompt.length;
+  const promptLenColor = promptLen >= 190 ? '#ef4444' : promptLen >= 160 ? '#eab308' : 'var(--text-disabled)';
 
   // Auto-resize textarea
   useEffect(() => {
@@ -1153,18 +1264,18 @@ function GenerateForm({
         <div className="form-group">
           <div className="flex items-center justify-between mb-1.5">
             <label className="label mb-0">Prompt</label>
-            <span className="text-2xs" style={{ fontSize: '0.65rem', color: 'var(--text-disabled)' }}>
-              {prompt.length}/500
+            <span className="text-2xs" style={{ fontSize: '0.65rem', color: promptLenColor }}>
+              {promptLen}/200
             </span>
           </div>
           <textarea
             ref={textareaRef}
             className="textarea"
-            placeholder={`Describe what to ${tool === 'generate' ? 'generate' : tool}…`}
+            placeholder={PRESET_PLACEHOLDERS[stylePreset] ?? 'Describe what you want to generate…'}
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value.slice(0, 500))}
+            onChange={(e) => setPrompt(e.target.value.slice(0, 200))}
             rows={3}
-            maxLength={500}
+            maxLength={200}
             style={{ resize: 'none', minHeight: 72 }}
           />
         </div>
@@ -1188,58 +1299,88 @@ function GenerateForm({
           </div>
         </div>
 
-        {/* Neg prompt toggle */}
+        {/* Advanced toggle — contains negative prompt */}
         <button
           className="flex items-center gap-1.5 text-xs self-start transition-colors duration-150"
-          style={{ color: showNeg ? 'var(--text-secondary)' : 'var(--text-disabled)' }}
-          onClick={() => setShowNeg((v) => !v)}
+          style={{ color: showAdvanced ? 'var(--text-secondary)' : 'var(--text-disabled)' }}
+          onClick={() => setShowAdvanced(!showAdvanced)}
         >
-          {showNeg ? '▾' : '▸'}
-          Negative prompt
+          {showAdvanced ? '▾' : '▸'}
+          Advanced
         </button>
 
-        {showNeg && (
-          <div className="form-group animate-fade-in-fast">
-            <textarea
-              className="textarea"
-              placeholder="What to avoid in the output…"
-              value={negPrompt}
-              onChange={(e) => setNegPrompt(e.target.value)}
-              rows={2}
-              style={{ resize: 'none', minHeight: 54 }}
-            />
+        {showAdvanced && (
+          <div className="flex flex-col gap-2 animate-fade-in-fast">
+            <div className="form-group">
+              <label className="label mb-1" style={{ fontSize: '0.72rem' }}>Negative prompt</label>
+              <textarea
+                className="textarea"
+                placeholder="What to avoid in the output…"
+                value={negPrompt}
+                onChange={(e) => setNegPrompt(e.target.value)}
+                rows={2}
+                style={{ resize: 'none', minHeight: 54 }}
+              />
+            </div>
           </div>
         )}
       </div>
 
-      {/* Style preset */}
+      {/* Style preset — always visible, categorized tabs */}
       <SectionHeader>Style Preset</SectionHeader>
-      <div className="p-4">
-        <div className="grid grid-cols-2 gap-1.5">
-          {STYLE_PRESETS.map((preset) => (
+      <div className="px-4 pb-1">
+        {/* Category tabs */}
+        <div className="flex gap-1 mb-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          {PRESET_CATEGORIES.map((cat) => (
             <button
-              key={preset.id}
-              onClick={() => setStylePreset(preset.id)}
-              className="flex flex-col gap-0.5 p-2 rounded-md text-left transition-all duration-150"
+              key={cat.id}
+              onClick={() => setPresetCategory(cat.id)}
+              className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full transition-all duration-150"
               style={{
-                background: stylePreset === preset.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
-                border: `1px solid ${stylePreset === preset.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
-                color: stylePreset === preset.id ? 'var(--accent)' : 'var(--text-secondary)',
+                background: presetCategory === cat.id ? 'var(--accent-dim)' : 'transparent',
+                border: `1px solid ${presetCategory === cat.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                color: presetCategory === cat.id ? 'var(--accent)' : 'var(--text-muted)',
+                fontSize: '0.68rem',
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
               }}
             >
-              <span className="text-xs font-medium">{preset.label}</span>
-              <span
-                className="text-2xs leading-tight"
-                style={{ fontSize: '0.6rem', color: stylePreset === preset.id ? 'var(--text-muted)' : 'var(--text-disabled)' }}
-              >
-                {preset.description}
-              </span>
+              {cat.label}
             </button>
           ))}
         </div>
+        {/* Preset grid — filtered by category */}
+        <div className="grid grid-cols-2 gap-1.5 pb-2">
+          {PRESETS_BY_CATEGORY[presetCategory].map((pid) => {
+            const preset = STYLE_PRESETS.find(p => p.id === pid);
+            if (!preset) return null;
+            return (
+              <button
+                key={preset.id}
+                onClick={() => onPresetSelect(preset.id)}
+                className="flex flex-col gap-0.5 p-2 rounded-md text-left transition-all duration-150"
+                style={{
+                  background: stylePreset === preset.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                  border: `1px solid ${stylePreset === preset.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                  color: stylePreset === preset.id ? 'var(--accent)' : 'var(--text-secondary)',
+                }}
+              >
+                <span className="text-xs font-medium">{preset.label}</span>
+                <span
+                  className="text-2xs leading-tight"
+                  style={{ fontSize: '0.6rem', color: stylePreset === preset.id ? 'var(--text-muted)' : 'var(--text-disabled)' }}
+                >
+                  {preset.description}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Asset Category */}
+      {/* Asset Category — only for Sprite + Edit tools */}
+      {toolControls.showCategory && (
+        <>
       <SectionHeader>Asset Category</SectionHeader>
       <div className="p-4">
         <div className="grid grid-cols-4 gap-1">
@@ -1276,8 +1417,12 @@ function GenerateForm({
           ))}
         </div>
       </div>
+        </>
+      )}
 
-      {/* Pixel Era */}
+      {/* Pixel Era — hidden for Inpaint (uses original image's era) */}
+      {toolControls.showEra && (
+        <>
       <SectionHeader>Pixel Era</SectionHeader>
       <div className="p-4">
         <div className="flex gap-1.5 flex-wrap">
@@ -1305,8 +1450,12 @@ function GenerateForm({
           ))}
         </div>
       </div>
+        </>
+      )}
 
-      {/* Background & Outline */}
+      {/* Background — hidden for Inpaint + Tileset */}
+      {toolControls.showBgMode && (
+        <>
       <SectionHeader>Background</SectionHeader>
       <div className="p-4">
         <div className="flex gap-1.5">
@@ -1330,38 +1479,44 @@ function GenerateForm({
           ))}
         </div>
       </div>
+        </>
+      )}
 
-      {/* Outline & Palette */}
-      <SectionHeader>Outline & Palette</SectionHeader>
-      <div className="p-4 flex flex-col gap-3">
-        <div>
-          <div className="flex gap-1.5">
-            {([
-              { id: 'bold', label: '■ Bold'  },
-              { id: 'soft', label: '▫ Soft'  },
-              { id: 'none', label: '○ None'  },
-              { id: 'glow', label: '✦ Glow'  },
-            ] as { id: import('@/lib/prompt-builder').OutlineStyle; label: string }[]).map((o) => (
-              <button
-                key={o.id}
-                onClick={() => setOutlineStyle(o.id)}
-                className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
-                style={{
-                  background: outlineStyle === o.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
-                  border: `1px solid ${outlineStyle === o.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
-                  color: outlineStyle === o.id ? 'var(--accent)' : 'var(--text-muted)',
-                }}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
+      {/* Outline (hidden for Animate, Directions, Tileset) */}
+      {toolControls.showOutline && (
+        <>
+      <SectionHeader>Outline</SectionHeader>
+      <div className="px-4 pb-4">
+        <div className="flex gap-1.5">
+          {([
+            { id: 'bold', label: '■ Bold'  },
+            { id: 'soft', label: '▫ Soft'  },
+            { id: 'none', label: '○ None'  },
+            { id: 'glow', label: '✦ Glow'  },
+          ] as { id: import('@/lib/prompt-builder').OutlineStyle; label: string }[]).map((o) => (
+            <button
+              key={o.id}
+              onClick={() => setOutlineStyle(o.id)}
+              className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+              style={{
+                background: outlineStyle === o.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                border: `1px solid ${outlineStyle === o.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                color: outlineStyle === o.id ? 'var(--accent)' : 'var(--text-muted)',
+              }}
+            >
+              {o.label}
+            </button>
+          ))}
         </div>
-        <div>
-          <label className="label" style={{ marginBottom: 6, display: 'flex', justifyContent: 'space-between' }}>
-            <span>Palette Colors</span>
-            <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{paletteSize}</span>
-          </label>
+      </div>
+        </>
+      )}
+
+      {/* Palette (hidden for Animate, Directions, Inpaint) */}
+      {toolControls.showPalette && (
+        <>
+      <SectionHeader>Palette Colors</SectionHeader>
+      <div className="px-4 pb-4">
           <div className="flex gap-1.5 flex-wrap">
             {([4, 8, 16, 32, 64, 256] as import('@/lib/prompt-builder').PaletteSize[]).map((p) => (
               <button
@@ -1379,8 +1534,9 @@ function GenerateForm({
               </button>
             ))}
           </div>
-        </div>
       </div>
+        </>
+      )}
 
       {/* Animate-specific controls */}
       {tool === 'animate' && (
@@ -1487,28 +1643,41 @@ function GenerateForm({
       <SectionHeader>Output Size</SectionHeader>
       <div className="p-4">
         <div className="flex gap-1.5 flex-wrap">
-          {SIZES.map((s) => (
-            <button
-              key={s}
-              onClick={() => setSize(s)}
-              className="flex-1 py-2 rounded-md text-xs font-medium transition-all duration-150"
-              style={{
-                background: size === s ? 'var(--accent-dim)' : 'var(--surface-overlay)',
-                border: `1px solid ${size === s ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
-                color: size === s ? 'var(--accent)' : 'var(--text-muted)',
-                minWidth: 42,
-              }}
-            >
-              {s}
-            </button>
-          ))}
+          {SIZES.map((s) => {
+            const recSize = PRESET_CONFIG[stylePreset].size;
+            const isRec = s === recSize;
+            return (
+              <button
+                key={s}
+                onClick={() => setSize(s)}
+                className="flex flex-col items-center flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                style={{
+                  background: size === s ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                  border: `1px solid ${size === s ? 'var(--accent-muted)' : isRec ? 'var(--accent-faint, rgba(99,102,241,.3))' : 'var(--surface-border)'}`,
+                  color: size === s ? 'var(--accent)' : 'var(--text-muted)',
+                  minWidth: 42,
+                  boxShadow: isRec && size !== s ? '0 0 0 1px var(--accent-faint, rgba(99,102,241,.2))' : 'none',
+                }}
+              >
+                <span>{s}</span>
+                <span style={{ fontSize: '0.55rem', color: isRec ? 'var(--accent-muted)' : 'var(--text-disabled)', marginTop: 1 }}>
+                  {SIZE_LABELS[s]}{isRec ? ' ✓' : ''}
+                </span>
+              </button>
+            );
+          })}
         </div>
+        {size < PRESET_CONFIG[stylePreset].size && (
+          <p className="form-hint mt-2" style={{ color: '#eab308' }}>
+            ⚠ Below recommended size — detail loss likely
+          </p>
+        )}
         <p className="form-hint mt-2">
           {(() => {
             const ar = ASPECT_RATIOS.find(a => a.id === aspectRatio) ?? ASPECT_RATIOS[0];
             const w = Math.round(size * ar.w / Math.max(ar.w, ar.h));
             const h = Math.round(size * ar.h / Math.max(ar.w, ar.h));
-            return `Output: ${w}×${h}px. Pixel art is most crisp at 32–128px.`;
+            return `Output: ${w}×${h}px`;
           })()}
         </p>
       </div>
@@ -1603,10 +1772,10 @@ function GenerateForm({
       <div
         className="px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-150"
         style={{ borderTop: '1px solid var(--surface-border)', borderBottom: '1px solid var(--surface-border)' }}
-        onClick={() => setShowAdvanced((v) => !v)}
+        onClick={() => setShowAdvanced(!showAdvanced)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && setShowAdvanced((v) => !v)}
+        onKeyDown={(e) => e.key === 'Enter' && setShowAdvanced(!showAdvanced)}
         aria-expanded={showAdvanced}
       >
         <span className="section-title">Advanced</span>
@@ -1736,6 +1905,7 @@ function StudioInner() {
   const [size, setSize]               = useState<PixelSize>(512);
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('1:1');
   const [stylePreset, setStylePreset] = useState<StylePreset>('rpg_icon');
+  const [presetCategory, setPresetCategory] = useState<PresetCategory>('characters');
   const [seed, setSeed]               = useState('');
   const [steps, setSteps]             = useState(4);
   const [guidance, setGuidance]       = useState(3.5);
@@ -1745,6 +1915,7 @@ function StudioInner() {
   const [batchResults, setBatchResults] = useState<GenerationResult[]>([]);
   const [selectedBatch, setSelectedBatch] = useState<number>(0);
   const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
+  const [showAdvanced, setShowAdvanced] = useState(false); // negative prompt toggle
 
   // Workspace
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(() => {
@@ -1870,6 +2041,17 @@ function StudioInner() {
     return () => window.removeEventListener('keydown', handler);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prompt, provider, size, stylePreset, seed, steps, guidance, negPrompt, isPublic]);
+
+  // Smart preset selection — auto-configures controls, preserves era (user's choice)
+  const handlePresetSelect = useCallback((id: StylePreset) => {
+    const cfg = PRESET_CONFIG[id];
+    setStylePreset(id);
+    setSize(cfg.size);
+    setAssetCategory(cfg.category);
+    setBgMode(cfg.bgMode);
+    setPaletteSize(cfg.paletteSize);
+    setOutlineStyle(cfg.outlineStyle);
+  }, []);
 
   // ── Generate ───────────────────────────────────────────────────────────────
   const handleGenerate = useCallback(async () => {
@@ -2272,12 +2454,17 @@ function StudioInner() {
           setPrompt={setPrompt}
           negPrompt={negPrompt}
           setNegPrompt={setNegPrompt}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
           size={size}
           setSize={setSize}
           aspectRatio={aspectRatio}
           setAspectRatio={setAspectRatio}
           stylePreset={stylePreset}
           setStylePreset={setStylePreset}
+          onPresetSelect={handlePresetSelect}
+          presetCategory={presetCategory}
+          setPresetCategory={setPresetCategory}
           assetCategory={assetCategory}
           setAssetCategory={setAssetCategory}
           pixelEra={pixelEra}
