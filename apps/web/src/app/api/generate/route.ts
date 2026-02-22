@@ -499,16 +499,17 @@ export async function POST(req: NextRequest) {
 // ---------------------------------------------------------------------------
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
-  const limit  = Math.min(Number(searchParams.get('limit')  ?? 20), 100);
-  const cursor = searchParams.get('cursor') ?? undefined;
-  const tool   = searchParams.get('tool')   ?? undefined;
-  const status = searchParams.get('status') ?? undefined;
-  const mode   = searchParams.get('mode')   ?? undefined;
+  const limit     = Math.min(Number(searchParams.get('limit')  ?? 20), 100);
+  const cursor    = searchParams.get('cursor')    ?? undefined;
+  const tool      = searchParams.get('tool')      ?? undefined;
+  const status    = searchParams.get('status')    ?? undefined;
+  const mode      = searchParams.get('mode')      ?? undefined;
+  const projectId = searchParams.get('projectId') ?? undefined;
 
-  // Optional: require auth for ?mine=true
+  // Optional: require auth for ?mine=true or ?projectId=
   let userId: string | undefined;
   const mine = searchParams.get('mine') === 'true';
-  if (mine && !process.env.SELF_HOSTED) {
+  if ((mine || projectId) && !process.env.SELF_HOSTED) {
     try {
       const { auth } = await import('@/lib/auth');
       const session = await auth();
@@ -521,6 +522,17 @@ export async function GET(req: NextRequest) {
   if (status)                          where.status = status;
   if (mode)                            where.mode   = mode;
   if (userId)                          where.userId = userId;
+
+  // projectId filter — verify ownership before applying
+  if (projectId && userId) {
+    try {
+      const project = await prisma.project.findUnique({ where: { id: projectId } });
+      if (project && project.userId === userId) {
+        where.projectId = projectId;
+      }
+      // If project doesn't belong to user, silently ignore filter (returns all their jobs)
+    } catch { /* ignore */ }
+  }
 
   const jobs = await prisma.job.findMany({
     where,

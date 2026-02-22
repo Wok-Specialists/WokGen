@@ -10,6 +10,7 @@ import type {
   BusinessPlatform,
 } from '@/lib/prompt-builder-business';
 import { PLATFORM_DIMENSIONS } from '@/lib/prompt-builder-business';
+import WorkspaceSelector from '@/app/_components/WorkspaceSelector';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -118,6 +119,12 @@ function BusinessStudioInner() {
   const [useHD, setUseHD]               = useState(false);
   const [isPublic, setIsPublic]         = useState(false);
 
+  // Workspace
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('wokgen:workspace:business') ?? null;
+    return null;
+  });
+
   // ── Generation state ──────────────────────────────────────────────────────
   const [jobStatus, setJobStatus]       = useState<JobStatus>('idle');
   const [result, setResult]             = useState<GenerationResult | null>(null);
@@ -204,6 +211,7 @@ function BusinessStudioInner() {
       height:         dims.height,
       quality:        useHD ? 'hd' : 'standard',
       isPublic,
+      ...(activeWorkspaceId ? { projectId: activeWorkspaceId } : {}),
       // Business-specific extra params passed through
       extra: {
         businessTool: activeTool,
@@ -370,6 +378,15 @@ function BusinessStudioInner() {
               <span className="studio-tool-label">{t.label}</span>
             </button>
           ))}
+        </div>
+
+        {/* Workspace selector */}
+        <div className="studio-control-section" style={{ paddingBottom: 0 }}>
+          <WorkspaceSelector
+            mode="business"
+            activeWorkspaceId={activeWorkspaceId}
+            onChange={setActiveWorkspaceId}
+          />
         </div>
 
         {/* Prompt / concept input */}

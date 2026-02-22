@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/components/Toast';
+import WorkspaceSelector from '@/app/_components/WorkspaceSelector';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -1745,6 +1746,12 @@ function StudioInner() {
   const [selectedBatch, setSelectedBatch] = useState<number>(0);
   const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
 
+  // Workspace
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('wokgen:workspace:pixel') ?? null;
+    return null;
+  });
+
   // Generation intelligence controls
   const [assetCategory, setAssetCategory] = useState<import('@/lib/prompt-builder').AssetCategory>('none');
   const [pixelEra, setPixelEra]           = useState<import('@/lib/prompt-builder').PixelEra>('none');
@@ -1825,7 +1832,10 @@ function StudioInner() {
 
   // ── Load history from recent jobs ─────────────────────────────────────────
   useEffect(() => {
-    fetch('/api/generate?limit=20&status=succeeded&mode=pixel')
+    const qs = activeWorkspaceId
+      ? `limit=20&status=succeeded&mode=pixel&projectId=${activeWorkspaceId}`
+      : 'limit=20&status=succeeded&mode=pixel';
+    fetch(`/api/generate?${qs}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.jobs) {
@@ -1835,7 +1845,7 @@ function StudioInner() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [activeWorkspaceId]);
 
   // ── Keyboard shortcuts ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -1945,6 +1955,7 @@ function StudioInner() {
         isPublic,
         quality:        useHD ? 'hd' : 'standard',
         seed:           seedValue,
+        ...(activeWorkspaceId ? { projectId: activeWorkspaceId } : {}),
         ...(apiKeys[provider] ? { apiKey: apiKeys[provider] } : {}),
         ...(provider === 'comfyui' ? { comfyuiHost } : {}),
       });
@@ -2243,6 +2254,15 @@ function StudioInner() {
             </h1>
           </div>
           <ProviderBadge provider={provider} />
+        </div>
+
+        {/* Workspace selector */}
+        <div className="px-4 pt-3 flex-shrink-0">
+          <WorkspaceSelector
+            mode="pixel"
+            activeWorkspaceId={activeWorkspaceId}
+            onChange={setActiveWorkspaceId}
+          />
         </div>
 
         {/* Tool form */}
