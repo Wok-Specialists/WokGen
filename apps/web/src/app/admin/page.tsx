@@ -49,7 +49,7 @@ export default function AdminPage() {
             </p>
           )}
         </div>
-        <Link href="/studio" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>
+        <Link href="/pixel/studio" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>
           ← Studio
         </Link>
       </div>

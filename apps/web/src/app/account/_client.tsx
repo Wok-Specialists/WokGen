@@ -265,7 +265,7 @@ export default function AccountClient({ user, plan, hdCredits }: Props) {
             )}
           </>
         ) : (
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-faint)' }}>No generation history yet. <Link href="/studio" style={{ color: '#a78bfa', textDecoration: 'none' }}>Open Studio →</Link></p>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-faint)' }}>No generation history yet. <Link href="/pixel/studio" style={{ color: '#a78bfa', textDecoration: 'none' }}>Open Studio →</Link></p>
         )}
       </Card>
 
@@ -274,7 +274,7 @@ export default function AccountClient({ user, plan, hdCredits }: Props) {
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <SectionLabel>Recent Generations</SectionLabel>
-            <Link href="/studio" style={{ fontSize: '0.75rem', color: '#a78bfa', textDecoration: 'none' }}>Open Studio →</Link>
+            <Link href="/pixel/studio" style={{ fontSize: '0.75rem', color: '#a78bfa', textDecoration: 'none' }}>Open Studio →</Link>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
             {usage.recent.map((job, i) => (

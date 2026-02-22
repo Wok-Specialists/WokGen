@@ -926,7 +926,7 @@ export default function GalleryPage() {
 
             <div style={{ marginLeft: 'auto' }}>
               <a
-                href="/studio"
+                href="/pixel/studio"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

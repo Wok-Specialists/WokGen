@@ -255,7 +255,7 @@ export default function NotFound() {
           </Link>
 
           <Link
-            href="/studio"
+            href="/pixel/studio"
             style={{
               display:        'inline-flex',
               alignItems:     'center',
