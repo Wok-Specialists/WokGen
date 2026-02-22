@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const LEFT_LINKS = [
   { label: 'Studio',     href: '/studio',                              external: false },
@@ -29,6 +30,9 @@ function NavItem({ label, href, external }: { label: string; href: string; exter
 }
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === '/studio') return null;
+
   return (
     <footer>
       <div className="divider-gradient" />

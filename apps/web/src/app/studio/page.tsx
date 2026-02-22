@@ -601,8 +601,8 @@ function OutputPanel({
       <div className="output-canvas flex-1">
         <div className="empty-state">
           <div
-            className="empty-state-icon animate-float"
-            style={{ fontSize: '2.5rem', animationDuration: '4s' }}
+            className="empty-state-icon"
+            style={{ fontSize: '2.5rem' }}
           >
             ✦
           </div>
@@ -1071,7 +1071,12 @@ function GenerateForm({
           ))}
         </div>
         <p className="form-hint mt-2">
-          Generation is done at {size}×{size}px. Pixel art is most crisp at 32–128px.
+          {(() => {
+            const ar = ASPECT_RATIOS.find(a => a.id === aspectRatio) ?? ASPECT_RATIOS[0];
+            const w = Math.round(size * ar.w / Math.max(ar.w, ar.h));
+            const h = Math.round(size * ar.h / Math.max(ar.w, ar.h));
+            return `Output: ${w}×${h}px. Pixel art is most crisp at 32–128px.`;
+          })()}
         </p>
       </div>
 
@@ -1602,10 +1607,7 @@ function StudioInner() {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div
-      className="flex overflow-hidden"
-      style={{ height: 'calc(100dvh - var(--nav-height, 56px))' }}
-    >
+    <div className="studio-layout">
 
       {/* ── Tool rail (far left) ──────────────────────────────────────────── */}
       <div
@@ -1798,13 +1800,6 @@ function StudioInner() {
               height: 44,
               fontSize: '0.9rem',
               fontWeight: 600,
-              ...(jobStatus === 'pending'
-                ? {}
-                : {
-                    animation: prompt.trim()
-                      ? 'pulse-glow 2.5s ease-in-out infinite'
-                      : 'none',
-                  }),
             }}
             onClick={handleGenerate}
             disabled={!prompt.trim() || jobStatus === 'pending'}
