@@ -13,9 +13,9 @@ const store = new Map<string, Bucket>();
 
 setInterval(() => {
   const now = Date.now();
-  for (const [key, bucket] of store) {
+  Array.from(store.entries()).forEach(([key, bucket]) => {
     if (bucket.resetAt < now) store.delete(key);
-  }
+  });
 }, 5 * 60 * 1000);
 
 function checkInMemory(key: string, maxRequests: number, windowMs: number): { allowed: boolean; retryAfter?: number } {

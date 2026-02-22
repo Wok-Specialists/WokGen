@@ -202,7 +202,7 @@ export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdC
           const isCurrent = plan.id === currentPlanId;
           const isPopular = meta.badge === 'Most Popular';
           const isPaid    = plan.priceUsdCents > 0;
-          const isDowngrade = isPaid && plans.find(p => p.id === currentPlanId)?.priceUsdCents > plan.priceUsdCents;
+          const isDowngrade = isPaid && (plans.find(p => p.id === currentPlanId)?.priceUsdCents ?? 0) > plan.priceUsdCents;
 
           return (
             <div key={plan.id} style={{

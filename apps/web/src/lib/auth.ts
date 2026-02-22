@@ -52,28 +52,40 @@ export const authConfig: NextAuthConfig = {
       if (!isNewUser) return;
       if (!user.id) return;
 
-      const existing = await prisma.subscription.findUnique({
-        where: { userId: user.id },
-      });
-      if (existing) return;
+      try {
+        const existing = await prisma.subscription.findUnique({
+          where: { userId: user.id },
+        });
+        if (existing) return;
 
-      const now = new Date();
-      const periodEnd = new Date(now);
-      periodEnd.setDate(periodEnd.getDate() + 30);
+        // Ensure the free plan row exists (idempotent upsert)
+        await prisma.plan.upsert({
+          where:  { id: 'free' },
+          create: { id: 'free', name: 'Free', priceUsdCents: 0, creditsPerMonth: 0, isUnlimitedStd: true },
+          update: {},
+        });
 
-      await prisma.subscription.create({
-        data: {
-          userId:            user.id,
-          planId:            'free',
-          status:            'active',
-          currentPeriodStart: now,
-          currentPeriodEnd:  periodEnd,
-        },
-      });
+        const now = new Date();
+        const periodEnd = new Date(now);
+        periodEnd.setDate(periodEnd.getDate() + 30);
 
-      // Send welcome email (no-op if RESEND_API_KEY not set)
-      if (user.email) {
-        await sendWelcomeEmail(user.email, user.name ?? undefined).catch(() => {});
+        await prisma.subscription.create({
+          data: {
+            userId:             user.id,
+            planId:             'free',
+            status:             'active',
+            currentPeriodStart: now,
+            currentPeriodEnd:   periodEnd,
+          },
+        });
+
+        // Send welcome email (no-op if RESEND_API_KEY not set)
+        if (user.email) {
+          await sendWelcomeEmail(user.email, user.name ?? undefined).catch(() => {});
+        }
+      } catch (err) {
+        // Non-fatal: log but never block sign-in over a subscription provisioning failure
+        console.error('[auth] Failed to provision Free subscription for new user:', err);
       }
     },
   },

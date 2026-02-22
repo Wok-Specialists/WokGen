@@ -60,8 +60,9 @@ export async function GET(req: NextRequest) {
       ? { createdAt: 'asc' as const }
       : { createdAt: 'desc' as const };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const assets = await prisma.galleryAsset.findMany({
-    where: where as Parameters<typeof prisma.galleryAsset.findMany>[0]['where'],
+    where: where as any,
     orderBy,
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),

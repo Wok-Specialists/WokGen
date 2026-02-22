@@ -11,7 +11,7 @@ services:
     rootDir: apps/web
 
     buildCommand: npm install --legacy-peer-deps && npx prisma generate && npm run build
-    startCommand: npx prisma migrate deploy && node .next/standalone/server.js
+    startCommand: npx prisma db push --accept-data-loss && npx prisma db seed && node .next/standalone/server.js
 
     healthCheckPath: /api/health
 
@@ -55,4 +55,4 @@ databases:
     user: wokgen
     plan: free
     # ⚠️  Render free PostgreSQL expires after 90 days.
-    #     Upgrade plan or recreate and re-run `prisma migrate deploy` before expiry.
+    #     Upgrade plan or recreate and re-run `prisma db push` before expiry.

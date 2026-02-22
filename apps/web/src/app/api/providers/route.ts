@@ -50,11 +50,12 @@ export async function GET() {
     };
   });
 
-  // Determine recommended default — first configured provider,
-  // falling back to "together" (free FLUX) then "comfyui".
+  // Determine recommended default — first configured cloud provider
+  // (replicate, fal, together). Excludes pollinations (always-free, handled
+  // automatically by generate route) and comfyui (local only).
   const defaultProvider =
-    providers.find((p) => p.configured && p.id !== 'comfyui')?.id ??
-    'comfyui';
+    providers.find((p) => p.configured && p.id !== 'comfyui' && p.id !== 'pollinations')?.id ??
+    'replicate'; // fallback — generate route will auto-use pollinations for standard anyway
 
   return NextResponse.json({
     providers,

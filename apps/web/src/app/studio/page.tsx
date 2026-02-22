@@ -1315,7 +1315,7 @@ function StudioInner() {
         resultUrl:    data.resultUrl as string ?? null,
         resultUrls:   data.resultUrls as string[] ?? null,
         durationMs:   data.durationMs as number | undefined,
-        resolvedSeed: data.resolvedSeed,
+        resolvedSeed: data.resolvedSeed as number | undefined,
       };
 
       setResult(gen);
@@ -1325,7 +1325,7 @@ function StudioInner() {
       if (gen.resultUrl) {
         setHistory((prev) => [
           {
-            id:        data.job.id,
+            id:        (data.job as Record<string, unknown> | null)?.id as string ?? gen.jobId,
             tool:      activeTool,
             prompt:    prompt.trim(),
             resultUrl: gen.resultUrl,

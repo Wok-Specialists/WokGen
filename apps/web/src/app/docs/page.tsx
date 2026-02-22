@@ -858,9 +858,9 @@ npm run start        # serves at http://localhost:3000`}
           rows={[
             [<InlineCode>DATABASE_URL</InlineCode>, '✓', '—', 'DB connection — file:./dev.db for SQLite; Neon postgres URL for production'],
             [<InlineCode>AUTH_SECRET</InlineCode>, 'hosted', '—', 'NextAuth v5 JWT secret — generate with: openssl rand -base64 32'],
-            [<InlineCode>GOOGLE_CLIENT_ID</InlineCode>, 'hosted', '—', 'Google OAuth app client ID'],
-            [<InlineCode>GOOGLE_CLIENT_SECRET</InlineCode>, 'hosted', '—', 'Google OAuth app client secret'],
-            [<InlineCode>NEXTAUTH_URL</InlineCode>, 'hosted', '—', 'Canonical URL, e.g. https://wokgen.wokspec.org'],
+            [<InlineCode>AUTH_GITHUB_ID</InlineCode>, 'hosted', '—', 'GitHub OAuth app client ID'],
+            [<InlineCode>AUTH_GITHUB_SECRET</InlineCode>, 'hosted', '—', 'GitHub OAuth app client secret'],
+            [<InlineCode>AUTH_URL</InlineCode>, 'hosted', '—', 'Canonical URL, e.g. https://wokgen.wokspec.org (NextAuth v5)'],
             [<InlineCode>REPLICATE_API_TOKEN</InlineCode>, '—', '—', 'Required for HD generation (Replicate FLUX/SDXL)'],
             [<InlineCode>FAL_API_KEY</InlineCode>, '—', '—', 'fal.ai API key (optional HD provider)'],
             [<InlineCode>COMFYUI_HOST</InlineCode>, '—', 'http://127.0.0.1:8188', 'ComfyUI base URL'],
