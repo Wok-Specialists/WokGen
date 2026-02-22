@@ -8,6 +8,7 @@ import {
 } from '@/lib/providers';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { sendLowCreditsEmail } from '@/lib/email';
+import { isSupportedMode, getMode } from '@/lib/modes';
 import type { ProviderName, Tool, GenerateParams } from '@/lib/providers';
 
 // ---------------------------------------------------------------------------
@@ -119,6 +120,7 @@ export async function POST(req: NextRequest) {
   const {
     tool       = 'generate',
     provider   = detectProvider(),
+    mode       = 'pixel',        // product line: pixel | business | vector | emoji | uiux
     prompt,
     negPrompt,
     width      = 512,
@@ -132,6 +134,7 @@ export async function POST(req: NextRequest) {
     backgroundMode,
     outlineStyle,
     paletteSize,
+    projectId,
     isPublic   = false,
     // BYOK fields — only used in self-hosted mode; stripped in hosted mode
     apiKey: byokKey,
@@ -140,18 +143,26 @@ export async function POST(req: NextRequest) {
     extra,
   } = body;
 
+  // Resolve and validate mode
+  const resolvedMode = isSupportedMode(mode) ? mode : 'pixel';
+  const modeContract = getMode(resolvedMode);
+
   // In hosted mode: ignore any client-supplied provider keys
   const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
   const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
-  // In hosted mode: use Replicate for HD requests.
-  // For standard: prefer Together → fal → HuggingFace → Pollinations (free fallback).
+  // In hosted mode: use mode-specific HD model; standard falls back through chain.
   const resolvedProvider: ProviderName = isSelfHosted
     ? (provider as ProviderName)
-    : useHD ? 'replicate'
+    : useHD ? (modeContract.models.hdProvider as ProviderName)
     : process.env.TOGETHER_API_KEY ? 'together'
     : process.env.FAL_KEY ? 'fal'
     : process.env.HF_TOKEN ? 'huggingface'
-    : 'pollinations'; // last resort — no key needed but may have downtime
+    : 'pollinations';
+
+  // Override model for HD if mode specifies a specific model
+  const effectiveModelOverride = useHD && modeContract.models.hdModelId && !modelOverride
+    ? modeContract.models.hdModelId
+    : (typeof modelOverride === 'string' ? modelOverride : undefined);
 
   // Guard: HD requires REPLICATE_API_TOKEN on server
   if (useHD && !process.env.REPLICATE_API_TOKEN) {
@@ -227,6 +238,8 @@ export async function POST(req: NextRequest) {
           seed:       typeof seed === 'number' && seed > 0 ? seed : null,
           isPublic:   Boolean(isPublic),
           params:     extra ? JSON.stringify(extra) : null,
+          mode:       resolvedMode,
+          ...(typeof projectId === 'string' ? { projectId } : {}),
           ...(authedUserId ? { userId: authedUserId } : {}),
         },
       });
@@ -254,7 +267,7 @@ export async function POST(req: NextRequest) {
     backgroundMode: typeof backgroundMode === 'string' ? backgroundMode as GenerateParams['backgroundMode'] : undefined,
     outlineStyle:   typeof outlineStyle === 'string' ? outlineStyle as GenerateParams['outlineStyle'] : undefined,
     paletteSize:    typeof paletteSize === 'number' ? paletteSize as GenerateParams['paletteSize'] : undefined,
-    modelOverride:  typeof modelOverride === 'string' ? modelOverride : undefined,
+    modelOverride:  effectiveModelOverride,
     extra:          extra as Record<string, unknown> | undefined,
   };
 
@@ -378,6 +391,7 @@ export async function POST(req: NextRequest) {
           provider: usedProvider,
           prompt:   String(prompt).trim(),
           isPublic: true,
+          mode:     resolvedMode,
         },
       }).catch((err) => {
         console.error('[generate] GalleryAsset creation failed:', err);

@@ -6,6 +6,7 @@ import { NavLink } from './_components/NavLink';
 import { Footer } from './_components/Footer';
 import { NavAuth } from './_components/NavAuth';
 import { Providers } from './_components/Providers';
+import { ModeSwitcher } from './_components/ModeSwitcher';
 
 export const dynamic = 'force-dynamic';
 
@@ -140,6 +141,7 @@ export default function RootLayout({
       <body className={dmSans.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Providers>
           <NavBar />
+          <ModeSwitcher />
           <main id="main-content" style={{ flex: 1 }}>{children}</main>
           <Footer />
         </Providers>

@@ -1,0 +1,32 @@
+import { pixelMode } from './pixel';
+import { businessMode } from './business';
+import { vectorMode } from './vector';
+import { emojiMode } from './emoji';
+import { uiuxMode } from './uiux';
+import type { ModeContract, ModeId } from './types';
+
+// ---------------------------------------------------------------------------
+// Mode registry — all product lines
+// ---------------------------------------------------------------------------
+export const MODES: Record<ModeId, ModeContract> = {
+  pixel:    pixelMode,
+  business: businessMode,
+  vector:   vectorMode,
+  emoji:    emojiMode,
+  uiux:     uiuxMode,
+};
+
+export const MODES_LIST: ModeContract[] = Object.values(MODES);
+
+export const LIVE_MODES = MODES_LIST.filter(m => m.status === 'live' || m.status === 'beta');
+export const COMING_SOON_MODES = MODES_LIST.filter(m => m.status === 'coming_soon');
+
+export function getMode(id: string): ModeContract {
+  return MODES[id as ModeId] ?? MODES.pixel;
+}
+
+export function isSupportedMode(id: unknown): id is ModeId {
+  return typeof id === 'string' && id in MODES;
+}
+
+export type { ModeContract, ModeId } from './types';

@@ -32,6 +32,7 @@ model User {
   accounts     Account[]
   sessions     Session[]
   jobs         Job[]
+  projects     Project[]
   subscription Subscription?
   usagePeriods UsagePeriod[]
 }
@@ -182,6 +183,13 @@ model Job {
   /// ISO-8601 timestamp string of external provider prediction (for polling)
   providerJobId String?
 
+  /// Product line that created this job: pixel | business | vector | emoji | uiux
+  mode      String   @default("pixel")
+
+  /// Optional project this job belongs to
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -191,8 +199,10 @@ model Job {
   @@index([userId])
   @@index([status])
   @@index([tool])
+  @@index([mode, isPublic, createdAt])
   @@index([isPublic, createdAt])
   @@index([createdAt])
+  @@index([projectId])
 }
 
 // ---------------------------------------------------------------------------
@@ -237,11 +247,44 @@ model GalleryAsset {
   /// SHA-256 of the image bytes (for dedup)
   hash      String?
 
+  /// Product line: pixel | business | vector | emoji | uiux
+  mode      String   @default("pixel")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([isPublic, createdAt])
+  @@index([mode, isPublic, createdAt])
   @@index([tool])
   @@index([rarity])
   @@index([hash])
+}
+
+// ---------------------------------------------------------------------------
+// Project — typed workspace per mode
+// Mode is immutable after creation. A job can belong to one project.
+// ---------------------------------------------------------------------------
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+
+  /// Product line: pixel | business | vector | emoji | uiux (immutable after creation)
+  mode        String
+
+  name        String
+  description String?
+
+  /// JSON-encoded mode-specific project settings
+  settings    String?
+
+  isArchived  Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs Job[]
+
+  @@index([userId, mode])
+  @@index([userId, isArchived])
 }

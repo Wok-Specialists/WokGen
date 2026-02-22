@@ -11,6 +11,8 @@ import { prisma } from '@/lib/db';
 //   rarity?   string   filter by rarity
 //   search?   string   substring match on prompt / title
 //   sort?     string   "newest" | "oldest"  (default: "newest")
+//   mode?     string   filter by product line: pixel | business | vector | emoji | uiux
+//   mine?     string   "true" — return only the authenticated user's assets
 //
 // Returns an array of public GalleryAssets with pagination metadata.
 // ---------------------------------------------------------------------------
@@ -23,14 +25,28 @@ export async function GET(req: NextRequest) {
   const rarity = searchParams.get('rarity')  ?? undefined;
   const search = searchParams.get('search')  ?? undefined;
   const sort   = searchParams.get('sort')    ?? 'newest';
+  const mode   = searchParams.get('mode')    ?? undefined;
+  const mine   = searchParams.get('mine')    === 'true';
+
+  // For "mine" filter, require auth
+  let authedUserId: string | null = null;
+  if (mine) {
+    const { auth } = await import('@/lib/auth');
+    const session = await auth();
+    authedUserId = session?.user?.id ?? null;
+    if (!authedUserId) {
+      return NextResponse.json({ error: 'Authentication required for personal gallery.' }, { status: 401 });
+    }
+  }
 
   // Build the where clause
-  const where: Record<string, unknown> = {
-    isPublic: true,
-  };
+  const where: Record<string, unknown> = mine && authedUserId
+    ? { job: { userId: authedUserId } }
+    : { isPublic: true };
 
   if (tool)   where.tool   = tool;
   if (rarity) where.rarity = rarity;
+  if (mode)   where.mode   = mode;
 
   // Prisma SQLite doesn't support full-text search natively;
   // use contains (case-insensitive via mode: 'insensitive' on postgres;
@@ -78,6 +94,7 @@ export async function GET(req: NextRequest) {
       tags:      true,
       rarity:    true,
       isPublic:  true,
+      mode:      true,
       createdAt: true,
     },
   });
