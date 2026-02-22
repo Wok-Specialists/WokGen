@@ -138,10 +138,14 @@ export async function POST(req: NextRequest) {
   // In hosted mode: ignore any client-supplied provider keys
   const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
   const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
-  // In hosted mode: use Replicate for HD requests, Pollinations for standard
+  // In hosted mode: use Replicate for HD requests.
+  // For standard: prefer Together.ai (free FLUX, more reliable) if key is set, else Pollinations.
   const resolvedProvider: ProviderName = isSelfHosted
     ? (provider as ProviderName)
-    : useHD ? 'replicate' : 'pollinations';
+    : useHD ? 'replicate'
+    : process.env.TOGETHER_API_KEY ? 'together'
+    : process.env.FAL_KEY ? 'fal'
+    : 'pollinations';
 
   // Guard: HD requires REPLICATE_API_TOKEN on server
   if (useHD && !process.env.REPLICATE_API_TOKEN) {
