@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from 'next-auth/providers/google';
 import { prisma } from '@/lib/db';
+import { sendWelcomeEmail } from '@/lib/email';
 import type { NextAuthConfig } from 'next-auth';
 
 // ---------------------------------------------------------------------------
@@ -69,6 +70,11 @@ export const authConfig: NextAuthConfig = {
           currentPeriodEnd:  periodEnd,
         },
       });
+
+      // Send welcome email (no-op if RESEND_API_KEY not set)
+      if (user.email) {
+        await sendWelcomeEmail(user.email, user.name ?? undefined).catch(() => {});
+      }
     },
   },
 };

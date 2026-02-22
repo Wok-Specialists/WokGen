@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
+import { sendBillingReceiptEmail, sendSubscriptionCanceledEmail } from '@/lib/email';
 import type Stripe from 'stripe';
 
 // Raw body required for Stripe signature verification
@@ -125,6 +126,7 @@ export async function POST(req: NextRequest) {
         const sub = event.data.object as Stripe.Subscription;
         const existing = await prisma.subscription.findFirst({
           where: { stripeSubscriptionId: sub.id },
+          include: { user: true },
         });
         if (!existing) break;
 
@@ -135,6 +137,35 @@ export async function POST(req: NextRequest) {
             planId: 'free',
           },
         });
+
+        // Send cancellation email
+        if (existing.user?.email && existing.currentPeriodEnd) {
+          await sendSubscriptionCanceledEmail(
+            existing.user.email,
+            existing.currentPeriodEnd,
+          ).catch(() => {});
+        }
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const inv = event.data.object as any;
+        const amountPaid: number = (inv.amount_paid ?? 0) / 100; // cents → dollars
+        if (amountPaid <= 0) break; // skip $0 invoices (trials)
+        const customerId = typeof inv.customer === 'string' ? inv.customer : inv.customer?.id;
+        if (!customerId) break;
+        const sub = await prisma.subscription.findFirst({
+          where: { stripeCustomerId: customerId },
+          include: { user: true, plan: true },
+        });
+        if (sub?.user?.email) {
+          await sendBillingReceiptEmail(
+            sub.user.email,
+            amountPaid,
+            sub.plan?.name ?? undefined,
+          ).catch(() => {});
+        }
         break;
       }
 

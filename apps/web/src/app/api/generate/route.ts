@@ -7,6 +7,7 @@ import {
   serializeError,
 } from '@/lib/providers';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { sendLowCreditsEmail } from '@/lib/email';
 import type { ProviderName, Tool, GenerateParams } from '@/lib/providers';
 
 // ---------------------------------------------------------------------------
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     // Guests: 5 req/min; authed users: 20 req/min
     const maxReqs = authedUserId ? 20 : 5;
-    const rl = checkRateLimit(rateLimitKey, maxReqs);
+    const rl = await checkRateLimit(rateLimitKey, maxReqs);
     if (!rl.allowed) {
       return NextResponse.json(
         { error: `Rate limit exceeded. Try again in ${rl.retryAfter}s.` },
@@ -299,6 +300,17 @@ export async function POST(req: NextRequest) {
         }
       } catch (err) {
         console.warn('[generate] Failed to deduct HD credit:', (err as Error).message);
+      }
+
+      // Send low-credits warning email when user hits 5 remaining (once per threshold)
+      if (hdCreditsRemaining) {
+        const totalRemaining = hdCreditsRemaining.monthly + hdCreditsRemaining.topUp;
+        if (totalRemaining === 5) {
+          const user = await prisma.user.findUnique({ where: { id: authedUserId }, select: { email: true } });
+          if (user?.email) {
+            sendLowCreditsEmail(user.email, 5).catch(() => {});
+          }
+        }
       }
     }
 
