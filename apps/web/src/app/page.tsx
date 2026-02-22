@@ -79,6 +79,58 @@ const MODES = [
   },
 ] as const;
 
+const QUICK_PROMPTS = [
+  {
+    mode: 'Pixel',
+    icon: '🗡',
+    label: 'Fantasy sword item icon, RPG style, transparent bg',
+    href: '/pixel/studio?tool=generate&prompt=Fantasy+sword+item+icon+RPG+style+transparent+background',
+    accent: '#a78bfa',
+  },
+  {
+    mode: 'Pixel',
+    icon: '🏰',
+    label: 'Medieval castle tileset, top-down perspective',
+    href: '/pixel/studio?tool=generate&prompt=Medieval+castle+tileset+top-down+perspective+seamless',
+    accent: '#a78bfa',
+  },
+  {
+    mode: 'Business',
+    icon: '⬛',
+    label: 'Minimal tech startup logo mark, dark modern',
+    href: '/business/studio?tool=logo&prompt=Minimal+tech+startup+focused+on+AI+security+dark+modern',
+    accent: '#60a5fa',
+  },
+  {
+    mode: 'Business',
+    icon: '📱',
+    label: 'Product launch social banner, SaaS minimal flat',
+    href: '/business/studio?tool=social&prompt=Product+launch+announcement+SaaS+app+minimal+flat+dark',
+    accent: '#60a5fa',
+  },
+  {
+    mode: 'Pixel',
+    icon: '👾',
+    label: 'Chibi character sprite, front-facing idle pose',
+    href: '/pixel/studio?tool=generate&prompt=Cute+chibi+character+sprite+front-facing+idle+pose',
+    accent: '#a78bfa',
+  },
+  {
+    mode: 'Business',
+    icon: '🌐',
+    label: 'SaaS company web hero, dark tech gradient',
+    href: '/business/studio?tool=web-hero&prompt=Developer+tools+company+homepage+dark+tech+background+clean',
+    accent: '#60a5fa',
+  },
+] as const;
+
+const STATS = [
+  { value: '5',  label: 'Product Modes' },
+  { value: '6+', label: 'AI Providers' },
+  { value: '∞',  label: 'Standard Generations' },
+  { value: '0',  label: 'Setup Required' },
+] as const;
+
 export default function PlatformLanding() {
   return (
     <div className="platform-landing">
@@ -86,21 +138,52 @@ export default function PlatformLanding() {
       {/* ── Platform hero ─────────────────────────────────────────────── */}
       <section className="platform-hero">
         <div className="platform-hero-inner">
+          <div className="platform-hero-eyebrow">
+            <span className="platform-hero-dot platform-hero-dot--pixel" />
+            <span className="platform-hero-dot platform-hero-dot--business" />
+            <span className="platform-hero-dot platform-hero-dot--vector" />
+            <span>Multi-vertical AI generation</span>
+          </div>
           <h1 className="platform-h1">
             One platform.<br />
-            Five asset engines.
+            <span className="platform-h1-accent">Five asset engines.</span>
           </h1>
           <p className="platform-desc">
-            WokGen is a multi-vertical AI asset generation platform.
-            Choose your mode. Generate production-ready assets.
+            WokGen generates production-ready assets across every creative category.
+            Game sprites, brand kits, social banners, icon sets, and code components —
+            each with its own professional pipeline.
           </p>
           <div className="platform-cta-row">
             <Link href="/pixel/studio" className="btn-primary btn-lg">
-              Start with Pixel Studio →
+              Start Free — Pixel Studio →
             </Link>
             <Link href="/business/studio" className="btn-ghost btn-lg">
               Business Studio →
             </Link>
+          </div>
+          <p className="platform-hero-note">
+            No account needed to start. Standard generation is always free.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Quick-try prompts ─────────────────────────────────────────── */}
+      <section className="platform-quicktry">
+        <div className="platform-section-inner">
+          <p className="platform-section-label">Try it now</p>
+          <div className="platform-quicktry-grid">
+            {QUICK_PROMPTS.map(q => (
+              <Link
+                key={q.label}
+                href={q.href}
+                className="platform-quicktry-card"
+                style={{ '--qt-accent': q.accent } as React.CSSProperties}
+              >
+                <span className="platform-quicktry-icon">{q.icon}</span>
+                <span className="platform-quicktry-mode">{q.mode}</span>
+                <span className="platform-quicktry-label">{q.label}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -108,6 +191,7 @@ export default function PlatformLanding() {
       {/* ── Mode cards ────────────────────────────────────────────────── */}
       <section className="platform-modes">
         <div className="platform-modes-inner">
+          <p className="platform-section-label">Choose your engine</p>
           <div className="platform-modes-grid">
             {MODES.map(mode => (
               <Link
@@ -140,6 +224,18 @@ export default function PlatformLanding() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Stats bar ─────────────────────────────────────────────────── */}
+      <section className="platform-stats">
+        <div className="platform-stats-inner">
+          {STATS.map(s => (
+            <div key={s.label} className="platform-stat">
+              <span className="platform-stat-value">{s.value}</span>
+              <span className="platform-stat-label">{s.label}</span>
+            </div>
+          ))}
         </div>
       </section>
 
