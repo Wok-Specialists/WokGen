@@ -11,7 +11,10 @@ import { useToast } from '@/components/Toast';
 
 type Tool = 'generate' | 'animate' | 'rotate' | 'inpaint' | 'scene';
 type Provider = 'replicate' | 'fal' | 'together' | 'comfyui' | 'huggingface' | 'pollinations';
-type StylePreset = 'rpg_icon' | 'emoji' | 'tileset' | 'sprite_sheet' | 'raw' | 'game_ui';
+type StylePreset = 'rpg_icon' | 'emoji' | 'tileset' | 'sprite_sheet' | 'raw' | 'game_ui'
+  | 'character_idle' | 'character_side' | 'top_down_char' | 'isometric' | 'chibi'
+  | 'horror' | 'sci_fi' | 'nature_tile' | 'animated_effect' | 'portrait'
+  | 'badge_icon' | 'weapon_icon';
 type JobStatus = 'idle' | 'pending' | 'succeeded' | 'failed';
 
 interface GenerationResult {
@@ -62,12 +65,24 @@ const TOOLS: { id: Tool; icon: string; label: string; shortLabel: string; kbd: s
 ];
 
 const STYLE_PRESETS: { id: StylePreset; label: string; description: string }[] = [
-  { id: 'rpg_icon',     label: 'RPG Icon',      description: 'Dark bg, bold readable silhouette' },
-  { id: 'emoji',        label: 'Emoji',         description: 'Bright, simple, no background'     },
-  { id: 'tileset',      label: 'Tileset',       description: 'Seamlessly tileable flat tile'      },
-  { id: 'sprite_sheet', label: 'Sprite Sheet',  description: 'Multiple poses on one sheet'        },
-  { id: 'game_ui',      label: 'Game UI',       description: 'HUD element, dark theme widget'     },
-  { id: 'raw',          label: 'Raw',           description: 'No preset — model defaults'         },
+  { id: 'rpg_icon',       label: 'RPG Icon',        description: 'Dark bg, bold silhouette'       },
+  { id: 'weapon_icon',    label: 'Weapon',           description: 'Inventory weapon, no bg'        },
+  { id: 'character_idle', label: 'Character',        description: 'Front-facing game sprite'       },
+  { id: 'character_side', label: 'Side Char',        description: 'Side-scroller sprite'           },
+  { id: 'top_down_char',  label: 'Top-Down',         description: 'Bird-eye character view'        },
+  { id: 'isometric',      label: 'Isometric',        description: '3/4 dimetric projection'        },
+  { id: 'chibi',          label: 'Chibi',            description: 'Super-deformed cute style'      },
+  { id: 'portrait',       label: 'Portrait',         description: 'Character bust/face detail'     },
+  { id: 'emoji',          label: 'Emoji',            description: 'Bright, simple, no background'  },
+  { id: 'tileset',        label: 'Tileset',          description: 'Seamlessly tileable flat tile'  },
+  { id: 'nature_tile',    label: 'Nature Tile',      description: 'Organic seamless terrain tile'  },
+  { id: 'sprite_sheet',   label: 'Sprite Sheet',     description: 'Multiple poses on one sheet'    },
+  { id: 'animated_effect',label: 'Effect',           description: 'High-contrast animation frame'  },
+  { id: 'game_ui',        label: 'Game UI',          description: 'HUD element, dark theme widget' },
+  { id: 'badge_icon',     label: 'Badge',            description: 'App-style flat icon'            },
+  { id: 'sci_fi',         label: 'Sci-Fi',           description: 'Tech aesthetic, neon accents'   },
+  { id: 'horror',         label: 'Horror',           description: 'Dark, desaturated, gritty'      },
+  { id: 'raw',            label: 'Raw',              description: 'No preset — model defaults'     },
 ];
 
 const SIZES = [32, 64, 128, 256, 512] as const;
@@ -102,38 +117,64 @@ const PROVIDER_LABELS: Record<Provider, string> = {
 
 const EXAMPLE_PROMPTS: Record<Tool, string[]> = {
   generate: [
-    'iron sword with ornate crossguard, RPG inventory icon',
+    'iron sword with ornate crossguard, battle-worn blade',
     'health potion, glowing red liquid in crystal vial, cork stopper',
-    'leather shield with iron boss, battle-worn',
-    'fire scroll with golden wax seal',
-    'diamond ring with emerald gemstone',
-    'ancient wooden staff with crystal orb',
-    'assassin dagger, curved black blade',
-    'enchanted bow, glowing bowstring',
+    'leather shield with iron boss, dented edge',
+    'fire scroll, golden wax seal, ancient parchment',
+    'diamond ring with large emerald gemstone',
+    'ancient wooden staff with glowing crystal orb',
+    'assassin dagger, curved black obsidian blade',
+    'enchanted longbow, runes on the limbs, glowing bowstring',
+    'warrior in plate armor, full body, front-facing',
+    'friendly merchant NPC, green cloak, pouch on belt',
+    'skeleton archer enemy, bone bow drawn back',
+    'treasure chest, gold-banded oak, glowing keyhole',
+    'dungeon stone floor tile, cracked and mossy',
+    'forest clearing tile, lush grass with wildflowers',
+    'castle gate UI frame, stone border with torch brackets',
+    'explosion particle effect, orange and white burst',
+    'purple magic portal swirling vortex',
+    'bat monster, cave dweller, wing spread',
+    'wooden barrel, stave bands, RPG prop',
+    'magic wand, twisted wood, star tip glowing',
   ],
   animate: [
-    'fire burning animation, looping flame cycle',
-    'water ripple effect, calm pool surface',
-    'coin spinning, gold glint',
-    'magic portal swirling, purple vortex',
+    'fire spirit creature, idle breathing',
+    'knight warrior character, walking cycle',
+    'water ripple on calm pool surface',
+    'coin spinning, gold glint reflection',
+    'wizard casting fireball spell',
+    'slime enemy, bouncing idle movement',
+    'explosion burst, orange and red particles',
+    'magic orb pulsing, purple energy',
+    'archer character, drawing and releasing bow',
+    'bat flying, wings flapping cycle',
   ],
   rotate: [
-    'warrior character, side-scrolling RPG style',
-    'treasure chest, wooden with iron bands',
-    'magic crystal, faceted gemstone',
-    'wooden barrel, RPG prop',
+    'warrior in full plate armor, turntable character',
+    'treasure chest, 4-direction turntable',
+    'magic crystal orb, faceted gemstone spin',
+    'wooden cart, RPG prop rotation',
+    'goblin enemy, 8-direction sprite sheet',
+    'mage character, staff in hand, turntable',
   ],
   inpaint: [
     'add glowing runes to the blade',
-    'replace the background with a dark dungeon',
-    'add a gem to the center of the shield',
-    'make the potion glow brighter',
+    'replace the background with dark dungeon stone',
+    'add a large ruby gem to the center of the shield',
+    'make the potion glow brighter with inner light',
+    'add flames to the sword edge',
+    'change the armor color to gold and black',
   ],
   scene: [
-    'dark dungeon tileset, stone floor and walls, torches',
-    'forest clearing with trees and flowers',
-    'castle interior, great hall with banners',
-    'desert town market, sand and clay buildings',
+    'dark dungeon corridor, stone floor and walls, wall torches',
+    'forest clearing, lush grass and scattered wildflowers',
+    'castle great hall interior, stone pillars and banners',
+    'desert market town, sandstone buildings, awnings',
+    'snowy mountain peak, ice and pine trees',
+    'volcanic cave, glowing lava pools in stone floor',
+    'underwater ruins, coral-covered stone blocks',
+    'cyberpunk city alley, neon signs and puddles',
   ],
 };
 
@@ -902,6 +943,24 @@ function GenerateForm({
   setAspectRatio,
   stylePreset,
   setStylePreset,
+  assetCategory,
+  setAssetCategory,
+  pixelEra,
+  setPixelEra,
+  bgMode,
+  setBgMode,
+  outlineStyle,
+  setOutlineStyle,
+  paletteSize,
+  setPaletteSize,
+  animationType,
+  setAnimationType,
+  animFrameCount,
+  setAnimFrameCount,
+  animFps,
+  setAnimFps,
+  animLoop,
+  setAnimLoop,
   seed,
   setSeed,
   steps,
@@ -927,6 +986,25 @@ function GenerateForm({
   setAspectRatio: (v: AspectRatio) => void;
   stylePreset: StylePreset;
   setStylePreset: (v: StylePreset) => void;
+  assetCategory: import('@/lib/prompt-builder').AssetCategory;
+  setAssetCategory: (v: import('@/lib/prompt-builder').AssetCategory) => void;
+  pixelEra: import('@/lib/prompt-builder').PixelEra;
+  setPixelEra: (v: import('@/lib/prompt-builder').PixelEra) => void;
+  bgMode: import('@/lib/prompt-builder').BackgroundMode;
+  setBgMode: (v: import('@/lib/prompt-builder').BackgroundMode) => void;
+  outlineStyle: import('@/lib/prompt-builder').OutlineStyle;
+  setOutlineStyle: (v: import('@/lib/prompt-builder').OutlineStyle) => void;
+  paletteSize: import('@/lib/prompt-builder').PaletteSize;
+  setPaletteSize: (v: import('@/lib/prompt-builder').PaletteSize) => void;
+  // Animate-specific
+  animationType: import('@/lib/prompt-builder').AnimationType;
+  setAnimationType: (v: import('@/lib/prompt-builder').AnimationType) => void;
+  animFrameCount: number;
+  setAnimFrameCount: (v: number) => void;
+  animFps: number;
+  setAnimFps: (v: number) => void;
+  animLoop: 'infinite' | 'pingpong' | 'once';
+  setAnimLoop: (v: 'infinite' | 'pingpong' | 'once') => void;
   seed: string;
   setSeed: (v: string) => void;
   steps: number;
@@ -1049,6 +1127,250 @@ function GenerateForm({
           ))}
         </div>
       </div>
+
+      {/* Asset Category */}
+      <SectionHeader>Asset Category</SectionHeader>
+      <div className="p-4">
+        <div className="grid grid-cols-4 gap-1">
+          {([
+            { id: 'none',       emoji: '🎲', label: 'Any'      },
+            { id: 'weapon',     emoji: '⚔️',  label: 'Weapon'   },
+            { id: 'armor',      emoji: '🛡️',  label: 'Armor'    },
+            { id: 'character',  emoji: '🧙',  label: 'Char'     },
+            { id: 'monster',    emoji: '👾',  label: 'Monster'  },
+            { id: 'consumable', emoji: '💊',  label: 'Item'     },
+            { id: 'gem',        emoji: '💎',  label: 'Gem'      },
+            { id: 'structure',  emoji: '🏰',  label: 'Build'    },
+            { id: 'nature',     emoji: '🌿',  label: 'Nature'   },
+            { id: 'ui',         emoji: '🎮',  label: 'UI'       },
+            { id: 'effect',     emoji: '✨',  label: 'Effect'   },
+            { id: 'tile',       emoji: '🗺️',  label: 'Tile'     },
+            { id: 'container',  emoji: '📦',  label: 'Chest'    },
+            { id: 'portrait',   emoji: '🖼️',  label: 'Portrait' },
+            { id: 'vehicle',    emoji: '🚀',  label: 'Vehicle'  },
+          ] as { id: import('@/lib/prompt-builder').AssetCategory; emoji: string; label: string }[]).map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setAssetCategory(cat.id)}
+              className="flex flex-col items-center gap-0.5 py-1.5 px-1 rounded-md transition-all duration-150"
+              style={{
+                background: assetCategory === cat.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                border: `1px solid ${assetCategory === cat.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                color: assetCategory === cat.id ? 'var(--accent)' : 'var(--text-secondary)',
+              }}
+            >
+              <span style={{ fontSize: '1rem', lineHeight: 1 }}>{cat.emoji}</span>
+              <span style={{ fontSize: '0.6rem', fontWeight: 500 }}>{cat.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Pixel Era */}
+      <SectionHeader>Pixel Era</SectionHeader>
+      <div className="p-4">
+        <div className="flex gap-1.5 flex-wrap">
+          {([
+            { id: 'none',    label: 'Auto'     },
+            { id: 'nes',     label: '8-bit NES' },
+            { id: 'gameboy', label: 'Game Boy'  },
+            { id: 'snes',    label: '16-bit'    },
+            { id: 'gba',     label: '32-bit'    },
+            { id: 'modern',  label: 'Modern'    },
+          ] as { id: import('@/lib/prompt-builder').PixelEra; label: string }[]).map((era) => (
+            <button
+              key={era.id}
+              onClick={() => setPixelEra(era.id)}
+              className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+              style={{
+                background: pixelEra === era.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                border: `1px solid ${pixelEra === era.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                color: pixelEra === era.id ? 'var(--accent)' : 'var(--text-muted)',
+                minWidth: 52,
+              }}
+            >
+              {era.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Background & Outline */}
+      <SectionHeader>Background</SectionHeader>
+      <div className="p-4">
+        <div className="flex gap-1.5">
+          {([
+            { id: 'transparent', label: '🔲 None' },
+            { id: 'dark',        label: '🌑 Dark'  },
+            { id: 'scene',       label: '🌄 Scene' },
+          ] as { id: import('@/lib/prompt-builder').BackgroundMode; label: string }[]).map((bg) => (
+            <button
+              key={bg.id}
+              onClick={() => setBgMode(bg.id)}
+              className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+              style={{
+                background: bgMode === bg.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                border: `1px solid ${bgMode === bg.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                color: bgMode === bg.id ? 'var(--accent)' : 'var(--text-muted)',
+              }}
+            >
+              {bg.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Outline & Palette */}
+      <SectionHeader>Outline & Palette</SectionHeader>
+      <div className="p-4 flex flex-col gap-3">
+        <div>
+          <div className="flex gap-1.5">
+            {([
+              { id: 'bold', label: '■ Bold'  },
+              { id: 'soft', label: '▫ Soft'  },
+              { id: 'none', label: '○ None'  },
+              { id: 'glow', label: '✦ Glow'  },
+            ] as { id: import('@/lib/prompt-builder').OutlineStyle; label: string }[]).map((o) => (
+              <button
+                key={o.id}
+                onClick={() => setOutlineStyle(o.id)}
+                className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                style={{
+                  background: outlineStyle === o.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                  border: `1px solid ${outlineStyle === o.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                  color: outlineStyle === o.id ? 'var(--accent)' : 'var(--text-muted)',
+                }}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label className="label" style={{ marginBottom: 6, display: 'flex', justifyContent: 'space-between' }}>
+            <span>Palette Colors</span>
+            <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{paletteSize}</span>
+          </label>
+          <div className="flex gap-1.5 flex-wrap">
+            {([4, 8, 16, 32, 64, 256] as import('@/lib/prompt-builder').PaletteSize[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPaletteSize(p)}
+                className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                style={{
+                  background: paletteSize === p ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                  border: `1px solid ${paletteSize === p ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                  color: paletteSize === p ? 'var(--accent)' : 'var(--text-muted)',
+                  minWidth: 32,
+                }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Animate-specific controls */}
+      {tool === 'animate' && (
+        <>
+          <SectionHeader>Animation Type</SectionHeader>
+          <div className="p-4">
+            <div className="grid grid-cols-2 gap-1.5">
+              {([
+                { id: 'idle',      label: '💤 Idle',       desc: 'Breathing, subtle motion'   },
+                { id: 'walk',      label: '🚶 Walk',       desc: '8-frame walk cycle'          },
+                { id: 'run',       label: '🏃 Run',        desc: 'Fast movement cycle'         },
+                { id: 'attack',    label: '⚔️ Attack',     desc: 'Strike animation'            },
+                { id: 'cast',      label: '✨ Cast',       desc: 'Magic spell release'         },
+                { id: 'death',     label: '💀 Death',      desc: 'Fall and fade out'           },
+                { id: 'fire',      label: '🔥 Fire',       desc: 'Looping flame effect'        },
+                { id: 'magic',     label: '🌟 Magic',      desc: 'Particle burst loop'         },
+                { id: 'explosion', label: '💥 Explode',    desc: 'Expand and dissipate'        },
+                { id: 'water',     label: '🌊 Water',      desc: 'Ripple surface loop'         },
+                { id: 'custom',    label: '🎬 Custom',     desc: 'Describe your own'           },
+              ] as { id: import('@/lib/prompt-builder').AnimationType; label: string; desc: string }[]).map((atype) => (
+                <button
+                  key={atype.id}
+                  onClick={() => setAnimationType(atype.id)}
+                  className="flex flex-col gap-0.5 p-2 rounded-md text-left transition-all duration-150"
+                  style={{
+                    background: animationType === atype.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                    border: `1px solid ${animationType === atype.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                    color: animationType === atype.id ? 'var(--accent)' : 'var(--text-secondary)',
+                  }}
+                >
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>{atype.label}</span>
+                  <span style={{ fontSize: '0.6rem', color: animationType === atype.id ? 'var(--text-muted)' : 'var(--text-disabled)' }}>{atype.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <SectionHeader>GIF Settings</SectionHeader>
+          <div className="p-4 flex flex-col gap-3">
+            <div>
+              <label className="label" style={{ marginBottom: 6, display: 'flex', justifyContent: 'space-between' }}>
+                <span>Frames</span>
+                <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{animFrameCount}</span>
+              </label>
+              <div className="flex gap-1.5">
+                {([2, 4, 6, 8, 12] as number[]).map((fc) => (
+                  <button key={fc} onClick={() => setAnimFrameCount(fc)}
+                    className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                    style={{
+                      background: animFrameCount === fc ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                      border: `1px solid ${animFrameCount === fc ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                      color: animFrameCount === fc ? 'var(--accent)' : 'var(--text-muted)',
+                    }}
+                  >{fc}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="label" style={{ marginBottom: 6, display: 'flex', justifyContent: 'space-between' }}>
+                <span>FPS</span>
+                <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{animFps}</span>
+              </label>
+              <div className="flex gap-1.5">
+                {([4, 8, 12, 18, 24] as number[]).map((f) => (
+                  <button key={f} onClick={() => setAnimFps(f)}
+                    className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                    style={{
+                      background: animFps === f ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                      border: `1px solid ${animFps === f ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                      color: animFps === f ? 'var(--accent)' : 'var(--text-muted)',
+                    }}
+                  >{f}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="label" style={{ marginBottom: 6 }}>Loop Mode</label>
+              <div className="flex gap-1.5">
+                {([
+                  { id: 'infinite', label: '∞ Loop'      },
+                  { id: 'pingpong', label: '↔ Ping-Pong' },
+                  { id: 'once',     label: '▶ Once'      },
+                ] as { id: typeof animLoop; label: string }[]).map((lm) => (
+                  <button key={lm.id} onClick={() => setAnimLoop(lm.id)}
+                    className="flex-1 py-1.5 rounded-md text-xs font-medium transition-all duration-150"
+                    style={{
+                      background: animLoop === lm.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                      border: `1px solid ${animLoop === lm.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                      color: animLoop === lm.id ? 'var(--accent)' : 'var(--text-muted)',
+                    }}
+                  >{lm.label}</button>
+                ))}
+              </div>
+            </div>
+            <p className="form-hint">
+              {animFrameCount} frames @ {animFps}fps = {(animFrameCount / animFps).toFixed(1)}s GIF
+              {animLoop === 'pingpong' ? ` (×2 ping-pong = ${((animFrameCount * 2 - 2) / animFps).toFixed(1)}s)` : ''}
+            </p>
+          </div>
+        </>
+      )}
 
       {/* Output size */}
       <SectionHeader>Output Size</SectionHeader>
@@ -1313,6 +1635,19 @@ function StudioInner() {
   const [selectedBatch, setSelectedBatch] = useState<number>(0);
   const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
 
+  // Generation intelligence controls
+  const [assetCategory, setAssetCategory] = useState<import('@/lib/prompt-builder').AssetCategory>('none');
+  const [pixelEra, setPixelEra]           = useState<import('@/lib/prompt-builder').PixelEra>('none');
+  const [bgMode, setBgMode]               = useState<import('@/lib/prompt-builder').BackgroundMode>('transparent');
+  const [outlineStyle, setOutlineStyle]   = useState<import('@/lib/prompt-builder').OutlineStyle>('bold');
+  const [paletteSize, setPaletteSize]     = useState<import('@/lib/prompt-builder').PaletteSize>(32);
+
+  // Animate tool state
+  const [animationType, setAnimationType] = useState<import('@/lib/prompt-builder').AnimationType>('idle');
+  const [animFrameCount, setAnimFrameCount] = useState(6);
+  const [animFps, setAnimFps]             = useState(8);
+  const [animLoop, setAnimLoop]           = useState<'infinite' | 'pingpong' | 'once'>('infinite');
+
   // Job state
   const [jobStatus, setJobStatus]     = useState<JobStatus>('idle');
   const [result, setResult]           = useState<GenerationResult | null>(null);
@@ -1434,19 +1769,71 @@ function StudioInner() {
 
     try {
       const baseSeed = seed ? parseInt(seed, 10) : Math.floor(Math.random() * 2147483647);
+
+      // ── Animate tool: calls /api/animate → returns a GIF ──────────────────
+      if (activeTool === 'animate') {
+        const animBody = {
+          prompt:         prompt.trim(),
+          animationType,
+          frameCount:     animFrameCount,
+          fps:            animFps,
+          loop:           animLoop,
+          size:           Math.min(genWidth, genHeight),
+          stylePreset,
+          assetCategory:  assetCategory !== 'none' ? assetCategory : undefined,
+          pixelEra:       pixelEra !== 'none' ? pixelEra : undefined,
+          backgroundMode: bgMode,
+          outlineStyle,
+          paletteSize,
+          seed:           baseSeed,
+          quality:        useHD ? 'hd' : 'standard',
+        };
+        const res = await fetch('/api/animate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(animBody),
+        });
+        let data: Record<string, unknown> = {};
+        try { data = await res.json(); } catch { throw new Error(`Server error (HTTP ${res.status})`); }
+        if (!res.ok || !data.ok) throw new Error((data.error as string | undefined) ?? `HTTP ${res.status}`);
+        const gen: GenerationResult = {
+          jobId:        'anim-' + baseSeed,
+          resultUrl:    data.resultUrl as string ?? null,
+          resultUrls:   null,
+          durationMs:   data.durationMs as number | undefined,
+          resolvedSeed: baseSeed,
+        };
+        setResult(gen);
+        setSelectedBatch(0);
+        setBatchResults([gen]);
+        setJobStatus('succeeded');
+        if (gen.resultUrl) {
+          setHistory(prev => [
+            { id: gen.jobId, tool: activeTool, prompt: prompt.trim(), resultUrl: gen.resultUrl, provider: 'huggingface', width: genWidth, height: genHeight, seed: baseSeed, createdAt: new Date().toISOString() },
+            ...prev.slice(0, 49),
+          ]);
+        }
+        return;
+      }
+
       const makeBody = (seedValue: number): Record<string, unknown> => ({
-        tool:        activeTool,
+        tool:           activeTool,
         provider,
-        prompt:      prompt.trim(),
-        negPrompt:   negPrompt.trim() || undefined,
-        width:       genWidth,
-        height:      genHeight,
+        prompt:         prompt.trim(),
+        negPrompt:      negPrompt.trim() || undefined,
+        width:          genWidth,
+        height:         genHeight,
         stylePreset,
+        assetCategory:  assetCategory !== 'none' ? assetCategory : undefined,
+        pixelEra:       pixelEra !== 'none' ? pixelEra : undefined,
+        backgroundMode: bgMode,
+        outlineStyle,
+        paletteSize,
         steps,
         guidance,
         isPublic,
-        quality:     useHD ? 'hd' : 'standard',
-        seed:        seedValue,
+        quality:        useHD ? 'hd' : 'standard',
+        seed:           seedValue,
         ...(apiKeys[provider] ? { apiKey: apiKeys[provider] } : {}),
         ...(provider === 'comfyui' ? { comfyuiHost } : {}),
       });
@@ -1515,8 +1902,10 @@ function StudioInner() {
       setJobStatus('failed');
     }
   }, [
-    activeTool, prompt, negPrompt, size, aspectRatio, stylePreset, steps, guidance,
+    activeTool, prompt, negPrompt, size, aspectRatio, stylePreset, assetCategory, pixelEra,
+    bgMode, outlineStyle, paletteSize, steps, guidance,
     provider, seed, isPublic, apiKeys, comfyuiHost, useHD, refreshCredits, batchCount,
+    animationType, animFrameCount, animFps, animLoop,
   ]);
 
   // ── Download ───────────────────────────────────────────────────────────────
@@ -1732,6 +2121,24 @@ function StudioInner() {
           setAspectRatio={setAspectRatio}
           stylePreset={stylePreset}
           setStylePreset={setStylePreset}
+          assetCategory={assetCategory}
+          setAssetCategory={setAssetCategory}
+          pixelEra={pixelEra}
+          setPixelEra={setPixelEra}
+          bgMode={bgMode}
+          setBgMode={setBgMode}
+          outlineStyle={outlineStyle}
+          setOutlineStyle={setOutlineStyle}
+          paletteSize={paletteSize}
+          setPaletteSize={setPaletteSize}
+          animationType={animationType}
+          setAnimationType={setAnimationType}
+          animFrameCount={animFrameCount}
+          setAnimFrameCount={setAnimFrameCount}
+          animFps={animFps}
+          setAnimFps={setAnimFps}
+          animLoop={animLoop}
+          setAnimLoop={setAnimLoop}
           seed={seed}
           setSeed={setSeed}
           steps={steps}

@@ -24,11 +24,13 @@
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.2",
     "clsx": "2.1.1",
+    "gifenc": "^1.0.3",
     "next": "14.2.35",
     "next-auth": "^5.0.0-beta.30",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "resend": "^6.9.2",
+    "sharp": "^0.34.5",
     "stripe": "^20.3.1",
     "tailwind-merge": "2.3.0"
   },

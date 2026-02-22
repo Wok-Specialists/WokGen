@@ -48,9 +48,37 @@ export interface GenerateParams {
 
   /**
    * Style preset tag — translated into prompt tokens by each provider module.
-   * e.g. "rpg_icon" | "emoji" | "tileset" | "sprite_sheet" | "raw"
    */
   stylePreset?: StylePreset;
+
+  /**
+   * Asset category — enriches prompt with category-specific tokens.
+   * e.g. 'weapon' | 'character' | 'tile' | 'effect'
+   */
+  assetCategory?: import('../prompt-builder').AssetCategory;
+
+  /**
+   * Pixel era / quality tier — injects era-specific palette and style tokens.
+   * e.g. 'nes' | 'snes' | 'gba' | 'modern'
+   */
+  pixelEra?: import('../prompt-builder').PixelEra;
+
+  /**
+   * Background mode for the generated asset.
+   * 'transparent' = no background tokens, 'dark' = dark atmospheric bg,
+   * 'scene' = full environmental context
+   */
+  backgroundMode?: import('../prompt-builder').BackgroundMode;
+
+  /**
+   * Outline style for the pixel art.
+   */
+  outlineStyle?: import('../prompt-builder').OutlineStyle;
+
+  /**
+   * Maximum colors in the palette (4/8/16/32/64/256).
+   */
+  paletteSize?: import('../prompt-builder').PaletteSize;
 
   /**
    * For rotate tool: number of directions (4 or 8)
@@ -80,35 +108,83 @@ export interface GenerateParams {
 // Style preset tokens
 // ---------------------------------------------------------------------------
 export type StylePreset =
-  | 'rpg_icon'      // Classic RPG inventory icon — dark bg, bold silhouette
-  | 'emoji'         // Emoji-scale, bright, simple
-  | 'tileset'       // Seamlessly tileable flat tile
-  | 'sprite_sheet'  // Multiple poses on one sheet
-  | 'raw'           // Minimal steering — model defaults
-  | 'game_ui';      // UI widget / HUD element
+  | 'rpg_icon'          // Classic RPG inventory icon — dark bg, bold silhouette
+  | 'emoji'             // Emoji-scale, bright, simple
+  | 'tileset'           // Seamlessly tileable flat tile
+  | 'sprite_sheet'      // Multiple poses on one sheet
+  | 'raw'               // Minimal steering — model defaults
+  | 'game_ui'           // UI widget / HUD element
+  | 'character_idle'    // Standing game character, centered, front-facing
+  | 'character_side'    // Side-scroller platformer character sprite
+  | 'top_down_char'     // Top-down RPG character sprite
+  | 'isometric'         // 3/4 isometric angle, dimetric projection
+  | 'chibi'             // Super-deformed cute proportions
+  | 'horror'            // Dark, desaturated, high contrast
+  | 'sci_fi'            // Technological, metallic, neon accents
+  | 'nature_tile'       // Organic, seamless, natural color palette
+  | 'animated_effect'   // Bright, high-contrast, designed for animation
+  | 'portrait'          // Character bust/face, detailed expression
+  | 'badge_icon'        // App-style icon, flat colors, rounded form
+  | 'weapon_icon';      // Weapon close-up, inventory item
 
 export const STYLE_PRESET_LABELS: Record<StylePreset, string> = {
-  rpg_icon:     'RPG Icon',
-  emoji:        'Emoji',
-  tileset:      'Tileset',
-  sprite_sheet: 'Sprite Sheet',
-  raw:          'Raw (no preset)',
-  game_ui:      'Game UI',
+  rpg_icon:       'RPG Icon',
+  emoji:          'Emoji',
+  tileset:        'Tileset',
+  sprite_sheet:   'Sprite Sheet',
+  raw:            'Raw',
+  game_ui:        'Game UI',
+  character_idle: 'Character (Idle)',
+  character_side: 'Character (Side)',
+  top_down_char:  'Top-Down Char',
+  isometric:      'Isometric',
+  chibi:          'Chibi',
+  horror:         'Horror',
+  sci_fi:         'Sci-Fi',
+  nature_tile:    'Nature Tile',
+  animated_effect:'Animated Effect',
+  portrait:       'Portrait',
+  badge_icon:     'Badge Icon',
+  weapon_icon:    'Weapon Icon',
 };
 
 /** Extra prompt tokens appended per preset */
 export const STYLE_PRESET_TOKENS: Record<StylePreset, string> = {
   rpg_icon:
-    'game inventory icon, RPG item, dark background, bold readable silhouette, crisp outlines',
+    'game inventory icon, RPG item, dark background, bold readable silhouette, crisp outlines, centered on canvas, single object',
   emoji:
-    'emoji icon, bright colors, simple shape, no background, very small scale readability',
+    'emoji icon, bright saturated colors, simple bold shape, no background, very small scale readability, clean linework',
   tileset:
-    'seamless tile, flat perspective, repeating texture, top-down game tileset, no border',
+    'seamless tile, flat top-down perspective, repeating texture, no visible seams, game tileset, consistent color palette across tiles',
   sprite_sheet:
-    'multiple poses grid, sprite sheet layout, consistent character scale, side view',
+    'sprite sheet layout, multiple animation poses in grid, consistent scale throughout, uniform spacing between frames',
   raw: '',
   game_ui:
-    'game HUD element, UI widget, flat design, dark theme, readable at small size',
+    'game HUD element, UI widget, flat design, dark theme, readable at small size, clean geometric shapes, minimal decoration',
+  character_idle:
+    'standing character pose, front-facing, centered on canvas, full body visible, consistent proportions, game sprite, idle stance',
+  character_side:
+    'side-scrolling character, lateral side view, profile facing right, full body, platformer game sprite, grounded stance',
+  top_down_char:
+    'top-down view character, bird eye perspective, overhead angle, RPG character, all limbs visible from above',
+  isometric:
+    'isometric perspective, 2:1 dimetric projection, 45-degree angle, 3/4 view, isometric game asset, consistent isometric grid',
+  chibi:
+    'chibi style, super-deformed proportions, oversized head, small body, 2:1 head to body ratio, cute and expressive, round features',
+  horror:
+    'dark horror style, desaturated muted palette, high contrast shadows, creepy atmosphere, gritty texture, visible grain, ominous',
+  sci_fi:
+    'sci-fi futuristic style, technological aesthetic, metallic surfaces, neon accent colors, clean geometric shapes, holographic glow',
+  nature_tile:
+    'organic natural tile, earthy color palette, varied organic texture, seamlessly tileable, forest or nature theme',
+  animated_effect:
+    'particle effect sprite, bright vivid colors, high contrast, magic or elemental visual, designed for loop animation, transparent-ready',
+  portrait:
+    'character portrait, bust shot, face and upper body, expressive features, detailed for size, centered composition',
+  badge_icon:
+    'badge or achievement icon, flat design, bold centered symbol, rounded silhouette, clear at small size, high contrast',
+  weapon_icon:
+    'weapon close-up, single weapon, game inventory icon, centered and upright, detailed texture, iconic silhouette, no hands',
 };
 
 // ---------------------------------------------------------------------------

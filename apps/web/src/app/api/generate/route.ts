@@ -127,6 +127,11 @@ export async function POST(req: NextRequest) {
     steps,
     guidance,
     stylePreset,
+    assetCategory,
+    pixelEra,
+    backgroundMode,
+    outlineStyle,
+    paletteSize,
     isPublic   = false,
     // BYOK fields — only used in self-hosted mode; stripped in hosted mode
     apiKey: byokKey,
@@ -235,17 +240,22 @@ export async function POST(req: NextRequest) {
   // 4. Build GenerateParams and run the provider
   // --------------------------------------------------------------------------
   const genParams: GenerateParams = {
-    tool:          tool as Tool,
-    prompt:        String(prompt).trim(),
-    negPrompt:     typeof negPrompt === 'string' ? negPrompt.trim() || undefined : undefined,
-    width:         clampSize(Number(width) || 512),
-    height:        clampSize(Number(height) || 512),
-    seed:          typeof seed === 'number' && seed > 0 ? seed : undefined,
-    steps:         typeof steps === 'number' ? steps : undefined,
-    guidance:      typeof guidance === 'number' ? guidance : undefined,
-    stylePreset:   isValidStylePreset(stylePreset) ? stylePreset : undefined,
-    modelOverride: typeof modelOverride === 'string' ? modelOverride : undefined,
-    extra:         extra as Record<string, unknown> | undefined,
+    tool:           tool as Tool,
+    prompt:         String(prompt).trim(),
+    negPrompt:      typeof negPrompt === 'string' ? negPrompt.trim() || undefined : undefined,
+    width:          clampSize(Number(width) || 512),
+    height:         clampSize(Number(height) || 512),
+    seed:           typeof seed === 'number' && seed > 0 ? seed : undefined,
+    steps:          typeof steps === 'number' ? steps : undefined,
+    guidance:       typeof guidance === 'number' ? guidance : undefined,
+    stylePreset:    isValidStylePreset(stylePreset) ? stylePreset : undefined,
+    assetCategory:  typeof assetCategory === 'string' ? assetCategory as GenerateParams['assetCategory'] : undefined,
+    pixelEra:       typeof pixelEra === 'string' ? pixelEra as GenerateParams['pixelEra'] : undefined,
+    backgroundMode: typeof backgroundMode === 'string' ? backgroundMode as GenerateParams['backgroundMode'] : undefined,
+    outlineStyle:   typeof outlineStyle === 'string' ? outlineStyle as GenerateParams['outlineStyle'] : undefined,
+    paletteSize:    typeof paletteSize === 'number' ? paletteSize as GenerateParams['paletteSize'] : undefined,
+    modelOverride:  typeof modelOverride === 'string' ? modelOverride : undefined,
+    extra:          extra as Record<string, unknown> | undefined,
   };
 
   try {
@@ -475,7 +485,11 @@ function detectProvider(): ProviderName {
 
 const VALID_TOOLS    = new Set(['generate', 'animate', 'rotate', 'inpaint', 'scene']);
 const VALID_PROVIDERS = new Set(['replicate', 'fal', 'together', 'comfyui', 'pollinations', 'huggingface']);
-const VALID_PRESETS  = new Set(['rpg_icon', 'emoji', 'tileset', 'sprite_sheet', 'raw', 'game_ui']);
+const VALID_PRESETS  = new Set([
+  'rpg_icon', 'emoji', 'tileset', 'sprite_sheet', 'raw', 'game_ui',
+  'character_idle', 'character_side', 'top_down_char', 'isometric', 'chibi',
+  'horror', 'sci_fi', 'nature_tile', 'animated_effect', 'portrait', 'badge_icon', 'weapon_icon',
+]);
 
 function isValidTool(v: unknown): v is Tool {
   return typeof v === 'string' && VALID_TOOLS.has(v);

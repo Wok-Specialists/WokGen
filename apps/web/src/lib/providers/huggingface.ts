@@ -9,7 +9,7 @@
  */
 
 import type { ProviderConfig, GenerateParams, GenerateResult, ProviderError } from './types';
-import { STYLE_PRESET_TOKENS } from './types';
+import { buildPrompt, buildNegativePrompt } from '../prompt-builder';
 
 // New HF Inference Router (replaces deprecated api-inference.huggingface.co)
 const HF_ROUTER = 'https://router.huggingface.co/hf-inference/models';
@@ -35,7 +35,23 @@ export async function huggingfaceGenerate(
   }
 
   const model  = (params.modelOverride as string | undefined) ?? DEFAULT_MODEL;
-  const prompt = buildPrompt(params);
+  const prompt = buildPrompt({
+    tool: params.tool,
+    userPrompt: params.prompt,
+    stylePreset: params.stylePreset,
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    backgroundMode: params.backgroundMode,
+    outlineStyle: params.outlineStyle,
+    paletteSize: params.paletteSize,
+    width: params.width,
+    height: params.height,
+  });
+  const negativePrompt = buildNegativePrompt({
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    userNegPrompt: params.negPrompt,
+  });
   const seed   = params.seed != null && params.seed > 0
     ? params.seed
     : Math.floor(Math.random() * 2_147_483_647);
@@ -50,7 +66,7 @@ export async function huggingfaceGenerate(
       width,
       height,
       seed,
-      ...(params.negPrompt ? { negative_prompt: params.negPrompt } : {}),
+      ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
     },
     options: { wait_for_model: true },
   };
@@ -107,19 +123,6 @@ export async function huggingfaceGenerate(
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function buildPrompt(params: GenerateParams): string {
-  const presetTokens = params.stylePreset
-    ? STYLE_PRESET_TOKENS[params.stylePreset]
-    : '';
-  return [
-    'pixel art, game asset, crisp pixel edges, limited color palette',
-    presetTokens,
-    params.prompt.trim(),
-  ]
-    .filter(Boolean)
-    .join(', ');
-}
 
 /** Snap to nearest 64 within [64, 1024] — HF models work best on even multiples */
 function snapSize(n: number): number {

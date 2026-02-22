@@ -10,7 +10,7 @@
  */
 
 import type { ProviderConfig, GenerateParams, GenerateResult } from './types';
-import { STYLE_PRESET_TOKENS } from './types';
+import { buildPrompt, buildNegativePrompt } from '../prompt-builder';
 
 const BASE_URL = 'https://image.pollinations.ai/prompt';
 
@@ -20,17 +20,25 @@ export async function pollinationsGenerate(
 ): Promise<GenerateResult> {
   const t0 = Date.now();
 
-  // Build prompt with style preset tokens
-  const presetTokens = params.stylePreset
-    ? STYLE_PRESET_TOKENS[params.stylePreset]
-    : '';
-  const fullPrompt = [
-    params.prompt.trim(),
-    'pixel art',
-    presetTokens,
-  ]
-    .filter(Boolean)
-    .join(', ');
+  // Build prompt with central prompt builder
+  const fullPrompt = buildPrompt({
+    tool: params.tool,
+    userPrompt: params.prompt,
+    stylePreset: params.stylePreset,
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    backgroundMode: params.backgroundMode,
+    outlineStyle: params.outlineStyle,
+    paletteSize: params.paletteSize,
+    width: params.width,
+    height: params.height,
+    lightweight: true, // Pollinations has a URL length limit — use compact tokens
+  });
+  const negPrompt = buildNegativePrompt({
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    userNegPrompt: params.negPrompt,
+  });
 
   const width  = params.width  ?? 512;
   const height = params.height ?? 512;
@@ -45,8 +53,8 @@ export async function pollinationsGenerate(
   url.searchParams.set('enhance', 'false');
 
   // Negative prompt is not natively supported but we can suffix the main prompt
-  if (params.negPrompt) {
-    url.searchParams.set('negative_prompt', params.negPrompt);
+  if (negPrompt) {
+    url.searchParams.set('negative_prompt', negPrompt);
   }
 
   const timeoutMs = _config.timeoutMs ?? 120_000;

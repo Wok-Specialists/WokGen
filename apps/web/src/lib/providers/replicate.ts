@@ -1,4 +1,5 @@
 import type { GenerateParams, GenerateResult, ProviderError } from './types';
+import { buildPrompt, buildNegativePrompt } from '../prompt-builder';
 
 // ---------------------------------------------------------------------------
 // Models available on Replicate
@@ -108,19 +109,24 @@ function buildInput(
   const isSdxl = model.includes('sdxl');
   const isAnimate = model.includes('zeroscope') || model.includes('animate');
 
-  const pixelArtPrefix =
-    'pixel art icon, game asset, crisp edges, limited palette, 32-color palette, ' +
-    'no anti-aliasing, transparent background, centered single object';
+  const fullPrompt = buildPrompt({
+    tool: params.tool,
+    userPrompt: params.prompt,
+    stylePreset: params.stylePreset,
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    backgroundMode: params.backgroundMode,
+    outlineStyle: params.outlineStyle,
+    paletteSize: params.paletteSize,
+    width: params.width,
+    height: params.height,
+  });
 
-  const fullPrompt = `${pixelArtPrefix}, ${params.prompt}`;
-
-  const negativePrompt = [
-    'blurry, photo, photorealistic, 3d render, noisy, gradient, smooth shading',
-    'anti-aliased, watermark, text, signature, multiple objects, busy background',
-    params.negPrompt ?? '',
-  ]
-    .filter(Boolean)
-    .join(', ');
+  const negativePrompt = buildNegativePrompt({
+    assetCategory: params.assetCategory,
+    pixelEra: params.pixelEra,
+    userNegPrompt: params.negPrompt,
+  });
 
   const seed =
     params.seed != null && params.seed > 0
