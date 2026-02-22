@@ -1176,7 +1176,8 @@ function StudioInner() {
   const [history, setHistory]           = useState<HistoryItem[]>([]);
   const [providers, setProviders]       = useState<ProviderInfo[]>([]);
 
-  // BYOK keys
+  // BYOK keys (only used in self-hosted mode)
+  const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === 'true';
   const [apiKeys, setApiKeys] = useState<Record<Provider, string>>({
     replicate: '',
     fal: '',
@@ -1466,7 +1467,8 @@ function StudioInner() {
           <span style={{ fontSize: '0.52rem' }}>History</span>
         </button>
 
-        {/* Settings */}
+        {/* Settings — only in self-hosted mode */}
+        {isSelfHosted && (
         <button
           className="flex flex-col items-center justify-center gap-1 w-10 h-12 rounded-lg transition-all duration-150 mb-1"
           style={{
@@ -1486,6 +1488,7 @@ function StudioInner() {
           <span style={{ fontSize: 14 }}>⚙</span>
           <span style={{ fontSize: '0.52rem' }}>Config</span>
         </button>
+        )}
       </div>
 
       {/* ── Left panel (controls) ─────────────────────────────────────────── */}
@@ -1611,8 +1614,8 @@ function StudioInner() {
         )}
       </div>
 
-      {/* Settings modal */}
-      {showSettings && (
+      {/* Settings modal — only in self-hosted mode */}
+      {isSelfHosted && showSettings && (
         <SettingsModal
           providers={providers}
           apiKeys={apiKeys}
