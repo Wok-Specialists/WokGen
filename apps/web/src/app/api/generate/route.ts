@@ -273,10 +273,11 @@ export async function POST(req: NextRequest) {
             { statusCode: 503 }
           );
         }
-        // HuggingFace failed → surface the actual error (no Replicate fallback for standard quality)
+        // HuggingFace failed → fall back to Pollinations (always available)
         if (resolvedProvider === 'huggingface') {
-          // Re-throw with HF error so the UI can show the real problem
-          throw err;
+          console.warn('[generate] HuggingFace failed, falling back to Pollinations:', (err as Error).message);
+          actualProvider = 'pollinations';
+          return generate('pollinations', genParams, resolveProviderConfig('pollinations', null, null));
         }
       }
       throw err;

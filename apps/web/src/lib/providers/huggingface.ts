@@ -58,7 +58,7 @@ export async function huggingfaceGenerate(
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Authorization:  `Bearer ${config.apiKey}`,
-    Accept:         'image/png,image/jpeg,*/*',
+    Accept:         'image/jpeg',
   };
 
   const timeoutMs  = config.timeoutMs ?? 120_000;
