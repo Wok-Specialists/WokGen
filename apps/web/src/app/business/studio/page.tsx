@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import type {
   BusinessTool,
   BusinessStyle,
@@ -96,14 +97,18 @@ const EXAMPLE_PROMPTS: Record<BusinessTool, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Business Studio Component
 // ---------------------------------------------------------------------------
-export default function BusinessStudio() {
+// Business Studio Component (inner — needs Suspense for useSearchParams)
+// ---------------------------------------------------------------------------
+function BusinessStudioInner() {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
 
   // ── Tool & controls state ──────────────────────────────────────────────────
-  const [activeTool, setActiveTool]     = useState<BusinessTool>('logo');
-  const [prompt, setPrompt]             = useState('');
+  const [activeTool, setActiveTool]     = useState<BusinessTool>(
+    (searchParams.get('tool') as BusinessTool | null) ?? 'logo'
+  );
+  const [prompt, setPrompt]             = useState(searchParams.get('prompt') ?? '');
   const [style, setStyle]               = useState<BusinessStyle>('corporate_clean');
   const [mood, setMood]                 = useState<BusinessMood>('professional');
   const [industry, setIndustry]         = useState('');
@@ -144,7 +149,11 @@ export default function BusinessStudio() {
   }, []);
 
   // Init prompt
-  useEffect(() => { setPrompt(EXAMPLE_PROMPTS['logo']); }, []);
+  // Only set default prompt if not provided via URL param
+  useEffect(() => {
+    if (!searchParams.get('prompt')) setPrompt(EXAMPLE_PROMPTS[activeTool]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ── Elapsed timer ─────────────────────────────────────────────────────────
   const startTimer = () => {
@@ -617,5 +626,14 @@ export default function BusinessStudio() {
       </aside>
 
     </div>
+  );
+}
+
+// Wrap with Suspense for useSearchParams
+export default function BusinessStudio() {
+  return (
+    <Suspense fallback={<div className="studio-layout" />}>
+      <BusinessStudioInner />
+    </Suspense>
   );
 }
