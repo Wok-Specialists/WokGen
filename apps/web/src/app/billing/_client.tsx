@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface Plan {
   id: string;
@@ -9,76 +10,108 @@ interface Plan {
   creditsPerMonth: number;
 }
 
-interface CreditPack {
-  id: string;
-  name: string;
-  priceUsd: number;
-  credits: number;
-}
-
 interface Props {
   currentPlanId: string;
   stripeEnabled: boolean;
   plans: Plan[];
   hdCredits: { monthly: number; topUp: number };
-  creditPacks: CreditPack[];
+  creditPacks: unknown[];
 }
 
-const CREDIT_PACKS: CreditPack[] = [
-  { id: 'micro',  name: 'Micro',  priceUsd: 1,  credits: 30   },
-  { id: 'small',  name: 'Small',  priceUsd: 3,  credits: 100  },
-  { id: 'medium', name: 'Medium', priceUsd: 8,  credits: 400  },
-  { id: 'large',  name: 'Large',  priceUsd: 20, credits: 1200 },
-];
+// ─── Plan display config ──────────────────────────────────────────────────────
 
-const PLAN_FEATURES: Record<string, string[]> = {
-  free:  ['Unlimited standard (Pollinations)', 'FLUX model', 'Public gallery'],
-  plus:  ['100 HD credits / month', 'Replicate FLUX.1-schnell', 'Unused credits roll into top-up'],
-  pro:   ['500 HD credits / month', 'Replicate FLUX.1-schnell', 'Priority queue'],
-  max:   ['2,000 HD credits / month', 'Replicate FLUX.1-schnell', 'Priority queue', 'Batch export'],
+const PLAN_META: Record<string, {
+  tagline: string;
+  badge?: string;
+  features: string[];
+  perCredit?: string;
+}> = {
+  free: {
+    tagline: 'Start creating. No card needed.',
+    features: [
+      'Unlimited standard generation',
+      'Pollinations FLUX model',
+      'Public gallery access',
+      'Guest or signed-in',
+    ],
+  },
+  plus: {
+    tagline: 'For regular creators.',
+    features: [
+      '100 HD credits / month',
+      'Replicate FLUX.1-schnell',
+      'Saved generation history',
+      'Unused credits roll to top-up',
+      'Everything in Free',
+    ],
+    perCredit: '$0.02',
+  },
+  pro: {
+    tagline: 'Best value for power users.',
+    badge: 'Most Popular',
+    features: [
+      '500 HD credits / month',
+      'Replicate FLUX.1-schnell',
+      'Priority generation queue',
+      'Saved generation history',
+      'Everything in Plus',
+    ],
+    perCredit: '$0.012',
+  },
+  max: {
+    tagline: 'Maximum output, lowest cost.',
+    features: [
+      '2,000 HD credits / month',
+      'Replicate FLUX.1-schnell',
+      'Bulk export',
+      'Priority generation queue',
+      'Everything in Pro',
+    ],
+    perCredit: '$0.0075',
+  },
 };
 
-export default function BillingClient({
-  currentPlanId,
-  stripeEnabled,
-  plans,
-  hdCredits,
-}: Props) {
+// ─── Credit packs ─────────────────────────────────────────────────────────────
+
+const PACKS = [
+  { id: 'micro',  label: 'Micro',  price: '$1',  credits: 30,    perCredit: '$0.033', note: '' },
+  { id: 'small',  label: 'Small',  price: '$3',  credits: 100,   perCredit: '$0.03',  note: '' },
+  { id: 'medium', label: 'Medium', price: '$8',  credits: 400,   perCredit: '$0.02',  note: '' },
+  { id: 'large',  label: 'Large',  price: '$20', credits: 1200,  perCredit: '$0.017', note: 'Best value' },
+] as const;
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdCredits }: Props) {
   const [loading, setLoading] = useState<string | null>(null);
 
   const handleUpgrade = async (planId: string) => {
-    if (planId === 'free') return;
+    if (planId === currentPlanId) return;
     setLoading(planId);
     try {
       const res  = await fetch('/api/billing/checkout', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ planId }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch {
-      alert('Failed to start checkout. Please try again.');
-    } finally {
-      setLoading(null);
-    }
+      else alert(data.error ?? 'Checkout failed.');
+    } catch { alert('Failed to start checkout. Please try again.'); }
+    finally { setLoading(null); }
   };
 
   const handleBuyPack = async (packId: string) => {
     setLoading(`pack-${packId}`);
     try {
       const res  = await fetch('/api/billing/credits', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ packId }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch {
-      alert('Failed to start checkout. Please try again.');
-    } finally {
-      setLoading(null);
-    }
+      else alert(data.error ?? 'Checkout failed.');
+    } catch { alert('Failed to start checkout. Please try again.'); }
+    finally { setLoading(null); }
   };
 
   const handleManage = async () => {
@@ -87,174 +120,238 @@ export default function BillingClient({
       const res  = await fetch('/api/billing/portal', { method: 'POST' });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch {
-      alert('Failed to open billing portal.');
-    } finally {
-      setLoading(null);
-    }
+    } catch { alert('Failed to open billing portal.'); }
+    finally { setLoading(null); }
   };
 
   const totalHd = hdCredits.monthly + hdCredits.topUp;
 
-  return (
-    <main className="billing-page">
+  // Sort plans by price
+  const sortedPlans = [...plans].sort((a, b) => a.priceUsdCents - b.priceUsdCents);
 
-      {/* HD Credit Balance */}
+  return (
+    <main style={{ maxWidth: 1040, margin: '0 auto', padding: '3rem 1.5rem' }}>
+
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
+          Plans & Credits
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 540 }}>
+          Standard quality (Pollinations) is always free — no account needed.
+          HD uses Replicate — subscribe for monthly credits, or buy a one-time pack.
+        </p>
+      </div>
+
+      {/* ── HD Credit balance ────────────────────────────────────────── */}
       {totalHd > 0 && (
-        <div className="credits-banner">
-          <span className="credits-label">HD Credits</span>
-          <span className="credits-value">{hdCredits.monthly} monthly</span>
+        <div style={{
+          display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap',
+          background: 'rgba(167,139,250,.07)', border: '1px solid rgba(167,139,250,.2)',
+          borderRadius: 4, padding: '0.85rem 1.25rem', marginBottom: '2rem',
+        }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#a78bfa' }}>HD Credits</span>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <strong style={{ color: 'var(--text)' }}>{hdCredits.monthly}</strong> monthly remaining
+          </span>
           {hdCredits.topUp > 0 && (
-            <span className="credits-value">+ {hdCredits.topUp} top-up</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text)' }}>{hdCredits.topUp}</strong> top-up bank
+            </span>
           )}
         </div>
       )}
 
-      <div className="billing-header">
-        <h1>Plans</h1>
-        <p>Standard quality (Pollinations) is always free and unlimited. HD uses Replicate — subscribe or buy top-up credits.</p>
-      </div>
-
-      <div className="plans-grid">
-        {plans.map((plan) => {
+      {/* ── Plans grid ──────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '3rem' }}>
+        {sortedPlans.map((plan) => {
+          const meta      = PLAN_META[plan.id] ?? { tagline: '', features: [] };
           const isCurrent = plan.id === currentPlanId;
+          const isPopular = meta.badge === 'Most Popular';
           const isPaid    = plan.priceUsdCents > 0;
-          const features  = PLAN_FEATURES[plan.id] ?? [];
+          const isDowngrade = isPaid && plans.find(p => p.id === currentPlanId)?.priceUsdCents > plan.priceUsdCents;
 
           return (
-            <div key={plan.id} className={`plan-card ${isCurrent ? 'plan-card--current' : ''}`}>
-              {isCurrent && <span className="plan-badge">Current</span>}
-              <h2 className="plan-name">{plan.name}</h2>
-              <div className="plan-price">
-                {plan.priceUsdCents === 0
-                  ? <span className="plan-price-free">Free</span>
-                  : <>
-                      <span className="plan-price-amount">${plan.priceUsdCents / 100}</span>
-                      <span className="plan-price-period">/month</span>
-                    </>
-                }
+            <div key={plan.id} style={{
+              background: 'var(--bg-surface)',
+              border: `1px solid ${isCurrent ? 'rgba(167,139,250,.5)' : isPopular ? 'rgba(167,139,250,.25)' : 'var(--border)'}`,
+              borderRadius: 4,
+              padding: '1.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.85rem',
+              position: 'relative',
+            }}>
+
+              {/* Badges */}
+              {isCurrent && (
+                <span style={{
+                  position: 'absolute', top: '1rem', right: '1rem',
+                  fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
+                  color: '#a78bfa', background: 'rgba(167,139,250,.15)',
+                  border: '1px solid rgba(167,139,250,.3)', borderRadius: 2, padding: '2px 7px',
+                }}>Current</span>
+              )}
+              {isPopular && !isCurrent && (
+                <span style={{
+                  position: 'absolute', top: '1rem', right: '1rem',
+                  fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
+                  color: '#a78bfa', background: 'rgba(167,139,250,.12)',
+                  border: '1px solid rgba(167,139,250,.25)', borderRadius: 2, padding: '2px 7px',
+                }}>Popular</span>
+              )}
+
+              {/* Plan name */}
+              <div>
+                <p style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-faint)', fontFamily: 'var(--font-heading)', marginBottom: '0.3rem' }}>
+                  {plan.name}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
+                  <span style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>
+                    {plan.priceUsdCents === 0 ? '$0' : `$${plan.priceUsdCents / 100}`}
+                  </span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-faint)' }}>
+                    {plan.priceUsdCents === 0 ? 'forever' : '/month'}
+                  </span>
+                </div>
+                {meta.perCredit && (
+                  <p style={{ fontSize: '0.7rem', color: 'var(--text-faint)', marginTop: '0.2rem' }}>
+                    {meta.perCredit}/HD credit
+                  </p>
+                )}
               </div>
-              <ul className="plan-features">
-                {features.map((f) => <li key={f}>{f}</li>)}
+
+              {/* Tagline */}
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
+                {meta.tagline}
+              </p>
+
+              {/* Features */}
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem', flex: 1 }}>
+                {meta.features.map(f => (
+                  <li key={f} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    <span style={{ color: '#a78bfa', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                    {f}
+                  </li>
+                ))}
               </ul>
 
-              {!isCurrent && (
-                <button
-                  className="plan-cta"
-                  onClick={isPaid ? () => handleUpgrade(plan.id) : undefined}
-                  disabled={!stripeEnabled || loading === plan.id}
-                >
-                  {loading === plan.id ? 'Redirecting…' : isPaid ? 'Upgrade' : 'Downgrade'}
-                </button>
-              )}
+              {/* CTA */}
+              <div style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+                {isCurrent ? (
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-faint)', textAlign: 'center', padding: '0.55rem 0' }}>
+                    Your current plan
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleUpgrade(plan.id)}
+                    disabled={!stripeEnabled || !!loading}
+                    style={{
+                      width: '100%', padding: '0.6rem 1rem',
+                      borderRadius: 4,
+                      background: isPopular ? 'linear-gradient(135deg, #6d28d9, #7c3aed)' : 'transparent',
+                      border: isPopular ? 'none' : '1px solid var(--border)',
+                      color: isPopular ? '#fff' : 'var(--text-muted)',
+                      fontSize: '0.83rem', fontWeight: 600, cursor: 'pointer',
+                      opacity: (!stripeEnabled || !!loading) ? 0.5 : 1,
+                      transition: 'opacity 0.15s, background 0.15s',
+                    }}
+                  >
+                    {loading === plan.id ? 'Redirecting…' : isDowngrade ? 'Downgrade' : plan.id === 'free' ? 'Downgrade to Free' : `Upgrade to ${plan.name}`}
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Credit Top-Up Packs */}
-      <div className="section-header">
-        <h2>HD Credit Top-Ups</h2>
-        <p>One-time packs. Credits never expire. Used when monthly allocation runs out.</p>
+      {/* ── Credit packs ────────────────────────────────────────────── */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.01em', marginBottom: '0.35rem', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
+            HD Credit Top-Ups
+          </h2>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            One-time purchase. Credits never expire. Used after your monthly allocation runs out.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.75rem' }}>
+          {PACKS.map(pack => (
+            <div key={pack.id} style={{
+              background: 'var(--bg-surface)',
+              border: `1px solid ${pack.note ? 'rgba(167,139,250,.25)' : 'var(--border)'}`,
+              borderRadius: 4, padding: '1.25rem',
+              display: 'flex', flexDirection: 'column', gap: '0.6rem', position: 'relative',
+            }}>
+              {pack.note && (
+                <span style={{
+                  position: 'absolute', top: '0.75rem', right: '0.75rem',
+                  fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
+                  color: '#a78bfa', background: 'rgba(167,139,250,.12)',
+                  border: '1px solid rgba(167,139,250,.25)', borderRadius: 2, padding: '1px 5px',
+                }}>{pack.note}</span>
+              )}
+              <p style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-faint)', fontFamily: 'var(--font-heading)', margin: 0 }}>
+                {pack.label}
+              </p>
+              <p style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-heading)', margin: 0, lineHeight: 1 }}>
+                {pack.price}
+              </p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                {pack.credits.toLocaleString()} HD credits
+              </p>
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-faint)', margin: 0 }}>
+                {pack.perCredit}/credit
+              </p>
+              <button
+                onClick={() => handleBuyPack(pack.id)}
+                disabled={!stripeEnabled || !!loading}
+                style={{
+                  marginTop: '0.25rem', width: '100%', padding: '0.5rem 0.75rem',
+                  borderRadius: 4, background: 'transparent',
+                  border: '1px solid var(--border)', color: 'var(--text-muted)',
+                  fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer',
+                  opacity: (!stripeEnabled || !!loading) ? 0.5 : 1,
+                  transition: 'border-color 0.15s, color 0.15s',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(167,139,250,.4)'; (e.currentTarget as HTMLButtonElement).style.color = '#a78bfa'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'; }}
+              >
+                {loading === `pack-${pack.id}` ? 'Redirecting…' : 'Buy'}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="packs-grid">
-        {CREDIT_PACKS.map((pack) => (
-          <div key={pack.id} className="pack-card">
-            <div className="pack-name">{pack.name}</div>
-            <div className="pack-credits">{pack.credits} HD credits</div>
-            <div className="pack-price">${pack.priceUsd}</div>
-            <button
-              className="pack-cta"
-              onClick={() => handleBuyPack(pack.id)}
-              disabled={!stripeEnabled || loading === `pack-${pack.id}`}
-            >
-              {loading === `pack-${pack.id}` ? 'Redirecting…' : 'Buy'}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {stripeEnabled && currentPlanId !== 'free' && (
-        <div className="billing-manage">
+      {/* ── Manage / notes ──────────────────────────────────────────── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+        <p style={{ fontSize: '0.78rem', color: 'var(--text-faint)', margin: 0 }}>
+          Prices in USD. Subscriptions renew monthly. Cancel anytime.{' '}
+          <Link href="/docs#pricing" style={{ color: '#a78bfa', textDecoration: 'none' }}>Learn more →</Link>
+        </p>
+        {stripeEnabled && currentPlanId !== 'free' && (
           <button
-            className="manage-btn"
             onClick={handleManage}
             disabled={loading === 'portal'}
+            style={{
+              background: 'none', border: '1px solid var(--border)', borderRadius: 4,
+              color: 'var(--text-muted)', padding: '0.45rem 0.9rem', fontSize: '0.8rem',
+              cursor: 'pointer',
+            }}
           >
             {loading === 'portal' ? 'Opening…' : 'Manage billing →'}
           </button>
-        </div>
-      )}
+        )}
+        {!stripeEnabled && (
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-faint)' }}>
+            Billing not configured — contact admin.
+          </span>
+        )}
+      </div>
 
-      {!stripeEnabled && (
-        <p className="billing-note">Billing is not yet configured.</p>
-      )}
-
-      <style jsx>{`
-        .billing-page { max-width: 980px; margin: 0 auto; padding: 3rem 1.5rem; }
-        .credits-banner {
-          display: flex; gap: 1rem; align-items: center;
-          background: rgba(167,139,250,.08);
-          border: 1px solid rgba(167,139,250,.2);
-          border-radius: 8px;
-          padding: 0.75rem 1.25rem;
-          margin-bottom: 2rem;
-          font-size: 0.875rem;
-        }
-        .credits-label { font-weight: 600; color: #a78bfa; }
-        .credits-value { color: var(--text-secondary, #888); }
-        .billing-header { margin-bottom: 2rem; }
-        .billing-header h1 { font-size: 1.75rem; font-weight: 700; margin: 0 0 0.5rem; }
-        .billing-header p { color: var(--text-secondary, #888); margin: 0; max-width: 560px; }
-        .section-header { margin: 2.5rem 0 1.25rem; }
-        .section-header h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.4rem; }
-        .section-header p { color: var(--text-secondary, #888); margin: 0; font-size: 0.875rem; }
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
-        .packs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
-        .plan-card, .pack-card {
-          background: var(--surface-card, #161616);
-          border: 1px solid var(--border-subtle, #262626);
-          border-radius: 8px;
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.9rem;
-          position: relative;
-        }
-        .plan-card--current { border-color: #a78bfa; }
-        .plan-badge {
-          position: absolute; top: 0.75rem; right: 0.75rem;
-          font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-          color: #a78bfa; background: rgba(167,139,250,.12);
-          border: 1px solid rgba(167,139,250,.25); border-radius: 4px; padding: 2px 6px;
-        }
-        .plan-name { font-size: 1.05rem; font-weight: 600; margin: 0; }
-        .plan-price { display: flex; align-items: baseline; gap: 0.2rem; }
-        .plan-price-free { font-size: 1.4rem; font-weight: 700; }
-        .plan-price-amount { font-size: 2rem; font-weight: 700; }
-        .plan-price-period { color: var(--text-muted, #666); font-size: 0.85rem; }
-        .plan-features { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
-        .plan-features li { font-size: 0.85rem; color: var(--text-secondary, #888); padding-left: 1.1rem; position: relative; }
-        .plan-features li::before { content: '✓'; position: absolute; left: 0; color: #a78bfa; }
-        .pack-name { font-weight: 600; font-size: 0.95rem; }
-        .pack-credits { font-size: 0.875rem; color: var(--text-secondary, #888); flex: 1; }
-        .pack-price { font-size: 1.4rem; font-weight: 700; }
-        .plan-cta, .pack-cta {
-          margin-top: auto; width: 100%; padding: 0.55rem 1rem;
-          border-radius: 6px; background: #a78bfa; color: #fff;
-          border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer;
-        }
-        .plan-cta:disabled, .pack-cta:disabled { opacity: 0.6; cursor: not-allowed; }
-        .billing-manage { margin-top: 2rem; }
-        .manage-btn {
-          background: none; border: 1px solid var(--border-subtle, #262626);
-          border-radius: 6px; color: var(--text-secondary, #888);
-          padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer;
-        }
-        .manage-btn:hover { border-color: #444; color: var(--text-primary, #f0f0f0); }
-        .billing-note { color: var(--text-muted, #666); font-size: 0.85rem; margin-top: 2rem; }
-      `}</style>
     </main>
   );
 }

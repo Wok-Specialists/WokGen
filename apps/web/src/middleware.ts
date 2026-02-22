@@ -10,9 +10,8 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  // Protect studio and API generation routes
+  // Account and billing require a real session
   const needsAuth =
-    pathname.startsWith('/studio') ||
     pathname.startsWith('/account') ||
     pathname.startsWith('/billing');
 
@@ -22,13 +21,8 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  // API routes return 401 JSON, not redirect
-  if (pathname.startsWith('/api/generate') && !session) {
-    return NextResponse.json(
-      { error: 'Authentication required' },
-      { status: 401 }
-    );
-  }
+  // /studio and /api/generate are open to guests — the route handlers
+  // enforce auth only for HD generation (standard is always free).
 
   return NextResponse.next();
 });

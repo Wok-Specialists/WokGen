@@ -12,9 +12,10 @@ import type { ProviderName, Tool, GenerateParams } from '@/lib/providers';
 // ---------------------------------------------------------------------------
 // POST /api/generate
 //
-// Dual-mode:
+// Three modes:
 //   SELF_HOSTED=true  → BYOK, no auth, no quota
-//   SELF_HOSTED unset → requires session, enforces monthly quota
+//   Authenticated     → standard (free) or HD (credit-gated)
+//   Guest             → standard only, IP rate-limited (5 req/min)
 // ---------------------------------------------------------------------------
 
 export const runtime = 'nodejs';
@@ -32,23 +33,21 @@ export async function POST(req: NextRequest) {
   if (!isSelfHosted) {
     const { auth } = await import('@/lib/auth');
     const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 },
-      );
-    }
-    authedUserId = session.user.id;
+    authedUserId = session?.user?.id ?? null;
 
-    // Rate limit: 10 requests/min per user
-    const rl = checkRateLimit(authedUserId);
+    // Determine rate-limit key: userId for authed, IP for guest
+    const rateLimitKey = authedUserId
+      ?? req.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      ?? req.headers.get('x-real-ip')
+      ?? 'unknown';
+
+    // Guests: 5 req/min; authed users: 20 req/min
+    const maxReqs = authedUserId ? 20 : 5;
+    const rl = checkRateLimit(rateLimitKey, maxReqs);
     if (!rl.allowed) {
       return NextResponse.json(
         { error: `Rate limit exceeded. Try again in ${rl.retryAfter}s.` },
-        {
-          status: 429,
-          headers: { 'Retry-After': String(rl.retryAfter) },
-        },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
       );
     }
 
@@ -65,6 +64,14 @@ export async function POST(req: NextRequest) {
     const requestedHD = rawBody.quality === 'hd';
 
     if (requestedHD) {
+      // Guests cannot use HD
+      if (!authedUserId) {
+        return NextResponse.json(
+          { error: 'Sign in to use HD generation.' },
+          { status: 401 },
+        );
+      }
+
       // Check HD credits: monthly allocation first, then top-up bank
       const user = await prisma.user.findUnique({
         where: { id: authedUserId },
@@ -88,8 +95,9 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-    // Standard (Pollinations) is always free — no check needed
+    // Standard (Pollinations) is always free for everyone — no check needed
   }
+
 
 
   // --------------------------------------------------------------------------
