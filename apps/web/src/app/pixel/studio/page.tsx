@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/components/Toast';
 
@@ -2160,6 +2161,23 @@ function StudioInner() {
 
         {/* Spacer */}
         <div className="flex-1" />
+
+        {/* Switch to Business Studio pill */}
+        <Link
+          href="/business/studio"
+          className="flex flex-col items-center justify-center gap-1 w-10 h-12 rounded-lg transition-all duration-150"
+          style={{
+            color: 'var(--text-disabled)',
+            border: '1px solid transparent',
+            textDecoration: 'none',
+            fontSize: '0.52rem',
+            letterSpacing: '0.01em',
+          }}
+          title="Switch to Business Studio"
+        >
+          <span style={{ fontSize: 12 }}>💼</span>
+          <span>Biz</span>
+        </Link>
 
         {/* History */}
         <button

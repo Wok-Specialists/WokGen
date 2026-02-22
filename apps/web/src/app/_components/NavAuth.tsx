@@ -2,10 +2,33 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
 
 export function NavAuth() {
   const { data: session, status } = useSession();
   const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === 'true';
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [open]);
 
   if (isSelfHosted) return null;
 
@@ -24,90 +47,150 @@ export function NavAuth() {
     );
   }
 
-  return (
-    <div className="nav-user">
-      {session.user?.image ? (
-        <img
-          src={session.user.image}
-          alt={session.user.name ?? 'User'}
-          className="nav-avatar"
-          width={28}
-          height={28}
-        />
-      ) : (
-        <span className="nav-avatar nav-avatar--initials">
-          {(session.user?.name ?? session.user?.email ?? 'U')[0].toUpperCase()}
-        </span>
-      )}
+  const displayName = session.user?.name?.split(' ')[0] ?? session.user?.email?.split('@')[0] ?? 'You';
+  const initial = displayName[0]?.toUpperCase() ?? 'U';
 
-      <div className="nav-user-menu">
-        <Link href="/account" className="nav-user-item">Account</Link>
-        <Link href="/billing" className="nav-user-item">Billing</Link>
-        <button
-          className="nav-user-item nav-user-item--danger"
-          onClick={() => signOut({ callbackUrl: '/' })}
-        >
-          Sign out
-        </button>
-      </div>
+  return (
+    <div className="nav-user" ref={containerRef}>
+      <button
+        className="nav-user-trigger"
+        onClick={() => setOpen(v => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Account menu"
+      >
+        {session.user?.image ? (
+          <img
+            src={session.user.image}
+            alt={displayName}
+            className="nav-avatar"
+            width={28}
+            height={28}
+          />
+        ) : (
+          <span className="nav-avatar nav-avatar--initials">{initial}</span>
+        )}
+        <span className="nav-user-name">{displayName}</span>
+        <span className="nav-user-chevron" aria-hidden>{open ? '▲' : '▾'}</span>
+      </button>
+
+      {open && (
+        <div className="nav-user-menu" role="menu">
+          <div className="nav-user-menu-header">
+            <span className="nav-user-menu-name">{session.user?.name ?? session.user?.email}</span>
+            {session.user?.email && session.user?.name && (
+              <span className="nav-user-menu-email">{session.user.email}</span>
+            )}
+          </div>
+          <div className="nav-user-menu-divider" />
+          <Link
+            href="/profile"
+            className="nav-user-item"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+          >
+            Profile
+          </Link>
+          <Link
+            href="/account"
+            className="nav-user-item"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+          >
+            Account
+          </Link>
+          <Link
+            href="/billing"
+            className="nav-user-item"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+          >
+            Billing & Plans
+          </Link>
+          <div className="nav-user-menu-divider" />
+          <button
+            className="nav-user-item nav-user-item--danger"
+            role="menuitem"
+            onClick={() => { setOpen(false); signOut({ callbackUrl: '/' }); }}
+          >
+            Sign out
+          </button>
+        </div>
+      )}
 
       <style jsx>{`
         .nav-auth-skeleton {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
+          width: 28px; height: 28px; border-radius: 50%;
           background: var(--surface-raised, #1e1e1e);
           animation: pulse 1.5s ease-in-out infinite;
         }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         .nav-user { position: relative; display: flex; align-items: center; }
+
+        .nav-user-trigger {
+          display: flex; align-items: center; gap: 0.4rem;
+          background: none; border: 1px solid transparent; border-radius: 6px;
+          padding: 0.2rem 0.4rem 0.2rem 0.25rem;
+          cursor: pointer; transition: border-color 0.12s, background 0.12s;
+          color: var(--text-muted, #888);
+        }
+        .nav-user-trigger:hover,
+        .nav-user-trigger[aria-expanded="true"] {
+          border-color: var(--border, #2a2a2a);
+          background: var(--surface-raised, #1e1e1e);
+          color: var(--text, #f0f0f0);
+        }
+
         .nav-avatar {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          object-fit: cover;
+          width: 26px; height: 26px; border-radius: 50%;
+          object-fit: cover; flex-shrink: 0;
           border: 1px solid var(--border-subtle, #262626);
-          cursor: pointer;
         }
         .nav-avatar--initials {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--surface-raised, #1e1e1e);
-          color: var(--text-primary, #f0f0f0);
-          font-size: 0.75rem;
-          font-weight: 600;
-          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          background: #27272a; color: var(--text, #f0f0f0);
+          font-size: 0.7rem; font-weight: 700;
         }
-        .nav-user:hover .nav-user-menu { display: flex; }
+        .nav-user-name {
+          font-size: 0.8rem; font-weight: 500; max-width: 80px;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .nav-user-chevron { font-size: 0.55rem; line-height: 1; opacity: 0.6; }
+
         .nav-user-menu {
-          display: none;
-          flex-direction: column;
-          position: absolute;
-          top: calc(100% + 8px);
-          right: 0;
-          background: var(--surface-card, #161616);
-          border: 1px solid var(--border-subtle, #262626);
-          border-radius: 6px;
-          overflow: hidden;
-          min-width: 140px;
-          z-index: 100;
-          box-shadow: 0 8px 24px rgba(0,0,0,.5);
+          position: absolute; top: calc(100% + 6px); right: 0;
+          background: var(--bg-surface, #111); border: 1px solid var(--border, #2a2a2a);
+          border-radius: 8px; overflow: hidden; min-width: 200px; z-index: 200;
+          box-shadow: 0 12px 32px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);
+          animation: menuIn 0.1s ease;
+        }
+        @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+        .nav-user-menu-header {
+          padding: 0.75rem 0.875rem 0.6rem;
+          display: flex; flex-direction: column; gap: 0.15rem;
+        }
+        .nav-user-menu-name {
+          font-size: 0.82rem; font-weight: 600; color: var(--text, #f0f0f0);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .nav-user-menu-email {
+          font-size: 0.72rem; color: var(--text-faint, #555);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .nav-user-menu-divider {
+          height: 1px; background: var(--border-subtle, #1e1e1e); margin: 0.2rem 0;
         }
         .nav-user-item {
-          display: block;
-          padding: 0.55rem 0.875rem;
-          font-size: 0.8rem;
-          color: var(--text-secondary, #888);
-          text-decoration: none;
-          background: none;
-          border: none;
-          text-align: left;
-          cursor: pointer;
-          width: 100%;
+          display: flex; align-items: center;
+          padding: 0.5rem 0.875rem; font-size: 0.82rem;
+          color: var(--text-muted, #888); text-decoration: none;
+          background: none; border: none; text-align: left; cursor: pointer; width: 100%;
+          transition: background 0.1s, color 0.1s;
         }
-        .nav-user-item:hover { background: var(--surface-raised, #1e1e1e); color: var(--text-primary, #f0f0f0); }
-        .nav-user-item--danger:hover { color: #ef4444; }
+        .nav-user-item:hover { background: var(--surface-raised, #1e1e1e); color: var(--text, #f0f0f0); }
+        .nav-user-item--danger:hover { color: #ef4444; background: rgba(239,68,68,.06); }
       `}</style>
     </div>
   );
