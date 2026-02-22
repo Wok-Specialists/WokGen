@@ -6,7 +6,7 @@
 export type Tool = 'generate' | 'animate' | 'rotate' | 'inpaint' | 'scene';
 
 // Provider identifiers
-export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui';
+export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui' | 'pollinations';
 
 // Canonical export pixel sizes
 export type PixelSize = 32 | 64 | 128 | 256 | 512;
@@ -228,6 +228,19 @@ export const PROVIDER_CAPABILITIES: Record<ProviderName, ProviderCapability> = {
     free: true,
     requiresKey: false,
   },
+  pollinations: {
+    generate: true,
+    animate: false,
+    rotate: false,
+    inpaint: false,
+    scene: false,
+    maxWidth: 1024,
+    maxHeight: 1024,
+    supportsSeed: true,
+    supportsNegativePrompt: false,
+    free: true,
+    requiresKey: false,
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -289,5 +302,16 @@ export const PROVIDER_META: Record<ProviderName, ProviderMeta> = {
     freeCredits: true,
     freeCreditsNote: 'Fully free — runs locally',
     color: '#E06C00',
+  },
+  pollinations: {
+    id: 'pollinations',
+    label: 'Pollinations.ai',
+    description: 'Free FLUX generation. No account, no key, no limits.',
+    docsUrl: 'https://pollinations.ai',
+    keyEnvVar: null,
+    keyLabel: null,
+    freeCredits: true,
+    freeCreditsNote: 'Completely free — no account needed',
+    color: '#22c55e',
   },
 };

@@ -23,15 +23,13 @@ export async function POST(req: NextRequest) {
   const isSelfHosted = process.env.SELF_HOSTED === 'true';
 
   // --------------------------------------------------------------------------
-  // 0. Auth + quota check (hosted mode only)
+  // 0. Auth + HD credit check (hosted mode only)
   // --------------------------------------------------------------------------
   let authedUserId: string | null = null;
+  let useHD = false; // whether to use Replicate (HD) vs Pollinations (standard)
 
   if (!isSelfHosted) {
-    // Dynamically import to avoid loading auth in self-hosted builds
     const { auth } = await import('@/lib/auth');
-    const { checkQuota, incrementUsage } = await import('@/lib/usage');
-
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -39,24 +37,45 @@ export async function POST(req: NextRequest) {
         { status: 401 },
       );
     }
-
     authedUserId = session.user.id;
 
-    const quota = await checkQuota(authedUserId);
-    if (!quota.allowed) {
-      return NextResponse.json(
-        {
-          error: 'Monthly generation limit reached. Upgrade your plan to continue.',
-          quota: { used: quota.used, limit: quota.limit, planId: quota.planId },
-        },
-        { status: 429 },
-      );
+    // Parse quality preference from body (peek ahead)
+    let rawBody: Record<string, unknown> = {};
+    try {
+      rawBody = await req.json();
+      // Re-attach parsed body so we don't need to parse again below
+      (req as NextRequest & { _parsedBody?: Record<string, unknown> })._parsedBody = rawBody;
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
 
-    // Attach incrementUsage to run after successful generation
-    // (we store the function reference and call it at step 5a)
-    (req as NextRequest & { _incrementUsage?: () => Promise<number> })._incrementUsage =
-      () => incrementUsage(authedUserId!);
+    const requestedHD = rawBody.quality === 'hd';
+
+    if (requestedHD) {
+      // Check HD credits: monthly allocation first, then top-up bank
+      const user = await prisma.user.findUnique({
+        where: { id: authedUserId },
+        include: { subscription: { include: { plan: true } } },
+      });
+
+      const monthlyAllocation = user?.subscription?.plan.creditsPerMonth ?? 0;
+      const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
+      const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
+      const topUpBank         = user?.hdTopUpCredits ?? 0;
+
+      if (monthlyRemaining > 0 || topUpBank > 0) {
+        useHD = true;
+      } else {
+        return NextResponse.json(
+          {
+            error: 'No HD credits remaining. Buy a top-up pack or upgrade your plan.',
+            hdCredits: { monthlyRemaining: 0, topUpBank: 0 },
+          },
+          { status: 429 },
+        );
+      }
+    }
+    // Standard (Pollinations) is always free — no check needed
   }
 
 
@@ -65,7 +84,9 @@ export async function POST(req: NextRequest) {
   // --------------------------------------------------------------------------
   let body: Record<string, unknown>;
   try {
-    body = await req.json();
+    // In hosted mode body was already parsed above; in self-hosted parse now
+    body = (req as NextRequest & { _parsedBody?: Record<string, unknown> })._parsedBody
+      ?? await req.json();
   } catch {
     return NextResponse.json(
       { error: 'Invalid JSON body' },
@@ -95,8 +116,10 @@ export async function POST(req: NextRequest) {
   // In hosted mode: ignore any client-supplied provider keys
   const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
   const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
-  // In hosted mode: always use Together AI (server key)
-  const resolvedProvider = isSelfHosted ? (provider as ProviderName) : 'together';
+  // In hosted mode: use Replicate for HD requests, Pollinations for standard
+  const resolvedProvider: ProviderName = isSelfHosted
+    ? (provider as ProviderName)
+    : useHD ? 'replicate' : 'pollinations';
 
   // Validate required fields
   if (typeof prompt !== 'string' || prompt.trim().length === 0) {
@@ -194,10 +217,8 @@ export async function POST(req: NextRequest) {
     const result = await generate(resolvedProvider, genParams, config);
 
     // ------------------------------------------------------------------------
-    // 5a. Update Job as succeeded + increment usage (hosted)
+    // 5a. Update Job as succeeded
     // ------------------------------------------------------------------------
-    let creditsRemaining: number | null = null;
-
     if (job) {
       try {
         job = await prisma.job.update({
@@ -215,13 +236,40 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Increment usage counter for hosted mode
-    if (!isSelfHosted && authedUserId) {
+    // Deduct HD credit on success (hosted mode + HD generation)
+    let hdCreditsRemaining: { monthly: number; topUp: number } | null = null;
+
+    if (!isSelfHosted && authedUserId && useHD) {
       try {
-        const { incrementUsage } = await import('@/lib/usage');
-        creditsRemaining = await incrementUsage(authedUserId);
+        // Use monthly credits first, then top-up bank
+        const user = await prisma.user.findUnique({ where: { id: authedUserId } });
+        const sub  = await prisma.subscription.findUnique({
+          where: { userId: authedUserId },
+          include: { plan: true },
+        });
+        const monthlyAllocation = sub?.plan.creditsPerMonth ?? 0;
+        const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
+        const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
+
+        if (monthlyRemaining > 0) {
+          await prisma.user.update({
+            where: { id: authedUserId },
+            data: { hdMonthlyUsed: { increment: 1 } },
+          });
+          hdCreditsRemaining = {
+            monthly: monthlyRemaining - 1,
+            topUp:   user?.hdTopUpCredits ?? 0,
+          };
+        } else {
+          // Draw from top-up bank
+          const updated = await prisma.user.update({
+            where: { id: authedUserId },
+            data: { hdTopUpCredits: { decrement: 1 } },
+          });
+          hdCreditsRemaining = { monthly: 0, topUp: Math.max(0, updated.hdTopUpCredits) };
+        }
       } catch (err) {
-        console.warn('[generate] Failed to increment usage:', (err as Error).message);
+        console.warn('[generate] Failed to deduct HD credit:', (err as Error).message);
       }
     }
 
@@ -246,13 +294,14 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({
-      ok:               true,
-      job:              job ? serializeJob(job) : null,
-      resultUrl:        result.resultUrl,
-      resultUrls:       result.resultUrls,
-      durationMs:       result.durationMs,
-      resolvedSeed:     result.resolvedSeed,
-      creditsRemaining,
+      ok:                  true,
+      job:                 job ? serializeJob(job) : null,
+      resultUrl:           result.resultUrl,
+      resultUrls:          result.resultUrls,
+      durationMs:          result.durationMs,
+      resolvedSeed:        result.resolvedSeed,
+      hdCreditsRemaining,
+      quality:             useHD ? 'hd' : 'standard',
     });
   } catch (err) {
     // ------------------------------------------------------------------------

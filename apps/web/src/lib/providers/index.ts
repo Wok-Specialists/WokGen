@@ -8,6 +8,7 @@ import { replicateGenerate } from './replicate';
 import { falGenerate } from './fal';
 import { togetherGenerate } from './together';
 import { comfyuiGenerate } from './comfyui';
+import { pollinationsGenerate } from './pollinations';
 
 // ---------------------------------------------------------------------------
 // Re-exports for convenience
@@ -17,6 +18,7 @@ export { replicateGenerate } from './replicate';
 export { falGenerate } from './fal';
 export { togetherGenerate } from './together';
 export { comfyuiGenerate } from './comfyui';
+export { pollinationsGenerate } from './pollinations';
 export { REPLICATE_MODELS } from './replicate';
 export { FAL_MODELS } from './fal';
 export { TOGETHER_MODELS } from './together';
@@ -35,10 +37,11 @@ export function resolveProviderConfig(
 ): ProviderConfig {
   const envKey = (() => {
     switch (provider) {
-      case 'replicate': return process.env.REPLICATE_API_TOKEN ?? '';
-      case 'fal':       return process.env.FAL_KEY ?? '';
-      case 'together':  return process.env.TOGETHER_API_KEY ?? '';
-      case 'comfyui':   return ''; // no key needed
+      case 'replicate':    return process.env.REPLICATE_API_TOKEN ?? '';
+      case 'fal':          return process.env.FAL_KEY ?? '';
+      case 'together':     return process.env.TOGETHER_API_KEY ?? '';
+      case 'comfyui':      return ''; // no key needed
+      case 'pollinations': return ''; // no key needed
     }
   })();
 
@@ -62,15 +65,15 @@ export function assertKeyPresent(
   provider: ProviderName,
   config: ProviderConfig,
 ): void {
-  if (provider === 'comfyui') return; // local — no key needed
+  if (provider === 'comfyui' || provider === 'pollinations') return; // no key needed
 
   if (!config.apiKey) {
-    const envVarNames: Record<Exclude<ProviderName, 'comfyui'>, string> = {
+    const envVarNames: Record<Exclude<ProviderName, 'comfyui' | 'pollinations'>, string> = {
       replicate: 'REPLICATE_API_TOKEN',
       fal:       'FAL_KEY',
       together:  'TOGETHER_API_KEY',
     };
-    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui'>];
+    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui' | 'pollinations'>];
     throw new Error(
       `No API key configured for provider "${provider}". ` +
         `Set ${envVar} in your .env.local file, or supply your key in the ` +
@@ -91,7 +94,8 @@ export function detectAvailableProvider(): ProviderName {
   if (process.env.REPLICATE_API_TOKEN) return 'replicate';
   if (process.env.FAL_KEY)             return 'fal';
   if (process.env.TOGETHER_API_KEY)    return 'together';
-  return 'comfyui';
+  // Pollinations is always available — no key needed
+  return 'pollinations';
 }
 
 // ---------------------------------------------------------------------------
@@ -134,6 +138,13 @@ export function listProviderStatus(): ProviderStatus[] {
       free: true,
     },
     {
+      provider: 'pollinations' as ProviderName,
+      configured: true, // always available — no key needed
+      docsUrl: 'https://pollinations.ai',
+      envVar: null,
+      free: true,
+    },
+    {
       provider: 'comfyui',
       configured: true, // always "available" — reachability is checked at generate time
       docsUrl: 'https://github.com/comfyanonymous/ComfyUI',
@@ -166,6 +177,9 @@ export async function generate(
 
     case 'comfyui':
       return comfyuiGenerate(params, config.comfyuiHost);
+
+    case 'pollinations':
+      return pollinationsGenerate(params, config);
 
     default: {
       // TypeScript exhaustiveness guard — should never reach this at runtime

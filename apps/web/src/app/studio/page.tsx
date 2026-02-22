@@ -1163,6 +1163,7 @@ function StudioInner() {
   const [guidance, setGuidance]       = useState(3.5);
   const [provider, setProvider]       = useState<Provider>('together');
   const [isPublic, setIsPublic]       = useState(false);
+  const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
 
   // Job state
   const [jobStatus, setJobStatus]     = useState<JobStatus>('idle');
@@ -1272,6 +1273,7 @@ function StudioInner() {
         steps,
         guidance,
         isPublic,
+        quality:     useHD ? 'hd' : 'standard',
         ...(seed ? { seed: parseInt(seed, 10) } : {}),
         ...(apiKeys[provider] ? { apiKey: apiKeys[provider] } : {}),
         ...(provider === 'comfyui' ? { comfyuiHost } : {}),
@@ -1547,6 +1549,48 @@ function StudioInner() {
           className="flex flex-col gap-2 p-4 flex-shrink-0"
           style={{ borderTop: '1px solid var(--surface-border)' }}
         >
+          {/* HD / Standard quality toggle (hosted mode only) */}
+          {!isSelfHosted && (
+            <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted, #666)' }}>
+                Quality
+              </span>
+              <div className="flex gap-1" style={{ fontSize: '0.75rem' }}>
+                <button
+                  style={{
+                    padding: '2px 10px',
+                    borderRadius: 4,
+                    border: '1px solid',
+                    borderColor: !useHD ? '#10b981' : 'var(--surface-border, #2a2a2a)',
+                    background:  !useHD ? 'rgba(16,185,129,.12)' : 'transparent',
+                    color:       !useHD ? '#10b981' : 'var(--text-muted, #666)',
+                    cursor: 'pointer',
+                    fontWeight: !useHD ? 600 : 400,
+                  }}
+                  onClick={() => setUseHD(false)}
+                >
+                  Standard
+                </button>
+                <button
+                  style={{
+                    padding: '2px 10px',
+                    borderRadius: 4,
+                    border: '1px solid',
+                    borderColor: useHD ? '#f59e0b' : 'var(--surface-border, #2a2a2a)',
+                    background:  useHD ? 'rgba(245,158,11,.12)' : 'transparent',
+                    color:       useHD ? '#f59e0b' : 'var(--text-muted, #666)',
+                    cursor: 'pointer',
+                    fontWeight: useHD ? 600 : 400,
+                  }}
+                  onClick={() => setUseHD(true)}
+                  title="Uses HD credits (Replicate). Requires Plus plan or top-up pack."
+                >
+                  HD ✦
+                </button>
+              </div>
+            </div>
+          )}
+
           <button
             className="btn-primary w-full"
             style={{

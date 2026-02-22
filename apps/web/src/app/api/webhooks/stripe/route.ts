@@ -35,6 +35,21 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const s = event.data.object as Stripe.Checkout.Session;
+
+        // --- Credit pack (one-time payment) ---
+        if (s.mode === 'payment' && s.metadata?.type === 'credit_pack') {
+          const userId  = s.metadata.userId;
+          const credits = parseInt(s.metadata.credits ?? '0', 10);
+          if (userId && credits > 0) {
+            await prisma.user.update({
+              where: { id: userId },
+              data:  { hdTopUpCredits: { increment: credits } },
+            });
+          }
+          break;
+        }
+
+        // --- Subscription checkout ---
         if (s.mode !== 'subscription') break;
 
         const userId = s.metadata?.userId;
@@ -43,7 +58,6 @@ export async function POST(req: NextRequest) {
 
         if (!userId || !planId || !stripeSubId) break;
 
-        // Use any cast for API version compatibility
         const stripeSub = await stripe.subscriptions.retrieve(stripeSubId) as unknown as {
           current_period_end: number;
           current_period_start: number;
@@ -71,6 +85,11 @@ export async function POST(req: NextRequest) {
             currentPeriodEnd:    periodEnd,
           },
         });
+        // Reset monthly HD usage counter for new subscription period
+        await prisma.user.update({
+          where: { id: userId },
+          data:  { hdMonthlyUsed: 0 },
+        });
         break;
       }
 
@@ -92,6 +111,13 @@ export async function POST(req: NextRequest) {
             currentPeriodEnd:   new Date(sub.current_period_end   * 1000),
           },
         });
+        // Reset monthly HD usage on renewal
+        if (existing.userId) {
+          await prisma.user.update({
+            where: { id: existing.userId },
+            data:  { hdMonthlyUsed: 0 },
+          });
+        }
         break;
       }
 

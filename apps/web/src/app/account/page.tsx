@@ -8,21 +8,15 @@ export default async function AccountPage() {
   if (!session?.user?.id) redirect('/login?callbackUrl=/account');
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      subscription: { include: { plan: true } },
-      usagePeriods: {
-        where: {
-          periodEnd: { gte: new Date() },
-        },
-        orderBy: { periodStart: 'desc' },
-        take: 1,
-      },
-    },
+    where:   { id: session.user.id },
+    include: { subscription: { include: { plan: true } } },
   });
 
-  const plan = user?.subscription?.plan;
-  const usage = user?.usagePeriods[0];
+  const plan             = user?.subscription?.plan;
+  const monthlyAlloc     = plan?.creditsPerMonth ?? 0;
+  const monthlyUsed      = user?.hdMonthlyUsed ?? 0;
+  const monthlyRemaining = Math.max(0, monthlyAlloc - monthlyUsed);
+  const topUpCredits     = user?.hdTopUpCredits ?? 0;
 
   return (
     <AccountClient
@@ -36,10 +30,7 @@ export default async function AccountPage() {
         name:            plan.name,
         creditsPerMonth: plan.creditsPerMonth,
       } : null}
-      usage={{
-        used:  usage?.imagesUsed ?? 0,
-        limit: plan?.creditsPerMonth ?? 20,
-      }}
+      hdCredits={{ monthly: monthlyRemaining, topUp: topUpCredits }}
     />
   );
 }

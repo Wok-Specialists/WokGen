@@ -6,11 +6,11 @@ import Link from 'next/link';
 interface Props {
   user: { name: string | null; email: string | null; image: string | null };
   plan: { id: string; name: string; creditsPerMonth: number } | null;
-  usage: { used: number; limit: number };
+  hdCredits: { monthly: number; topUp: number };
 }
 
-export default function AccountClient({ user, plan, usage }: Props) {
-  const pct = Math.min(100, Math.round((usage.used / (usage.limit || 1)) * 100));
+export default function AccountClient({ user, plan, hdCredits }: Props) {
+  const totalHd = hdCredits.monthly + hdCredits.topUp;
 
   return (
     <main className="account-page">
@@ -30,30 +30,36 @@ export default function AccountClient({ user, plan, usage }: Props) {
         </div>
       </section>
 
-      {/* Usage */}
+      {/* Plan + HD Credits */}
       <section className="account-section">
-        <h2 className="section-title">Usage this month</h2>
-        <div className="usage-bar-wrap">
-          <div className="usage-bar-bg">
-            <div
-              className="usage-bar-fill"
-              style={{ width: `${pct}%`, background: pct >= 90 ? '#ef4444' : '#10b981' }}
-            />
-          </div>
-          <span className="usage-label">
-            {usage.used} / {usage.limit} generations
-          </span>
-        </div>
-        <p className="usage-plan">
-          Plan: <strong>{plan?.name ?? 'Free'}</strong>
-          {' · '}
+        <h2 className="section-title">Plan</h2>
+        <div className="plan-row">
+          <span className="plan-name">{plan?.name ?? 'Free'}</span>
           <Link href="/billing" className="upgrade-link">
             {plan?.id === 'free' ? 'Upgrade →' : 'Manage plan →'}
           </Link>
-        </p>
+        </div>
+
+        <div className="credits-row">
+          <div className="credit-item">
+            <span className="credit-label">Monthly HD credits</span>
+            <span className="credit-value">{hdCredits.monthly}</span>
+          </div>
+          <div className="credit-item">
+            <span className="credit-label">Top-up bank</span>
+            <span className="credit-value">{hdCredits.topUp}</span>
+          </div>
+        </div>
+
+        {totalHd === 0 && plan?.id === 'free' && (
+          <p className="credits-note">
+            Standard quality (Pollinations) is always unlimited.
+            <Link href="/billing" className="upgrade-link"> Buy HD credits →</Link>
+          </p>
+        )}
       </section>
 
-      {/* Danger zone */}
+      {/* Sign out */}
       <section className="account-section">
         <button
           className="signout-btn"
@@ -81,11 +87,13 @@ export default function AccountClient({ user, plan, usage }: Props) {
         .profile-avatar { border-radius: 50%; border: 1px solid var(--border-subtle, #262626); }
         .profile-name { font-size: 1rem; font-weight: 600; margin: 0; }
         .profile-email { font-size: 0.85rem; color: var(--text-secondary, #888); margin: 0; }
-        .usage-bar-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
-        .usage-bar-bg { height: 6px; background: var(--surface-raised, #1e1e1e); border-radius: 3px; overflow: hidden; }
-        .usage-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-        .usage-label { font-size: 0.8rem; color: var(--text-secondary, #888); }
-        .usage-plan { font-size: 0.875rem; color: var(--text-secondary, #888); margin: 0; }
+        .plan-row { display: flex; align-items: center; justify-content: space-between; }
+        .plan-name { font-size: 1rem; font-weight: 600; }
+        .credits-row { display: flex; gap: 1.5rem; }
+        .credit-item { display: flex; flex-direction: column; gap: 0.15rem; }
+        .credit-label { font-size: 0.75rem; color: var(--text-muted, #666); }
+        .credit-value { font-size: 1.25rem; font-weight: 700; }
+        .credits-note { font-size: 0.8rem; color: var(--text-muted, #666); margin: 0; }
         .upgrade-link { color: #10b981; text-decoration: none; font-weight: 500; }
         .upgrade-link:hover { text-decoration: underline; }
         .signout-btn {

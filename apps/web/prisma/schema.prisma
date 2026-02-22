@@ -24,6 +24,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  /// Top-up HD credits (never expire, bought via credit packs)
+  hdTopUpCredits      Int @default(0)
+  /// Monthly HD credits consumed this billing period (reset on period renewal)
+  hdMonthlyUsed       Int @default(0)
+
   accounts     Account[]
   sessions     Session[]
   jobs         Job[]
@@ -72,11 +77,13 @@ model VerificationToken {
 // ---------------------------------------------------------------------------
 
 model Plan {
-  id              String  @id   // "free" | "pro" | "studio"
-  name            String
-  priceUsdCents   Int           // 0 | 900 | 2900
-  creditsPerMonth Int           // 20 | 200 | 500
-  stripePriceId   String?       // set after Stripe products are created
+  id                String  @id   // "free" | "plus" | "pro" | "max"
+  name              String
+  priceUsdCents     Int           // 0 | 200 | 600 | 1500
+  creditsPerMonth   Int           // 0 | 100 | 500 | 2000 (HD Replicate credits)
+  /// true = Pollinations unlimited; false = Replicate with monthly HD credits
+  isUnlimitedStd    Boolean @default(true)
+  stripePriceId     String?       // set after Stripe products are created
 
   subscriptions Subscription[]
 }
