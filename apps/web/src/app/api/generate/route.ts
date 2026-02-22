@@ -258,7 +258,7 @@ export async function POST(req: NextRequest) {
       ) {
         console.warn('[generate] Pollinations failed, falling back to Replicate:', (err as Error).message);
         actualProvider = 'replicate';
-        return generate('replicate', genParams, config);
+        return generate('replicate', genParams, resolveProviderConfig('replicate', null, null));
       }
       throw err;
     });
