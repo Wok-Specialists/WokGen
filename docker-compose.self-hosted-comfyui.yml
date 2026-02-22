@@ -1,0 +1,60 @@
+# WokGen — Self-Hosted with local ComfyUI (full GPU pipeline)
+# Requirements:
+#   - NVIDIA GPU with 4GB+ VRAM (8GB for HQ preset)
+#   - NVIDIA Container Toolkit installed
+#   - ComfyUI model: Realistic_Vision_V6.0_NV_B1_fp16.safetensors
+#
+# Hardware presets (selectable in Studio UI):
+#   Light:    4 steps  — 4GB VRAM min  — ~3–8s
+#   Standard: 24 steps — 6GB VRAM min  — ~20–40s
+#   HQ:       28 steps — 8GB VRAM min  — ~30–60s
+#
+# Usage:
+#   1. Place model in ./comfyui/models/checkpoints/
+#   2. docker compose -f docker-compose.self-hosted-comfyui.yml up
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SELF_HOSTED: "true"
+    ports:
+      - "3000:3000"
+    environment:
+      - SELF_HOSTED=true
+      - NODE_ENV=production
+      - DATABASE_URL=file:./data/dev.db
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+      - NEXT_TELEMETRY_DISABLED=1
+      - COMFYUI_HOST=http://comfyui
+      - COMFYUI_PORT=8188
+      # Optional cloud fallback keys
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY:-}
+    volumes:
+      - wokgen-data:/app/apps/web/data
+    depends_on:
+      - comfyui
+    restart: unless-stopped
+
+  comfyui:
+    image: yanwk/comfyui-boot:latest
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./comfyui/models:/root/ComfyUI/models
+      - ./comfyui/workflows:/root/ComfyUI/custom_nodes/wokgen_workflows
+      - comfyui-output:/root/ComfyUI/output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  wokgen-data:
+  comfyui-output:

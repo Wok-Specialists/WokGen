@@ -4,6 +4,8 @@ import Link from 'next/link';
 import './globals.css';
 import { NavLink } from './_components/NavLink';
 import { Footer } from './_components/Footer';
+import { NavAuth } from './_components/NavAuth';
+import { Providers } from './_components/Providers';
 
 export const dynamic = 'force-dynamic';
 
@@ -140,23 +142,6 @@ function NavBar() {
 
       {/* Right side actions */}
       <div className="flex items-center gap-2 ml-auto">
-        {/* Pipeline badge */}
-        <span
-          className="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full"
-          style={{
-            background: 'var(--surface-overlay)',
-            border: '1px solid var(--surface-border)',
-            color: 'var(--text-muted)',
-          }}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: 'var(--success)' }}
-            aria-hidden="true"
-          />
-          Self-hosted
-        </span>
-
         {/* GitHub link */}
         <a
           href="https://github.com/WokSpecialists/WokGen"
@@ -177,10 +162,8 @@ function NavBar() {
           </svg>
         </a>
 
-        {/* CTA */}
-        <Link href="/studio" className="btn-primary btn-sm hidden sm:inline-flex">
-          Open Studio
-        </Link>
+        {/* Auth nav — client component (session-aware) */}
+        <NavAuth />
       </div>
     </nav>
   );
@@ -213,9 +196,11 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <NavBar />
-        <main id="main-content" style={{ flex: 1 }}>{children}</main>
-        <Footer />
+        <Providers>
+          <NavBar />
+          <main id="main-content" style={{ flex: 1 }}>{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

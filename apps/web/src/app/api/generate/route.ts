@@ -11,34 +11,55 @@ import type { ProviderName, Tool, GenerateParams } from '@/lib/providers';
 // ---------------------------------------------------------------------------
 // POST /api/generate
 //
-// Request body (JSON):
-// {
-//   tool:        Tool            (default: "generate")
-//   provider:    ProviderName    (default: detected from env)
-//   prompt:      string          (required)
-//   negPrompt?:  string
-//   width?:      number          (default: 512)
-//   height?:     number          (default: 512)
-//   seed?:       number
-//   steps?:      number
-//   guidance?:   number
-//   stylePreset? StylePreset
-//   isPublic?:   boolean         (default: false)
-//   apiKey?:     string          (BYOK — stored only in this request, never persisted)
-//   comfyuiHost? string          (BYOK ComfyUI host override)
-//   modelOverride? string
-//   extra?:      Record<string, unknown>
-// }
-//
-// Runs the full generation synchronously and returns the completed job.
-// Works correctly on self-hosted Next.js (no serverless cold-start limits).
+// Dual-mode:
+//   SELF_HOSTED=true  → BYOK, no auth, no quota
+//   SELF_HOSTED unset → requires session, enforces monthly quota
 // ---------------------------------------------------------------------------
 
 export const runtime = 'nodejs';
-// Allow up to 10 minutes for slow local ComfyUI or high-demand cloud providers
-export const maxDuration = 300; // Vercel Hobby plan max (300s)
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
+  const isSelfHosted = process.env.SELF_HOSTED === 'true';
+
+  // --------------------------------------------------------------------------
+  // 0. Auth + quota check (hosted mode only)
+  // --------------------------------------------------------------------------
+  let authedUserId: string | null = null;
+
+  if (!isSelfHosted) {
+    // Dynamically import to avoid loading auth in self-hosted builds
+    const { auth } = await import('@/lib/auth');
+    const { checkQuota, incrementUsage } = await import('@/lib/usage');
+
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 },
+      );
+    }
+
+    authedUserId = session.user.id;
+
+    const quota = await checkQuota(authedUserId);
+    if (!quota.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Monthly generation limit reached. Upgrade your plan to continue.',
+          quota: { used: quota.used, limit: quota.limit, planId: quota.planId },
+        },
+        { status: 429 },
+      );
+    }
+
+    // Attach incrementUsage to run after successful generation
+    // (we store the function reference and call it at step 5a)
+    (req as NextRequest & { _incrementUsage?: () => Promise<number> })._incrementUsage =
+      () => incrementUsage(authedUserId!);
+  }
+
+
   // --------------------------------------------------------------------------
   // 1. Parse & validate request body
   // --------------------------------------------------------------------------
@@ -64,11 +85,18 @@ export async function POST(req: NextRequest) {
     guidance,
     stylePreset,
     isPublic   = false,
+    // BYOK fields — only used in self-hosted mode; stripped in hosted mode
     apiKey: byokKey,
     comfyuiHost: byokHost,
     modelOverride,
     extra,
   } = body;
+
+  // In hosted mode: ignore any client-supplied provider keys
+  const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
+  const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
+  // In hosted mode: always use Together AI (server key)
+  const resolvedProvider = isSelfHosted ? (provider as ProviderName) : 'together';
 
   // Validate required fields
   if (typeof prompt !== 'string' || prompt.trim().length === 0) {
@@ -87,10 +115,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!isValidProvider(provider)) {
+  if (!isValidProvider(resolvedProvider)) {
     return NextResponse.json(
       {
-        error: `Invalid provider "${provider}". Must be one of: replicate, fal, together, comfyui`,
+        error: `Invalid provider "${resolvedProvider}". Must be one of: replicate, fal, together, comfyui`,
       },
       { status: 400 },
     );
@@ -100,13 +128,13 @@ export async function POST(req: NextRequest) {
   // 2. Resolve provider config (env vars merged with BYOK overrides)
   // --------------------------------------------------------------------------
   const config = resolveProviderConfig(
-    provider as ProviderName,
-    typeof byokKey === 'string' ? byokKey : null,
-    typeof byokHost === 'string' ? byokHost : null,
+    resolvedProvider,
+    resolvedByokKey,
+    resolvedByokHost,
   );
 
   try {
-    assertKeyPresent(provider as ProviderName, config);
+    assertKeyPresent(resolvedProvider, config);
   } catch (err) {
     return NextResponse.json(
       { error: (err as Error).message },
@@ -128,7 +156,7 @@ export async function POST(req: NextRequest) {
         data: {
           tool:       tool as Tool,
           status:     'running',
-          provider:   provider as ProviderName,
+          provider:   resolvedProvider,
           prompt:     String(prompt).trim(),
           negPrompt:  typeof negPrompt === 'string' ? negPrompt.trim() || null : null,
           width:      clampSize(Number(width) || 512),
@@ -136,6 +164,7 @@ export async function POST(req: NextRequest) {
           seed:       typeof seed === 'number' && seed > 0 ? seed : null,
           isPublic:   Boolean(isPublic),
           params:     extra ? JSON.stringify(extra) : null,
+          ...(authedUserId ? { userId: authedUserId } : {}),
         },
       });
     } catch (dbErr) {
@@ -162,11 +191,13 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const result = await generate(provider as ProviderName, genParams, config);
+    const result = await generate(resolvedProvider, genParams, config);
 
     // ------------------------------------------------------------------------
-    // 5a. Update Job as succeeded
+    // 5a. Update Job as succeeded + increment usage (hosted)
     // ------------------------------------------------------------------------
+    let creditsRemaining: number | null = null;
+
     if (job) {
       try {
         job = await prisma.job.update({
@@ -184,6 +215,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Increment usage counter for hosted mode
+    if (!isSelfHosted && authedUserId) {
+      try {
+        const { incrementUsage } = await import('@/lib/usage');
+        creditsRemaining = await incrementUsage(authedUserId);
+      } catch (err) {
+        console.warn('[generate] Failed to increment usage:', (err as Error).message);
+      }
+    }
+
     // ------------------------------------------------------------------------
     // 5b. If the generation succeeded and isPublic, also create a GalleryAsset
     // ------------------------------------------------------------------------
@@ -195,23 +236,23 @@ export async function POST(req: NextRequest) {
           thumbUrl: result.resultUrl,
           size:     clampSize(Number(width) || 512),
           tool:     tool as Tool,
-          provider: provider as ProviderName,
+          provider: resolvedProvider,
           prompt:   String(prompt).trim(),
           isPublic: true,
         },
       }).catch((err) => {
-        // Non-fatal: gallery creation failure should not surface as a generate error
         console.error('[generate] GalleryAsset creation failed:', err);
       });
     }
 
     return NextResponse.json({
-      ok:             true,
-      job:            job ? serializeJob(job) : null,
-      resultUrl:      result.resultUrl,
-      resultUrls:     result.resultUrls,
-      durationMs:     result.durationMs,
-      resolvedSeed:   result.resolvedSeed,
+      ok:               true,
+      job:              job ? serializeJob(job) : null,
+      resultUrl:        result.resultUrl,
+      resultUrls:       result.resultUrls,
+      durationMs:       result.durationMs,
+      resolvedSeed:     result.resolvedSeed,
+      creditsRemaining,
     });
   } catch (err) {
     // ------------------------------------------------------------------------

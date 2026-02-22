@@ -12,10 +12,119 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
+// NextAuth required models
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  jobs         Job[]
+  subscription Subscription?
+  usagePeriods UsagePeriod[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Billing models
+// ---------------------------------------------------------------------------
+
+model Plan {
+  id              String  @id   // "free" | "pro" | "studio"
+  name            String
+  priceUsdCents   Int           // 0 | 900 | 2900
+  creditsPerMonth Int           // 20 | 200 | 500
+  stripePriceId   String?       // set after Stripe products are created
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  planId               String
+  /// active | canceled | past_due | trialing
+  status               String   @default("active")
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?  @unique
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id])
+
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+}
+
+model UsagePeriod {
+  id          String   @id @default(cuid())
+  userId      String
+  periodStart DateTime
+  periodEnd   DateTime
+  imagesUsed  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, periodStart])
+  @@index([userId, periodStart])
+}
+
+// ---------------------------------------------------------------------------
 // Job — tracks a single generation request through its lifecycle
 // ---------------------------------------------------------------------------
 model Job {
   id        String   @id @default(cuid())
+
+  /// Optional owner — null for anonymous / self-hosted requests
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   /// Tool that created this job: generate | animate | rotate | inpaint | scene
   tool      String   @default("generate")
@@ -39,6 +148,9 @@ model Job {
 
   /// JSON-encoded extra params per tool (e.g. { "style": "rpg", "steps": 20 })
   params    String?
+
+  /// ComfyUI hardware preset used: "lowmem" | "standard" | "hq"
+  comfyPreset String?
 
   // ---- Outputs --------------------------------------------------------------
   /// Primary result URL (single image tools)
@@ -69,6 +181,7 @@ model Job {
   // A job can optionally produce a persisted gallery asset
   asset       GalleryAsset?
 
+  @@index([userId])
   @@index([status])
   @@index([tool])
   @@index([isPublic, createdAt])
