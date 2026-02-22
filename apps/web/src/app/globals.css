@@ -14,6 +14,7 @@
   --bg-elevated:   #1c1c1c;
   --border:        #2c2c2c;
   --border-subtle: #1f1f1f;
+  --border-focus:  #6d28d9;
 
   /* Text */
   --text:          #ebebeb;
@@ -24,6 +25,7 @@
   --accent:        #a78bfa;
   --accent-2:      #c4b5fd;
   --accent-dim:    #7c3aed;
+  --accent-muted:  #5b21b6;
   --accent-glow:   rgba(167, 139, 250, 0.18);
   --grad-from:     #7c3aed;
   --grad-to:       #a78bfa;
