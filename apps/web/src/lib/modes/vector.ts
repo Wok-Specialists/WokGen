@@ -27,7 +27,7 @@ export const vectorMode: ModeContract = {
   licenseKey: 'design_system',
   routes: { landing: '/vector', studio: '/vector/studio', gallery: '/vector/gallery', docs: '/docs/vector' },
   servicePairing: { label: 'WokSpec Design Systems', description: 'Need a complete icon system? WokSpec builds consistent design systems.', href: 'https://wokspec.org' },
-  status: 'coming_soon',
+  status: 'beta',
   targetUsers: ['UI/UX designers', 'Design system maintainers', 'Front-end engineers'],
   notFor: ['Pixel art', 'Photography', 'Code generation'],
   examplePrompts: [

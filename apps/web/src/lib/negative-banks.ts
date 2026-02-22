@@ -221,6 +221,57 @@ export const BUSINESS_NEGATIVES: string[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Vector mode negatives
+// ---------------------------------------------------------------------------
+
+export const VECTOR_NEGATIVES: string[] = [
+  'raster',
+  'pixel art',
+  'photorealistic',
+  'photograph',
+  'painterly',
+  'watercolor',
+  'oil paint',
+  'blurry',
+  'noise',
+  'jpeg artifacts',
+  'gradient mesh',
+  'irregular stroke width',
+  'misaligned nodes',
+  'inconsistent style',
+  'drop shadow',
+  'bevel',
+  'emboss',
+  'lens flare',
+  'glow effects',
+  'busy background',
+  'texture',
+  'multiple styles mixed',
+];
+
+// ---------------------------------------------------------------------------
+// Emoji mode negatives
+// ---------------------------------------------------------------------------
+
+export const EMOJI_NEGATIVES: string[] = [
+  'complex background',
+  'detailed scene',
+  'realistic',
+  'photographic',
+  'multiple characters',
+  'landscape',
+  'text overlay',
+  'watermark',
+  'blurry',
+  'low contrast',
+  'dark',
+  'noise',
+  'tiny details invisible at small size',
+  'inconsistent line weight',
+  'amateurish',
+];
+
+// ---------------------------------------------------------------------------
 // Utility functions
 // ---------------------------------------------------------------------------
 
@@ -231,7 +282,7 @@ export const BUSINESS_NEGATIVES: string[] = [
  * @param tool       — e.g. 'generate', 'animate', 'scene'
  * @param preset     — style preset key (or undefined)
  * @param userNeg    — the user's own negative prompt (prepended with highest priority)
- * @param mode       — 'pixel' | 'business' (selects base negative bank)
+ * @param mode       — 'pixel' | 'business' | 'vector' | 'emoji' (selects base negative bank)
  */
 export function assembleNegativePrompt(
   tool: string,
@@ -248,6 +299,10 @@ export function assembleNegativePrompt(
 
   if (mode === 'business') {
     parts.push(...BUSINESS_NEGATIVES);
+  } else if (mode === 'vector') {
+    parts.push(...VECTOR_NEGATIVES);
+  } else if (mode === 'emoji') {
+    parts.push(...EMOJI_NEGATIVES);
   } else {
     // Pixel mode (and others default to pixel negatives)
     parts.push(...GLOBAL_PIXEL_NEGATIVES);

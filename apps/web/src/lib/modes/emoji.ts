@@ -27,7 +27,7 @@ export const emojiMode: ModeContract = {
   licenseKey: 'commercial_app',
   routes: { landing: '/emoji', studio: '/emoji/studio', gallery: '/emoji/gallery', docs: '/docs/emoji' },
   servicePairing: { label: 'WokSpec Emoji Services', description: 'Need custom emoji packs at scale? WokSpec delivers.', href: 'https://wokspec.org' },
-  status: 'coming_soon',
+  status: 'beta',
   targetUsers: ['Discord server owners', 'App developers', 'Content creators', 'Brand teams'],
   notFor: ['Complex illustrations', 'Pixel game assets', 'Code generation'],
   examplePrompts: [

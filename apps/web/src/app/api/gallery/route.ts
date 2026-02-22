@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
   const sort   = searchParams.get('sort')    ?? 'newest';
   const mode   = searchParams.get('mode')    ?? undefined;
   const mine   = searchParams.get('mine')    === 'true';
+  const styleFilter = searchParams.get('style') ?? null;
 
   // For "mine" filter, require auth
   let authedUserId: string | null = null;
@@ -44,9 +45,11 @@ export async function GET(req: NextRequest) {
     ? { job: { userId: authedUserId } }
     : { isPublic: true };
 
-  if (tool)   where.tool   = tool;
-  if (rarity) where.rarity = rarity;
-  if (mode)   where.mode   = mode;
+  if (tool)        where.tool   = tool;
+  if (rarity)      where.rarity = rarity;
+  if (mode)        where.mode   = mode;
+  // tags is stored as a JSON string — use substring match for style filter
+  if (styleFilter) where.tags   = { contains: styleFilter };
 
   // Prisma SQLite doesn't support full-text search natively;
   // use contains (case-insensitive via mode: 'insensitive' on postgres;

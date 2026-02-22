@@ -80,9 +80,79 @@ const STANDARD_MATRIX: Record<string, Record<string, ProviderPreference[]>> = {
       { provider: 'pollinations' },
     ],
   },
+  vector: {
+    generate: [
+      { provider: 'pollinations' },
+    ],
+    animate:  [{ provider: 'pollinations' }],
+    rotate:   [{ provider: 'pollinations' }],
+    inpaint:  [{ provider: 'pollinations' }],
+    scene:    [{ provider: 'pollinations' }],
+  },
+  emoji: {
+    generate: [
+      { provider: 'pollinations' },
+    ],
+    animate:  [{ provider: 'pollinations' }],
+    rotate:   [{ provider: 'pollinations' }],
+    inpaint:  [{ provider: 'pollinations' }],
+    scene:    [{ provider: 'pollinations' }],
+  },
 };
 
-// All other modes (vector, emoji, uiux image mockup) use the same as business
+// Vector mode: prefer Replicate Recraft V3 SVG for HD (true SVG generation)
+const VECTOR_STANDARD: Record<string, ProviderPreference[]> = {
+  generate: [
+    { provider: 'together',    requires: 'TOGETHER_API_KEY' },
+    { provider: 'huggingface', requires: 'HF_TOKEN' },
+    { provider: 'pollinations' },
+  ],
+  animate:  [{ provider: 'pollinations' }],
+  rotate:   [{ provider: 'together', requires: 'TOGETHER_API_KEY' }, { provider: 'pollinations' }],
+  inpaint:  [{ provider: 'together', requires: 'TOGETHER_API_KEY' }, { provider: 'pollinations' }],
+  scene:    [{ provider: 'together', requires: 'TOGETHER_API_KEY' }, { provider: 'pollinations' }],
+};
+
+const VECTOR_HD: Record<string, ProviderPreference[]> = {
+  generate: [
+    { provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, // Recraft V3 SVG
+    { provider: 'fal',       requires: 'FAL_KEY' },
+    { provider: 'together',  requires: 'TOGETHER_API_KEY' },
+    { provider: 'pollinations' },
+  ],
+  animate:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+  rotate:   [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+  inpaint:  [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+  scene:    [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+};
+
+// Emoji mode: same quality chain as pixel (small-format, high-detail)
+const EMOJI_STANDARD: Record<string, ProviderPreference[]> = {
+  generate: [
+    { provider: 'together',    requires: 'TOGETHER_API_KEY' },
+    { provider: 'huggingface', requires: 'HF_TOKEN' },
+    { provider: 'pollinations' },
+  ],
+  animate:  [{ provider: 'pollinations' }],
+  rotate:   [{ provider: 'together', requires: 'TOGETHER_API_KEY' }, { provider: 'pollinations' }],
+  inpaint:  [{ provider: 'together', requires: 'TOGETHER_API_KEY' }, { provider: 'pollinations' }],
+  scene:    [{ provider: 'pollinations' }],
+};
+
+const EMOJI_HD: Record<string, ProviderPreference[]> = {
+  generate: [
+    { provider: 'fal',       requires: 'FAL_KEY' },
+    { provider: 'replicate', requires: 'REPLICATE_API_TOKEN' },
+    { provider: 'together',  requires: 'TOGETHER_API_KEY' },
+    { provider: 'pollinations' },
+  ],
+  animate:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+  rotate:   [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+  inpaint:  [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+  scene:    [{ provider: 'fal',       requires: 'FAL_KEY' }, { provider: 'pollinations' }],
+};
+
+// All other modes (uiux image mockup) use business routing as fallback
 const FALLBACK_STANDARD: Record<string, ProviderPreference[]> = {
   generate: STANDARD_MATRIX.business.generate,
   animate:  STANDARD_MATRIX.business.animate,
@@ -155,6 +225,28 @@ const HD_MATRIX: Record<string, Record<string, ProviderPreference[]>> = {
       { provider: 'pollinations' },
     ],
   },
+  vector: {
+    generate: [
+      { provider: 'replicate', requires: 'REPLICATE_API_TOKEN' },
+      { provider: 'fal',      requires: 'FAL_KEY' },
+      { provider: 'pollinations' },
+    ],
+    animate:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    rotate:   [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    inpaint:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    scene:    [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+  },
+  emoji: {
+    generate: [
+      { provider: 'replicate', requires: 'REPLICATE_API_TOKEN' },
+      { provider: 'fal',      requires: 'FAL_KEY' },
+      { provider: 'pollinations' },
+    ],
+    animate:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    rotate:   [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    inpaint:  [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+    scene:    [{ provider: 'replicate', requires: 'REPLICATE_API_TOKEN' }, { provider: 'pollinations' }],
+  },
 };
 
 const FALLBACK_HD: Record<string, ProviderPreference[]> = {
@@ -185,20 +277,29 @@ export function resolveOptimalProvider(
   tool: string,
   useHD: boolean,
 ): ProviderName {
-  const matrix = useHD ? HD_MATRIX : STANDARD_MATRIX;
+  // Mode-specific matrices
+  const modeStandardMap: Record<string, Record<string, ProviderPreference[]>> = {
+    ...STANDARD_MATRIX,
+    vector: VECTOR_STANDARD,
+    emoji:  EMOJI_STANDARD,
+  };
+  const modeHdMap: Record<string, Record<string, ProviderPreference[]>> = {
+    ...HD_MATRIX,
+    vector: VECTOR_HD,
+    emoji:  EMOJI_HD,
+  };
+
+  const map = useHD ? modeHdMap : modeStandardMap;
   const fallback = useHD ? FALLBACK_HD : FALLBACK_STANDARD;
 
-  const modeMatrix = matrix[mode] ?? null;
+  const modeMatrix = map[mode] ?? null;
   const preferences: ProviderPreference[] =
     modeMatrix?.[tool] ?? fallback[tool] ?? [{ provider: 'pollinations' }];
 
   for (const pref of preferences) {
-    // If no key required, this provider is always available
     if (!pref.requires) return pref.provider;
-    // If key is present in env, use this provider
     if (hasKey(pref.requires)) return pref.provider;
   }
 
-  // Ultimate fallback — Pollinations requires no key
   return 'pollinations';
 }

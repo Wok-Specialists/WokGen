@@ -16,7 +16,8 @@ export function ModeSwitcher() {
         {MODES_LIST.map(mode => {
           const isActive = activeMode === mode.id;
           const isSoon   = mode.status === 'coming_soon';
-          // Live modes → go to studio; coming-soon → go to landing (waitlist page)
+          const isBeta   = mode.status === 'beta';
+          // All non-coming-soon modes go to studio
           const href = isSoon ? mode.routes.landing : mode.routes.studio;
 
           return (
@@ -38,6 +39,9 @@ export function ModeSwitcher() {
                   aria-current={isActive ? 'page' : undefined}
                 >
                   {mode.shortLabel}
+                  {isBeta && !isActive && (
+                    <span className="mode-tab-badge mode-tab-badge--beta">β</span>
+                  )}
                 </Link>
               )}
             </div>

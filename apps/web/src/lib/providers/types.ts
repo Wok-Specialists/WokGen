@@ -102,6 +102,12 @@ export interface GenerateParams {
 
   /** Free-form extra params forwarded as-is to the provider */
   extra?: Record<string, unknown>;
+
+  /** Product line mode: pixel | business | vector | emoji | uiux */
+  mode?: string;
+
+  /** Whether HD quality was requested (affects model selection) */
+  useHD?: boolean;
 }
 
 // ---------------------------------------------------------------------------

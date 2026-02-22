@@ -45,39 +45,39 @@ const MODES = [
     id: 'vector',
     label: 'WokGen Vector',
     accent: '#34d399',
-    status: 'coming_soon' as const,
+    status: 'beta' as const,
     tagline: 'For design systems',
     desc: 'SVG icon sets, illustration libraries, and design system components. Pure vector, stroke-consistent.',
     icon: '✦',
     highlights: ['SVG Icon Packs', 'Illustration Sets', 'UI Kits', 'Design Tokens'],
     href: '/vector',
-    studioCta: null,
+    studioCta: '/vector/studio',
   },
   {
     id: 'emoji',
     label: 'WokGen Emoji',
     accent: '#fb923c',
-    status: 'coming_soon' as const,
+    status: 'beta' as const,
     tagline: 'For platforms and apps',
     desc: 'Custom emoji packs, reaction sets, Discord/Slack icons, and app icon sets. Platform-correct sizing.',
     icon: '😄',
     highlights: ['Emoji Packs', 'Reaction Sets', 'Sticker Packs', 'App Icons'],
     href: '/emoji',
-    studioCta: null,
+    studioCta: '/emoji/studio',
   },
   {
     id: 'uiux',
     label: 'WokGen UI/UX',
     accent: '#f472b6',
-    status: 'coming_soon' as const,
+    status: 'live' as const,
     tagline: 'For product teams',
     desc: 'React components, Tailwind sections, landing pages, and design system tokens. Prompt → production-ready code.',
     icon: '⌨',
     highlights: ['React Components', 'Tailwind Sections', 'Page Templates', 'Design Tokens'],
     href: '/uiux',
-    studioCta: null,
+    studioCta: '/uiux/studio',
   },
-] as const;
+] satisfies Array<{ id: string; label: string; accent: string; status: 'live' | 'beta' | 'coming_soon'; tagline: string; desc: string; icon: string; highlights: readonly string[]; href: string; studioCta: string }>;
 
 const QUICK_PROMPTS = [
   {
@@ -109,18 +109,32 @@ const QUICK_PROMPTS = [
     accent: '#60a5fa',
   },
   {
+    mode: 'Vector',
+    icon: '✦',
+    label: 'Settings gear icon, outline style, rounded corners',
+    href: '/vector/studio?preset=outline&prompt=Settings+gear+icon+outline+style+rounded+corners',
+    accent: '#34d399',
+  },
+  {
+    mode: 'Emoji',
+    icon: '😄',
+    label: 'Happy blob emoji, Discord-style, expressive',
+    href: '/emoji/studio?preset=blob&prompt=Happy+laughing+blob+emoji+expressive',
+    accent: '#fb923c',
+  },
+  {
+    mode: 'UI/UX',
+    icon: '⌨',
+    label: 'SaaS pricing section, 3 tiers, dark theme',
+    href: '/uiux/studio?prompt=SaaS+pricing+section+3+tiers+dark+minimal',
+    accent: '#f472b6',
+  },
+  {
     mode: 'Pixel',
     icon: '👾',
     label: 'Chibi character sprite, front-facing idle pose',
     href: '/pixel/studio?tool=generate&prompt=Cute+chibi+character+sprite+front-facing+idle+pose',
     accent: '#a78bfa',
-  },
-  {
-    mode: 'Business',
-    icon: '🌐',
-    label: 'SaaS company web hero, dark tech gradient',
-    href: '/business/studio?tool=web-hero&prompt=Developer+tools+company+homepage+dark+tech+background+clean',
-    accent: '#60a5fa',
   },
 ] as const;
 
@@ -197,7 +211,7 @@ export default function PlatformLanding() {
               <Link
                 key={mode.id}
                 href={mode.href}
-                className={`platform-mode-card${mode.status === 'coming_soon' ? ' platform-mode-card--soon' : ''}`}
+                className={`platform-mode-card${(mode.status as string) === 'coming_soon' ? ' platform-mode-card--soon' : mode.status === 'beta' ? ' platform-mode-card--beta' : ''}`}
                 style={{ '--mode-card-accent': mode.accent } as React.CSSProperties}
               >
                 <div className="platform-mode-card-header">
@@ -206,8 +220,8 @@ export default function PlatformLanding() {
                     <div className="platform-mode-label">{mode.label}</div>
                     <div className="platform-mode-tagline">{mode.tagline}</div>
                   </div>
-                  {mode.status === 'coming_soon' && (
-                    <span className="platform-mode-badge">Soon</span>
+                  {mode.status === 'beta' && (
+                    <span className="platform-mode-badge platform-mode-badge--beta">Beta</span>
                   )}
                 </div>
                 <p className="platform-mode-desc">{mode.desc}</p>

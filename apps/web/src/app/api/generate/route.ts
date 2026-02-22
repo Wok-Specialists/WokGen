@@ -17,6 +17,15 @@ import {
   type BusinessMood,
   type BusinessPlatform,
 } from '@/lib/prompt-builder-business';
+import {
+  buildVectorPrompt,
+  buildEmojiPrompt,
+  type VectorTool,
+  type VectorStyle,
+  type VectorWeight,
+  type EmojiStyle,
+  type EmojiPlatform,
+} from '@/lib/prompt-builder-vector';
 import { resolveOptimalProvider } from '@/lib/provider-router';
 import { assembleNegativePrompt, encodeNegativesIntoPositive } from '@/lib/negative-banks';
 import { validateAndSanitize } from '@/lib/prompt-validator';
@@ -156,7 +165,13 @@ export async function POST(req: NextRequest) {
     extra,
   } = body;
 
-  // Resolve and validate mode
+  // Resolve and validate mode — reject unknown modes with a 400
+  if (mode !== undefined && mode !== null && !isSupportedMode(mode)) {
+    return NextResponse.json(
+      { error: `Invalid mode "${mode}". Must be one of: pixel, business, vector, emoji, uiux` },
+      { status: 400 },
+    );
+  }
   const resolvedMode = isSupportedMode(mode) ? mode : 'pixel';
   const modeContract = getMode(resolvedMode);
 
@@ -240,6 +255,52 @@ export async function POST(req: NextRequest) {
         effectiveWidth  = built.width;
         effectiveHeight = built.height;
       }
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Vector mode: enrich prompt via buildVectorPrompt
+  // --------------------------------------------------------------------------
+  if (resolvedMode === 'vector' && effectivePrompt) {
+    const vTool    = (extraRecord.vectorTool   ?? 'icon')    as VectorTool;
+    const vStyle   = (extraRecord.vectorStyle  ?? 'outline') as VectorStyle;
+    const vWeight  = (extraRecord.strokeWeight ?? 'regular') as VectorWeight;
+    const vColors  = typeof body.colorCount === 'number' ? body.colorCount : 1;
+    const built    = buildVectorPrompt({
+      tool:        vTool,
+      concept:     effectivePrompt,
+      style:       vStyle,
+      strokeWeight: vWeight,
+      colorCount:  vColors,
+      category:    typeof body.category === 'string' ? body.category : undefined,
+    });
+    effectivePrompt  = built.prompt;
+    effectiveNeg     = effectiveNeg ? `${effectiveNeg}, ${built.negPrompt}` : built.negPrompt;
+    if (effectiveWidth === 512 && effectiveHeight === 512) {
+      effectiveWidth  = built.width;
+      effectiveHeight = built.height;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Emoji mode: enrich prompt via buildEmojiPrompt
+  // --------------------------------------------------------------------------
+  if (resolvedMode === 'emoji' && effectivePrompt) {
+    const eStyle    = (extraRecord.emojiStyle    ?? 'expressive')  as EmojiStyle;
+    const ePlatform = (extraRecord.emojiPlatform ?? 'universal')   as EmojiPlatform;
+    const eSize     = typeof body.targetSize === 'number' ? body.targetSize : 64;
+    const built     = buildEmojiPrompt({
+      concept:    effectivePrompt,
+      style:      eStyle,
+      targetSize: eSize as 16 | 32 | 64 | 128 | 256,
+      platform:   ePlatform,
+      category:   typeof body.category === 'string' ? body.category : undefined,
+    });
+    effectivePrompt  = built.prompt;
+    effectiveNeg     = effectiveNeg ? `${effectiveNeg}, ${built.negPrompt}` : built.negPrompt;
+    if (effectiveWidth === 512 && effectiveHeight === 512) {
+      effectiveWidth  = built.width;
+      effectiveHeight = built.height;
     }
   }
 
@@ -388,11 +449,13 @@ export async function POST(req: NextRequest) {
     paletteSize:    typeof paletteSize === 'number' ? paletteSize as GenerateParams['paletteSize'] : undefined,
     modelOverride:  effectiveModelOverride,
     extra:          extra as Record<string, unknown> | undefined,
+    mode:           resolvedMode,
+    useHD,
   };
 
   try {
     let actualProvider: ProviderName = resolvedProvider;
-    const result = await generate(resolvedProvider, genParams, config).catch(async (err: unknown) => {
+    const generationPromise = generate(resolvedProvider, genParams, config).catch(async (err: unknown) => {
       if (!isSelfHosted) {
         // Pollinations down → try HuggingFace (if key set) or Replicate as last resort
         if (resolvedProvider === 'pollinations') {
@@ -424,6 +487,13 @@ export async function POST(req: NextRequest) {
       }
       throw err;
     });
+
+    const result = await Promise.race([
+      generationPromise,
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Generation timed out after 3 minutes')), 180_000),
+      ),
+    ]);
 
     // actual provider used (may differ from resolvedProvider if fallback occurred)
     const usedProvider: ProviderName = actualProvider;
@@ -546,11 +616,13 @@ export async function POST(req: NextRequest) {
     console.error(`[generate] Job ${job?.id ?? '(no-db)'} failed:`, err);
 
     const statusCode = serialized.statusCode ?? 500;
+    const hint = getErrorHint(err);
 
     return NextResponse.json(
       {
         ok:    false,
         jobId: job?.id ?? null,
+        hint,
         ...serialized,
       },
       { status: statusCode >= 400 ? statusCode : 500 },
@@ -640,6 +712,15 @@ function detectProvider(): ProviderName {
   if (process.env.FAL_KEY)             return 'fal';
   if (process.env.TOGETHER_API_KEY)    return 'together';
   return 'comfyui';
+}
+
+function getErrorHint(err: unknown): string {
+  const msg = err instanceof Error ? err.message.toLowerCase() : '';
+  if (msg.includes('timed out')) return 'The generation took too long. Try a simpler prompt or a different provider.';
+  if (msg.includes('rate limit') || msg.includes('429')) return 'Rate limit hit. Try again in a moment or switch providers.';
+  if (msg.includes('nsfw') || msg.includes('safety')) return 'Your prompt triggered a safety filter. Try rephrasing it.';
+  if (msg.includes('unauthorized') || msg.includes('401')) return 'API key invalid or expired. Check your provider settings.';
+  return 'Generation failed. Try again or switch providers.';
 }
 
 const VALID_TOOLS    = new Set(['generate', 'animate', 'rotate', 'inpaint', 'scene']);

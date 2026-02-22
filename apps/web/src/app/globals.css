@@ -1103,6 +1103,17 @@
   border-radius: 9999px;
   border: 1px solid var(--surface-border);
 }
+.mode-tab-badge--beta {
+  background: rgba(167,139,250,.1);
+  color: #a78bfa;
+  border-color: rgba(167,139,250,.25);
+}
+.platform-mode-card--beta { opacity: 0.92; }
+.platform-mode-badge--beta {
+  background: rgba(167,139,250,.12);
+  color: #a78bfa;
+  border-color: rgba(167,139,250,.3);
+}
 
 @media (max-width: 640px) {
   .mode-switcher-inner {

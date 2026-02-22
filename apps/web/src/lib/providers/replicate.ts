@@ -19,6 +19,9 @@ export const REPLICATE_MODELS = {
 
   /** Controlnet tile — used for inpainting / upscaling pixel art */
   controlnet_tile: 'andreasjansson/stable-diffusion-inpainting:e490d072a34a94a11e9711ed5a6ba621c3fab884eda1665d9d3a282d65a21180',
+
+  /** Recraft V3 SVG — high-quality vector/SVG generation */
+  recraft_v3_svg: 'recraft-ai/recraft-v3-svg',
 } as const;
 
 export type ReplicateModelKey = keyof typeof REPLICATE_MODELS;
@@ -92,6 +95,11 @@ function resolveModel(params: GenerateParams): string {
   // Allow caller to override; otherwise pick by tool
   if (params.modelOverride) return params.modelOverride;
 
+  // Vector HD → use Recraft V3 SVG for high-quality SVG output
+  if (params.mode === 'vector' && params.useHD) {
+    return REPLICATE_MODELS.recraft_v3_svg;
+  }
+
   switch (params.tool) {
     case 'animate':
       return REPLICATE_MODELS.animate;
@@ -108,6 +116,7 @@ function buildInput(
   const isFlux = model.includes('flux');
   const isSdxl = model.includes('sdxl');
   const isAnimate = model.includes('zeroscope') || model.includes('animate');
+  const isRecraft = model.includes('recraft');
 
   const fullPrompt = buildPrompt({
     tool: params.tool,
@@ -132,6 +141,24 @@ function buildInput(
     params.seed != null && params.seed > 0
       ? params.seed
       : Math.floor(Math.random() * 2 ** 32);
+
+  if (isRecraft) {
+    // Map stylePreset to recraft style param
+    const recraftStyleMap: Record<string, string> = {
+      outline: 'vector_illustration',
+      filled:  'vector_illustration',
+      rounded: 'icon',
+      sharp:   'icon',
+    };
+    const style =
+      (params.stylePreset && recraftStyleMap[params.stylePreset]) ??
+      'vector_illustration';
+    return {
+      prompt: fullPrompt,
+      style,
+      size: params.width ?? 1024,
+    };
+  }
 
   if (isFlux) {
     return {

@@ -7,6 +7,17 @@ import { STYLE_PRESET_TOKENS } from './types';
 // ---------------------------------------------------------------------------
 
 const TOGETHER_API_BASE = 'https://api.together.xyz/v1';
+const TIMEOUT_MS = 30_000;
+
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export const TOGETHER_MODELS = {
   /** FLUX.1-schnell — free tier, fast, high quality */
@@ -83,14 +94,24 @@ export async function togetherGenerate(
     response_format: 'b64_json',
   };
 
-  const res = await fetch(`${TOGETHER_API_BASE}/images/generations`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(`${TOGETHER_API_BASE}/images/generations`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }, TIMEOUT_MS);
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      const pe: ProviderError = new Error(`Request timed out after ${TIMEOUT_MS / 1000}s`);
+      pe.provider = 'together';
+      throw pe;
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     const errBody: TogetherErrorResponse = await res.json().catch(() => ({}));

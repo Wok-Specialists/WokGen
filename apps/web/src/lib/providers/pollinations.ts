@@ -9,10 +9,21 @@
  * the client never has to deal with CORS or Pollinations' redirect chain.
  */
 
-import type { ProviderConfig, GenerateParams, GenerateResult } from './types';
+import type { ProviderConfig, GenerateParams, GenerateResult, ProviderError } from './types';
 import { buildPrompt, buildNegativePrompt } from '../prompt-builder';
 
 const BASE_URL = 'https://image.pollinations.ai/prompt';
+const TIMEOUT_MS = 15_000;
+
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export async function pollinationsGenerate(
   params: GenerateParams,
@@ -57,20 +68,17 @@ export async function pollinationsGenerate(
     url.searchParams.set('negative_prompt', negPrompt);
   }
 
-  const timeoutMs = _config.timeoutMs ?? 120_000;
-
-  const controller = new AbortController();
-  const timeoutId  = setTimeout(() => controller.abort(), timeoutMs);
+  const timeoutMs = _config.timeoutMs ?? TIMEOUT_MS;
 
   let imageBuffer: ArrayBuffer;
   let contentType: string;
 
   try {
-    const res = await fetch(url.toString(), {
-      signal: controller.signal,
-      // Follow redirects (Pollinations sometimes redirects to CDN)
-      redirect: 'follow',
-    });
+    const res = await fetchWithTimeout(
+      url.toString(),
+      { redirect: 'follow' },
+      timeoutMs,
+    );
 
     if (!res.ok) {
       throw Object.assign(
@@ -81,8 +89,13 @@ export async function pollinationsGenerate(
 
     contentType = res.headers.get('content-type') ?? 'image/jpeg';
     imageBuffer = await res.arrayBuffer();
-  } finally {
-    clearTimeout(timeoutId);
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      const pe: ProviderError = new Error(`Request timed out after ${timeoutMs / 1000}s`);
+      pe.provider = 'pollinations';
+      throw pe;
+    }
+    throw err;
   }
 
   // Convert to base64 data URL
