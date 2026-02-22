@@ -504,6 +504,8 @@ function HistoryPanel({
                   src={item.resultUrl}
                   alt=""
                   className="w-full h-full pixel-art object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <span style={{ color: 'var(--text-disabled)', fontSize: 18 }}>?</span>
@@ -1759,6 +1761,12 @@ function StudioInner() {
               <a href="/billing" style={{ color: '#a78bfa', textDecoration: 'none' }}>
                 HD credits — sign in or upgrade →
               </a>
+            </div>
+          )}
+          {!isSelfHosted && !useHD && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.125rem' }}>
+              <span style={{ color: '#10b981', marginRight: '0.25rem' }}>∞</span>
+              Standard generation is always free
             </div>
           )}
         </div>

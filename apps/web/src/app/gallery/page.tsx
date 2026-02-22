@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -343,6 +344,23 @@ function AssetModal({
             <ProviderDot provider={asset.provider} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Link
+              href={`/studio?prompt=${encodeURIComponent(asset.prompt)}`}
+              style={{
+                padding: '5px 10px',
+                borderRadius: 6,
+                background: 'var(--accent-muted, rgba(167,139,250,0.12))',
+                border: '1px solid var(--accent-border, rgba(167,139,250,0.3))',
+                color: '#a78bfa',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              ✦ Make similar
+            </Link>
             <button
               onClick={download}
               style={{

@@ -717,3 +717,31 @@
 }
 .gallery-card:hover .gallery-card-overlay,
 .gallery-card:focus-visible .gallery-card-overlay { opacity: 1; }
+
+/* ── Studio mobile layout ─────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .studio-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100dvh - var(--nav-height));
+    overflow: auto;
+  }
+  .studio-panel-left {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow-y: visible;
+    max-height: none;
+  }
+  .studio-canvas {
+    min-height: 60vh;
+  }
+}
+
+/* ── Mobile nav improvements ──────────────────────────────────────────────── */
+@media (max-width: 500px) {
+  .nav-bar { padding: 0 0.75rem; gap: 0.5rem; }
+  .nav-link { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+}
