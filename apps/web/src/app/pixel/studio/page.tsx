@@ -2132,6 +2132,15 @@ function StudioInner() {
   const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
   const [showAdvanced, setShowAdvanced] = useState(false); // negative prompt toggle
 
+  // SFX / Sounds panel
+  const [showSoundsPanel, setShowSoundsPanel] = useState(false);
+  const [sfxPrompt, setSfxPrompt]             = useState('');
+  const [sfxDuration, setSfxDuration]         = useState(2.0);
+  const [sfxInfluence, setSfxInfluence]       = useState(0.6);
+  const [sfxAudio, setSfxAudio]               = useState<string | null>(null);
+  const [sfxLoading, setSfxLoading]           = useState(false);
+  const [sfxError, setSfxError]               = useState<string | null>(null);
+
   // Workspace
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(() => {
     if (typeof window !== 'undefined') return localStorage.getItem('wokgen:workspace:pixel') ?? null;
@@ -2814,6 +2823,174 @@ function StudioInner() {
           favSaved={favSaved}
           savePromptAsFavorite={savePromptAsFavorite}
         />
+
+        {/* ── 🔊 Sounds panel ───────────────────────────────────────────── */}
+        <div style={{ borderTop: '1px solid var(--surface-border)' }}>
+          <div
+            className="px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-150"
+            onClick={() => setShowSoundsPanel((v) => !v)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setShowSoundsPanel((v) => !v)}
+            aria-expanded={showSoundsPanel}
+          >
+            <span className="section-title">🔊 Sounds</span>
+            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>
+              {showSoundsPanel ? '▾' : '▸'}
+            </span>
+          </div>
+
+          {showSoundsPanel && (
+            <div className="px-4 pb-4 flex flex-col gap-3 animate-fade-in-fast">
+              {/* Prompt label + Auto-suggest */}
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Describe the sound…
+                </label>
+                <button
+                  className="btn-secondary"
+                  style={{ fontSize: '0.7rem', padding: '2px 8px', height: 'auto' }}
+                  onClick={async () => {
+                    if (!prompt.trim()) return;
+                    try {
+                      const res = await fetch('/api/sfx/suggest', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ visualPrompt: prompt, assetType: 'pixel art game asset' }),
+                      });
+                      const data = await res.json() as { suggestion?: string };
+                      if (data.suggestion) setSfxPrompt(data.suggestion);
+                    } catch { /* ignore */ }
+                  }}
+                  title="Auto-suggest sound from image prompt"
+                >
+                  ✦ Auto-suggest
+                </button>
+              </div>
+              <input
+                type="text"
+                className="input"
+                placeholder="e.g. sword swing, fire crackle"
+                value={sfxPrompt}
+                onChange={(e) => setSfxPrompt(e.target.value)}
+                maxLength={500}
+              />
+
+              {/* Duration slider */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs" style={{ color: 'var(--text-secondary)' }}>Duration</label>
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{sfxDuration.toFixed(1)}s</span>
+                </div>
+                <input
+                  type="range"
+                  className="slider"
+                  min={0.5}
+                  max={5.0}
+                  step={0.5}
+                  value={sfxDuration}
+                  onChange={(e) => setSfxDuration(Number(e.target.value))}
+                />
+                <div className="flex justify-between text-xs mt-0.5" style={{ color: 'var(--text-disabled)' }}>
+                  <span>0.5s</span>
+                  <span>5.0s</span>
+                </div>
+              </div>
+
+              {/* Prompt influence */}
+              <div>
+                <label className="text-xs mb-1 block" style={{ color: 'var(--text-secondary)' }}>Prompt influence</label>
+                <div className="flex gap-1">
+                  {([['Low', 0.3], ['Balanced', 0.6], ['Exact', 0.9]] as [string, number][]).map(([label, val]) => (
+                    <button
+                      key={label}
+                      onClick={() => setSfxInfluence(val)}
+                      className="flex-1"
+                      style={{
+                        padding: '3px 0',
+                        borderRadius: 4,
+                        border: '1px solid',
+                        borderColor: sfxInfluence === val ? 'var(--accent-muted)' : 'var(--surface-border)',
+                        background:  sfxInfluence === val ? 'var(--accent-dim)'  : 'transparent',
+                        color:       sfxInfluence === val ? 'var(--accent)'      : 'var(--text-muted)',
+                        fontSize: '0.72rem',
+                        fontWeight: sfxInfluence === val ? 600 : 400,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Generate button */}
+              <button
+                className="btn-primary w-full"
+                style={{ height: 38, fontSize: '0.85rem', fontWeight: 600 }}
+                disabled={sfxLoading || !sfxPrompt.trim()}
+                onClick={async () => {
+                  if (!sfxPrompt.trim()) return;
+                  setSfxLoading(true);
+                  setSfxError(null);
+                  setSfxAudio(null);
+                  try {
+                    const res = await fetch('/api/sfx/generate', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ prompt: sfxPrompt, duration: sfxDuration, promptInfluence: sfxInfluence }),
+                    });
+                    const data = await res.json() as { audioBase64?: string; mimeType?: string; error?: string };
+                    if (!res.ok || data.error) {
+                      setSfxError(data.error ?? 'Sound generation failed');
+                    } else if (data.audioBase64 && data.mimeType) {
+                      setSfxAudio(`data:${data.mimeType};base64,${data.audioBase64}`);
+                    }
+                  } catch {
+                    setSfxError('Sound generation failed');
+                  } finally {
+                    setSfxLoading(false);
+                  }
+                }}
+              >
+                {sfxLoading ? (
+                  <span className="flex items-center justify-center gap-2"><Spinner size="sm" />Generating…</span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <span>🎵</span> Generate Sound
+                  </span>
+                )}
+              </button>
+
+              {/* Error */}
+              {sfxError && (
+                <p className="text-xs" style={{ color: 'var(--error, #ef4444)' }}>{sfxError}</p>
+              )}
+
+              {/* Audio player */}
+              {sfxAudio && (
+                <div className="flex flex-col gap-2">
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio controls src={sfxAudio} className="w-full" style={{ height: 36, borderRadius: 6 }} />
+                  <a
+                    href={sfxAudio}
+                    download={`${sfxPrompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_')}.mp3`}
+                    className="btn-secondary text-center"
+                    style={{ fontSize: '0.78rem', padding: '4px 0', display: 'block', textDecoration: 'none' }}
+                  >
+                    ↓ Download .mp3
+                  </a>
+                </div>
+              )}
+
+              {/* Hint */}
+              <p className="text-xs" style={{ color: 'var(--text-disabled)', marginTop: -4 }}>
+                Free: 3 sounds/day · Great for game assets
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* Generate button */}
         <div

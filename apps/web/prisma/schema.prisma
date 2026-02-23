@@ -45,6 +45,7 @@ model User {
   usagePeriods       UsagePeriod[]
   eralConversations  EralConversation[]
   preference         UserPreference?
+  sfxJobs            SfxJob[]
 }
 
 model Account {
@@ -382,4 +383,19 @@ model RateLimit {
   key      String @id
   count    Int
   reset_at BigInt // Unix ms timestamp when the window resets
+}
+
+// ---------------------------------------------------------------------------
+// SfxJob — tracks a sound effect generation request
+// ---------------------------------------------------------------------------
+model SfxJob {
+  id              String   @id @default(cuid())
+  userId          String?
+  prompt          String
+  durationSeconds Float
+  audioUrl        String?
+  provider        String   @default("elevenlabs")
+  createdAt       DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }

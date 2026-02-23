@@ -167,6 +167,29 @@ function BusinessStudioInner() {
   // Timer ref
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // ── SFX / Audio panel ────────────────────────────────────────────────────
+  const [showAudioPanel, setShowAudioPanel] = useState(false);
+  const [sfxPrompt, setSfxPrompt]           = useState('');
+  const [sfxDuration, setSfxDuration]       = useState(2.0);
+  const [sfxInfluence, setSfxInfluence]     = useState(0.6);
+  const [sfxAudio, setSfxAudio]             = useState<string | null>(null);
+  const [sfxLoading, setSfxLoading]         = useState(false);
+  const [sfxError, setSfxError]             = useState<string | null>(null);
+
+  // Content-aware SFX prompt defaults when tool changes
+  const SFX_DEFAULTS: Record<string, string> = {
+    'logo':      'brand reveal sting, professional, elegant, 2 seconds',
+    'brand-kit': 'brand reveal sting, professional, elegant, 2 seconds',
+    'social':    'notification sound, energetic, attention-grabbing',
+    'slide':     'slide transition, smooth, corporate',
+    'web-hero':  'ambient website sound, modern, subtle',
+  };
+
+  useEffect(() => {
+    setSfxPrompt(SFX_DEFAULTS[activeTool] ?? '');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTool]);
+
   const toastSuccess = (msg: string) => { setToast({ msg, type: 'success' }); setTimeout(() => setToast(null), 3500); };
   const toastError   = (msg: string) => { setToast({ msg, type: 'error' });   setTimeout(() => setToast(null), 4000); };
 
@@ -654,6 +677,168 @@ function BusinessStudioInner() {
             </div>
           </div>
         )}
+
+        {/* ── 🔊 Audio panel ──────────────────────────────────────────────── */}
+        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+          <div
+            className="px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-150"
+            onClick={() => setShowAudioPanel((v) => !v)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setShowAudioPanel((v) => !v)}
+            aria-expanded={showAudioPanel}
+          >
+            <span className="studio-control-label" style={{ fontWeight: 600 }}>🔊 Audio</span>
+            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>
+              {showAudioPanel ? '▾' : '▸'}
+            </span>
+          </div>
+
+          {showAudioPanel && (
+            <div className="px-4 pb-4 flex flex-col gap-3">
+              {/* Prompt label + Auto-suggest */}
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Describe the sound…
+                </label>
+                <button
+                  className="btn-secondary"
+                  style={{ fontSize: '0.7rem', padding: '2px 8px', height: 'auto' }}
+                  onClick={async () => {
+                    if (!prompt.trim()) return;
+                    try {
+                      const res = await fetch('/api/sfx/suggest', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ visualPrompt: prompt, assetType: `business ${activeTool}` }),
+                      });
+                      const data = await res.json() as { suggestion?: string };
+                      if (data.suggestion) setSfxPrompt(data.suggestion);
+                    } catch { /* ignore */ }
+                  }}
+                  title="Auto-suggest audio from visual prompt"
+                >
+                  ✦ Auto-suggest
+                </button>
+              </div>
+              <input
+                type="text"
+                className="studio-input"
+                placeholder="e.g. brand reveal sting, notification sound"
+                value={sfxPrompt}
+                onChange={(e) => setSfxPrompt(e.target.value)}
+                maxLength={500}
+              />
+
+              {/* Duration slider */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs" style={{ color: 'var(--text-secondary)' }}>Duration</label>
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{sfxDuration.toFixed(1)}s</span>
+                </div>
+                <input
+                  type="range"
+                  className="studio-slider"
+                  min={1}
+                  max={10}
+                  step={0.5}
+                  value={sfxDuration}
+                  onChange={(e) => setSfxDuration(Number(e.target.value))}
+                />
+                <div className="flex justify-between text-xs mt-0.5" style={{ color: 'var(--text-disabled)' }}>
+                  <span>1s</span>
+                  <span>10s</span>
+                </div>
+              </div>
+
+              {/* Prompt influence */}
+              <div>
+                <label className="text-xs mb-1 block" style={{ color: 'var(--text-secondary)' }}>Prompt influence</label>
+                <div className="flex gap-1">
+                  {([['Low', 0.3], ['Balanced', 0.6], ['Exact', 0.9]] as [string, number][]).map(([label, val]) => (
+                    <button
+                      key={label}
+                      onClick={() => setSfxInfluence(val)}
+                      className="flex-1"
+                      style={{
+                        padding: '3px 0',
+                        borderRadius: 4,
+                        border: '1px solid',
+                        borderColor: sfxInfluence === val ? 'var(--accent-muted, #60a5fa66)' : 'var(--surface-border)',
+                        background:  sfxInfluence === val ? 'var(--accent-dim, rgba(96,165,250,0.12))' : 'transparent',
+                        color:       sfxInfluence === val ? 'var(--accent, #60a5fa)' : 'var(--text-muted)',
+                        fontSize: '0.72rem',
+                        fontWeight: sfxInfluence === val ? 600 : 400,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Generate audio button */}
+              <button
+                className="btn-primary w-full"
+                style={{ height: 38, fontSize: '0.85rem', fontWeight: 600 }}
+                disabled={sfxLoading || !sfxPrompt.trim()}
+                onClick={async () => {
+                  if (!sfxPrompt.trim()) return;
+                  setSfxLoading(true);
+                  setSfxError(null);
+                  setSfxAudio(null);
+                  try {
+                    const res = await fetch('/api/sfx/generate', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ prompt: sfxPrompt, duration: sfxDuration, promptInfluence: sfxInfluence }),
+                    });
+                    const data = await res.json() as { audioBase64?: string; mimeType?: string; error?: string };
+                    if (!res.ok || data.error) {
+                      setSfxError(data.error ?? 'Audio generation failed');
+                    } else if (data.audioBase64 && data.mimeType) {
+                      setSfxAudio(`data:${data.mimeType};base64,${data.audioBase64}`);
+                    }
+                  } catch {
+                    setSfxError('Audio generation failed');
+                  } finally {
+                    setSfxLoading(false);
+                  }
+                }}
+              >
+                {sfxLoading ? 'Generating…' : <span>🎵 Generate Audio</span>}
+              </button>
+
+              {/* Error */}
+              {sfxError && (
+                <p className="text-xs" style={{ color: 'var(--error, #ef4444)' }}>{sfxError}</p>
+              )}
+
+              {/* Audio player */}
+              {sfxAudio && (
+                <div className="flex flex-col gap-2">
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio controls src={sfxAudio} style={{ width: '100%', height: 36, borderRadius: 6 }} />
+                  <a
+                    href={sfxAudio}
+                    download={`${sfxPrompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_')}.mp3`}
+                    className="btn-secondary text-center"
+                    style={{ fontSize: '0.78rem', padding: '4px 0', display: 'block', textDecoration: 'none' }}
+                  >
+                    ↓ Download .mp3
+                  </a>
+                </div>
+              )}
+
+              {/* Hint */}
+              <p className="text-xs" style={{ color: 'var(--text-disabled)', marginTop: -4 }}>
+                Free: 3 sounds/day · Great for game assets
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* Generate button */}
         <div className="studio-control-section">
