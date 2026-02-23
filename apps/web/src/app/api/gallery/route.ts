@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { auth } from '@/lib/auth';
 
 // ---------------------------------------------------------------------------
 // GET /api/gallery
@@ -132,6 +133,13 @@ export async function GET(req: NextRequest) {
 // }
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
+  // Require authentication
+  const session = await auth();
+  const authedUserId = session?.user?.id;
+  if (!authedUserId) {
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -148,11 +156,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Verify the job exists and has succeeded
+  // Verify the job exists, has succeeded, and belongs to this user
   const job = await prisma.job.findUnique({
     where: { id: jobId },
     select: {
       id:        true,
+      userId:    true,
       status:    true,
       tool:      true,
       provider:  true,
@@ -168,6 +177,11 @@ export async function POST(req: NextRequest) {
       { error: `Job "${jobId}" not found` },
       { status: 404 },
     );
+  }
+
+  // Only the job owner can promote it to the gallery
+  if (job.userId !== authedUserId) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   if (job.status !== 'succeeded') {
@@ -234,6 +248,13 @@ export async function POST(req: NextRequest) {
 // DELETE /api/gallery?id=<assetId>
 // ---------------------------------------------------------------------------
 export async function DELETE(req: NextRequest) {
+  // Require authentication
+  const session = await auth();
+  const authedUserId = session?.user?.id;
+  if (!authedUserId) {
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   const id = req.nextUrl.searchParams.get('id');
 
   if (!id) {
@@ -245,11 +266,16 @@ export async function DELETE(req: NextRequest) {
 
   const existing = await prisma.galleryAsset.findUnique({
     where: { id },
-    select: { id: true },
+    select: { id: true, job: { select: { userId: true } } },
   });
 
   if (!existing) {
     return NextResponse.json({ error: 'Asset not found' }, { status: 404 });
+  }
+
+  // Only the asset owner can delete it
+  if (existing.job?.userId !== authedUserId) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   await prisma.galleryAsset.delete({ where: { id } });
