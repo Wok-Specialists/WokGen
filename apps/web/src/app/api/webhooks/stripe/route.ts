@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { stripe, PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 import { sendBillingReceiptEmail, sendSubscriptionCanceledEmail } from '@/lib/email';
 import type Stripe from 'stripe';
 
 // Raw body required for Stripe signature verification
 export const dynamic = 'force-dynamic';
+
+/** Reverse-lookup: Stripe price ID → our plan ID */
+function planIdFromPriceId(priceId: string): string | null {
+  for (const plan of Object.values(PLANS)) {
+    if (plan.stripePriceId && plan.stripePriceId === priceId) return plan.id;
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   if (!stripe) {
@@ -63,8 +71,8 @@ export async function POST(req: NextRequest) {
           current_period_end: number;
           current_period_start: number;
         };
-        const now = new Date();
-        const periodEnd = new Date(stripeSub.current_period_end * 1000);
+        const periodStart = new Date(stripeSub.current_period_start * 1000);
+        const periodEnd   = new Date(stripeSub.current_period_end   * 1000);
 
         await prisma.subscription.upsert({
           where: { userId },
@@ -74,7 +82,7 @@ export async function POST(req: NextRequest) {
             status:              'active',
             stripeCustomerId:    typeof s.customer === 'string' ? s.customer : s.customer?.id,
             stripeSubscriptionId: stripeSubId,
-            currentPeriodStart:  now,
+            currentPeriodStart:  periodStart,
             currentPeriodEnd:    periodEnd,
           },
           update: {
@@ -82,7 +90,7 @@ export async function POST(req: NextRequest) {
             status:              'active',
             stripeCustomerId:    typeof s.customer === 'string' ? s.customer : s.customer?.id,
             stripeSubscriptionId: stripeSubId,
-            currentPeriodStart:  now,
+            currentPeriodStart:  periodStart,
             currentPeriodEnd:    periodEnd,
           },
         });
@@ -104,9 +112,14 @@ export async function POST(req: NextRequest) {
         });
         if (!existing) break;
 
+        // Resolve planId from the active price ID (handles portal plan changes)
+        const activePriceId = sub.items?.data?.[0]?.price?.id ?? null;
+        const resolvedPlanId = activePriceId ? (planIdFromPriceId(activePriceId) ?? existing.planId) : existing.planId;
+
         await prisma.subscription.update({
           where: { id: existing.id },
           data: {
+            planId:             resolvedPlanId,
             status:             sub.status,
             currentPeriodStart: new Date(sub.current_period_start * 1000),
             currentPeriodEnd:   new Date(sub.current_period_end   * 1000),

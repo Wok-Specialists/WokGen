@@ -91,3 +91,22 @@ export const CREDIT_PACKS = {
 } as const;
 
 export type CreditPackId = keyof typeof CREDIT_PACKS;
+
+// ---------------------------------------------------------------------------
+// HD credit costs per generation type
+// ---------------------------------------------------------------------------
+
+export const CREDIT_COSTS = {
+  /** Browser TTS fallback — always free */
+  voice_standard: 0,
+  /** HuggingFace/Replicate HD voice */
+  voice_hd: 1,
+  /** Text generation — free for all tiers, rate-limited */
+  text_generation: 0,
+  /** Standard image (Pollinations) — always free */
+  image_standard: 0,
+  /** HD image (Replicate FLUX) — 1 credit */
+  image_hd: 1,
+} as const;
+
+export type CreditCostKey = keyof typeof CREDIT_COSTS;
