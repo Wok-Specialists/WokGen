@@ -6,6 +6,7 @@ import { checkRateLimit } from '@/lib/rate-limit';
 
 export const maxDuration = 30;
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Rule-based fallback keyword map
 const KEYWORD_MAP: [RegExp, string][] = [

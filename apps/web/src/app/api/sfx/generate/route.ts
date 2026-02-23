@@ -10,6 +10,7 @@ import { getUserPlanId, PER_MIN_RATE } from '@/lib/quota';
 
 export const maxDuration = 60;
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Daily SFX limits by tier (-1 = unlimited)
 const SFX_DAILY_LIMIT: Record<string, number> = {

@@ -13,6 +13,7 @@ import { prisma } from '@/lib/db';
 // ---------------------------------------------------------------------------
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';

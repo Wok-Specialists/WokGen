@@ -4,6 +4,7 @@ import { removeBackground } from '@/lib/bg-remove';
 import { prisma } from '@/lib/db';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/tools/bg-remove

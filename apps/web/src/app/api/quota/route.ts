@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { getQuotaStatus, getUserPlanId } from '@/lib/quota';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/quota

@@ -486,6 +486,22 @@
 }
 .nav-backlink:hover { color: var(--text-muted); }
 
+.nav-eral-badge {
+  color: #818cf8;
+  background: rgba(129,140,248,0.1);
+  border: 1px solid rgba(129,140,248,0.25);
+  border-radius: 9999px;
+  padding: 2px 8px 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.nav-eral-badge:hover {
+  background: rgba(129,140,248,0.18);
+  box-shadow: 0 0 10px rgba(129,140,248,0.2);
+}
+
 .nav-link {
   font-size: 0.8rem;
   font-weight: 500;
