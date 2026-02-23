@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/speak
@@ -20,66 +21,6 @@ const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const TOGETHER_URL = 'https://api.together.xyz/v1/chat/completions';
 
 const RACHEL_VOICE_ID = '21m00Tcm4TlvDq8ikWAM';
-
-// ─── Daily voice quota (in-memory, per user/IP) ──────────────────────────────
-// NOTE: EralMessage has no "type" column — we track voice usage in-memory.
-const VOICE_DAILY_LIMIT: Record<string, number> = {
-  guest: 2,
-  free:  5,
-  plus:  -1,
-  pro:   -1,
-  max:   -1,
-};
-
-interface DailyBucket { count: number; resetAt: number }
-const dailyStore = new Map<string, DailyBucket>();
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [k, v] of dailyStore.entries()) {
-    if (v.resetAt < now) dailyStore.delete(k);
-  }
-}, 30 * 60 * 1000);
-
-function checkDailyVoiceQuota(
-  key: string,
-  limit: number,
-): { allowed: boolean; used: number; limit: number } {
-  if (limit === -1) return { allowed: true, used: 0, limit: -1 };
-  const now = Date.now();
-  const dayMs = 24 * 60 * 60 * 1000;
-  const bucket = dailyStore.get(key);
-  if (!bucket || bucket.resetAt < now) {
-    dailyStore.set(key, { count: 1, resetAt: now + dayMs });
-    return { allowed: true, used: 1, limit };
-  }
-  if (bucket.count >= limit) return { allowed: false, used: bucket.count, limit };
-  bucket.count++;
-  return { allowed: true, used: bucket.count, limit };
-}
-
-// ─── Per-minute rate limit ────────────────────────────────────────────────────
-interface MinuteBucket { count: number; resetAt: number }
-const minuteStore = new Map<string, MinuteBucket>();
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [k, v] of minuteStore.entries()) {
-    if (v.resetAt < now) minuteStore.delete(k);
-  }
-}, 5 * 60 * 1000);
-
-function checkMinuteRateLimit(key: string, max: number): { allowed: boolean } {
-  const now = Date.now();
-  const bucket = minuteStore.get(key);
-  if (!bucket || bucket.resetAt < now) {
-    minuteStore.set(key, { count: 1, resetAt: now + 60_000 });
-    return { allowed: true };
-  }
-  if (bucket.count >= max) return { allowed: false };
-  bucket.count++;
-  return { allowed: true };
-}
 
 // ─── TTS preprocessing ────────────────────────────────────────────────────────
 
@@ -149,21 +90,26 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── Per-minute rate limit ──────────────────────────────────────────────────
+  // ── Per-minute rate limit (shared across Vercel instances via Redis/Postgres) ─
   const minuteMax: Record<string, number> = {
     guest: 2, free: 5, plus: 15, pro: 15, max: 15,
   };
-  const rl = checkMinuteRateLimit(`voice:min:${rlKey}`, minuteMax[tier] ?? 5);
+  const rl = await checkRateLimit(`voice:min:${rlKey}`, minuteMax[tier] ?? 5, 60_000);
   if (!rl.allowed) {
     return NextResponse.json({ error: 'Rate limit exceeded', code: 'RATE_LIMIT' }, { status: 429 });
   }
 
-  // ── Daily voice quota ──────────────────────────────────────────────────────
+  // ── Daily voice quota (shared across Vercel instances via Redis/Postgres) ────
+  const VOICE_DAILY_LIMIT: Record<string, number> = {
+    guest: 2, free: 5, plus: -1, pro: -1, max: -1,
+  };
   const dailyLimit = VOICE_DAILY_LIMIT[tier] ?? 5;
-  const quota = checkDailyVoiceQuota(`voice:day:${rlKey}`, dailyLimit);
-  if (!quota.allowed) {
+  const dailyRl = dailyLimit === -1
+    ? { allowed: true }
+    : await checkRateLimit(`voice:day:${rlKey}`, dailyLimit, 24 * 60 * 60 * 1000);
+  if (!dailyRl.allowed) {
     return NextResponse.json(
-      { error: 'Daily voice limit reached', limit: quota.limit, code: 'VOICE_QUOTA' },
+      { error: 'Daily voice limit reached', limit: dailyLimit, code: 'VOICE_QUOTA' },
       { status: 429 },
     );
   }

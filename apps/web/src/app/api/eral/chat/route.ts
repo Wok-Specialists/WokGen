@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
@@ -28,33 +29,6 @@ const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' }
 
 // Fallback for eral-7c when Groq key is absent
 const ERAL_7C_TOGETHER_FALLBACK = 'meta-llama/Llama-3.1-70B-Instruct-Turbo';
-
-// ─── Rate limiting (in-memory, keyed by userId or IP) ───────────────────────
-
-interface RateBucket { count: number; resetAt: number }
-const rlStore = new Map<string, RateBucket>();
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [k, v] of rlStore.entries()) {
-    if (v.resetAt < now) rlStore.delete(k);
-  }
-}, 5 * 60 * 1000);
-
-function checkEralRateLimit(key: string, max: number): { allowed: boolean; retryAfter?: number } {
-  const now = Date.now();
-  const windowMs = 60 * 60 * 1000; // 1 hour
-  const bucket = rlStore.get(key);
-  if (!bucket || bucket.resetAt < now) {
-    rlStore.set(key, { count: 1, resetAt: now + windowMs });
-    return { allowed: true };
-  }
-  if (bucket.count >= max) {
-    return { allowed: false, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
-  }
-  bucket.count++;
-  return { allowed: true };
-}
 
 // ─── System prompt ──────────────────────────────────────────────────────────
 
@@ -245,11 +219,11 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   const userId = session?.user?.id;
 
-  // Rate limiting
+  // Rate limiting (1-hour sliding window; shared across Vercel instances via Redis/Postgres)
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   const rlKey = userId ?? ip;
   const rlMax = userId ? 50 : 10;
-  const rl = checkEralRateLimit(`eral:${rlKey}`, rlMax);
+  const rl = await checkRateLimit(`eral:${rlKey}`, rlMax, 60 * 60 * 1000);
   if (!rl.allowed) {
     return NextResponse.json(
       { error: 'Rate limit exceeded', retryAfter: rl.retryAfter },
