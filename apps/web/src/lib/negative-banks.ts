@@ -32,6 +32,10 @@ export const PIXEL_NEGATIVES: string[] = [
   'multiple characters', 'duplicate', 'mirror image', 'extra limbs',
   'deformed', 'mutated', 'text', 'watermark', 'signature', 'artist name',
   'frame', 'border', 'grid lines', 'ui elements outside sprite',
+  // 2027-era artifact patterns
+  'text rendering errors', 'garbled text', 'blurry text', 'inconsistent line weight',
+  'floating limbs', 'extra fingers', 'AI texture repetition', 'tiling artifacts',
+  'color banding', 'JPEG compression artifacts', 'overexposed highlights', 'crushed blacks',
 ];
 
 // ---------------------------------------------------------------------------
@@ -250,6 +254,9 @@ export const BUSINESS_NEGATIVES: string[] = [
   'cluttered', 'crowded', 'chaotic layout', 'too many elements',
   'inconsistent style', 'off-brand colors', 'mixed styles',
   'overexposed', 'bad composition', 'distorted',
+  // 2027-era artifact patterns for business/logo modes
+  'amateur design', 'asymmetric layout', 'drop shadow excess', 'beveled edges',
+  'lens flare', 'neon glow', 'illegible font', 'distorted perspective',
 ];
 
 // ---------------------------------------------------------------------------
@@ -266,6 +273,9 @@ export const VECTOR_NEGATIVES: string[] = [
   'misaligned nodes', 'inconsistent style', 'multiple styles mixed',
   'drop shadow', 'bevel', 'emboss', 'lens flare', 'glow effects',
   'watermark', 'text', 'signature',
+  // 2027-era artifact patterns for vector/icon modes
+  'photorealistic shading', 'gradient fills', 'raster noise', 'soft shadows',
+  'depth of field', 'bokeh', 'chromatic aberration',
 ];
 
 // ---------------------------------------------------------------------------

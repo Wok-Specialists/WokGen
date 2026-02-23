@@ -734,6 +734,9 @@ function OutputPanel({
   displayUrl,
   onBgRemove,
   bgRemoving,
+  compareMode,
+  compareResults,
+  onSelectCompare,
 }: {
   status: JobStatus;
   result: GenerationResult | null;
@@ -754,6 +757,9 @@ function OutputPanel({
   displayUrl?: string | null;
   onBgRemove?: (url: string) => void;
   bgRemoving?: boolean;
+  compareMode?: boolean;
+  compareResults?: GenerationResult[];
+  onSelectCompare?: (r: GenerationResult) => void;
 }) {
   const [zoom, setZoom] = useState<1|2|4>(1);
   const [activeUrl, setActiveUrl] = useState<string | null>(null);
@@ -1005,11 +1011,16 @@ function OutputPanel({
             onClick={() => {
               const url = `${window.location.origin}/assets/${result.jobId}`;
               navigator.clipboard.writeText(url).catch(() => {});
-              // toast handled by parent caller if wired; silent fallback here
             }}
           >
             ⇧ Share
           </button>
+        )}
+        {result?.jobId && !result.jobId.startsWith('anim-') && !result.jobId.startsWith('local') && (
+          <div style={{ display: 'flex', gap: 2 }}>
+            <RatingButton jobId={result.jobId} value={1} label="👍" title="Good result" />
+            <RatingButton jobId={result.jobId} value={-1} label="👎" title="Bad result" />
+          </div>
         )}
         {result?.guestDownloadGated ? (
           <a
@@ -1191,7 +1202,7 @@ function OutputPanel({
       </div>
 
       {/* Batch thumbnail strip */}
-      {batchResults && batchResults.length > 1 && (
+      {batchResults && batchResults.length > 1 && !compareMode && (
         <div
           className="flex items-center gap-2 px-4 py-2 flex-shrink-0 overflow-x-auto"
           style={{ borderTop: '1px solid var(--surface-border)', background: 'var(--surface-overlay)' }}
@@ -1223,6 +1234,60 @@ function OutputPanel({
           <span style={{ fontSize: '0.72rem', color: 'var(--text-faint)', marginLeft: 4 }}>
             {batchResults.length} variations — click to select
           </span>
+        </div>
+      )}
+
+      {/* Compare mode side-by-side */}
+      {compareMode && compareResults && compareResults.length === 2 && (
+        <div
+          className="flex items-center justify-center gap-4 px-4 py-4 flex-shrink-0"
+          style={{ borderTop: '1px solid var(--surface-border)', background: 'var(--surface-overlay)', overflowX: 'auto' }}
+        >
+          {compareResults.map((r: GenerationResult, i: number) => r.resultUrl && (
+            <div
+              key={i}
+              style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <div
+                style={{
+                  border: '1px solid var(--surface-border)',
+                  borderRadius: 6,
+                  padding: 8,
+                  background: 'var(--surface-raised)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={r.resultUrl}
+                  alt={`Variant ${i + 1}`}
+                  className="pixel-art"
+                  style={{
+                    maxWidth: 120,
+                    maxHeight: 120,
+                    objectFit: 'contain',
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: 6, width: '100%' }}>
+                <button
+                  type="button"
+                  className="btn btn--sm"
+                  onClick={() => onSelectCompare?.(r)}
+                  style={{ flex: 1, fontSize: '0.65rem', padding: '3px 6px' }}
+                >
+                  Use this
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -1260,6 +1325,35 @@ function OutputPanel({
         </div>
       )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Rating button — thumbs up / down on a job result
+// ---------------------------------------------------------------------------
+function RatingButton({ jobId, value, label, title }: { jobId: string; value: 1 | -1; label: string; title: string }) {
+  const [rated, setRated] = useState<1 | -1 | null>(null);
+  const handle = async () => {
+    const next = rated === value ? 0 : value;
+    setRated(next === 0 ? null : (next as 1 | -1));
+    await fetch(`/api/jobs/${jobId}/rate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: next }),
+    }).catch(() => {});
+  };
+  return (
+    <button
+      className="btn-ghost btn-xs"
+      onClick={handle}
+      title={title}
+      style={{
+        opacity: rated === value ? 1 : 0.5,
+        filter: rated === value ? 'none' : 'grayscale(1)',
+        transition: 'opacity 0.15s, filter 0.15s',
+        fontSize: 14,
+      }}
+    >{label}</button>
   );
 }
 
@@ -1310,6 +1404,8 @@ function GenerateForm({
   refImageInputRef,
   seed,
   setSeed,
+  lockSeed,
+  setLockSeed,
   steps,
   setSteps,
   guidance,
@@ -1326,6 +1422,9 @@ function GenerateForm({
   setShowFavMenu,
   favSaved,
   savePromptAsFavorite,
+  promptHistory,
+  showPromptHistory,
+  setShowPromptHistory,
 }: {
   tool: Tool;
   prompt: string;
@@ -1372,6 +1471,8 @@ function GenerateForm({
   refImageInputRef: React.RefObject<HTMLInputElement>;
   seed: string;
   setSeed: (v: string) => void;
+  lockSeed: boolean;
+  setLockSeed: (v: boolean | ((prev: boolean) => boolean)) => void;
   steps: number;
   setSteps: (v: number) => void;
   guidance: number;
@@ -1388,6 +1489,9 @@ function GenerateForm({
   setShowFavMenu: (v: boolean | ((prev: boolean) => boolean)) => void;
   favSaved: boolean;
   savePromptAsFavorite: () => void;
+  promptHistory: string[];
+  showPromptHistory: boolean;
+  setShowPromptHistory: (v: boolean | ((prev: boolean) => boolean)) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // Derived control visibility for the active tool
@@ -1480,6 +1584,34 @@ function GenerateForm({
                 </div>
               )}
             </div>
+            {/* History dropdown */}
+            {promptHistory.length > 0 && (
+              <div style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  className="btn-ghost btn-xs"
+                  onClick={() => setShowPromptHistory(v => !v)}
+                  title="Recent prompts"
+                  style={{ fontSize: '0.65rem', padding: '0 2px' }}
+                >
+                  History ▾
+                </button>
+                {showPromptHistory && (
+                  <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: '#1a1a2e', border: '1px solid #303050', borderRadius: 6, minWidth: 280, maxHeight: 220, overflowY: 'auto', padding: 4, marginTop: 4 }}>
+                    {promptHistory.map((p, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '6px 10px', fontSize: 12, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', borderRadius: 4 }}
+                        onClick={() => { setPrompt(p); setShowPromptHistory(false); }}
+                      >
+                        {p.slice(0, 80)}{p.length > 80 ? '…' : ''}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <textarea
             ref={textareaRef}
@@ -2156,6 +2288,30 @@ function GenerateForm({
                 </button>
               )}
             </div>
+            {seed && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                <button
+                  type="button"
+                  title={lockSeed ? 'Unlock seed (will vary each generation)' : 'Lock seed (keep same across generations)'}
+                  onClick={() => setLockSeed(v => !v)}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: 11,
+                    borderRadius: 4,
+                    border: '1px solid #303050',
+                    background: lockSeed ? '#5b21b640' : 'transparent',
+                    color: lockSeed ? '#a78bfa' : 'var(--text-muted)',
+                    cursor: 'pointer',
+                    fontWeight: lockSeed ? 600 : 400,
+                  }}
+                >
+                  {lockSeed ? '🔒 Locked' : '🔓 Lock'}
+                </button>
+                {!lockSeed && (
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Will vary each gen</span>
+                )}
+              </div>
+            )}
           </FormField>
 
           {/* Steps */}
@@ -2243,6 +2399,7 @@ function StudioInner() {
   const [stylePreset, setStylePreset] = useState<StylePreset>('rpg_icon');
   const [presetCategory, setPresetCategory] = useState<PresetCategory>('characters');
   const [seed, setSeed]               = useState('');
+  const [lockSeed, setLockSeed]       = useState(false);
   const [steps, setSteps]             = useState(4);
   const [guidance, setGuidance]       = useState(3.5);
   const [provider, setProvider]       = useState<Provider>('together');
@@ -2250,6 +2407,8 @@ function StudioInner() {
   const [batchCount, setBatchCount]   = useState<1|2|4>(1);
   const [batchResults, setBatchResults] = useState<GenerationResult[]>([]);
   const [selectedBatch, setSelectedBatch] = useState<number>(0);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareResults, setCompareResults] = useState<GenerationResult[]>([]);
   const [useHD, setUseHD]             = useState(false); // HD = Replicate; Standard = Pollinations
   const [showAdvanced, setShowAdvanced] = useState(false); // negative prompt toggle
 
@@ -2326,6 +2485,11 @@ function StudioInner() {
   const [favPrompts, setFavPrompts]     = useState<{ id: string; prompt: string; label?: string }[]>([]);
   const [showFavMenu, setShowFavMenu]   = useState(false);
   const [favSaved, setFavSaved]         = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  // ── Prompt history state ───────────────────────────────────────────────────
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const [showPromptHistory, setShowPromptHistory] = useState(false);
 
   // ── Preference sync ────────────────────────────────────────────────────────
   usePreferenceSync('pixel', { tool: activeTool, size, stylePreset, useHD, assetCategory, pixelEra });
@@ -2455,16 +2619,38 @@ function StudioInner() {
   // ── Keyboard shortcuts ─────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName ?? '').toLowerCase();
+      const inputFocused = tag === 'input' || tag === 'textarea' || tag === 'select';
+
       // ⌘/Ctrl + Enter → generate
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
         e.preventDefault();
-        if (!e.target || !(e.target as HTMLElement).closest('textarea')) {
-          handleGenerate();
-        }
+        handleGenerate();
+        return;
+      }
+      // ⌘/Ctrl + R → regenerate
+      if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
+        e.preventDefault();
+        handleGenerate();
+        return;
+      }
+      // ⌘/Ctrl + ArrowUp → enhance prompt
+      if ((e.metaKey || e.ctrlKey) && e.key === 'ArrowUp') {
+        e.preventDefault();
+        setPrompt((p: string) => {
+          const tag = ', masterwork, highly detailed, crisp pixels';
+          return p.endsWith(tag) ? p : p + tag;
+        });
+        return;
+      }
+      // ? → shortcut sheet (not in inputs)
+      if (!inputFocused && e.key === '?') {
+        e.preventDefault();
+        setShowShortcuts(v => !v);
+        return;
       }
       // 1–5 → switch tool (only when no input focused)
-      const tag = (document.activeElement?.tagName ?? '').toLowerCase();
-      if (tag !== 'input' && tag !== 'textarea' && tag !== 'select') {
+      if (!inputFocused) {
         const toolMap: Record<string, Tool> = {
           '1': 'generate', '2': 'animate', '3': 'rotate', '4': 'inpaint', '5': 'scene',
         };
@@ -2549,6 +2735,14 @@ function StudioInner() {
             { id: gen.jobId, tool: activeTool, prompt: prompt.trim(), resultUrl: gen.resultUrl, provider: 'huggingface', width: genWidth, height: genHeight, seed: baseSeed, createdAt: new Date().toISOString() },
             ...prev.slice(0, 49),
           ]);
+          setPromptHistory(prev => {
+            const next = [prompt.trim(), ...prev.filter(p => p !== prompt.trim())].slice(0, 20);
+            return next;
+          });
+        }
+        // Auto-vary seed if not locked
+        if (!lockSeed && seed) {
+          setSeed(String(baseSeed + 1));
         }
         return;
       }
@@ -2582,7 +2776,9 @@ function StudioInner() {
         },
       });
 
-      const seeds = Array.from({ length: batchCount }, (_, i) =>
+      // Determine number of seeds to generate
+      const numSeeds = compareMode ? 2 : batchCount;
+      const seeds = Array.from({ length: numSeeds }, (_, i) =>
         i === 0 ? baseSeed : baseSeed + i * 137
       );
 
@@ -2618,6 +2814,10 @@ function StudioInner() {
             ...prev.slice(0, 49),
           ]);
         }
+        // Auto-vary seed if not locked
+        if (!lockSeed && seed) {
+          setSeed(String(baseSeed + 1));
+        }
       } else {
         const results = await Promise.allSettled(seeds.map((s, idx) => fetchOne(s, idx)));
         const fulfilled = results
@@ -2627,19 +2827,33 @@ function StudioInner() {
           const firstErr = results.find(r => r.status === 'rejected') as PromiseRejectedResult;
           throw new Error(firstErr?.reason?.message ?? 'All generations failed');
         }
-        setBatchResults(fulfilled);
-        setSelectedBatch(0);
-        setResult(fulfilled[0]);
+        if (compareMode) {
+          setCompareResults(fulfilled);
+          setResult(fulfilled[0]);
+        } else {
+          setBatchResults(fulfilled);
+          setSelectedBatch(0);
+          setResult(fulfilled[0]);
+        }
         fireConfetti('generation');
         setJobStatus('succeeded');
+        setPromptHistory(prev => {
+          const next = [prompt.trim(), ...prev.filter(p => p !== prompt.trim())].slice(0, 20);
+          return next;
+        });
         fulfilled.forEach(gen => {
-          if (gen.resultUrl) {
+          if (gen.resultUrl && !compareMode) {
             setHistory(prev => [
               { id: gen.jobId, tool: activeTool, prompt: prompt.trim(), resultUrl: gen.resultUrl, provider, width: genWidth, height: genHeight, seed: gen.resolvedSeed ?? null, createdAt: new Date().toISOString() },
               ...prev.slice(0, 49),
             ]);
           }
         });
+        // Auto-vary seed if not locked
+        if (!lockSeed && seed) {
+          const nextSeed = baseSeed + numSeeds * 137;
+          setSeed(String(nextSeed));
+        }
       }
 
       if (isPublic) setSavedToGallery(true);
@@ -2651,7 +2865,7 @@ function StudioInner() {
   }, [
     activeTool, prompt, negPrompt, size, aspectRatio, stylePreset, assetCategory, pixelEra,
     bgMode, outlineStyle, paletteSize, steps, guidance,
-    provider, seed, isPublic, apiKeys, comfyuiHost, useHD, refreshCredits, batchCount,
+    provider, seed, lockSeed, isPublic, apiKeys, comfyuiHost, useHD, refreshCredits, batchCount, compareMode,
     animationType, animFrameCount, animFps, animLoop,
   ]);
 
@@ -2952,6 +3166,8 @@ function StudioInner() {
           refImageInputRef={refImageInputRef}
           seed={seed}
           setSeed={setSeed}
+          lockSeed={lockSeed}
+          setLockSeed={setLockSeed}
           steps={steps}
           setSteps={setSteps}
           guidance={guidance}
@@ -2968,6 +3184,9 @@ function StudioInner() {
           setShowFavMenu={setShowFavMenu}
           favSaved={favSaved}
           savePromptAsFavorite={savePromptAsFavorite}
+          promptHistory={promptHistory}
+          showPromptHistory={showPromptHistory}
+          setShowPromptHistory={setShowPromptHistory}
         />
 
         {/* ── 🔊 Sounds panel ───────────────────────────────────────────── */}
@@ -3266,7 +3485,7 @@ function StudioInner() {
                   {([1, 2, 4] as const).map(n => (
                     <button
                       key={n}
-                      onClick={() => setBatchCount(n)}
+                      onClick={() => { setBatchCount(n); setCompareMode(false); }}
                       style={{
                         padding: '2px 8px',
                         borderRadius: 4,
@@ -3283,6 +3502,31 @@ function StudioInner() {
                     </button>
                   ))}
                 </div>
+              </div>
+              {/* Compare mode toggle */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', paddingTop: '0.125rem' }}>
+                <button
+                  type="button"
+                  onClick={() => { 
+                  const nextCompareMode = !compareMode;
+                  setCompareMode(nextCompareMode);
+                  if (nextCompareMode) setBatchCount(1); // when comparing, ensure batch is 1
+                }}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '0.72rem',
+                    borderRadius: 4,
+                    border: '1px solid',
+                    borderColor: compareMode ? 'var(--accent-muted)' : 'var(--surface-border)',
+                    background: compareMode ? 'var(--accent-dim)' : 'transparent',
+                    color: compareMode ? 'var(--accent)' : 'var(--text-muted)',
+                    cursor: 'pointer',
+                    fontWeight: compareMode ? 600 : 400,
+                  }}
+                  title="Generate 2 variants side-by-side for comparison"
+                >
+                  🔀 Compare
+                </button>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.125rem' }}>
                 <span style={{ color: '#10b981', marginRight: '0.25rem' }}>∞</span>
@@ -3314,10 +3558,23 @@ function StudioInner() {
           displayUrl={bgDisplayUrl}
           onBgRemove={handleBgRemove}
           bgRemoving={bgRemoving}
+          compareMode={compareMode}
+          compareResults={compareResults}
           onSelectBatch={(i) => {
             setSelectedBatch(i);
             setResult(batchResults[i] ?? null);
             setBgDisplayUrl(null);
+          }}
+          onSelectCompare={(r) => {
+            setResult(r);
+            setCompareMode(false);
+            setCompareResults([]);
+            if (r.resultUrl) {
+              setHistory(prev => [
+                { id: r.jobId, tool: activeTool, prompt: prompt.trim(), resultUrl: r.resultUrl, provider, width: result?.width ?? 0, height: result?.height ?? 0, seed: r.resolvedSeed ?? null, createdAt: new Date().toISOString() },
+                ...prev.slice(0, 49),
+              ]);
+            }
           }}
         />
 
@@ -3340,6 +3597,36 @@ function StudioInner() {
           onSave={handleSaveSettings}
           onClose={() => setShowSettings(false)}
         />
+      )}
+      {showShortcuts && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Keyboard shortcuts"
+          onClick={() => setShowShortcuts(false)}
+        >
+          <div className="modal" style={{ maxWidth: 440 }} onClick={e => e.stopPropagation()}>
+            <div className="modal__header">
+              <span className="modal__title">Keyboard Shortcuts</span>
+              <button className="btn btn--ghost btn--sm btn--icon" onClick={() => setShowShortcuts(false)} aria-label="Close">✕</button>
+            </div>
+            <div className="modal__body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {([
+                ['⌘ / Ctrl + Enter', 'Generate'],
+                ['⌘ / Ctrl + R', 'Regenerate'],
+                ['⌘ / Ctrl + ↑', 'Enhance prompt'],
+                ['1 – 5', 'Switch tool (Generate / Animate / Rotate / Inpaint / Scene)'],
+                ['?', 'Toggle this shortcut sheet'],
+              ] as [string, string][]).map(([key, desc]) => (
+                <div key={key} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, fontSize: 13 }}>
+                  <kbd style={{ fontFamily: 'monospace', background: '#252538', border: '1px solid #303050', borderRadius: 4, padding: '2px 8px', color: 'var(--accent)', flexShrink: 0 }}>{key}</kbd>
+                  <span style={{ color: 'var(--text-muted)', textAlign: 'right' }}>{desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
       <EralSidebar mode="pixel" tool={activeTool} prompt={prompt} />
     </div>

@@ -26,6 +26,20 @@ const TOOL_SUFFIXES: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
+// Pixel art style modifiers — style → vivid prompt modifiers
+// ---------------------------------------------------------------------------
+
+const PIXEL_STYLE_MODIFIERS: Record<string, string> = {
+  'aseprite':  'aseprite-style sprite, crisp pixel grid, limited 16-color palette, clean black outline, 32x32 resolution',
+  'neo-geo':   'neo-geo arcade art, flat color fills, bold black outline, saturated primary colors, high contrast silhouette',
+  'dithered':  'ordered Bayer matrix dither, 4-color palette, stipple pattern shading, retro ZX Spectrum aesthetic',
+  'gameboy':   'original Game Boy 4-shade green palette, flat shading, chunky pixels, no anti-aliasing',
+  'c64':       'Commodore 64 color palette, character cell graphics, low resolution, distinctive chip color palette',
+  'nes':       'NES color palette, 8x8 tile grid, solid colors, no gradients, horizontal sprite flip symmetry',
+  'isometric': 'isometric pixel art, 2:1 angle, clean tile edges, consistent light direction from top-left',
+};
+
+// ---------------------------------------------------------------------------
 // Era → palette descriptor
 // ---------------------------------------------------------------------------
 
@@ -68,6 +82,8 @@ export interface BuildPixelPromptOptions {
   height?: number;
   /** Sprite/asset type — drives tool-specific suffix */
   spriteType?: string;
+  /** Pixel art style — applies style modifiers (aseprite, neo-geo, dithered, etc) */
+  style?: string;
   /** Pixel era hint — affects palette descriptor */
   era?: string;
   /** Explicit palette size; derived from canvas size if omitted */
@@ -91,6 +107,7 @@ export function buildPixelPrompt(opts: BuildPixelPromptOptions): PixelPromptResu
     width   = 64,
     height  = 64,
     spriteType,
+    style,
     era,
     paletteSize: explicitPalette,
     frameCount,
@@ -108,21 +125,25 @@ export function buildPixelPrompt(opts: BuildPixelPromptOptions): PixelPromptResu
   // 2. User concept — preserved verbatim as the creative core
   if (concept.trim()) parts.push(concept.trim());
 
-  // 3. Sprite-type suffix
+  // 3. Style modifier — vivid style-specific instructions (if provided)
+  const styleModifier = style ? PIXEL_STYLE_MODIFIERS[style] ?? '' : '';
+  if (styleModifier) parts.push(styleModifier);
+
+  // 4. Sprite-type suffix
   const typeSuffix = spriteType ? TOOL_SUFFIXES[spriteType] ?? '' : '';
   if (typeSuffix) parts.push(typeSuffix);
 
-  // 4. Animation frame layout
+  // 5. Animation frame layout
   if (spriteType === 'animation' && frameCount && frameCount > 1) {
     parts.push(
       `sprite sheet, ${frameCount} frames horizontal layout, ${width}x${height} per frame, consistent character across all frames`,
     );
   }
 
-  // 5. Palette enforcement
+  // 6. Palette enforcement
   parts.push(palLabel);
 
-  // 6. Hard pixel art quality constraints
+  // 7. Hard pixel art quality constraints
   parts.push(
     'pixel art character sprite sheet',
     'hard pixel edges',

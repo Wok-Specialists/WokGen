@@ -195,7 +195,17 @@ export default function ApiKeysClient() {
             <tbody>
               {keys.map(k => (
                 <tr key={k.id} className="apikeys-row">
-                  <td className="apikeys-cell-name">{k.name}</td>
+                  <td className="apikeys-cell-name">
+                    {k.name}
+                    {(() => {
+                      const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+                      return new Date(k.createdAt) < ninetyDaysAgo ? (
+                        <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 4, background: '#f59e0b18', color: '#f59e0b', border: '1px solid #f59e0b40', marginLeft: 6 }}>
+                          Rotate — 90+ days old
+                        </span>
+                      ) : null;
+                    })()}
+                  </td>
                   <td><code className="apikeys-prefix">{k.keyPrefix}…</code></td>
                   <td className="apikeys-cell-scopes">
                     {k.scopes.split(',').map(s => (

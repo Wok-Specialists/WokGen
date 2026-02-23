@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import {
   preprocessTextForTTS,
   detectContentType,
+  detectProsodyHints,
   selectOptimalVoice,
   getVoiceSettings,
   estimateCharCount,
@@ -20,6 +21,19 @@ import { getUserPlanId, TTS_MAX_CHARS } from '@/lib/quota';
 //   2. OpenAI TTS  (OPENAI_API_KEY)      — secondary, excellent quality
 //   3. HuggingFace Kokoro (HF_TOKEN)     — fallback
 // ---------------------------------------------------------------------------
+
+function splitDialogue(text: string): { speaker: string; line: string }[] | null {
+  // Detect patterns like: "Alice: Hello" or "[Alice] Hello" or "ALICE: Hello"
+  const lines = text.split('\n').filter(l => l.trim());
+  const matches = lines.map(l => {
+    const m = l.match(/^([A-Z][a-zA-Z\s]{0,20}):\s*(.+)$/);
+    return m ? { speaker: m[1].trim(), line: m[2].trim() } : null;
+  });
+  if (matches.some(m => m !== null) && matches.filter(m => m !== null).length >= 2) {
+    return matches.filter((m): m is { speaker: string; line: string } => m !== null);
+  }
+  return null; // not dialogue format
+}
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -264,13 +278,21 @@ export async function POST(req: NextRequest) {
 
   // ── Pre-process & select voice ───────────────────────────────────────────
   const processedText = preprocessTextForTTS(text);
+  
+  // ── Detect dialogue format ───────────────────────────────────────────────
+  const dialogueLines = splitDialogue(processedText);
+  if (dialogueLines) {
+    logger.info(`[TTS] Dialogue detected with ${dialogueLines.length} speakers: ${dialogueLines.map(d => d.speaker).join(', ')}`);
+  }
+
   const contentType   = detectContentType(processedText);
+  const prosodyHints  = detectProsodyHints(processedText);
   const selectedVoice = customVoiceId
     ? { id: customVoiceId, name: 'Custom' }
     : selectOptimalVoice(style, contentType);
 
   logger.info(
-    `[TTS] style=${style}, contentType=${contentType}, voice=${selectedVoice.name}, hd=${hd}, chars=${estimateCharCount(processedText)}`,
+    `[TTS] style=${style}, contentType=${contentType}, emotion=${prosodyHints.emotion}, pace=${prosodyHints.pace}, voice=${selectedVoice.name}, hd=${hd}, chars=${estimateCharCount(processedText)}`,
   );
 
   // ── Provider chain: ElevenLabs streaming → OpenAI → HuggingFace ──────────
@@ -329,12 +351,14 @@ export async function POST(req: NextRequest) {
   const base64Audio = audioBuffer.toString('base64');
 
   return NextResponse.json({
-    audio:       `data:${mimeType};base64,${base64Audio}`,
+    audio:            `data:${mimeType};base64,${base64Audio}`,
     format,
     provider,
-    voice:       selectedVoice.name,
+    voice:            selectedVoice.name,
     contentType,
-    charCount:   estimateCharCount(processedText),
-    creditsUsed: hd ? 1 : 0,
+    prosody:          prosodyHints,
+    charCount:        estimateCharCount(processedText),
+    creditsUsed:      hd ? 1 : 0,
+    dialogueDetected: !!dialogueLines,
   });
 }

@@ -39,6 +39,17 @@ const ABBREVIATION_MAP: Record<string, string> = {
 // Content type detection for voice selection
 export type ContentType = 'narrative' | 'technical' | 'marketing' | 'dialogue' | 'news' | 'casual';
 
+/**
+ * Detect content type to inform voice selection and prosody adjustments.
+ * Returns both the content classification and optional prosody hints.
+ */
+export interface ContentTypeResult {
+  type: ContentType;
+  emotion: string;
+  pace: string;
+  prosody: string;
+}
+
 export function detectContentType(text: string): ContentType {
   const lower = text.toLowerCase();
 
@@ -63,6 +74,47 @@ export function detectContentType(text: string): ContentType {
     return 'casual';
   }
   return 'narrative';
+}
+
+/**
+ * Detect emotional tone and prosody hints for richer TTS.
+ * Analyzes punctuation, sentence structure, and keywords to infer delivery style.
+ */
+export function detectProsodyHints(text: string): { emotion: string; pace: string; prosody: string } {
+  const lower = text.toLowerCase();
+
+  // Excited (short, energetic, exclamation marks)
+  if (lower.includes('!') && lower.length < 80) {
+    return { emotion: 'excited', pace: 'fast', prosody: 'high pitch' };
+  }
+
+  // Questioning (multiple question marks, curiosity markers)
+  if (lower.match(/\?{2,}/) || lower.includes('really?')) {
+    return { emotion: 'questioning', pace: 'medium', prosody: 'rising intonation' };
+  }
+
+  // Contemplative/slow (many sentences, complex structure)
+  if (lower.split('.').length > 4) {
+    return { emotion: 'neutral', pace: 'slow', prosody: 'steady, measured' };
+  }
+
+  // Persuasive/marketing (action-oriented language)
+  if (lower.match(/buy now|limited time|act fast|don't miss|exclusive offer/)) {
+    return { emotion: 'persuasive', pace: 'energetic', prosody: 'confident' };
+  }
+
+  // Narrative/storytelling (scene/chapter markers)
+  if (lower.match(/chapter|scene|narrator|int\.|once upon|long ago/)) {
+    return { emotion: 'narrative', pace: 'calm', prosody: 'deep and clear' };
+  }
+
+  // Uncertainty or thoughtfulness (hedging language)
+  if (lower.match(/maybe|perhaps|seems|might|could|appears|somewhat/)) {
+    return { emotion: 'thoughtful', pace: 'medium-slow', prosody: 'gentle, contemplative' };
+  }
+
+  // Default neutral
+  return { emotion: 'neutral', pace: 'medium', prosody: 'conversational' };
 }
 
 export function preprocessTextForTTS(text: string): string {
