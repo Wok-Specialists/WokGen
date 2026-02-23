@@ -88,17 +88,23 @@ const nextConfig = {
   },
 
   // ---------------------------------------------------------------------------
-  // CORS headers for the API — allow cross-origin requests from Studio UI
-  // embedded in other apps or called directly (e.g. from CLI tools).
+  // CORS headers for the API.
+  // Allow-Credentials is intentionally NOT set at this level — setting it
+  // alongside a wildcard origin is a security misconfiguration. Individual
+  // routes that genuinely need credentials (e.g. auth callbacks) handle it
+  // themselves. This header set is for unauthenticated/BYOK cross-origin use.
   // ---------------------------------------------------------------------------
   async headers() {
+    const origin = process.env.CORS_ORIGIN ??
+      (process.env.NODE_ENV === 'production'
+        ? (process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wokgen.wokspec.org')
+        : 'http://localhost:3000');
     return [
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Credentials', value: 'true'                                   },
-          { key: 'Access-Control-Allow-Origin',      value: process.env.CORS_ORIGIN ?? (process.env.NODE_ENV === 'production' ? (process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wokgen.wokspec.org') : '*') },
-          { key: 'Access-Control-Allow-Methods',     value: 'GET,POST,PUT,PATCH,DELETE,OPTIONS'      },
+          { key: 'Access-Control-Allow-Origin',  value: origin },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,PATCH,DELETE,OPTIONS' },
           {
             key:   'Access-Control-Allow-Headers',
             value: [
@@ -164,8 +170,8 @@ const nextConfig = {
   // TypeScript / ESLint build behaviour
   // ---------------------------------------------------------------------------
   typescript: {
-    // Type errors are caught by the CI tsc step; do not block production builds.
-    ignoreBuildErrors: true,
+    // Type errors must not ship to production. Fix TS errors rather than ignoring them.
+    ignoreBuildErrors: false,
   },
 
   eslint: {

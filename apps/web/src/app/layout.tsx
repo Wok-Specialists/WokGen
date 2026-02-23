@@ -14,8 +14,6 @@ const EralVoiceButton = nextDynamic(
   { ssr: false },
 );
 
-export const dynamic = 'force-dynamic';
-
 // ---------------------------------------------------------------------------
 const dmSans = DM_Sans({
   subsets: ['latin'],

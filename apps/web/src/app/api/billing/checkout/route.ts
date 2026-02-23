@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { stripe, PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
+import { z } from 'zod';
+
+const CheckoutSchema = z.object({
+  planId: z.enum(['plus', 'pro', 'max']),
+});
 
 export async function POST(req: NextRequest) {
   if (!stripe) {
@@ -13,7 +18,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
 
-  const { planId } = await req.json();
+  let body: z.infer<typeof CheckoutSchema>;
+  try {
+    body = CheckoutSchema.parse(await req.json());
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid request', details: err instanceof Error ? err.message : undefined }, { status: 422 });
+  }
+
+  const { planId } = body;
   const plan = PLANS[planId as keyof typeof PLANS];
   if (!plan || plan.priceUsdCents === 0) {
     return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });

@@ -3,6 +3,20 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { z } from 'zod';
+
+const ChatSchema = z.object({
+  message:        z.string().min(1).max(8000),
+  conversationId: z.string().cuid().optional(),
+  modelVariant:   z.enum(['eral-7c', 'eral-mini', 'eral-code', 'eral-creative']).optional(),
+  context: z.object({
+    mode:          z.string().max(64).optional(),
+    tool:          z.string().max(64).optional(),
+    prompt:        z.string().max(2000).optional(),
+    studioContext: z.string().max(2000).optional(),
+  }).optional(),
+  stream: z.boolean().optional(),
+});
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
@@ -231,20 +245,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: ChatRequest;
+  const contentLength = Number(req.headers.get('content-length') ?? 0);
+  if (contentLength > 16_384) {
+    return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
+  }
+
+  let body: z.infer<typeof ChatSchema>;
   try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    body = ChatSchema.parse(await req.json());
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid request', details: err instanceof Error ? err.message : undefined }, { status: 422 });
   }
 
   const { message, conversationId, modelVariant = 'eral-7c', context, stream } = body;
-
-  if (!message?.trim()) {
-    return NextResponse.json({ error: 'message is required' }, { status: 400 });
-  }
-
-  // Resolve provider config
   let providerConfig: { url: string; apiKey: string; model: string };
   try {
     providerConfig = resolveEndpointAndKey(modelVariant);

@@ -52,7 +52,9 @@ import { buildPrompt as buildEnginePrompt } from '@/lib/prompt-engine';
 // ---------------------------------------------------------------------------
 
 export const runtime = 'nodejs';
-export const maxDuration = 300;
+// Vercel Hobby plan caps serverless functions at 60s.
+// Vercel Pro raises this to 300s — upgrade the plan before changing this value.
+export const maxDuration = 55;
 
 // ---------------------------------------------------------------------------
 // Module-level provider failure tracker
@@ -140,6 +142,10 @@ export async function POST(req: NextRequest) {
     }
 
     // ── 0b. Parse body (needed to determine if HD) ────────────────────────
+    const contentLength = Number(req.headers.get('content-length') ?? 0);
+    if (contentLength > 16_384) {
+      return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
+    }
     let rawBody: Record<string, unknown> = {};
     try {
       rawBody = await req.json();

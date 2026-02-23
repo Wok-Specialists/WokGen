@@ -23,7 +23,21 @@ import { getUserPlanId, TTS_MAX_CHARS } from '@/lib/quota';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-type Language = 'en' | 'es' | 'fr' | 'de' | 'it' | 'pt' | 'pl' | 'ja' | 'ko' | 'zh' | 'hi';
+import { z } from 'zod';
+
+const VOICE_STYLES = ['natural', 'narration', 'newscast', 'customerservice', 'assistant', 'chat', 'enthusiastic', 'friendly', 'hopeful', 'poetry-reading', 'shouting', 'terrified', 'unfriendly', 'whispering'] as const;
+const LANGUAGES = ['en', 'es', 'fr', 'de', 'it', 'pt', 'pl', 'ja', 'ko', 'zh', 'hi'] as const;
+
+const VoiceGenerateSchema = z.object({
+  text:             z.string().min(1).max(10_000),
+  style:            z.enum(VOICE_STYLES).optional(),
+  hd:               z.boolean().optional(),
+  voiceId:          z.string().max(128).optional(),
+  language:         z.enum(LANGUAGES).optional(),
+  emotionIntensity: z.number().min(0).max(1).optional(),
+  voiceClarity:     z.number().min(0).max(1).optional(),
+  naturalPauses:    z.boolean().optional(),
+});
 
 // ---------------------------------------------------------------------------
 // Provider calls
@@ -176,33 +190,24 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Parse body ───────────────────────────────────────────────────────────
-  let body: {
-    text?: string;
-    style?: VoiceStyle;
-    hd?: boolean;
-    voiceId?: string;
-    language?: Language;
-    emotionIntensity?: number;
-    voiceClarity?: number;
-    naturalPauses?: boolean;
-  };
+  const contentLength = Number(req.headers.get('content-length') ?? 0);
+  if (contentLength > 32_768) {
+    return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
+  }
+  let body: z.infer<typeof VoiceGenerateSchema>;
   try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    body = VoiceGenerateSchema.parse(await req.json());
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid request', details: err instanceof Error ? err.message : undefined }, { status: 422 });
   }
 
-  const text     = (body.text ?? '').trim();
+  const text     = body.text.trim();
   const style    = (body.style ?? 'natural') as VoiceStyle;
   const hd       = body.hd ?? false;
   const customVoiceId = body.voiceId;
   const emotionIntensity = body.emotionIntensity;
   const voiceClarity     = body.voiceClarity;
   const naturalPauses    = body.naturalPauses ?? true;
-
-  if (!text) {
-    return NextResponse.json({ error: 'text is required' }, { status: 400 });
-  }
 
   // ── Tier-based char limit ─────────────────────────────────────────────────
   const planId = authedUserId ? await getUserPlanId(authedUserId) : 'guest';

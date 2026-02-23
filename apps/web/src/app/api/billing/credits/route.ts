@@ -3,6 +3,11 @@ import { auth } from '@/lib/auth';
 import { stripe, CREDIT_PACKS } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 import type { CreditPackId } from '@/lib/stripe';
+import { z } from 'zod';
+
+const CreditsSchema = z.object({
+  packId: z.string().min(1).max(64),
+});
 
 export async function POST(req: NextRequest) {
   if (!stripe) {
@@ -14,8 +19,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
 
-  const { packId } = await req.json() as { packId: CreditPackId };
-  const pack = CREDIT_PACKS[packId];
+  let body: z.infer<typeof CreditsSchema>;
+  try {
+    body = CreditsSchema.parse(await req.json());
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid request', details: err instanceof Error ? err.message : undefined }, { status: 422 });
+  }
+
+  const { packId } = body;
+  const pack = CREDIT_PACKS[packId as CreditPackId];
   if (!pack) {
     return NextResponse.json({ error: 'Invalid credit pack' }, { status: 400 });
   }

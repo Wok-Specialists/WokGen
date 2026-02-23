@@ -11,6 +11,14 @@ export const prisma =
       process.env.NODE_ENV === 'development'
         ? ['query', 'error', 'warn']
         : ['error'],
+    // Neon serverless: limit concurrent connections per instance.
+    // The Neon pooler URL (-pooler.) handles multiplexing; keep this low
+    // to avoid exhausting the pool under high Vercel instance counts.
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== 'production') {
