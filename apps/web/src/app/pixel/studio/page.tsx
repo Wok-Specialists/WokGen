@@ -1360,6 +1360,9 @@ function GenerateForm({
   setShowFavMenu,
   favSaved,
   savePromptAsFavorite,
+  promptHistory,
+  showPromptHistory,
+  setShowPromptHistory,
 }: {
   tool: Tool;
   prompt: string;
@@ -1422,6 +1425,9 @@ function GenerateForm({
   setShowFavMenu: (v: boolean | ((prev: boolean) => boolean)) => void;
   favSaved: boolean;
   savePromptAsFavorite: () => void;
+  promptHistory: string[];
+  showPromptHistory: boolean;
+  setShowPromptHistory: (v: boolean | ((prev: boolean) => boolean)) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // Derived control visibility for the active tool
@@ -1514,6 +1520,34 @@ function GenerateForm({
                 </div>
               )}
             </div>
+            {/* History dropdown */}
+            {promptHistory.length > 0 && (
+              <div style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  className="btn-ghost btn-xs"
+                  onClick={() => setShowPromptHistory(v => !v)}
+                  title="Recent prompts"
+                  style={{ fontSize: '0.65rem', padding: '0 2px' }}
+                >
+                  History ▾
+                </button>
+                {showPromptHistory && (
+                  <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: '#1a1a2e', border: '1px solid #303050', borderRadius: 6, minWidth: 280, maxHeight: 220, overflowY: 'auto', padding: 4, marginTop: 4 }}>
+                    {promptHistory.map((p, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '6px 10px', fontSize: 12, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', borderRadius: 4 }}
+                        onClick={() => { setPrompt(p); setShowPromptHistory(false); }}
+                      >
+                        {p.slice(0, 80)}{p.length > 80 ? '…' : ''}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <textarea
             ref={textareaRef}
@@ -2362,6 +2396,10 @@ function StudioInner() {
   const [favSaved, setFavSaved]         = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
+  // ── Prompt history state ───────────────────────────────────────────────────
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const [showPromptHistory, setShowPromptHistory] = useState(false);
+
   // ── Preference sync ────────────────────────────────────────────────────────
   usePreferenceSync('pixel', { tool: activeTool, size, stylePreset, useHD, assetCategory, pixelEra });
 
@@ -2606,6 +2644,10 @@ function StudioInner() {
             { id: gen.jobId, tool: activeTool, prompt: prompt.trim(), resultUrl: gen.resultUrl, provider: 'huggingface', width: genWidth, height: genHeight, seed: baseSeed, createdAt: new Date().toISOString() },
             ...prev.slice(0, 49),
           ]);
+          setPromptHistory(prev => {
+            const next = [prompt.trim(), ...prev.filter(p => p !== prompt.trim())].slice(0, 20);
+            return next;
+          });
         }
         return;
       }
@@ -2689,6 +2731,10 @@ function StudioInner() {
         setResult(fulfilled[0]);
         fireConfetti('generation');
         setJobStatus('succeeded');
+        setPromptHistory(prev => {
+          const next = [prompt.trim(), ...prev.filter(p => p !== prompt.trim())].slice(0, 20);
+          return next;
+        });
         fulfilled.forEach(gen => {
           if (gen.resultUrl) {
             setHistory(prev => [
@@ -3025,6 +3071,9 @@ function StudioInner() {
           setShowFavMenu={setShowFavMenu}
           favSaved={favSaved}
           savePromptAsFavorite={savePromptAsFavorite}
+          promptHistory={promptHistory}
+          showPromptHistory={showPromptHistory}
+          setShowPromptHistory={setShowPromptHistory}
         />
 
         {/* ── 🔊 Sounds panel ───────────────────────────────────────────── */}
