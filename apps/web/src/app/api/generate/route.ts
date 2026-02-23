@@ -7,6 +7,13 @@ import {
   serializeError,
 } from '@/lib/providers';
 import { checkRateLimit } from '@/lib/rate-limit';
+import {
+  claimStdSlot,
+  checkConcurrent,
+  releaseConcurrentSlot,
+  getUserPlanId,
+  PER_MIN_RATE,
+} from '@/lib/quota';
 import { sendLowCreditsEmail } from '@/lib/email';
 import { isSupportedMode, getMode } from '@/lib/modes';
 import type { ProviderName, Tool, GenerateParams, GenerateResult } from '@/lib/providers';
@@ -86,60 +93,74 @@ export async function POST(req: NextRequest) {
   const isSelfHosted = process.env.SELF_HOSTED === 'true';
 
   // --------------------------------------------------------------------------
-  // 0. Auth + HD credit check (hosted mode only)
+  // 0. Auth + quota enforcement (hosted mode only)
+  //
+  // Tiers enforced:
+  //   guest → 3 std/day per IP,  2 req/min,  max 1 concurrent
+  //   free  → 10 std/day,        5 req/min,  max 2 concurrent
+  //   plus  → unlimited std,    15 req/min,  max 3 concurrent
+  //   pro   → unlimited std,    30 req/min,  max 5 concurrent
   // --------------------------------------------------------------------------
   let authedUserId: string | null = null;
-  let useHD = false; // whether to use Replicate (HD) vs Pollinations (standard)
+  let useHD = false;
+
+  // Extract client IP once (used for both rate-limit and guest quota)
+  const clientIP =
+    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
 
   if (!isSelfHosted) {
     const { auth } = await import('@/lib/auth');
     const session = await auth();
     authedUserId = session?.user?.id ?? null;
 
-    // Determine rate-limit key: userId for authed, IP for guest
-    const rateLimitKey = authedUserId
-      ?? req.headers.get('x-forwarded-for')?.split(',')[0].trim()
-      ?? req.headers.get('x-real-ip')
-      ?? 'unknown';
+    // ── 0a. Per-minute rate limit ─────────────────────────────────────────
+    // Key: userId for authenticated users, IP for guests.
+    // Rate limits enforced via Redis (shared across all Vercel instances).
+    const rateLimitKey = authedUserId ?? clientIP;
 
-    // Guests: 10 req/min; authed users: 30 req/min
-    // (increased to handle brand-kit which fires 4 parallel requests)
-    const maxReqs = authedUserId ? 30 : 10;
-    const rl = await checkRateLimit(rateLimitKey, maxReqs);
+    // Resolve plan tier for rate limit (skip heavy DB lookup; use fast path)
+    // We'll do the full planId lookup below only for quota enforcement.
+    let rlPlanId = 'guest';
+    if (authedUserId) {
+      rlPlanId = await getUserPlanId(authedUserId); // ~1 DB read, cached in Redis
+    }
+    const rlTier  = authedUserId ? rlPlanId : 'guest';
+    const maxReqs = PER_MIN_RATE[rlTier] ?? PER_MIN_RATE.free;
+
+    const rl = await checkRateLimit(rateLimitKey, maxReqs, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
-        { error: `Rate limit exceeded. Try again in ${rl.retryAfter}s.` },
-        { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+        { error: `Too many requests. Try again in ${rl.retryAfter}s.` },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfter ?? 60) } },
       );
     }
 
-    // Parse quality preference from body (peek ahead)
+    // ── 0b. Parse body (needed to determine if HD) ────────────────────────
     let rawBody: Record<string, unknown> = {};
     try {
       rawBody = await req.json();
-      // Re-attach parsed body so we don't need to parse again below
       (req as NextRequest & { _parsedBody?: Record<string, unknown> })._parsedBody = rawBody;
     } catch {
       return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
 
     const requestedHD = rawBody.quality === 'hd';
+    const planId      = authedUserId ? rlPlanId : 'guest'; // reuse already-fetched planId
 
+    // ── 0c. HD credits check ──────────────────────────────────────────────
     if (requestedHD) {
-      // Guests cannot use HD
       if (!authedUserId) {
         return NextResponse.json(
           { error: 'Sign in to use HD generation.' },
           { status: 401 },
         );
       }
-
-      // Check HD credits: monthly allocation first, then top-up bank
       const user = await prisma.user.findUnique({
         where: { id: authedUserId },
         include: { subscription: { include: { plan: true } } },
       });
-
       const monthlyAllocation = user?.subscription?.plan.creditsPerMonth ?? 0;
       const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
       const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
@@ -153,11 +174,55 @@ export async function POST(req: NextRequest) {
             error: 'No HD credits remaining. Buy a top-up pack or upgrade your plan.',
             hdCredits: { monthlyRemaining: 0, topUpBank: 0 },
           },
-          { status: 429 },
+          { status: 402 },
         );
       }
     }
-    // Standard (Pollinations) is always free for everyone — no check needed
+
+    // ── 0d. Standard daily quota ──────────────────────────────────────────
+    // Enforced for ALL standard (non-HD) generations, including guests.
+    // Atomic: either claims the slot or rejects. No double-counting.
+    if (!requestedHD) {
+      const quota = await claimStdSlot(authedUserId, clientIP, planId);
+      if (!quota.allowed) {
+        const isGuest = !authedUserId;
+        return NextResponse.json(
+          {
+            error: isGuest
+              ? `Daily limit reached (${quota.limit} free generations/day). Sign up for more.`
+              : `Daily generation limit reached (${quota.used}/${quota.limit}). Resets in ${Math.ceil((quota.retryAfter ?? 3600) / 3600)}h.`,
+            quota: {
+              used:       quota.used,
+              limit:      quota.limit,
+              remaining:  0,
+              tier:       quota.tier,
+              resetsIn:   quota.retryAfter,
+            },
+            code: 'QUOTA_EXCEEDED',
+          },
+          { status: 429, headers: { 'Retry-After': String(quota.retryAfter ?? 3600) } },
+        );
+      }
+
+      // Attach quota info to response headers for frontend to read
+      (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining = quota.remaining;
+    }
+
+    // ── 0e. Concurrent request limit ─────────────────────────────────────
+    // Prevents one user from monopolising generation workers.
+    const concur = await checkConcurrent(authedUserId, clientIP, planId);
+    if (!concur.allowed) {
+      // For guests: release the concurrent slot we just claimed
+      if (!authedUserId) await releaseConcurrentSlot(clientIP);
+      return NextResponse.json(
+        {
+          error: 'You already have a generation in progress. Please wait for it to finish.',
+          concurrent: { running: concur.running, max: concur.max },
+          code: 'CONCURRENT_LIMIT',
+        },
+        { status: 503 },
+      );
+    }
   }
 
 
@@ -167,7 +232,6 @@ export async function POST(req: NextRequest) {
   // --------------------------------------------------------------------------
   let body: Record<string, unknown>;
   try {
-    // In hosted mode body was already parsed above; in self-hosted parse now
     body = (req as NextRequest & { _parsedBody?: Record<string, unknown> })._parsedBody
       ?? await req.json();
   } catch {
@@ -766,6 +830,10 @@ export async function POST(req: NextRequest) {
       resolvedSeed:        result.resolvedSeed,
       hdCreditsRemaining,
       quality:             useHD ? 'hd' : 'standard',
+      // Quota info for frontend display (undefined for HD/paid tiers)
+      quotaRemaining: !useHD
+        ? (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining
+        : undefined,
     });
   } catch (err) {
     // ------------------------------------------------------------------------

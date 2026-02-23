@@ -1,28 +1,126 @@
 /**
- * Rate limiter — uses Upstash Redis when UPSTASH_REDIS_REST_URL is set,
- * falls back to in-memory sliding window (acceptable for single-instance dev).
+ * Rate limiter — sliding window per key.
  *
- * Upstash is edge-compatible and persists across Vercel serverless instances,
- * fixing the multi-instance bypass issue with the in-memory fallback.
+ * Primary:  Upstash Redis (shared across ALL Vercel serverless instances).
+ *           This is the ONLY correct option at scale. In-memory rate limiting
+ *           is silently bypassed when Vercel spawns multiple instances.
+ *
+ * Fallback: Postgres-backed rate limiting via WokGen's own DB.
+ *           Slower (~10ms) but correct. Used when Redis is not configured.
+ *
+ * Last resort: In-memory — ONLY acceptable for local development.
+ *              Will NOT enforce limits across concurrent production instances.
  */
 
-// ─── In-memory fallback (dev / missing env vars) ──────────────────────────
+import { prisma } from '@/lib/db';
 
-interface Bucket { count: number; resetAt: number }
-const store = new Map<string, Bucket>();
+// ─── Upstash Redis (primary) ───────────────────────────────────────────────
 
-setInterval(() => {
-  const now = Date.now();
-  Array.from(store.entries()).forEach(([key, bucket]) => {
-    if (bucket.resetAt < now) store.delete(key);
-  });
-}, 5 * 60 * 1000);
+let _upstashLimiter: ((key: string, max: number, windowMs: number) => Promise<{ allowed: boolean; retryAfter?: number }>) | null | undefined = undefined;
 
-function checkInMemory(key: string, maxRequests: number, windowMs: number): { allowed: boolean; retryAfter?: number } {
-  const now = Date.now();
-  const existing = store.get(key);
+function getUpstashLimiter() {
+  if (_upstashLimiter !== undefined) return _upstashLimiter;
+  const url   = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) { _upstashLimiter = null; return null; }
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Redis } = require('@upstash/redis');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Ratelimit } = require('@upstash/ratelimit');
+    const redis = new Redis({ url, token });
+    const limiters = new Map<string, ReturnType<typeof Ratelimit>>();
+
+    _upstashLimiter = async (key: string, max: number, windowMs: number) => {
+      const cacheKey = `${max}:${windowMs}`;
+      if (!limiters.has(cacheKey)) {
+        limiters.set(cacheKey, new Ratelimit({
+          redis,
+          limiter: Ratelimit.slidingWindow(max, `${windowMs}ms`),
+          prefix:  'wokgen:rl',
+        }));
+      }
+      const result = await limiters.get(cacheKey)!.limit(key);
+      return result.success
+        ? { allowed: true }
+        : { allowed: false, retryAfter: Math.ceil((result.reset - Date.now()) / 1000) };
+    };
+  } catch {
+    _upstashLimiter = null;
+  }
+
+  return _upstashLimiter;
+}
+
+// ─── Postgres fallback (correct at scale, no Redis required) ──────────────
+// Uses a single RateLimit table row per key, with atomic compare-and-swap.
+
+async function checkPostgres(
+  key: string,
+  maxRequests: number,
+  windowMs: number,
+): Promise<{ allowed: boolean; retryAfter?: number }> {
+  const now   = Date.now();
+  const until = now + windowMs;
+
+  try {
+    // Upsert: create the row if missing, reset if window expired, else increment
+    const result = await prisma.$queryRaw<Array<{ count: number; reset_at: bigint }>>`
+      INSERT INTO "RateLimit" (key, count, reset_at)
+      VALUES (${key}, 1, ${until})
+      ON CONFLICT (key) DO UPDATE SET
+        count    = CASE
+                     WHEN "RateLimit".reset_at < ${now} THEN 1
+                     ELSE "RateLimit".count + 1
+                   END,
+        reset_at = CASE
+                     WHEN "RateLimit".reset_at < ${now} THEN ${until}
+                     ELSE "RateLimit".reset_at
+                   END
+      RETURNING count, reset_at
+    `;
+
+    const row       = result[0];
+    const count     = row?.count ?? 1;
+    const resetAt   = Number(row?.reset_at ?? until);
+    const retryAfter = Math.ceil((resetAt - now) / 1000);
+
+    if (count > maxRequests) {
+      return { allowed: false, retryAfter };
+    }
+    return { allowed: true };
+  } catch {
+    // DB unavailable — fall through to in-memory (development only)
+    return checkInMemory(key, maxRequests, windowMs);
+  }
+}
+
+// ─── In-memory (development / last resort) ────────────────────────────────
+// IMPORTANT: This is NOT shared across Vercel instances.
+// Only acceptable for local development where there is a single process.
+
+interface MemBucket { count: number; resetAt: number }
+const _memStore = new Map<string, MemBucket>();
+
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, bucket] of _memStore.entries()) {
+      if (bucket.resetAt < now) _memStore.delete(key);
+    }
+  }, 5 * 60_000);
+}
+
+function checkInMemory(
+  key: string,
+  maxRequests: number,
+  windowMs: number,
+): { allowed: boolean; retryAfter?: number } {
+  const now      = Date.now();
+  const existing = _memStore.get(key);
   if (!existing || existing.resetAt < now) {
-    store.set(key, { count: 1, resetAt: now + windowMs });
+    _memStore.set(key, { count: 1, resetAt: now + windowMs });
     return { allowed: true };
   }
   if (existing.count >= maxRequests) {
@@ -32,63 +130,26 @@ function checkInMemory(key: string, maxRequests: number, windowMs: number): { al
   return { allowed: true };
 }
 
-// ─── Upstash Redis limiter ─────────────────────────────────────────────────
-
-let upstashLimiter: ((key: string, max: number, windowMs: number) => Promise<{ allowed: boolean; retryAfter?: number }>) | null = null;
-
-function getUpstashLimiter() {
-  if (upstashLimiter) return upstashLimiter;
-  const url   = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-
-  // Lazy import so build doesn't fail if package is absent
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Redis } = require('@upstash/redis');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Ratelimit } = require('@upstash/ratelimit');
-
-  const redis = new Redis({ url, token });
-
-  // Cache per-window limiters
-  const limiters = new Map<string, ReturnType<typeof Ratelimit>>();
-
-  upstashLimiter = async (key: string, max: number, windowMs: number) => {
-    const cacheKey = `${max}:${windowMs}`;
-    if (!limiters.has(cacheKey)) {
-      limiters.set(cacheKey, new Ratelimit({
-        redis,
-        limiter: Ratelimit.slidingWindow(max, `${windowMs}ms`),
-        prefix:  'wokgen:rl',
-      }));
-    }
-    const limiter = limiters.get(cacheKey)!;
-    const result  = await limiter.limit(key);
-    return result.success
-      ? { allowed: true }
-      : { allowed: false, retryAfter: Math.ceil((result.reset - Date.now()) / 1000) };
-  };
-
-  return upstashLimiter;
-}
-
 // ─── Public API ───────────────────────────────────────────────────────────
 
 /**
- * @returns `{ allowed: true }` when under limit, `{ allowed: false, retryAfter }` when over.
+ * Check rate limit for a key. Returns immediately.
+ *
+ * Uses Redis → Postgres → in-memory in that priority order.
+ * Redis is the only option that works correctly across Vercel instances.
  */
 export async function checkRateLimit(
-  userId: string,
+  key: string,
   maxRequests = 10,
-  windowMs = 60_000,
+  windowMs    = 60_000,
 ): Promise<{ allowed: boolean; retryAfter?: number }> {
-  const limiter = getUpstashLimiter();
-  if (limiter) {
+  const upstash = getUpstashLimiter();
+  if (upstash) {
     try {
-      return await limiter(userId, maxRequests, windowMs);
+      return await upstash(key, maxRequests, windowMs);
     } catch {
-      // Upstash unavailable — fall through to in-memory
+      // Redis unavailable — fall through
     }
   }
-  return checkInMemory(userId, maxRequests, windowMs);
+  return checkPostgres(key, maxRequests, windowMs);
 }

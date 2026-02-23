@@ -32,6 +32,11 @@ model User {
   /// Whether new generations default to public (community gallery opt-in)
   publicGenerationsDefault Boolean @default(false)
 
+  /// Standard (free-tier) images generated today — atomic daily quota counter
+  stdGenToday  Int     @default(0)
+  /// UTC date YYYY-MM-DD of the current stdGenToday window (resets at midnight UTC)
+  stdGenDate   String?
+
   accounts           Account[]
   sessions           Session[]
   jobs               Job[]
@@ -358,4 +363,23 @@ model UserPreference {
 
   @@unique([userId])
   @@index([userId])
+}
+
+/// Guest (unauthenticated) standard generation usage by IP per day.
+/// Used as DB fallback when Redis is unavailable.
+model GuestUsage {
+  ip    String
+  date  String  // YYYY-MM-DD UTC
+  count Int     @default(0)
+
+  @@id([ip, date])
+  @@index([date])
+}
+
+/// Per-key sliding-window rate limit counters.
+/// Used as fallback when Upstash Redis is not configured.
+model RateLimit {
+  key      String @id
+  count    Int
+  reset_at BigInt // Unix ms timestamp when the window resets
 }
