@@ -1376,6 +1376,19 @@ function GenerateForm({
     ta.style.height = `${ta.scrollHeight}px`;
   }, [prompt]);
 
+  // Close My Prompts dropdown on outside click
+  useEffect(() => {
+    if (!showFavMenu) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      // closest ancestor with data-fav-menu closes on outside click
+      const menu = document.querySelector('[data-fav-menu]');
+      if (menu && !menu.contains(target)) setShowFavMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showFavMenu, setShowFavMenu]);
+
   const examples = EXAMPLE_PROMPTS[tool];
   const canGenerate = prompt.trim().length > 0 && !isLoading;
 
@@ -1401,7 +1414,7 @@ function GenerateForm({
               </button>
               {/* My Prompts dropdown */}
               {favPrompts.length > 0 && (
-                <div style={{ position: 'relative' }}>
+                <div data-fav-menu style={{ position: 'relative' }}>
                   <button
                     title="My saved prompts"
                     onClick={() => setShowFavMenu(v => !v)}
@@ -3005,7 +3018,7 @@ function StudioInner() {
 
               {/* Generate button */}
               <button
-                className="btn-primary w-full"
+                className="btn btn-primary w-full"
                 style={{ height: 38, fontSize: '0.85rem', fontWeight: 600 }}
                 disabled={sfxLoading || !sfxPrompt.trim()}
                 onClick={async () => {
@@ -3119,7 +3132,7 @@ function StudioInner() {
 
           <button
             data-generate-btn
-            className="btn-primary w-full"
+            className="btn btn-primary w-full"
             style={{
               height: 44,
               fontSize: '0.9rem',

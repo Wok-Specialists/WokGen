@@ -201,6 +201,17 @@ function BusinessStudioInner() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTool]);
 
+  // Close My Prompts dropdown on outside click
+  useEffect(() => {
+    if (!showFavMenu) return;
+    const handler = (e: MouseEvent) => {
+      const menu = document.querySelector('[data-fav-menu]');
+      if (menu && !menu.contains(e.target as Node)) setShowFavMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showFavMenu]);
+
   const toastSuccess = (msg: string) => { setToast({ msg, type: 'success' }); setTimeout(() => setToast(null), 3500); };
   const toastError   = (msg: string) => { setToast({ msg, type: 'error' });   setTimeout(() => setToast(null), 4000); };
 
@@ -526,7 +537,7 @@ function BusinessStudioInner() {
               </button>
               {/* My Prompts dropdown */}
               {favPrompts.length > 0 && (
-                <div style={{ position: 'relative' }}>
+                <div data-fav-menu style={{ position: 'relative' }}>
                   <button
                     title="My saved prompts"
                     onClick={() => setShowFavMenu(v => !v)}
@@ -918,7 +929,7 @@ function BusinessStudioInner() {
         {/* Generate button */}
         <div className="studio-control-section">
           <button
-            className="btn-primary btn-generate"
+            className="btn btn-primary btn-generate"
             onClick={handleGenerate}
             disabled={jobStatus === 'running' || !prompt.trim()}
           >
