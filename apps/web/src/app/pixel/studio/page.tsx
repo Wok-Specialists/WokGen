@@ -18,6 +18,7 @@ import { usePreferenceSync } from '@/hooks/usePreferenceSync';
 import { useWAPListener } from '@/hooks/useWAPListener';
 import { QuotaBadge } from '@/components/quota-badge';
 import { ColorPalette } from '@/components/color-palette';
+import PromptIntelligenceBar from '@/app/_components/PromptIntelligenceBar';
 import SfxBrowser from '@/components/sfx-browser';
 
 // ---------------------------------------------------------------------------
@@ -1622,6 +1623,11 @@ function GenerateForm({
             rows={3}
             maxLength={200}
             style={{ resize: 'none', minHeight: 72 }}
+          />
+          <PromptIntelligenceBar
+            prompt={prompt}
+            mode="pixel"
+            onAccept={(enriched) => setPrompt(enriched.slice(0, 200))}
           />
         </div>
 
