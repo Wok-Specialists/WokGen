@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import {
   preprocessTextForTTS,
   detectContentType,
+  detectProsodyHints,
   selectOptimalVoice,
   getVoiceSettings,
   estimateCharCount,
@@ -265,12 +266,13 @@ export async function POST(req: NextRequest) {
   // ── Pre-process & select voice ───────────────────────────────────────────
   const processedText = preprocessTextForTTS(text);
   const contentType   = detectContentType(processedText);
+  const prosodyHints  = detectProsodyHints(processedText);
   const selectedVoice = customVoiceId
     ? { id: customVoiceId, name: 'Custom' }
     : selectOptimalVoice(style, contentType);
 
   logger.info(
-    `[TTS] style=${style}, contentType=${contentType}, voice=${selectedVoice.name}, hd=${hd}, chars=${estimateCharCount(processedText)}`,
+    `[TTS] style=${style}, contentType=${contentType}, emotion=${prosodyHints.emotion}, pace=${prosodyHints.pace}, voice=${selectedVoice.name}, hd=${hd}, chars=${estimateCharCount(processedText)}`,
   );
 
   // ── Provider chain: ElevenLabs streaming → OpenAI → HuggingFace ──────────
@@ -334,6 +336,7 @@ export async function POST(req: NextRequest) {
     provider,
     voice:       selectedVoice.name,
     contentType,
+    prosody:     prosodyHints,
     charCount:   estimateCharCount(processedText),
     creditsUsed: hd ? 1 : 0,
   });
