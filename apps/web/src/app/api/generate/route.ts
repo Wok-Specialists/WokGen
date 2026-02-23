@@ -34,12 +34,13 @@ import {
   type EmojiPlatform,
 } from '@/lib/prompt-builder-vector';
 import { buildPixelPrompt } from '@/lib/prompt-builder-pixel';
-import { removeBackground } from '@/lib/bg-remove';
+import { removeBackground, removeBackgroundWithFallback } from '@/lib/bg-remove';
 import { resolveOptimalProvider } from '@/lib/provider-router';
 import { assembleNegativePrompt, encodeNegativesIntoPositive } from '@/lib/negative-banks';
 import { validateAndSanitize } from '@/lib/prompt-validator';
 import { resolveQualityProfile, getQualityProfile } from '@/lib/quality-profiles';
 import { buildVariantPrompt } from '@/lib/variant-builder';
+import { buildPrompt as buildEnginePrompt } from '@/lib/prompt-engine';
 
 // ---------------------------------------------------------------------------
 // POST /api/generate
@@ -547,8 +548,43 @@ export async function POST(req: NextRequest) {
   const modeQuality    = getQualityProfile(resolvedMode, modeType, useHD);
   const presetQuality  = resolveQualityProfile(typeof stylePreset === 'string' ? stylePreset : undefined);
   // Client-supplied values take priority, then mode-aware, then preset-level
-  const resolvedSteps    = typeof steps    === 'number' ? steps    : (modeQuality.steps    ?? presetQuality.steps);
-  const resolvedGuidance = typeof guidance === 'number' ? guidance : (modeQuality.guidance ?? presetQuality.guidance);
+  let resolvedSteps    = typeof steps    === 'number' ? steps    : (modeQuality.steps    ?? presetQuality.steps);
+  let resolvedGuidance = typeof guidance === 'number' ? guidance : (modeQuality.guidance ?? presetQuality.guidance);
+
+  // --------------------------------------------------------------------------
+  // Prompt engine hardening — enforce mode-specific guidance floors, step
+  // minimums, and transparent-background negatives via the unified PromptConfig
+  // interface. Runs after all per-mode builders so it only augments the final
+  // assembled prompt rather than replacing builder output.
+  // --------------------------------------------------------------------------
+  if (isSupportedMode(resolvedMode)) {
+    const engineHint = buildEnginePrompt({
+      mode: resolvedMode as 'pixel' | 'business' | 'vector' | 'emoji' | 'uiux',
+      userPrompt: typeof prompt === 'string' ? prompt.trim() : '',
+      backgroundMode: typeof backgroundMode === 'string'
+        ? (backgroundMode as 'default' | 'transparent' | 'custom')
+        : 'default',
+      subType:
+        typeof extraRecord.businessTool === 'string' ? extraRecord.businessTool
+        : typeof extraRecord.vectorTool  === 'string' ? extraRecord.vectorTool
+        : typeof assetCategory === 'string' && assetCategory !== 'none' ? String(assetCategory)
+        : undefined,
+    });
+    // Enforce guidance and steps floors when client didn't override them
+    if (typeof guidance !== 'number') {
+      resolvedGuidance = Math.max(resolvedGuidance, engineHint.guidance);
+    }
+    if (typeof steps !== 'number') {
+      resolvedSteps = Math.max(resolvedSteps, engineHint.steps);
+    }
+    // Prepend engine negatives (highest priority, before assembleNegativePrompt)
+    const firstEngineNegTerm = engineHint.negative.split(',')[0].trim().toLowerCase();
+    if (engineHint.negative && !effectiveNeg?.toLowerCase().includes(firstEngineNegTerm)) {
+      effectiveNeg = effectiveNeg
+        ? `${engineHint.negative}, ${effectiveNeg}`
+        : engineHint.negative;
+    }
+  }
 
   if (!isValidTool(effectiveTool)) {
     return NextResponse.json(
@@ -721,10 +757,14 @@ export async function POST(req: NextRequest) {
     // ------------------------------------------------------------------------
     // 5a-pre. Background removal — when transparentBackground is requested,
     //         post-process the image to strip the background via RMBG-1.4.
+    //         On failure: return original image with a diagnostic note (no
+    //         silent failure).
     // ------------------------------------------------------------------------
+    let bgRemovalNote: string | undefined;
     if (backgroundMode === 'transparent' && result.resultUrl) {
-      const stripped = await removeBackground(result.resultUrl);
-      if (stripped) result = { ...result, resultUrl: stripped };
+      const bgResult = await removeBackgroundWithFallback(result.resultUrl);
+      result = { ...result, resultUrl: bgResult.url };
+      if (!bgResult.bgRemoved) bgRemovalNote = bgResult.note;
     }
 
     // ------------------------------------------------------------------------
@@ -841,6 +881,7 @@ export async function POST(req: NextRequest) {
       hdCreditsRemaining,
       quality:             useHD ? 'hd' : 'standard',
       guestDownloadGated:  authedUserId === null,
+      bgRemovalNote,
       // Quota info for frontend display (undefined for HD/paid tiers)
       quotaRemaining: !useHD
         ? (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining

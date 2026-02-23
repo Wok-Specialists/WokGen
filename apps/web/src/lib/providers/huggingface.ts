@@ -67,6 +67,7 @@ export async function huggingfaceGenerate(
     inputs: prompt,
     parameters: {
       num_inference_steps: model === PIXEL_ART_MODEL ? 25 : model.includes('schnell') ? 4 : 20,
+      guidance_scale: isPixelMode ? 9.0 : 7.5,
       width,
       height,
       seed,
