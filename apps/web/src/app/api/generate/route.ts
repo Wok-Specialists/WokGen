@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
 import {
@@ -287,7 +288,34 @@ export async function POST(req: NextRequest) {
     comfyuiHost: byokHost,
     modelOverride,
     extra,
+    async: asyncFlag = false, // flag for BullMQ async path
   } = body;
+
+  // Async path: enqueue and return immediately if REDIS_URL + async flag
+  if (asyncFlag === true && process.env.REDIS_URL && authedUserId) {
+    const { enqueueGeneration } = await import('@/lib/gen-queue');
+    const queueJobId = randomUUID();
+    const effectivePrompt = typeof prompt === 'string' ? prompt.trim() : '';
+    const effectiveMode = typeof mode === 'string' && isSupportedMode(mode) ? mode : 'pixel';
+    const effectiveStyle = typeof stylePreset === 'string' ? stylePreset : undefined;
+    
+    try {
+      await enqueueGeneration({
+        jobId: queueJobId,
+        userId: authedUserId,
+        prompt: effectivePrompt,
+        mode: effectiveMode,
+        style: effectiveStyle,
+      });
+      return NextResponse.json(
+        { jobId: queueJobId, status: 'queued' },
+        { status: 202 },
+      );
+    } catch (error) {
+      logger.warn({ jobId: queueJobId, error }, '[async] Failed to enqueue generation');
+      // Fall through to sync path on failure
+    }
+  }
 
   // Resolve and validate mode — reject unknown modes with a 400
   if (mode !== undefined && mode !== null && !isSupportedMode(mode)) {

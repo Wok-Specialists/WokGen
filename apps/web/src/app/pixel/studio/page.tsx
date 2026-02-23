@@ -3507,7 +3507,11 @@ function StudioInner() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', paddingTop: '0.125rem' }}>
                 <button
                   type="button"
-                  onClick={() => { setCompareMode(v => !v); if (!compareMode) setBatchCount(1); }}
+                  onClick={() => { 
+                  const nextCompareMode = !compareMode;
+                  setCompareMode(nextCompareMode);
+                  if (nextCompareMode) setBatchCount(1); // when comparing, ensure batch is 1
+                }}
                   style={{
                     padding: '4px 10px',
                     fontSize: '0.72rem',
