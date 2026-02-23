@@ -775,15 +775,70 @@ export async function POST(req: NextRequest) {
         lastErr = err;
         recordProviderFailure(candidateProvider);
         const statusCode = (err as { statusCode?: number }).statusCode ?? 0;
+        const errorMsg = err instanceof Error ? err.message.toLowerCase() : '';
+        
+        // Check for content filter errors (422 or safety-related messages)
+        const isContentFilter = statusCode === 422 || errorMsg.includes('nsfw') || 
+                               errorMsg.includes('safety') || errorMsg.includes('policy');
+        
+        // Attempt retry with sanitized prompt on content filter rejection
+        if (isContentFilter && candidateProvider === resolvedProvider && genParams.prompt) {
+          try {
+            logger.info({ provider: candidateProvider }, '[generate] content filter detected; retrying with sanitized prompt');
+            
+            // Sanitize prompt by removing explicit content keywords
+            const sanitizedPrompt = genParams.prompt
+              .replace(/\b(nude|nsfw|explicit|gore|violence|blood|NSFW|sexually|erotic)\b/gi, '')
+              .trim() + ' safe for work, family friendly';
+            
+            const retryConfig = candidateProvider === resolvedProvider
+              ? config
+              : resolveProviderConfig(candidateProvider, null, null);
+            
+            const retryParams = { ...genParams, prompt: sanitizedPrompt };
+            
+            const retryResult = await Promise.race([
+              generate(candidateProvider, retryParams, retryConfig),
+              new Promise<never>((_, reject) =>
+                setTimeout(
+                  () => reject(Object.assign(new Error('Generation timed out'), { statusCode: 504 })),
+                  180_000,
+                ),
+              ),
+            ]);
+            
+            // Validate retry result URL
+            const hasValidUrl =
+              isValidResultUrl(retryResult.resultUrl) ||
+              retryResult.resultUrls?.some(u => isValidResultUrl(u));
+            if (!hasValidUrl) {
+              throw Object.assign(
+                new Error(`Provider ${candidateProvider} returned an invalid image URL`),
+                { statusCode: 502, provider: candidateProvider },
+              );
+            }
+            
+            result = retryResult;
+            usedProvider = candidateProvider;
+            logger.info({ provider: candidateProvider }, '[generate] retry with sanitized prompt succeeded');
+            break;
+          } catch (retryErr) {
+            logger.warn({ provider: candidateProvider, err: (retryErr as Error).message }, 
+              '[generate] retry with sanitized prompt failed');
+            // Fall through to normal error handling
+            lastErr = retryErr;
+          }
+        }
+        
         // Continue the chain only for transient failures (503, 429, 504/timeout)
         const isTransient =
           statusCode === 503 || statusCode === 429 || statusCode === 504 ||
           (err instanceof Error && /timeout|loading|unavailable|rate.?limit/i.test(err.message));
-        if (!isTransient) {
+        if (!isTransient && !isContentFilter) {
           // Hard failure (auth error, bad request, etc.) — don't try fallbacks
           throw err;
         }
-        logger.warn({ provider: candidateProvider, err: (err as Error).message },
+        logger.warn({ provider: candidateProvider, err: errorMsg },
           `[generate] ${candidateProvider} transient error (${statusCode}), trying next`
         );
       }

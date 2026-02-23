@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { checkSsrf } from '@/lib/ssrf-check';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,12 @@ export async function POST(
   }
   if (!auto.targetValue) {
     return NextResponse.json({ error: 'No webhook URL configured' }, { status: 400 });
+  }
+
+  // Validate webhook URL against SSRF before attempting fetch
+  const guard = checkSsrf(auto.targetValue);
+  if (!guard.ok) {
+    return NextResponse.json({ ok: false, error: guard.reason }, { status: 422 });
   }
 
   try {
