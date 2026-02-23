@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { safeMarkdown } from '@/lib/safe-markdown';
+import { safeMarkdown, sanitizeHtml } from '@/lib/safe-markdown';
 import { parseWAPFromResponse, executeWAP, type WAPResponse } from '@/lib/wap';
 
 // ---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ function SidebarBubble({ msg, isStreaming }: { msg: SidebarMessage; isStreaming?
       ) : (
         <div
           className="esb-prose"
-          dangerouslySetInnerHTML={{ __html: safeMarkdown(msg.content) }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(safeMarkdown(msg.content)) }}
         />
       )}
       {isStreaming && <span className="esb-cursor" aria-hidden="true" />}

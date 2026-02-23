@@ -20,6 +20,11 @@ export function NavAuth() {
     closeTimer.current = setTimeout(() => setOpen(false), 150);
   };
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => clearTimeout(closeTimer.current);
+  }, []);
+
   // Public-by-default setting
   const [publicDefault, setPublicDefault]   = useState(false);
   const [savingDefault, setSavingDefault]   = useState(false);
@@ -233,7 +238,7 @@ export function NavAuth() {
         .nav-user-chevron { font-size: 0.55rem; line-height: 1; opacity: 0.6; }
 
         .nav-user-menu {
-          position: absolute; top: 100%; right: 0;
+          position: absolute; top: 100%; right: 0; margin-top: -1px;
           background: var(--bg-surface, #111); border: 1px solid var(--border, #2a2a2a);
           border-radius: 8px; overflow: hidden; min-width: 210px; z-index: 200;
           box-shadow: 0 12px 32px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { safeMarkdown } from '@/lib/safe-markdown';
+import { safeMarkdown, sanitizeHtml } from '@/lib/safe-markdown';
 import { parseWAPFromResponse, executeWAP, type WAPResponse } from '@/lib/wap';
 
 // ── SpeechRecognition type shim (not in all TS libs) ─────────────────────────
@@ -213,7 +213,7 @@ function MessageBubble({
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const renderedHtml = isUser ? '' : addCopyButtons(safeMarkdown(msg.content));
+  const renderedHtml = isUser ? '' : sanitizeHtml(addCopyButtons(safeMarkdown(msg.content)));
   const followUps =
     showSuggestions && !isUser && onFollowUp ? getFollowUpSuggestions(msg.content) : [];
 

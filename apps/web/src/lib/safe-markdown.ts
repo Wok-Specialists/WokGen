@@ -4,6 +4,15 @@
  * Only our markdown conversion creates HTML tags.
  */
 
+/** Belt-and-suspenders HTML sanitizer — strips script tags and dangerous event handlers. */
+export function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+="[^"]*"/gi, '')
+    .replace(/on\w+='[^']*'/gi, '')
+    .replace(/javascript:/gi, '');
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, '&amp;')
