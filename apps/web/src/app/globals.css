@@ -69,6 +69,25 @@
   --mode-switcher-height: 41px;   /* sticky bar below nav */
   --sidebar-width: 64px;
   --panel-width:  380px;
+
+  /* ── Typography scale ──────────────────────────────────────── */
+  --font-xs:   0.6875rem; /* 11px */
+  --font-sm:   0.75rem;   /* 12px */
+  --font-base: 0.875rem;  /* 14px */
+  --font-md:   1rem;      /* 16px */
+  --font-lg:   1.125rem;  /* 18px */
+  --font-xl:   1.25rem;   /* 20px */
+  --font-2xl:  1.5rem;    /* 24px */
+
+  /* ── Spacing scale ─────────────────────────────────────────── */
+  --space-1: 0.25rem;  /* 4px  */
+  --space-2: 0.5rem;   /* 8px  */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-7: 2rem;     /* 32px */
+  --space-8: 2.5rem;   /* 40px */
 }
 
 /* ---- Base ---- */
@@ -1448,7 +1467,7 @@
   min-height: 100vh;
 }
 .platform-hero {
-  padding: 5rem 1.5rem 3.5rem;
+  padding: var(--space-8) var(--space-6) var(--space-7);
   text-align: center;
 }
 .platform-hero-inner {
@@ -3078,6 +3097,8 @@
 .platform-section-inner {
   max-width: 1280px;
   margin: 0 auto;
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
 }
 .platform-quicktry-grid {
   display: grid;
