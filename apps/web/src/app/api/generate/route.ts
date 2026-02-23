@@ -135,7 +135,12 @@ export async function POST(req: NextRequest) {
     if (!rl.allowed) {
       return NextResponse.json(
         { error: `Too many requests. Try again in ${rl.retryAfter}s.` },
-        { status: 429, headers: { 'Retry-After': String(rl.retryAfter ?? 60) } },
+        { status: 429, headers: {
+          'Retry-After':           String(rl.retryAfter ?? 60),
+          'X-RateLimit-Limit':     String(maxReqs),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset':     String(Math.floor(Date.now() / 1000) + (rl.retryAfter ?? 60)),
+        } },
       );
     }
 
@@ -202,7 +207,12 @@ export async function POST(req: NextRequest) {
             },
             code: 'QUOTA_EXCEEDED',
           },
-          { status: 429, headers: { 'Retry-After': String(quota.retryAfter ?? 3600) } },
+          { status: 429, headers: {
+            'Retry-After':           String(quota.retryAfter ?? 3600),
+            'X-RateLimit-Limit':     String(quota.limit),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset':     String(Math.floor(Date.now() / 1000) + (quota.retryAfter ?? 3600)),
+          } },
         );
       }
 

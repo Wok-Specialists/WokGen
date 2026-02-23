@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { z } from 'zod';
+import { checkSsrf } from '@/lib/ssrf-check';
 
 // ---------------------------------------------------------------------------
 // GET  /api/automations     — list user's automations
@@ -11,14 +13,21 @@ export const dynamic = 'force-dynamic';
 
 const MAX_AUTOMATIONS = 10;
 
-// Very basic cron syntax validator (5 or 6 fields)
+// Cron syntax validator (5 fields)
 function isValidCron(expr: string): boolean {
   const parts = expr.trim().split(/\s+/);
   if (parts.length < 5 || parts.length > 6) return false;
-  // Each part: digit, *, */N, or N-M
   const part = /^(\*|[0-9]+(-[0-9]+)?(\/[0-9]+)?|\*\/[0-9]+)$/;
   return parts.every(p => part.test(p));
 }
+
+const CreateAutomationSchema = z.object({
+  name:            z.string().min(1).max(80),
+  schedule:        z.string().min(9).max(60),
+  targetType:      z.enum(['email', 'webhook', 'in_app']).optional().default('in_app'),
+  targetValue:     z.string().max(500).optional(),
+  messageTemplate: z.string().min(1).max(2000),
+});
 
 export async function GET() {
   const session = await auth();
@@ -36,22 +45,22 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const body = await req.json().catch(() => ({}));
-  const { name, schedule, targetType, targetValue, messageTemplate } = body;
+  const rawBody = await req.json().catch(() => null);
+  if (!rawBody) return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
 
-  if (!name?.trim())            return NextResponse.json({ error: '`name` required' }, { status: 400 });
-  if (!schedule?.trim())        return NextResponse.json({ error: '`schedule` required' }, { status: 400 });
-  if (!messageTemplate?.trim()) return NextResponse.json({ error: '`messageTemplate` required' }, { status: 400 });
-  if (!isValidCron(schedule))   return NextResponse.json({ error: 'Invalid cron expression' }, { status: 400 });
-
-  const allowedTargets = ['email', 'webhook', 'in_app'];
-  if (targetType && !allowedTargets.includes(targetType)) {
-    return NextResponse.json({ error: 'Invalid targetType' }, { status: 400 });
+  const parsed = CreateAutomationSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid request body.' }, { status: 400 });
   }
 
+  const { name, schedule, targetType, targetValue, messageTemplate } = parsed.data;
+
+  if (!isValidCron(schedule)) return NextResponse.json({ error: 'Invalid cron expression' }, { status: 400 });
+
   if (targetType === 'webhook' && targetValue) {
-    try { new URL(targetValue); } catch {
-      return NextResponse.json({ error: 'Invalid webhook URL' }, { status: 400 });
+    const ssrf = checkSsrf(targetValue, true);
+    if (!ssrf.ok) {
+      return NextResponse.json({ error: `Invalid webhook URL: ${ssrf.reason}` }, { status: 400 });
     }
   }
 

@@ -8,9 +8,20 @@ import { Footer } from './_components/Footer';
 import { NavAuth } from './_components/NavAuth';
 import { Providers } from './_components/Providers';
 import { ModeSwitcher } from './_components/ModeSwitcher';
+import { Toaster } from 'sonner';
 
 const EralVoiceButton = nextDynamic(
   () => import('@/components/eral-voice-button').then((m) => ({ default: m.EralVoiceButton })),
+  { ssr: false },
+);
+
+const CommandPalette = nextDynamic(
+  () => import('./_components/CommandPalette'),
+  { ssr: false },
+);
+
+const OnboardingGate = nextDynamic(
+  () => import('./_components/OnboardingGate'),
   { ssr: false },
 );
 
@@ -160,6 +171,15 @@ export default function RootLayout({
           <main id="main-content" style={{ flex: 1 }}>{children}</main>
           <Footer />
           <EralVoiceButton />
+          <CommandPalette />
+          <OnboardingGate />
+          <Toaster
+            theme="dark"
+            position="bottom-right"
+            toastOptions={{
+              style: { background: '#0d0d14', border: '1px solid #252538', color: '#f4f4f4', fontFamily: 'var(--font-sans)' },
+            }}
+          />
         </Providers>
       </body>
     </html>

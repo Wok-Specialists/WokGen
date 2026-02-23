@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { checkSsrf } from '@/lib/ssrf-check';
 
 // ---------------------------------------------------------------------------
 // GET /api/cron/automations
@@ -74,6 +75,8 @@ async function fireAutomation(automation: {
   const message = renderTemplate(automation.messageTemplate, vars);
 
   if (automation.targetType === 'webhook' && automation.targetValue) {
+    const ssrf = checkSsrf(automation.targetValue, true);
+    if (!ssrf.ok) throw new Error(`Blocked webhook URL: ${ssrf.reason}`);
     const res = await fetch(automation.targetValue, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },

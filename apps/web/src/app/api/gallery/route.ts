@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
+import { cache } from '@/lib/cache';
 
 // ---------------------------------------------------------------------------
 // GET /api/gallery
@@ -39,6 +40,16 @@ export async function GET(req: NextRequest) {
     if (!authedUserId) {
       return NextResponse.json({ error: 'Authentication required for personal gallery.' }, { status: 401 });
     }
+  }
+
+  // Cache public gallery pages in Redis (skip for 'mine' or search queries)
+  const cacheKey = (!mine && !search && !authedUserId)
+    ? `gallery:${mode ?? 'all'}:${tool ?? 'all'}:${sort}:${cursor ?? 'first'}:${limit}`
+    : null;
+
+  if (cacheKey) {
+    const hit = await cache.get<object>(cacheKey);
+    if (hit) return NextResponse.json(hit, { headers: { 'Cache-Control': 's-maxage=30, stale-while-revalidate=60', 'X-Cache': 'HIT' } });
   }
 
   // Build the where clause
@@ -110,15 +121,19 @@ export async function GET(req: NextRequest) {
     createdAt: a.createdAt.toISOString(),
   }));
 
-  return NextResponse.json({
+  const responseBody = {
     assets:     serialized,
     nextCursor,
     hasMore,
     total:      trimmed.length,
-  }, {
+  };
+
+  if (cacheKey) await cache.set(cacheKey, responseBody, 30);
+
+  return NextResponse.json(responseBody, {
     headers: mine
       ? {}
-      : { 'Cache-Control': 's-maxage=30, stale-while-revalidate=60' },
+      : { 'Cache-Control': 's-maxage=30, stale-while-revalidate=60', 'X-Cache': 'MISS' },
   });
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { toast } from 'sonner';
 import Link from 'next/link';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -499,7 +500,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
     setExporting(true);
     try {
       const res = await fetch(`/api/projects/${projectId}/export`);
-      if (!res.ok) { alert('Export failed — no succeeded assets yet?'); return; }
+      if (!res.ok) { toast.error('Export failed — no assets succeeded yet.'); return; }
       const blob = await res.blob();
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');

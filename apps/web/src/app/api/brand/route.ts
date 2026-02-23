@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
+import { z } from 'zod';
 
 // ---------------------------------------------------------------------------
 // GET  /api/brand   — list user's brand kits
 // POST /api/brand   — create a brand kit
 // ---------------------------------------------------------------------------
+
+const CreateBrandKitSchema = z.object({
+  name:        z.string().min(1).max(80),
+  paletteJson: z.array(z.string()).optional().default([]),
+  typography:  z.record(z.unknown()).optional(),
+  styleGuide:  z.string().max(4000).optional(),
+  industry:    z.string().max(80).optional(),
+  mood:        z.string().max(80).optional(),
+  projectId:   z.string().optional(),
+});
 
 export async function GET() {
   const session = await auth();
@@ -22,10 +33,15 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
 
-  const body = await req.json().catch(() => null);
-  if (!body?.name) return NextResponse.json({ error: 'name is required.' }, { status: 400 });
+  const rawBody = await req.json().catch(() => null);
+  if (!rawBody) return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
 
-  const { name, paletteJson, typography, styleGuide, industry, mood, projectId } = body;
+  const parsed = CreateBrandKitSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid request body.' }, { status: 400 });
+  }
+
+  const { name, paletteJson, typography, styleGuide, industry, mood, projectId } = parsed.data;
 
   const kit = await prisma.brandKit.create({
     data: {

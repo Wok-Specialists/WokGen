@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
 
@@ -19,12 +20,16 @@ export const maxDuration = 60;
 
 const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const TOGETHER_URL = 'https://api.together.xyz/v1/chat/completions';
+const GEMINI_URL   = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const MISTRAL_URL  = 'https://api.mistral.ai/v1/chat/completions';
 
-const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' }> = {
-  'eral-7c':       { model: 'llama-3.3-70b-versatile',                    provider: 'groq'    },
-  'eral-mini':     { model: 'llama3-8b-8192',                             provider: 'groq'    },
-  'eral-code':     { model: 'deepseek-ai/DeepSeek-V3',                    provider: 'together' },
-  'eral-creative': { model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',       provider: 'together' },
+const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' | 'gemini' | 'mistral' }> = {
+  'eral-7c':       { model: 'llama-3.3-70b-versatile',              provider: 'groq'    },
+  'eral-mini':     { model: 'llama3-8b-8192',                       provider: 'groq'    },
+  'eral-code':     { model: 'deepseek-ai/DeepSeek-V3',              provider: 'together' },
+  'eral-creative': { model: 'mistralai/Mixtral-8x7B-Instruct-v0.1', provider: 'together' },
+  'eral-gemini':   { model: 'gemini-1.5-flash',                     provider: 'gemini'   },
+  'eral-fast':     { model: 'mistral-small-latest',                  provider: 'mistral'  },
 };
 
 // Fallback for eral-7c when Groq key is absent
@@ -115,10 +120,27 @@ function resolveEndpointAndKey(variant: string): {
   url: string;
   apiKey: string;
   model: string;
+  provider?: string;
 } {
   const mapping = MODEL_MAP[variant] ?? MODEL_MAP['eral-7c'];
-  const groqKey = process.env.GROQ_API_KEY;
+  const groqKey    = process.env.GROQ_API_KEY;
   const togetherKey = process.env.TOGETHER_API_KEY;
+  const geminiKey  = process.env.GOOGLE_AI_API_KEY;
+  const mistralKey = process.env.MISTRAL_API_KEY;
+
+  if (mapping.provider === 'gemini') {
+    if (geminiKey) {
+      return { url: `${GEMINI_URL}?key=${geminiKey}`, apiKey: geminiKey, model: mapping.model, provider: 'gemini' };
+    }
+    // Fall through to groq fallback
+  }
+
+  if (mapping.provider === 'mistral') {
+    if (mistralKey) {
+      return { url: MISTRAL_URL, apiKey: mistralKey, model: mapping.model, provider: 'mistral' };
+    }
+    // Fall through to groq fallback
+  }
 
   if (mapping.provider === 'groq') {
     if (groqKey) {
@@ -232,13 +254,34 @@ export async function POST(req: NextRequest) {
   if (!rl.allowed) {
     return NextResponse.json(
       { error: 'Rate limit exceeded', retryAfter: rl.retryAfter },
-      { status: 429, headers: { 'Retry-After': String(rl.retryAfter ?? 60) } },
+      { status: 429, headers: {
+        'Retry-After':           String(rl.retryAfter ?? 60),
+        'X-RateLimit-Limit':     String(rlMax),
+        'X-RateLimit-Remaining': '0',
+        'X-RateLimit-Reset':     String(Math.floor(Date.now() / 1000) + (rl.retryAfter ?? 60)),
+      } },
     );
   }
 
   let body: ChatRequest;
   try {
-    body = await req.json();
+    const raw = await req.json();
+    const Schema = z.object({
+      message:       z.string().min(1).max(4000),
+      conversationId: z.string().cuid().optional(),
+      modelVariant:  z.enum(['eral-7c','eral-mini','eral-code','eral-creative','eral-gemini','eral-fast']).optional(),
+      stream:        z.boolean().optional(),
+      context:       z.object({
+        mode:      z.string().optional(),
+        projectId: z.string().optional(),
+        prompt:    z.string().max(2000).optional(),
+      }).optional(),
+    });
+    const parsed = Schema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Invalid request', details: parsed.error.flatten() }, { status: 400 });
+    }
+    body = parsed.data as ChatRequest;
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }

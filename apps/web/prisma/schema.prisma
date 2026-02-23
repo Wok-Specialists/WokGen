@@ -47,6 +47,8 @@ model User {
   preference         UserPreference?
   sfxJobs            SfxJob[]
   automations        Automation[]
+  apiKeys            ApiKey[]
+  onboarding         OnboardingState?
 }
 
 model Account {
@@ -224,6 +226,9 @@ model Job {
   @@index([isPublic, createdAt])
   @@index([createdAt])
   @@index([projectId])
+  @@index([userId, createdAt])
+  @@index([userId, mode, status])
+  @@index([status, createdAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -313,6 +318,7 @@ model Project {
 
   @@index([userId, mode])
   @@index([userId, isArchived])
+  @@index([userId, updatedAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -596,4 +602,39 @@ model Automation {
 
   @@index([userId])
   @@index([enabled, schedule])
+}
+
+model ApiKey {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  /// SHA-256 hex hash of the raw key — stored, never the key itself
+  keyHash      String    @unique
+  /// First 8 chars of key for display, e.g. "wk_live_a1b2c3d4"
+  keyPrefix    String
+  /// Comma-separated scopes: "generate,read" etc.
+  scopes       String    @default("generate,read")
+  lastUsedAt   DateTime?
+  expiresAt    DateTime?
+  isActive     Boolean   @default(true)
+  requestCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
+}
+
+model OnboardingState {
+  id     String @id @default(cuid())
+  userId String @unique
+  step   Int    @default(0)
+  useCase String?
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
