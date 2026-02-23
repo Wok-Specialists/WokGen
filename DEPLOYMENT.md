@@ -30,7 +30,7 @@ In **Project → Settings → Environment Variables**, add:
 
 | Variable | Value |
 |---|---|
-| `DATABASE_URL` | Your Neon **pooled** connection string (PgBouncer port 6432) |
+| `DATABASE_URL` | Your Neon **pooled** connection string (PgBouncer port 6432) — append `?statement_timeout=10000` for 10s query timeout |
 | `DIRECT_URL` | Your Neon **direct** connection string (port 5432) — used for migrations |
 | `NEXT_PUBLIC_BASE_URL` | `https://wokgen.wokspec.org` |
 | `NEXT_TELEMETRY_DISABLED` | `1` |
