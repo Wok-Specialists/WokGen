@@ -124,3 +124,26 @@ export async function sendSubscriptionCanceledEmail(to: string, periodEnd: Date)
     text: `Your WokGen subscription has been canceled. Access continues until ${date}. Standard generation remains free.`,
   });
 }
+
+export async function sendEmailVerification(to: string, verifyUrl: string) {
+  await send({
+    to,
+    subject: 'Verify your WokGen email address',
+    html: `
+      <div style="font-family:system-ui,sans-serif;max-width:520px;margin:0 auto;padding:2rem;background:#0d0d0d;color:#ebebeb">
+        <h1 style="font-size:1.5rem;font-weight:700;color:#a78bfa;margin:0 0 1rem">WokGen</h1>
+        <p style="color:#ebebeb;margin:0 0 1rem">Verify your email address</p>
+        <p style="color:#888;margin:0 0 1.5rem;line-height:1.7">
+          Click the button below to verify your email address. This link expires in 24 hours.
+        </p>
+        <a href="${verifyUrl}" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
+          Verify email →
+        </a>
+        <p style="color:#464646;font-size:.8rem;margin:2rem 0 0">
+          If you didn't request this, ignore this email.
+        </p>
+      </div>
+    `,
+    text: `Verify your WokGen email: ${verifyUrl}`,
+  });
+}

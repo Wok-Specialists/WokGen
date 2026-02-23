@@ -4,15 +4,18 @@ import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useToast } from '@/components/Toast';
 import WorkspaceSelector from '@/app/_components/WorkspaceSelector';
-import { EralSidebar } from '@/app/_components/EralSidebar';
 import { parseApiError, type StudioError } from '@/lib/studio-errors';
 import { usePreferenceSync } from '@/hooks/usePreferenceSync';
 import { useWAPListener } from '@/hooks/useWAPListener';
 import { QuotaBadge } from '@/components/quota-badge';
-import { ColorPalette } from '@/components/color-palette';
-import SfxBrowser from '@/components/sfx-browser';
+
+// Lazy-load below-the-fold heavy components to improve initial page load
+const EralSidebar  = dynamic(() => import('@/app/_components/EralSidebar').then(m => ({ default: m.EralSidebar })), { ssr: false });
+const ColorPalette = dynamic(() => import('@/components/color-palette').then(m => ({ default: m.ColorPalette })), { ssr: false });
+const SfxBrowser   = dynamic(() => import('@/components/sfx-browser'), { ssr: false });
 
 // ---------------------------------------------------------------------------
 // Types

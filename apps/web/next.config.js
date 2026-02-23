@@ -183,4 +183,12 @@ const nextConfig = {
   poweredByHeader: false,
 };
 
-module.exports = nextConfig;
+// Wrap with Sentry (no-ops when SENTRY_DSN is not set)
+const { withSentryConfig } = require('@sentry/nextjs');
+module.exports = withSentryConfig(nextConfig, {
+  silent: true,        // suppress Sentry CLI output during builds
+  hideSourceMaps: true,
+  disableLogger: true,
+  // Only upload source maps when SENTRY_AUTH_TOKEN is set
+  sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+});

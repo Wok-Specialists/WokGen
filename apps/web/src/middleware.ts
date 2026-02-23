@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 export default auth((req) => {
   const isSelfHosted = process.env.SELF_HOSTED === 'true';
+  const start = Date.now();
 
   // Self-hosted mode: no auth enforcement at all
   if (isSelfHosted) return NextResponse.next();
@@ -25,7 +26,9 @@ export default auth((req) => {
   // /studio and /api/generate are open to guests — the route handlers
   // enforce auth only for HD generation (standard is always free).
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set('x-response-time', String(Date.now() - start));
+  return res;
 });
 
 export const config = {

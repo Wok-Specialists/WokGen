@@ -46,6 +46,7 @@ model User {
   eralConversations  EralConversation[]
   preference         UserPreference?
   sfxJobs            SfxJob[]
+  apiKeys            ApiKey[]
 }
 
 model Account {
@@ -270,6 +271,54 @@ model GalleryAsset {
   @@index([tool])
   @@index([rarity])
   @@index([hash])
+}
+
+// ---------------------------------------------------------------------------
+// GalleryReport — user report of a community gallery asset
+// ---------------------------------------------------------------------------
+model GalleryReport {
+  id        String   @id @default(cuid())
+  assetId   String
+  /// Reporter user ID (null for guest reports)
+  userId    String?
+  /// Reason enum: nsfw | spam | copyright | other
+  reason    String
+  /// Optional free-text note from reporter
+  note      String?
+  /// pending | reviewed | actioned | dismissed
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  @@index([assetId])
+  @@index([status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// ApiKey — developer API keys for the public REST API
+// ---------------------------------------------------------------------------
+model ApiKey {
+  id          String    @id @default(cuid())
+  userId      String
+  /// Human-readable label set by the user
+  name        String
+  /// SHA-256 hash of the raw key (the raw key is shown only once at creation)
+  keyHash     String    @unique
+  /// Key prefix (first 8 chars of raw key) for display in UI: e.g. "wk_live_"
+  prefix      String
+  /// Optional IP whitelist (JSON array of CIDR strings)
+  allowedIps  String?
+  /// Scopes granted (JSON array): e.g. ["generate", "gallery:read"]
+  scopes      String    @default("[\"generate\"]")
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  /// false = revoked
+  active      Boolean   @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
 }
 
 // ---------------------------------------------------------------------------

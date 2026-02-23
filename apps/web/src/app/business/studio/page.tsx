@@ -10,16 +10,19 @@ import type {
   BusinessPlatform,
 } from '@/lib/prompt-builder-business';
 import { PLATFORM_DIMENSIONS } from '@/lib/prompt-builder-business';
+import dynamic from 'next/dynamic';
 import WorkspaceSelector from '@/app/_components/WorkspaceSelector';
-import { EralSidebar } from '@/app/_components/EralSidebar';
 import { QuotaBadge } from '@/components/quota-badge';
 import { parseApiError, type StudioError } from '@/lib/studio-errors';
 import { StudioErrorBanner } from '@/app/_components/StudioErrorBanner';
 import { usePreferenceSync } from '@/hooks/usePreferenceSync';
-import { ColorPalette } from '@/components/color-palette';
-import { QrGenerator } from '@/components/qr-generator';
-import { FontPairing } from '@/components/font-pairing';
-import SfxBrowser from '@/components/sfx-browser';
+
+// Lazy-load below-the-fold heavy components
+const EralSidebar  = dynamic(() => import('@/app/_components/EralSidebar').then(m => ({ default: m.EralSidebar })), { ssr: false });
+const ColorPalette = dynamic(() => import('@/components/color-palette').then(m => ({ default: m.ColorPalette })), { ssr: false });
+const QrGenerator  = dynamic(() => import('@/components/qr-generator').then(m => ({ default: m.QrGenerator })), { ssr: false });
+const FontPairing  = dynamic(() => import('@/components/font-pairing').then(m => ({ default: m.FontPairing })), { ssr: false });
+const SfxBrowser   = dynamic(() => import('@/components/sfx-browser'), { ssr: false });
 
 // ---------------------------------------------------------------------------
 // Types

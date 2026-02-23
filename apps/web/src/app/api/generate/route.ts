@@ -7,6 +7,9 @@ import {
   serializeError,
 } from '@/lib/providers';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { recordProviderFailure, isProviderThrottled } from '@/lib/provider-health';
+import { logger } from '@/lib/logger';
+import { persistImage } from '@/lib/storage';
 import {
   claimStdSlot,
   checkConcurrent,
@@ -57,29 +60,8 @@ export const runtime = 'nodejs';
 export const maxDuration = 55;
 
 // ---------------------------------------------------------------------------
-// Module-level provider failure tracker
-// Skips providers that have failed ≥3 times in the last 60 seconds.
-// ---------------------------------------------------------------------------
-const _providerFailureCounts = new Map<string, { count: number; resetAt: number }>();
-const _FAILURE_WINDOW_MS = 60_000;
-const _MAX_FAILURES = 3;
-
-function recordProviderFailure(provider: string): void {
-  const now = Date.now();
-  const entry = _providerFailureCounts.get(provider);
-  if (!entry || now > entry.resetAt) {
-    _providerFailureCounts.set(provider, { count: 1, resetAt: now + _FAILURE_WINDOW_MS });
-  } else {
-    entry.count += 1;
-  }
-}
-
-function isProviderThrottled(provider: string): boolean {
-  const now = Date.now();
-  const entry = _providerFailureCounts.get(provider);
-  if (!entry || now > entry.resetAt) return false;
-  return entry.count >= _MAX_FAILURES;
-}
+// Module-level provider failure tracker moved to src/lib/provider-health.ts
+// (Redis-backed, shared across all Vercel instances, with memory fallback)
 
 /** Ordered fallback providers to try when `primary` fails (non-self-hosted only). */
 function getFallbackChain(primary: ProviderName): ProviderName[] {
@@ -687,9 +669,11 @@ export async function POST(req: NextRequest) {
 
   try {
     // Build provider chain: primary first, then key-available fallbacks (skip throttled ones).
+    const fallbackProviders = getFallbackChain(resolvedProvider);
+    const throttleChecks = await Promise.all(fallbackProviders.map(p => isProviderThrottled(p)));
     const providerChain: ProviderName[] = isSelfHosted
       ? [resolvedProvider]
-      : [resolvedProvider, ...getFallbackChain(resolvedProvider).filter(p => !isProviderThrottled(p))];
+      : [resolvedProvider, ...fallbackProviders.filter((_, i) => !throttleChecks[i])];
 
     let usedProvider: ProviderName = resolvedProvider;
     let result: GenerateResult | undefined;
@@ -725,12 +709,12 @@ export async function POST(req: NextRequest) {
         result     = timedResult;
         usedProvider = candidateProvider;
         if (candidateProvider !== resolvedProvider) {
-          console.warn(`[generate] Primary ${resolvedProvider} failed; used fallback ${candidateProvider}`);
+          logger.warn('generate', { msg: 'fallback used', primary: resolvedProvider, fallback: candidateProvider });
         }
         break;
       } catch (err) {
         lastErr = err;
-        recordProviderFailure(candidateProvider);
+        await recordProviderFailure(candidateProvider);
         const statusCode = (err as { statusCode?: number }).statusCode ?? 0;
         // Continue the chain only for transient failures (503, 429, 504/timeout)
         const isTransient =
@@ -860,11 +844,16 @@ export async function POST(req: NextRequest) {
     // 5b. If the generation succeeded and isPublic, also create a GalleryAsset
     // ------------------------------------------------------------------------
     if (job && Boolean(isPublic) && result.resultUrl) {
+      // Persist the image to Vercel Blob for long-term storage (no-op if not configured)
+      const persistedUrl = await persistImage(result.resultUrl, {
+        folder: resolvedMode,
+        jobId:  job.id,
+      });
       await prisma.galleryAsset.create({
         data: {
           jobId:    job.id,
-          imageUrl: result.resultUrl,
-          thumbUrl: result.resultUrl,
+          imageUrl: persistedUrl,
+          thumbUrl: persistedUrl,
           size:     clampSize(Number(width) || 512),
           tool:     tool as Tool,
           provider: usedProvider,
@@ -910,6 +899,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.error(`[generate] Job ${job?.id ?? '(no-db)'} failed:`, err);
+    logger.error('generate', { jobId: job?.id, error: (err as Error)?.message ?? String(err) });
 
     const statusCode = serialized.statusCode ?? 500;
     const hint = getErrorHint(err);
