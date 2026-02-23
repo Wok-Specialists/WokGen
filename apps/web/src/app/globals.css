@@ -7990,3 +7990,114 @@ body {
 .cl-hash { font-size: 11px; color: #333c57; font-family: "JetBrains Mono",monospace; margin-left: auto; }
 .cl-date { font-size: 11px; color: #333c57; }
 .cl-entry-body { margin: 0; font-size: 14px; color: var(--text-secondary,#94b0c2); line-height: 1.55; }
+
+/* ============================================================
+   Skeleton loading screens
+   ============================================================ */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skeleton-block {
+  background: linear-gradient(90deg, #1a1a2e 25%, #252538 50%, #1a1a2e 75%);
+  background-size: 600px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  display: block;
+}
+.skeleton-block--rounded { border-radius: 4px; }
+
+.skeleton-card {
+  background: var(--surface-card, #131320);
+  border: 1px solid var(--surface-border, #252538);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.skeleton-card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.skeleton-card-meta { display: flex; gap: 8px; margin-top: 4px; }
+
+.skeleton-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.skeleton-list { display: flex; flex-direction: column; }
+.skeleton-list-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--surface-border, #252538); }
+.skeleton-list-icon { border-radius: 6px; flex-shrink: 0; }
+.skeleton-list-text { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+.skeleton-page { padding: 40px 24px; max-width: 1200px; margin: 0 auto; }
+.skeleton-page-title { margin-bottom: 12px; }
+.skeleton-page-sub { margin-bottom: 32px; }
+
+/* ============================================================
+   Micro-animations
+   ============================================================ */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(65,166,246,0); }
+  50%       { box-shadow: 0 0 0 6px rgba(65,166,246,0.15); }
+}
+@keyframes scanline-reveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bounce-in {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Utility animation classes */
+.anim-fade-in       { animation: fade-in      0.25s ease-out both; }
+.anim-fade-in-up    { animation: fade-in-up   0.3s  ease-out both; }
+.anim-scale-in      { animation: scale-in     0.2s  ease-out both; }
+.anim-slide-right   { animation: slide-in-right 0.25s ease-out both; }
+.anim-scanline      { animation: scanline-reveal 0.6s ease-out both; }
+.anim-bounce-in     { animation: bounce-in    0.35s cubic-bezier(.34,1.56,.64,1) both; }
+.anim-spin          { animation: spin         1s    linear infinite; }
+.anim-pulse-glow    { animation: pulse-glow   2s    ease-in-out infinite; }
+
+/* Stagger helpers — apply via style={{ animationDelay }} */
+.anim-d1 { animation-delay: 0.05s; }
+.anim-d2 { animation-delay: 0.10s; }
+.anim-d3 { animation-delay: 0.15s; }
+.anim-d4 { animation-delay: 0.20s; }
+.anim-d5 { animation-delay: 0.25s; }
+
+/* Card hover lift */
+.card-lift { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+/* Generation result scanline reveal */
+.result-reveal { animation: scanline-reveal 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Spinner */
+.spinner { width: 18px; height: 18px; border: 2px solid rgba(65,166,246,0.2); border-top-color: #41a6f6; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; flex-shrink: 0; }
+.spinner--sm { width: 14px; height: 14px; border-width: 1.5px; }
+.spinner--lg { width: 28px; height: 28px; border-width: 3px; }

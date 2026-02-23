@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { log as logger } from '@/lib/logger';
 import {
   generate,
   resolveProviderConfig,
@@ -166,7 +167,15 @@ export async function POST(req: NextRequest) {
       }
       const user = await prisma.user.findUnique({
         where: { id: authedUserId },
-        include: { subscription: { include: { plan: true } } },
+        select: {
+          hdMonthlyUsed:  true,
+          hdTopUpCredits: true,
+          subscription: {
+            select: {
+              plan: { select: { creditsPerMonth: true } },
+            },
+          },
+        },
       });
       const monthlyAllocation = user?.subscription?.plan.creditsPerMonth ?? 0;
       const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
@@ -688,7 +697,7 @@ export async function POST(req: NextRequest) {
       });
     } catch (dbErr) {
       // Non-fatal — log and continue without job tracking
-      console.warn('[generate] DB unavailable, running without job tracking:', (dbErr as Error).message);
+      logger.warn({ err: (dbErr as Error).message }, '[generate] DB unavailable, running without job tracking');
     }
   }
 
@@ -756,8 +765,7 @@ export async function POST(req: NextRequest) {
         result     = timedResult;
         usedProvider = candidateProvider;
         if (candidateProvider !== resolvedProvider) {
-          console.warn(`[generate] Primary ${resolvedProvider} failed; used fallback ${candidateProvider}`);
-        }
+          logger.warn({ primary: resolvedProvider, fallback: candidateProvider }, '[generate] primary failed; used fallback');        }
         break;
       } catch (err) {
         lastErr = err;
@@ -771,9 +779,8 @@ export async function POST(req: NextRequest) {
           // Hard failure (auth error, bad request, etc.) — don't try fallbacks
           throw err;
         }
-        console.warn(
-          `[generate] ${candidateProvider} transient error (${statusCode}), trying next:`,
-          (err as Error).message,
+        logger.warn({ provider: candidateProvider, err: (err as Error).message },
+          `[generate] ${candidateProvider} transient error (${statusCode}), trying next`
         );
       }
     }
@@ -805,6 +812,23 @@ export async function POST(req: NextRequest) {
     }
 
     // ------------------------------------------------------------------------
+    // 5a-pre2. Image quality gate — detect blank/corrupt outputs (non-fatal)
+    // ------------------------------------------------------------------------
+    if (result.resultUrl && process.env.ENABLE_QUALITY_GATE !== 'false') {
+      try {
+        const { checkImageQuality } = await import('@/lib/image-quality');
+        const qr = await checkImageQuality(result.resultUrl);
+        if (!qr.ok) {
+          logger.warn({ reason: qr.reason, entropy: qr.entropy }, '[generate] quality gate: blank/corrupt output detected');
+          // Attach quality warning to response but still return — don't fail silently
+          (result as GenerateResult & { qualityWarning?: string }).qualityWarning = qr.reason;
+        }
+      } catch {
+        // non-fatal — quality gate failure should never block the response
+      }
+    }
+
+    // ------------------------------------------------------------------------
     // 5a. Update Job as succeeded
     // ------------------------------------------------------------------------
     if (job) {
@@ -820,7 +844,7 @@ export async function POST(req: NextRequest) {
           },
         });
       } catch (dbErr) {
-        console.warn('[generate] Failed to update job record:', (dbErr as Error).message);
+        logger.warn({ err: (dbErr as Error).message }, '[generate] Failed to update job record');
       }
     }
 
@@ -857,7 +881,7 @@ export async function POST(req: NextRequest) {
           hdCreditsRemaining = { monthly: 0, topUp: Math.max(0, updated.hdTopUpCredits) };
         }
       } catch (err) {
-        console.warn('[generate] Failed to deduct HD credit:', (err as Error).message);
+        logger.warn({ err: (err as Error).message }, '[generate] Failed to deduct HD credit');
       }
 
       // Send low-credits warning email when user hits 5 remaining (once per threshold)
@@ -904,7 +928,7 @@ export async function POST(req: NextRequest) {
           mode:     resolvedMode,
         },
       }).catch((err) => {
-        console.error('[generate] GalleryAsset creation failed:', err);
+        logger.error('[generate] GalleryAsset creation failed:', err);
       });
     }
 
@@ -950,10 +974,10 @@ export async function POST(req: NextRequest) {
           status: 'failed',
           error:  serialized.error,
         },
-      }).catch(console.error); // best-effort — don't mask the original error
+      }).catch((e) => logger.error(e, '[generate] gallery asset creation failed')); // best-effort — don't mask the original error
     }
 
-    console.error(`[generate] Job ${job?.id ?? '(no-db)'} failed:`, err);
+    logger.error({ jobId: job?.id ?? '(no-db)', err }, '[generate] job failed');
 
     const statusCode = serialized.statusCode ?? 500;
     const hint = getErrorHint(err);
