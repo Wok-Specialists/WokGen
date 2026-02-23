@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
+export const maxDuration = 30;
+
 // ---------------------------------------------------------------------------
 // UI/UX Code Generation Endpoint
 // POST /api/uiux/generate  — Generate or iteratively refine UI components
