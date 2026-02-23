@@ -103,26 +103,43 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Credit pre-check ────────────────────────────────────────────────────
-    const user = await prisma.user.findUnique({
-      where:   { id: authedUserId },
-      include: { subscription: { include: { plan: true } } },
-    });
-    const monthlyAllocation = user?.subscription?.plan.creditsPerMonth ?? 0;
-    const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
-    const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
-    const topUpBank         = user?.hdTopUpCredits ?? 0;
-    const totalAvailable    = monthlyRemaining + topUpBank;
+    // ── Reserve 1 HD credit atomically (prevents parallel-request race) ──────
+    // Attempt to deduct from monthly allocation first, then top-up bank.
+    // If both are 0, reject immediately. If generation fails, we refund below.
+    let usedMonthly = false;
+    try {
+      const sub = await prisma.subscription.findUnique({
+        where: { userId: authedUserId }, include: { plan: true },
+      });
+      const monthlyAlloc = sub?.plan?.creditsPerMonth ?? 0;
 
-    if (totalAvailable < 1) {
-      return NextResponse.json(
-        {
-          error:            'Insufficient credits',
-          creditsRequired:  1,
-          creditsAvailable: 0,
+      // Try to atomically increment hdMonthlyUsed only if still under allocation
+      const updated = await prisma.user.updateMany({
+        where: {
+          id:            authedUserId,
+          hdMonthlyUsed: { lt: monthlyAlloc },
         },
-        { status: 402 },
-      );
+        data: { hdMonthlyUsed: { increment: 1 } },
+      });
+
+      if (updated.count > 0) {
+        usedMonthly = true;
+      } else {
+        // Monthly exhausted — try top-up bank
+        const topUpUpdated = await prisma.user.updateMany({
+          where: { id: authedUserId, hdTopUpCredits: { gt: 0 } },
+          data:  { hdTopUpCredits: { decrement: 1 } },
+        });
+        if (topUpUpdated.count === 0) {
+          return NextResponse.json(
+            { error: 'Insufficient credits', creditsRequired: 1, creditsAvailable: 0 },
+            { status: 402 },
+          );
+        }
+      }
+    } catch (reserveErr) {
+      console.error('[voice/generate] Credit reservation error:', reserveErr);
+      return NextResponse.json({ error: 'Could not reserve credits' }, { status: 500 });
     }
 
     try {
@@ -170,34 +187,9 @@ export async function POST(req: NextRequest) {
       const buffer   = await audioRes.arrayBuffer();
       const base64   = Buffer.from(buffer).toString('base64');
 
-      // ── Deduct 1 HD credit on success ──────────────────────────────────────
-      let hdCreditsRemaining = 0;
-      try {
-        const freshUser = await prisma.user.findUnique({ where: { id: authedUserId } });
-        const freshSub  = await prisma.subscription.findUnique({
-          where:   { userId: authedUserId },
-          include: { plan: true },
-        });
-        const freshMonthlyAlloc = freshSub?.plan?.creditsPerMonth ?? 0;
-        const freshMonthlyUsed  = freshUser?.hdMonthlyUsed ?? 0;
-        const freshMonthlyRem   = Math.max(0, freshMonthlyAlloc - freshMonthlyUsed);
-
-        if (freshMonthlyRem > 0) {
-          await prisma.user.update({
-            where: { id: authedUserId },
-            data:  { hdMonthlyUsed: { increment: 1 } },
-          });
-          hdCreditsRemaining = freshMonthlyRem - 1 + (freshUser?.hdTopUpCredits ?? 0);
-        } else {
-          const updated = await prisma.user.update({
-            where: { id: authedUserId },
-            data:  { hdTopUpCredits: { decrement: 1 } },
-          });
-          hdCreditsRemaining = Math.max(0, updated.hdTopUpCredits);
-        }
-      } catch (dbErr) {
-        console.warn('[voice/generate] Failed to deduct HD credit:', (dbErr as Error).message);
-      }
+      // Credit was already reserved above — just return remaining balance info
+      const freshUser = await prisma.user.findUnique({ where: { id: authedUserId } }).catch(() => null);
+      const hdCreditsRemaining = (freshUser?.hdTopUpCredits ?? 0);
 
       return NextResponse.json({
         audioBase64:      base64,
@@ -207,6 +199,16 @@ export async function POST(req: NextRequest) {
         hdCreditsRemaining,
       });
     } catch (err) {
+      // Refund the reserved credit on failure
+      try {
+        if (usedMonthly) {
+          await prisma.user.update({ where: { id: authedUserId }, data: { hdMonthlyUsed: { decrement: 1 } } });
+        } else {
+          await prisma.user.update({ where: { id: authedUserId }, data: { hdTopUpCredits: { increment: 1 } } });
+        }
+      } catch (refundErr) {
+        console.error('[voice/generate] Credit refund failed:', refundErr);
+      }
       return NextResponse.json(
         { error: err instanceof Error ? err.message : 'HD generation failed' },
         { status: 502 },

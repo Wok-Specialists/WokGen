@@ -10,3 +10,5 @@ dataset/accepted/
 dataset/rejected/
 dataset/train/
 dataset/manifests/
+.vercel
+.env*.local
