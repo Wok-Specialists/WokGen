@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { parseApiError, type StudioError } from '@/lib/studio-errors';
 import { StudioErrorBanner } from '@/app/_components/StudioErrorBanner';
 import { preprocessTextForTTS, detectContentType, selectOptimalVoice } from '@/lib/tts-intelligence';
@@ -67,7 +68,7 @@ const PROVIDER_COLORS: Record<string, string> = {
 };
 
 const ACCENT = '#f59e0b';
-const MAX_CHARS = 5000;
+const MAX_CHARS = 10000; // shown in UI; actual server limit depends on tier
 
 const EXAMPLES = [
   {
@@ -96,17 +97,32 @@ const EXAMPLES = [
 // Component
 // ---------------------------------------------------------------------------
 export default function VoiceStudioPage() {
+  const { data: session } = useSession();
+  const userId = session?.user?.id ?? null;
+  const userPlan: string = (session?.user as { plan?: string } | undefined)?.plan ?? 'free';
+
   const [text, setText]             = useState('');
   const [style, setStyle]           = useState<VoiceStyle>('natural');
   const [hd, setHd]                 = useState(false);
   const [language, setLanguage]     = useState('en');
   const [generating, setGenerating] = useState(false);
   const [audioUrl, setAudioUrl]     = useState<string | null>(null);
+  const [audioFormat, setAudioFormat] = useState<'mp3' | 'wav'>('mp3');
   const [voiceName, setVoiceName]   = useState('');
   const [provider, setProvider]     = useState('');
   const [contentType, setContentType] = useState('');
   const [error, setError]           = useState<string | null>(null);
   const [studioError, setStudioError] = useState<StudioError | null>(null);
+
+  // Emotion controls
+  const [emotionIntensity, setEmotionIntensity] = useState(0.3);
+  const [voiceClarity, setVoiceClarity]         = useState(0.75);
+  const [naturalPauses, setNaturalPauses]       = useState(true);
+
+  // Voice preview
+  const [previewPlaying, setPreviewPlaying] = useState(false);
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const charsLeft = MAX_CHARS - text.length;
@@ -129,8 +145,26 @@ export default function VoiceStudioPage() {
       const res = await fetch('/api/voice/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, style, hd, language }),
+        body: JSON.stringify({ text, style, hd, language, emotionIntensity, voiceClarity, naturalPauses }),
       });
+
+      // ElevenLabs streaming: content-type is audio/mpeg, not JSON
+      const ct = res.headers.get('Content-Type') ?? '';
+      if (ct.startsWith('audio/')) {
+        if (!res.ok) {
+          setError('Audio generation failed');
+          return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+        setAudioFormat('mp3');
+        setProvider(res.headers.get('X-Provider') ?? 'elevenlabs');
+        setVoiceName(res.headers.get('X-Voice-Id') ? 'ElevenLabs' : 'ElevenLabs');
+        setContentType('');
+        return;
+      }
+
       const data = await res.json() as {
         audio?: string;
         format?: string;
@@ -139,6 +173,8 @@ export default function VoiceStudioPage() {
         contentType?: string;
         charCount?: number;
         error?: string;
+        code?: string;
+        limit?: number;
       };
       if (!res.ok) {
         const parsed = parseApiError({ status: res.status, error: data.error });
@@ -146,6 +182,7 @@ export default function VoiceStudioPage() {
         return;
       }
       setAudioUrl(data.audio ?? null);
+      setAudioFormat((data.format ?? 'mp3') as 'mp3' | 'wav');
       setVoiceName(data.voice ?? '');
       setProvider(data.provider ?? '');
       setContentType(data.contentType ?? '');
@@ -160,13 +197,14 @@ export default function VoiceStudioPage() {
     if (!audioUrl) return;
     const a = document.createElement('a');
     a.href = audioUrl;
-    a.download = `wokgen-voice-${Date.now()}.${audioUrl.startsWith('data:audio/mpeg') ? 'mp3' : 'wav'}`;
+    a.download = `wokgen-voice-${Date.now()}.${audioFormat}`;
     a.click();
   }
 
   function handleClear() {
     setText('');
     setAudioUrl(null);
+    setAudioFormat('mp3');
     setVoiceName('');
     setProvider('');
     setContentType('');
@@ -180,6 +218,28 @@ export default function VoiceStudioPage() {
     setAudioUrl(null);
     setError(null);
     setStudioError(null);
+  }
+
+  async function handleVoicePreview() {
+    if (previewPlaying) {
+      previewAudioRef.current?.pause();
+      setPreviewPlaying(false);
+      return;
+    }
+    try {
+      const res = await fetch('/api/voice/voices');
+      const { voices } = await res.json() as { voices: Array<{ id: string; preview_url: string | null }> };
+      const voice = voices.find(v => v.id === liveVoice?.id);
+      if (!voice?.preview_url) return;
+      const audio = new Audio(voice.preview_url);
+      previewAudioRef.current = audio;
+      audio.onended = () => setPreviewPlaying(false);
+      audio.onerror = () => setPreviewPlaying(false);
+      setPreviewPlaying(true);
+      await audio.play();
+    } catch {
+      setPreviewPlaying(false);
+    }
   }
 
   return (
@@ -332,6 +392,23 @@ export default function VoiceStudioPage() {
                     </span>
                   )}
                 </span>
+                <button
+                  onClick={handleVoicePreview}
+                  title={previewPlaying ? 'Stop preview' : 'Preview voice'}
+                  style={{
+                    marginLeft: 'auto',
+                    padding: '2px 8px',
+                    borderRadius: 4,
+                    border: '1px solid var(--surface-border)',
+                    background: previewPlaying ? `${ACCENT}22` : 'transparent',
+                    color: previewPlaying ? ACCENT : 'var(--text-muted)',
+                    fontSize: 11,
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                >
+                  {previewPlaying ? '■ Stop' : '▶ Preview'}
+                </button>
               </div>
             )}
           </div>
@@ -469,6 +546,91 @@ export default function VoiceStudioPage() {
                 }}
               />
             </button>
+          </div>
+
+          {/* Emotion controls */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+              }}
+            >
+              Voice Controls
+            </div>
+
+            {/* Emotion Intensity */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, fontWeight: 600 }}>Emotion Intensity</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{emotionIntensity.toFixed(2)}</span>
+              </div>
+              <input
+                type="range" min={0} max={1} step={0.05}
+                value={emotionIntensity}
+                onChange={e => setEmotionIntensity(Number(e.target.value))}
+                style={{ width: '100%', accentColor: ACCENT }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
+                <span>Neutral</span><span>Expressive</span>
+              </div>
+            </div>
+
+            {/* Voice Clarity */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, fontWeight: 600 }}>Voice Clarity</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{voiceClarity.toFixed(2)}</span>
+              </div>
+              <input
+                type="range" min={0} max={1} step={0.05}
+                value={voiceClarity}
+                onChange={e => setVoiceClarity(Number(e.target.value))}
+                style={{ width: '100%', accentColor: ACCENT }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
+                <span>Warm</span><span>Crisp</span>
+              </div>
+            </div>
+
+            {/* Natural Pauses toggle */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 12px',
+                borderRadius: 8,
+                background: 'var(--surface)',
+                border: `1px solid ${naturalPauses ? ACCENT + '55' : 'var(--surface-border)'}`,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600 }}>Natural Pauses</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>
+                  Auto-insert pauses at punctuation
+                </div>
+              </div>
+              <button
+                onClick={() => setNaturalPauses(p => !p)}
+                aria-label="Toggle natural pauses"
+                style={{
+                  width: 36, height: 20, borderRadius: 10, border: 'none', cursor: 'pointer',
+                  background: naturalPauses ? ACCENT : 'var(--surface-border)',
+                  position: 'relative', transition: 'background 0.2s', flexShrink: 0,
+                }}
+              >
+                <span style={{
+                  position: 'absolute', top: 2,
+                  left: naturalPauses ? 18 : 2,
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: '#fff', transition: 'left 0.2s',
+                }} />
+              </button>
+            </div>
           </div>
 
           {/* Generate + Clear */}
@@ -741,6 +903,64 @@ export default function VoiceStudioPage() {
               ))}
             </div>
           </div>
+
+          {/* Voice Cloning (logged-in users only) */}
+          {userId && (
+            <div
+              style={{
+                borderRadius: 10,
+                border: '1px solid var(--surface-border)',
+                background: 'var(--surface)',
+                padding: 20,
+              }}
+            >
+              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>🎤 Voice Cloning</div>
+              {userPlan === 'pro' || userPlan === 'max' ? (
+                <div>
+                  {/* TODO: Implement voice cloning — upload WAV (10–30s), call /api/voice/clone */}
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 12px' }}>
+                    Upload a 10–30 second WAV sample to clone your voice.
+                  </p>
+                  <div
+                    style={{
+                      padding: '24px',
+                      borderRadius: 8,
+                      border: '2px dashed var(--surface-border)',
+                      textAlign: 'center',
+                      color: 'var(--text-muted)',
+                      fontSize: 12,
+                    }}
+                  >
+                    WAV upload — coming soon
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 12px' }}>
+                    Clone any voice from a short audio sample. Available on Pro plan.
+                  </p>
+                  <Link
+                    href="/pricing"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      padding: '8px 16px',
+                      borderRadius: 7,
+                      background: `${ACCENT}18`,
+                      border: `1px solid ${ACCENT}55`,
+                      color: ACCENT,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    🔒 Upgrade to Pro →
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

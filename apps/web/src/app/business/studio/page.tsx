@@ -32,6 +32,7 @@ interface GenerationResult {
   resolvedSeed?: number;
   width?:       number;
   height?:      number;
+  guestDownloadGated?: boolean;
 }
 
 interface HistoryItem {
@@ -323,6 +324,7 @@ function BusinessStudioInner() {
           jobId: data.job?.id ?? 'local', resultUrl: data.resultUrl,
           durationMs: data.durationMs, resolvedSeed: data.resolvedSeed,
           width: dims.width, height: dims.height,
+          guestDownloadGated: data.guestDownloadGated as boolean | undefined,
         };
         setResult(gen);
         setJobStatus('succeeded');
@@ -1022,12 +1024,31 @@ function BusinessStudioInner() {
                       {displayResult.width} × {displayResult.height}
                     </span>
                   )}
-                  <button
-                    className="btn-ghost btn-sm"
-                    onClick={() => handleDownload(displayUrl ?? displayResult.resultUrl!)}
-                  >
-                    ↓ Download
-                  </button>
+                  {(displayResult as GenerationResult)?.guestDownloadGated ? (
+                    <a
+                      href="/api/auth/signin"
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: 6,
+                        background: '#f59e0b18',
+                        border: '1px solid #f59e0b55',
+                        color: '#f59e0b',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Sign in to download →
+                    </a>
+                  ) : (
+                    <button
+                      className="btn-ghost btn-sm"
+                      onClick={() => handleDownload(displayUrl ?? displayResult.resultUrl!)}
+                    >
+                      ↓ Download
+                    </button>
+                  )}
                   <button
                     className="btn-ghost btn-sm"
                     onClick={() => { const u = displayUrl ?? displayResult.resultUrl; if (u) { navigator.clipboard.writeText(u); toastSuccess('URL copied'); } }}

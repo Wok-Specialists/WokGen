@@ -23,6 +23,7 @@ interface GenerationResult {
   durationMs?: number;
   width?: number;
   height?: number;
+  guestDownloadGated?: boolean;
 }
 
 interface HistoryItem {
@@ -241,7 +242,7 @@ function VectorStudioInner() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...body, variantIndex }),
           });
-          const data = await res.json() as { ok?: boolean; error?: string; job?: { id?: string }; resultUrl?: string; durationMs?: number };
+          const data = await res.json() as { ok?: boolean; error?: string; job?: { id?: string }; resultUrl?: string; durationMs?: number; guestDownloadGated?: boolean };
           if (!res.ok || !data.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
           return {
             jobId: data.job?.id ?? crypto.randomUUID(),
@@ -249,6 +250,7 @@ function VectorStudioInner() {
             durationMs: data.durationMs,
             width: size,
             height: size,
+            guestDownloadGated: data.guestDownloadGated,
           } as GenerationResult;
         }),
       );
@@ -623,13 +625,27 @@ function VectorStudioInner() {
                     alt={`Variant ${i + 1}`}
                     style={{ width: '100%', aspectRatio: '1', objectFit: 'contain', display: 'block' }}
                   />
-                  <button
-                    className="btn-ghost btn-xs"
-                    style={{ position: 'absolute', bottom: 6, right: 6 }}
-                    onClick={() => r.resultUrl && handleDownload(r.resultUrl, i)}
-                  >
-                    ↓
-                  </button>
+                  {r.guestDownloadGated ? (
+                    <a
+                      href="/api/auth/signin"
+                      style={{
+                        position: 'absolute', bottom: 6, right: 6,
+                        padding: '2px 6px', borderRadius: 4,
+                        background: '#f59e0b18', border: '1px solid #f59e0b55',
+                        color: '#f59e0b', fontSize: 10, fontWeight: 600, textDecoration: 'none',
+                      }}
+                    >
+                      Sign in →
+                    </a>
+                  ) : (
+                    <button
+                      className="btn-ghost btn-xs"
+                      style={{ position: 'absolute', bottom: 6, right: 6 }}
+                      onClick={() => r.resultUrl && handleDownload(r.resultUrl, i)}
+                    >
+                      ↓
+                    </button>
+                  )}
                 </div>
               ) : null,
             )}
@@ -691,12 +707,31 @@ function VectorStudioInner() {
                       {displayResult.width} × {displayResult.height}
                     </span>
                   )}
-                  <button
-                    className="btn-ghost btn-sm"
-                    onClick={() => handleDownload(displayUrl ?? displayResult.resultUrl!)}
-                  >
-                    ↓ Download
-                  </button>
+                  {displayResult?.guestDownloadGated ? (
+                    <a
+                      href="/api/auth/signin"
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: 6,
+                        background: '#f59e0b18',
+                        border: '1px solid #f59e0b55',
+                        color: '#f59e0b',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Sign in to download →
+                    </a>
+                  ) : (
+                    <button
+                      className="btn-ghost btn-sm"
+                      onClick={() => handleDownload(displayUrl ?? displayResult.resultUrl!)}
+                    >
+                      ↓ Download
+                    </button>
+                  )}
                   <button
                     className="btn-ghost btn-sm"
                     onClick={() => {

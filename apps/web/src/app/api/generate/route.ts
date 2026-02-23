@@ -840,6 +840,7 @@ export async function POST(req: NextRequest) {
       resolvedSeed:        result.resolvedSeed,
       hdCreditsRemaining,
       quality:             useHD ? 'hd' : 'standard',
+      guestDownloadGated:  authedUserId === null,
       // Quota info for frontend display (undefined for HD/paid tiers)
       quotaRemaining: !useHD
         ? (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining

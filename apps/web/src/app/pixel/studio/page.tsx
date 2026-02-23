@@ -35,6 +35,7 @@ interface GenerationResult {
   width?: number;
   height?: number;
   seed?: number | null;
+  guestDownloadGated?: boolean;
 }
 
 interface ProviderInfo {
@@ -991,9 +992,28 @@ function OutputPanel({
         <button className="btn-ghost btn-sm" onClick={onCopyImage} title="Copy image to clipboard">
           ⎘ Copy
         </button>
-        <button className="btn-secondary btn-sm" onClick={onDownload}>
-          ↓ Download
-        </button>
+        {result?.guestDownloadGated ? (
+          <a
+            href="/api/auth/signin"
+            style={{
+              padding: '4px 10px',
+              borderRadius: 6,
+              background: '#f59e0b18',
+              border: '1px solid #f59e0b55',
+              color: '#f59e0b',
+              fontSize: 11,
+              fontWeight: 600,
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Sign in to download →
+          </a>
+        ) : (
+          <button className="btn-secondary btn-sm" onClick={onDownload}>
+            ↓ Download
+          </button>
+        )}
         <button
           className={cn(savedToGallery ? 'btn-success' : 'btn-primary', 'btn-sm')}
           onClick={onSaveToGallery}
@@ -2507,11 +2527,12 @@ function StudioInner() {
         try { data = await res.json(); } catch { throw new Error(`Server error (HTTP ${res.status})`); }
         if (!res.ok || !data.ok) throw new Error((data.error as string | undefined) ?? `HTTP ${res.status}`);
         return {
-          jobId:        (data.job as Record<string, unknown> | null)?.id as string ?? 'local',
-          resultUrl:    data.resultUrl as string ?? null,
-          resultUrls:   data.resultUrls as string[] ?? null,
-          durationMs:   data.durationMs as number | undefined,
-          resolvedSeed: data.resolvedSeed as number | undefined,
+          jobId:              (data.job as Record<string, unknown> | null)?.id as string ?? 'local',
+          resultUrl:          data.resultUrl as string ?? null,
+          resultUrls:         data.resultUrls as string[] ?? null,
+          durationMs:         data.durationMs as number | undefined,
+          resolvedSeed:       data.resolvedSeed as number | undefined,
+          guestDownloadGated: data.guestDownloadGated as boolean | undefined,
         } as GenerationResult;
       };
 
