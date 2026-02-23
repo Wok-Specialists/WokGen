@@ -8838,3 +8838,32 @@ body {
 .empty-state-action:hover {
   background: #6ba0f9;
 }
+
+/* ── Accessibility: Focus rings ──────────────────────────────────────────── */
+/* Focus rings — accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent, #4f8ef7);
+  outline-offset: 2px;
+}
+
+/* ── Accessibility: Skip link ────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--accent, #4f8ef7);
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 9999;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}

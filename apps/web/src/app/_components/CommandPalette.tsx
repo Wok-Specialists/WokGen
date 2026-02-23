@@ -92,7 +92,7 @@ export default function CommandPalette() {
 
   return (
     <div className="cmdk-overlay" onClick={() => setOpen(false)}>
-      <div className="cmdk-container" onClick={e => e.stopPropagation()}>
+      <div className="cmdk-container" role="dialog" aria-label="Command palette" aria-modal="true" onClick={e => e.stopPropagation()}>
         <Command className="cmdk-root" shouldFilter={false}>
           <div className="cmdk-input-wrap">
             <svg className="cmdk-search-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -105,6 +105,7 @@ export default function CommandPalette() {
               value={query}
               onValueChange={setQuery}
               autoFocus
+              aria-label="Search commands"
             />
             <kbd className="cmdk-esc-hint">ESC</kbd>
           </div>

@@ -156,7 +156,7 @@ export default function OnboardingModal({ onComplete }: Props) {
 
   return (
     <div className="onboard-overlay">
-      <div className="onboard-modal">
+      <div className="onboard-modal" role="dialog" aria-label="Onboarding" aria-modal="true">
         {/* Header */}
         <div className="onboard-header">
           <div className="onboard-progress">
@@ -167,6 +167,8 @@ export default function OnboardingModal({ onComplete }: Props) {
           <button className="onboard-skip" onClick={handleSkip}>Skip</button>
         </div>
 
+        {/* Step content — aria-live so screen readers announce step changes */}
+        <div aria-live="polite">
         {/* Step title */}
         <h2 className="onboard-title">{STEP_TITLES[step - 1]}</h2>
 
@@ -284,6 +286,7 @@ export default function OnboardingModal({ onComplete }: Props) {
             </div>
           </>
         )}
+        </div>
       </div>
     </div>
   );

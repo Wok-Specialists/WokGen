@@ -166,6 +166,7 @@ export default function RootLayout({
       </head>
       <body className={dmSans.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Providers>
+          <a href="#main-content" className="skip-link">Skip to content</a>
           <NavBar />
           <ModeSwitcher />
           <main id="main-content" style={{ flex: 1 }}>{children}</main>

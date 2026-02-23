@@ -1423,6 +1423,7 @@ function GenerateForm({
               {/* Save as Favorite */}
               <button
                 title={favSaved ? 'Saved!' : 'Save prompt as favorite'}
+                aria-label={favSaved ? 'Saved!' : 'Save prompt as favorite'}
                 onClick={savePromptAsFavorite}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', lineHeight: 1, color: favSaved ? '#f59e0b' : 'var(--text-disabled)', transition: 'color 0.15s' }}
               >
