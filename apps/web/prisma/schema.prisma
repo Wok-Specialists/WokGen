@@ -514,16 +514,18 @@ model BrandKit {
 
 /// Team membership for a project
 model ProjectMember {
-  id        String   @id @default(cuid())
-  projectId String
-  userId    String
+  id            String   @id @default(cuid())
+  projectId     String
+  userId        String?  // nullable for pending invites
   /// owner | editor | viewer
-  role      String   @default("viewer")
-  invitedBy String?
-  createdAt DateTime @default(now())
+  role          String   @default("viewer")
+  invitedBy     String?
+  inviteToken   String?  @unique // token for accepting pending invites
+  inviteStatus  String?  @default("pending") // pending | accepted | declined
+  createdAt     DateTime @default(now())
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, userId])
   @@index([projectId])
