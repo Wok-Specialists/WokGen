@@ -104,14 +104,16 @@ function NavBar() {
       </Link>
 
       {/* Nav links */}
-      <div className="flex items-center gap-1 flex-1">
-        <NavLink href="/pixel/studio">Studio</NavLink>
-        <NavLink href="/community">Community</NavLink>
-        <NavLink href="/docs">Docs</NavLink>
-        <NavLink href="/eral">
-          <span className="nav-eral-badge">🧠 Eral</span>
-        </NavLink>
-      </div>
+        <div className="flex items-center gap-1 flex-1">
+          <NavLink href="/pixel/studio">Studio</NavLink>
+          <NavLink href="/community">Community</NavLink>
+          <NavLink href="/eral">
+            <span className="nav-eral-badge">🧠 Eral</span>
+          </NavLink>
+          <NavLink href="/eral/director">Director</NavLink>
+          <NavLink href="/brand">Brand</NavLink>
+          <NavLink href="/docs">Docs</NavLink>
+        </div>
 
       {/* Right side */}
       <div className="flex items-center gap-2 ml-auto">

@@ -115,6 +115,10 @@ export async function GET(req: NextRequest) {
     nextCursor,
     hasMore,
     total:      trimmed.length,
+  }, {
+    headers: mine
+      ? {}
+      : { 'Cache-Control': 's-maxage=30, stale-while-revalidate=60' },
   });
 }
 

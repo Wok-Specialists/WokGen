@@ -207,6 +207,11 @@ model Job {
   // A job can optionally produce a persisted gallery asset
   asset       GalleryAsset?
 
+  // Asset relationships where this job is the source or target
+  assetRelFrom AssetRelationship[] @relation("RelFrom")
+  assetRelTo   AssetRelationship[] @relation("RelTo")
+  assetTags    AssetTag[]
+
   @@index([userId])
   @@index([status])
   @@index([tool])
@@ -293,8 +298,12 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobs Job[]
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs         Job[]
+  brief        ProjectBrief?
+  brandKit     BrandKit[]
+  members      ProjectMember[]
+  relationships AssetRelationship[]
 
   @@index([userId, mode])
   @@index([userId, isArchived])
@@ -398,4 +407,107 @@ model SfxJob {
   createdAt       DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+// ---------------------------------------------------------------------------
+// Depth features — asset relationships, project briefs, brand kits, team
+// ---------------------------------------------------------------------------
+
+/// Links two jobs together within a project (e.g. character → matching enemy)
+model AssetRelationship {
+  id        String   @id @default(cuid())
+  projectId String
+  fromJobId String
+  toJobId   String
+  /// variation | animation_of | enemy_of | tileset_for | same_palette | brand_use
+  type      String
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fromJob Job     @relation("RelFrom", fields: [fromJobId], references: [id], onDelete: Cascade)
+  toJob   Job     @relation("RelTo",   fields: [toJobId],   references: [id], onDelete: Cascade)
+
+  @@unique([fromJobId, toJobId, type])
+  @@index([projectId])
+}
+
+/// Project-level creative brief — drives Eral asset director suggestions
+model ProjectBrief {
+  id          String   @id @default(cuid())
+  projectId   String   @unique
+
+  // Game project fields
+  genre       String?  // dungeon_crawler | platformer | top_down_rpg | city_builder
+  artStyle    String?  // nes_16color | snes_32color | gb_monochrome | modern_pixel
+  paletteJson String?  @db.Text  // JSON: [{hex, name}]
+  moodBoard   String?  @db.Text  // JSON: [imageUrl]
+
+  // Brand project fields
+  brandName   String?
+  industry    String?
+  colorHex    String?  // primary brand color
+  styleGuide  String?  @db.Text
+
+  // Pinned style snapshot (JSON: full preset config)
+  pinnedStyle String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+/// Persistent brand kit — palette, typography direction, style guide
+model BrandKit {
+  id          String   @id @default(cuid())
+  userId      String
+  projectId   String?
+
+  name        String
+  /// JSON: [{hex, name, role}]
+  paletteJson String   @db.Text
+  /// JSON: {primary, secondary, scale}
+  typography  String?  @db.Text
+  styleGuide  String?  @db.Text
+  industry    String?
+  mood        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([projectId])
+}
+
+/// Team membership for a project
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  /// owner | editor | viewer
+  role      String   @default("viewer")
+  invitedBy String?
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+/// Freeform tags on individual jobs (for gallery search and project organization)
+model AssetTag {
+  id     String  @id @default(cuid())
+  jobId  String
+  tag    String
+  userId String?
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, tag])
+  @@index([jobId])
+  @@index([tag])
 }

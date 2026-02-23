@@ -52,6 +52,25 @@ export async function GET(
     );
   }
 
+  // Auto-timeout stuck jobs: if status is "running" and it's been >10 minutes, mark failed.
+  if (job.status === 'running') {
+    const ageMs = Date.now() - job.updatedAt.getTime();
+    if (ageMs > 10 * 60 * 1000) {
+      await prisma.job.update({
+        where: { id },
+        data:  { status: 'failed', error: 'Generation timed out after 10 minutes.' },
+      }).catch(() => {});
+      return NextResponse.json({
+        ...job,
+        status:     'failed',
+        error:      'Generation timed out after 10 minutes.',
+        resultUrls: job.resultUrls ? JSON.parse(job.resultUrls) : null,
+        createdAt:  job.createdAt.toISOString(),
+        updatedAt:  new Date().toISOString(),
+      });
+    }
+  }
+
   return NextResponse.json({
     ...job,
     resultUrls: job.resultUrls ? JSON.parse(job.resultUrls) : null,
@@ -61,7 +80,10 @@ export async function GET(
 }
 
 // ---------------------------------------------------------------------------
-// PATCH /api/jobs/[id]
+// POST /api/jobs/[id]/timeout  (internal — called by cron or client timeout)
+//
+// Mark a stuck "running" job as "failed" if it has been running for >10min.
+// ---------------------------------------------------------------------------
 //
 // Update mutable job fields: title, isPublic, tags.
 // Used by the studio UI for "Save to Gallery" and visibility toggling.
