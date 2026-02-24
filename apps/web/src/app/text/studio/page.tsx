@@ -151,6 +151,8 @@ export default function TextStudio() {
     setElapsedMs(0);
     startTimer();
 
+    // TODO: Replace with SSE streaming so content streams token-by-token into the result area.
+    // The /api/text/generate endpoint should emit `data: {...}` events with partial content.
     try {
       const res = await fetch('/api/text/generate', {
         method: 'POST',
