@@ -35,6 +35,9 @@ const NAV_COMMANDS = [
   { id: 'nav-tools',    label: 'Tools',                href: '/tools',            group: 'Platform' },
   { id: 'nav-pricing',  label: 'Open Source Models',  href: '/pricing',          group: 'Platform' },
   { id: 'nav-changelog',label: 'Changelog',            href: '/changelog',        group: 'Platform' },
+  { id: 'nav-admin',      label: 'Admin Dashboard', href: '/admin',           group: 'Admin'    },
+  { id: 'nav-admin-metrics', label: 'Admin Metrics', href: '/admin/metrics',  group: 'Admin'    },
+  { id: 'nav-admin-jobs',    label: 'Job Queues',    href: '/admin/jobs',     group: 'Admin'    },
 ];
 
 export default function CommandPalette() {
