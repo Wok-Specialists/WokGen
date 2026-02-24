@@ -14,7 +14,7 @@ export default function Page() {
       id="regex"
       label="Regex Tester"
       description="Test regular expressions with live match highlighting, group captures, and an explanation of your pattern."
-      icon="🔍"
+      icon="search"
     >
       <RegexTool />
     </ToolShell>

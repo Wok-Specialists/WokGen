@@ -248,7 +248,7 @@ export default function TilemapTool() {
         <div className="tilemap-toolbar-group">
           {(['paint', 'erase', 'fill'] as const).map(t => (
             <button key={t} className={`tilemap-tool-btn${tool === t ? ' active' : ''}`} onClick={() => setTool(t)}>
-              {t === 'paint' ? '🖌️ Paint' : t === 'erase' ? '🧹 Erase' : '🪣 Fill'}
+              {t === 'paint' ? 'Paint' : t === 'erase' ? 'Erase' : 'Fill'}
             </button>
           ))}
         </div>
@@ -289,7 +289,7 @@ export default function TilemapTool() {
             {[...layers].reverse().map(l => (
               <div key={l.id} className={`tilemap-layer-row${l.id === activeLayer ? ' active' : ''}`} onClick={() => setActiveLayer(l.id)}>
                 <button className="tilemap-layer-vis" onClick={e => { e.stopPropagation(); toggleLayer(l.id); }}>
-                  {l.visible ? '👁️' : '🙈'}
+                  {l.visible ? 'Show' : 'Hide'}
                 </button>
                 <span className="tilemap-layer-name">{l.name}</span>
                 {layers.length > 1 && (

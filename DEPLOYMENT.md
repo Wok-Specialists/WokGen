@@ -37,6 +37,8 @@ In **Project → Settings → Environment Variables**, add:
 | `AUTH_SECRET` | Run `openssl rand -base64 32` and paste output |
 | `AUTH_GITHUB_ID` | GitHub OAuth App client ID |
 | `AUTH_GITHUB_SECRET` | GitHub OAuth App client secret |
+| `AUTH_GOOGLE_ID` | Google OAuth 2.0 client ID |
+| `AUTH_GOOGLE_SECRET` | Google OAuth 2.0 client secret |
 | `RESEND_API_KEY` | Resend API key (domain must be verified in Resend dashboard) |
 | `ADMIN_EMAIL` | Email of the GitHub account with admin panel access |
 | `TOGETHER_API_KEY` | *(optional)* your Together key |
@@ -73,6 +75,13 @@ In **Project → Settings → Environment Variables**, add:
 2. Homepage URL: `https://wokgen.wokspec.org`
 3. Authorization callback URL: `https://wokgen.wokspec.org/api/auth/callback/github`
 4. Copy the Client ID and generate a Client Secret
+
+**Google OAuth setup:**
+1. Go to https://console.cloud.google.com → APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID (type: Web application)
+3. Authorized redirect URIs: `https://wokgen.wokspec.org/api/auth/callback/google`
+4. Copy the Client ID and Client Secret into `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`
+5. In OAuth consent screen, add `wokgen.wokspec.org` as an authorized domain
 
 **Resend email setup (for wokspec.org on Cloudflare):**
 1. Create account at https://resend.com

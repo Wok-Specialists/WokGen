@@ -130,7 +130,7 @@ export default function FaviconTool() {
           <div className="tool-dropzone-icon">⭐</div>
           <p className="tool-dropzone-text">Drop your logo or image here</p>
           <p className="tool-dropzone-sub">PNG · SVG · JPG · WebP — square images work best</p>
-          <p className="tool-dropzone-private">🔒 100% client-side — nothing uploaded</p>
+          <p className="tool-dropzone-private">100% client-side — nothing uploaded</p>
           <input
             ref={inputRef}
             type="file"
@@ -185,7 +185,7 @@ export default function FaviconTool() {
           </div>
 
           <div className="favicon-ico-note">
-            <p>💡 <strong>Need a .ico file?</strong> Download the PNGs above and combine them using an online <code>.ico</code> maker (e.g. favicon.io).</p>
+            <p><strong>Need a .ico file?</strong> Download the PNGs above and combine them using an online <code>.ico</code> maker (e.g. favicon.io).</p>
           </div>
 
           {/* Actions */}

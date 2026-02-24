@@ -40,9 +40,9 @@ function statusLabel(p: ProviderStatus): { label: string; cls: string } {
 
 function statusEmoji(p: ProviderStatus) {
   if (!p.configured) return '⬜';
-  if (!p.available)  return '🔴';
-  if (p.degraded)    return '🟡';
-  return '🟢';
+  if (!p.available)  return 'DOWN';
+  if (p.degraded)    return 'DEGRADED';
+  return 'OK';
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -144,7 +144,7 @@ export default function StatusPage() {
       {/* Overall banner */}
       <div className={`devplatform-status-banner devplatform-status-banner--${overallStatus}`}>
         <span className="devplatform-status-banner__emoji">
-          {overallStatus === 'operational' ? '🟢' : overallStatus === 'degraded' ? '🟡' : '🔴'}
+          {overallStatus === 'operational' ? 'OK' : overallStatus === 'degraded' ? 'DEGRADED' : 'DOWN'}
         </span>
         <div>
           <p className="devplatform-status-banner__title">

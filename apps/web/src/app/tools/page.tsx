@@ -9,13 +9,13 @@ import TutorialOverlay, { useTutorial, TOOLS_TUTORIAL } from '@/components/Tutor
 
 const SIDEBAR_CATEGORIES: Array<{ tag: ToolTag | null; label: string }> = [
   { tag: null,       label: 'All Tools' },
-  { tag: 'image',   label: '🖼 Image' },
-  { tag: 'design',  label: '🎨 Design' },
-  { tag: 'dev',     label: '💻 Dev Tools' },
-  { tag: 'gamedev', label: '🎮 Game Dev' },
-  { tag: 'audio',   label: '🔊 Audio' },
+  { tag: 'image',   label: 'Image' },
+  { tag: 'design',  label: 'Design' },
+  { tag: 'dev',     label: 'Dev Tools' },
+  { tag: 'gamedev', label: 'Game Dev' },
+  { tag: 'audio',   label: 'Audio' },
   { tag: 'crypto',  label: '₿ Crypto/Web3' },
-  { tag: 'collab',  label: '🖊 Collab' },
+  { tag: 'collab',  label: 'Collab' },
 ];
 
 function countForTag(tag: ToolTag | null) {
@@ -188,7 +188,7 @@ export default function ToolsPage() {
         {/* Recently Used */}
         {recentTools.length > 0 && (
           <section className="toolhub-section">
-            <h2 className="toolhub-section-title">🕐 Recently Used</h2>
+            <h2 className="toolhub-section-title">Recently Used</h2>
             <div className="toolhub-grid">
               {recentTools.map(tool => (
                 <ToolCard key={tool.id} tool={tool} {...cardProps} starred={starredIds.includes(tool.id)} />

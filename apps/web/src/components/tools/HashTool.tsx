@@ -90,7 +90,7 @@ export default function HashTool() {
           onDragOver={e => e.preventDefault()}
           onDrop={async e => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) { setFilename(f.name); await hashAll(undefined, f); }}}
         >
-          {filename ? <p className="tool-dropzone-text">📄 {filename}</p> : <>
+          {filename ? <p className="tool-dropzone-text">{filename}</p> : <>
             <p className="tool-dropzone-text">Drop file here or click to browse</p>
             <p className="tool-dropzone-sub">Any file type — all processing in browser</p>
           </>}
@@ -133,7 +133,7 @@ export default function HashTool() {
             />
             {verifyStatus && (
               <span className={`hash-verify-badge ${verifyStatus}`}>
-                {verifyStatus === 'match' ? '✅ Match' : '❌ Mismatch'}
+                {verifyStatus === 'match' ? 'Match' : 'Mismatch'}
               </span>
             )}
           </div>

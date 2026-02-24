@@ -195,7 +195,7 @@ export default function CsvTool() {
         <div className="csv-drop-header">
           <span className="csv-drop-label">CSV Input</span>
           <div className="csv-drop-actions">
-            <button className="btn-ghost-xs" onClick={() => fileRef.current?.click()}>📂 Load File</button>
+            <button className="btn-ghost-xs" onClick={() => fileRef.current?.click()}>Load File</button>
             <button className="btn-ghost-xs" onClick={() => setCsv(EXAMPLE_CSV)}>Example</button>
             <button className="btn-ghost-xs" onClick={() => setCsv('')}>Clear</button>
           </div>
@@ -214,7 +214,7 @@ export default function CsvTool() {
       <div className="csv-tabs">
         {(['table', 'convert', 'stats'] as Tab[]).map(t => (
           <button key={t} className={`csv-tab${tab === t ? ' active' : ''}`} onClick={() => setTab(t)}>
-            {t === 'table' ? '📋 Table View' : t === 'convert' ? '🔄 Convert' : '📊 Stats'}
+            {t === 'table' ? 'Table' : t === 'convert' ? 'Convert' : 'Stats'}
           </button>
         ))}
       </div>
@@ -225,7 +225,7 @@ export default function CsvTool() {
           <div className="csv-filter-row">
             <input
               className="csv-filter-input"
-              placeholder="🔍 Filter rows…"
+              placeholder="Filter rows…"
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />

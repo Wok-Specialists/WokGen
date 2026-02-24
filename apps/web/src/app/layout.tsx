@@ -14,7 +14,6 @@ import { StudiosDropdown } from './_components/StudiosDropdown';
 import { MobileNav } from './_components/MobileNav';
 import { Breadcrumb } from './_components/Breadcrumb';
 import { Toaster } from 'sonner';
-import DonationStrip from '@/components/DonationStrip';
 import { PageLoadingBar } from '@/components/PageLoadingBar';
 
 const EralVoiceButton = nextDynamic(
@@ -57,8 +56,8 @@ export const metadata: Metadata = {
     template: '%s · WokGen',
   },
   description:
-    'Multi-vertical AI asset generation: pixel art game assets, business branding, ' +
-    'vector icons, emoji packs, and UI/UX components. Free to start. Powered by WokSpec.',
+    'WokGen Studio — one platform for AI asset generation: pixel art, business branding, ' +
+    'vector icons, UI/UX components, voice, and text. Free to start. Powered by WokSpec.',
   keywords: [
     'AI asset generator',
     'pixel art generator',
@@ -191,7 +190,6 @@ export default function RootLayout({
         </Providers>
         <Analytics />
         <SpeedInsights />
-        <DonationStrip />
       </body>
     </html>
   );

@@ -174,7 +174,7 @@ export default async function SupportPage() {
 
         <div className="support-values-grid">
           <div className="card">
-            <div className="support-values-icon">🔓</div>
+            <div className="support-values-icon">Open</div>
             <div className="support-values-title">Open Source</div>
             <p className="support-values-desc">
               Every model, every API route, every UI component is public on GitHub.
@@ -182,7 +182,7 @@ export default async function SupportPage() {
             </p>
           </div>
           <div className="card">
-            <div className="support-values-icon">🌐</div>
+            <div className="support-values-icon">Web</div>
             <div className="support-values-title">Community Powered</div>
             <p className="support-values-desc">
               WokGen runs on volunteer compute and community donations. No VC funding,
@@ -190,7 +190,7 @@ export default async function SupportPage() {
             </p>
           </div>
           <div className="card">
-            <div className="support-values-icon">🔒</div>
+            <div className="support-values-icon">Secure</div>
             <div className="support-values-title">Privacy First</div>
             <p className="support-values-desc">
               We don&apos;t train on your generations, sell your data, or track

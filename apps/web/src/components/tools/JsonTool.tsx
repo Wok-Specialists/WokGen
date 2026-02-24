@@ -109,7 +109,7 @@ export default function JsonTool() {
         const depth = countDepth(parsed);
         const keys = countKeys(parsed);
         setOutput(
-          `✅ Valid JSON\n\nType: ${Array.isArray(parsed) ? `Array (${(parsed as unknown[]).length} items)` : typeof parsed}\nKeys: ${keys}\nNesting depth: ${depth}`
+          `Valid JSON\n\nType: ${Array.isArray(parsed) ? `Array (${(parsed as unknown[]).length} items)` : typeof parsed}\nKeys: ${keys}\nNesting depth: ${depth}`
         );
       } else if (mode === 'convert') {
         const target = CONVERT_TARGETS.find(t => t.id === convertTarget);
@@ -118,7 +118,7 @@ export default function JsonTool() {
       }
     } catch (e) {
       const msg = e instanceof SyntaxError ? e.message : String(e);
-      setError(`❌ Invalid JSON: ${msg}`);
+      setError(`Invalid JSON: ${msg}`);
       setOutput('');
     }
   }, [input, mode, convertTarget]);
@@ -134,7 +134,7 @@ export default function JsonTool() {
     setInput(JSON.stringify({
       name: 'WokGen',
       version: '2.0.0',
-      features: ['AI Studios', 'Free Tools', 'Open Source'],
+      features: ['WokGen Studio', 'Free Tools', 'Open Source'],
       meta: { free: true, models: 300 },
     }, null, 2));
   };

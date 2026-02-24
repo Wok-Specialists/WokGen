@@ -100,7 +100,7 @@ export default function TutorialOverlay({ tutorial, onComplete, onSkip }: Tutori
         <h4 className="tutorial-tooltip-title">{current.title}</h4>
         <p className="tutorial-tooltip-body">{current.body}</p>
         {current.action && (
-          <p className="tutorial-action-hint">👆 {current.action}</p>
+          <p className="tutorial-action-hint">{current.action}</p>
         )}
         <div className="tutorial-tooltip-nav">
           {step > 0 && (
@@ -112,7 +112,7 @@ export default function TutorialOverlay({ tutorial, onComplete, onSkip }: Tutori
             ))}
           </div>
           <button className="btn-primary btn-sm" onClick={next}>
-            {isLast ? '🎉 Done!' : 'Next →'}
+            {isLast ? 'Done' : 'Next →'}
           </button>
         </div>
       </div>
@@ -180,7 +180,7 @@ export function useTutorial(tutorial: Tutorial, autoStart = true) {
 
 export const PIXEL_STUDIO_TUTORIAL: Tutorial = {
   id: 'pixel-studio-v1',
-  label: 'Pixel Studio Tour',
+  label: 'Pixel mode Tour',
   steps: [
     {
       target: '.studio-prompt-input, [data-tutorial="prompt"]',
@@ -249,7 +249,7 @@ export const ERAL_TUTORIAL: Tutorial = {
     {
       target: '.eral-input, [data-tutorial="eral-input"]',
       title: 'Talk to Eral',
-      body: 'Eral is your AI companion. Ask questions, request generations, or give commands like "Take me to Pixel Studio".',
+      body: 'Eral is your AI companion. Ask questions, request generations, or give commands like "Take me to Pixel mode".',
       action: 'Type a message and press Enter',
       position: 'top',
     },

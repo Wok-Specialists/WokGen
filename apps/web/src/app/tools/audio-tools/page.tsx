@@ -13,7 +13,7 @@ export default function Page() {
       id="audio-tools"
       label="Audio Utilities"
       description="Waveform visualizer, audio file metadata, and GIF frame builder."
-      icon="🔊"
+      icon="AUD"
     >
       <AudioTool />
     </ToolShell>

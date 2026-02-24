@@ -13,7 +13,7 @@ export default function Page() {
       id="csv-tools"
       label="CSV / Data Tools"
       description="Convert CSV ↔ JSON ↔ YAML. Table viewer with sort and filter."
-      icon="📊"
+      icon="CSV"
     >
       <CsvTool />
     </ToolShell>

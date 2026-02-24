@@ -13,7 +13,7 @@ export default function Page() {
       id="markdown"
       label="Markdown Editor"
       description="Split-pane editor with live preview, GFM support, toolbar, and export."
-      icon="📝"
+      icon="MD"
     >
       <MarkdownTool />
     </ToolShell>

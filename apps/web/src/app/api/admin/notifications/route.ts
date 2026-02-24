@@ -68,7 +68,7 @@ async function sendTestWebhook(webhookUrl: string, eventType: NotifyEventType): 
       body: JSON.stringify({
         embeds: [
           {
-            title: `✅ WokGen Test — ${EVENT_LABELS[eventType]}`,
+            title: `WokGen Test — ${EVENT_LABELS[eventType]}`,
             description: `This is a test notification for the **${EVENT_LABELS[eventType]}** event type.`,
             color: 0x5865f2,
             footer: { text: 'WokGen Admin Notifications' },

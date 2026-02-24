@@ -211,8 +211,8 @@ export default function AudioTool() {
 
   const TABS: { id: Tab; label: string }[] = [
     { id: 'waveform', label: '〰 Waveform' },
-    { id: 'fileinfo', label: 'ℹ️ File Info' },
-    { id: 'gif', label: '🎞 GIF Frames' },
+    { id: 'fileinfo', label: 'File Info' },
+    { id: 'gif', label: 'GIF Frames' },
   ];
 
   return (
@@ -243,18 +243,18 @@ export default function AudioTool() {
                 className="tool-file-input-hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) { setWaveFile(f); setWaveDrawn(false); drawWaveform(f); } }}
               />
-              <div className="tool-dropzone-icon">🔊</div>
+              <div className="tool-dropzone-icon"></div>
               <p className="tool-dropzone-text">Drop an audio file (MP3/WAV/OGG)</p>
             </div>
           ) : (
             <div className="pdf-file-item pdf-selected-file">
-              <span className="pdf-file-name">🔊 {waveFile.name}</span>
+              <span className="pdf-file-name">{waveFile.name}</span>
               <span className="pdf-file-size">{formatBytes(waveFile.size)}</span>
               <button className="pdf-file-remove" onClick={() => { setWaveFile(null); setWaveDrawn(false); setWaveError(''); }}>✕</button>
             </div>
           )}
 
-          {waveBusy && <p className="pdf-loading">⏳ Decoding audio…</p>}
+          {waveBusy && <p className="pdf-loading">Decoding audio…</p>}
           {waveError && <p className="pdf-error">{waveError}</p>}
 
           <canvas
@@ -283,18 +283,18 @@ export default function AudioTool() {
                 className="tool-file-input-hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) { setInfoFile(f); setAudioInfo(null); loadAudioInfo(f); } }}
               />
-              <div className="tool-dropzone-icon">🎵</div>
+              <div className="tool-dropzone-icon"></div>
               <p className="tool-dropzone-text">Drop an audio file to inspect</p>
             </div>
           ) : (
             <div className="pdf-file-item pdf-selected-file">
-              <span className="pdf-file-name">🎵 {infoFile.name}</span>
+              <span className="pdf-file-name">{infoFile.name}</span>
               <span className="pdf-file-size">{formatBytes(infoFile.size)}</span>
               <button className="pdf-file-remove" onClick={() => { setInfoFile(null); setAudioInfo(null); setInfoError(''); }}>✕</button>
             </div>
           )}
 
-          {infoBusy && <p className="pdf-loading">🔍 Analyzing audio…</p>}
+          {infoBusy && <p className="pdf-loading">Analyzing audio…</p>}
           {infoError && <p className="pdf-error">{infoError}</p>}
 
           {audioInfo && (
@@ -330,7 +330,7 @@ export default function AudioTool() {
               className="tool-file-input-hidden"
               onChange={e => e.target.files && addGifFiles(e.target.files)}
             />
-            <div className="tool-dropzone-icon">🖼</div>
+            <div className="tool-dropzone-icon"></div>
             <p className="tool-dropzone-text">Drop PNG/JPG frames here</p>
             <p className="tool-dropzone-sub">Order determines animation sequence</p>
           </div>
@@ -339,7 +339,7 @@ export default function AudioTool() {
             <ul className="pdf-file-list">
               {gifFiles.map((f, i) => (
                 <li key={i} className="pdf-file-item">
-                  <span className="pdf-file-name">🖼 {f.name}</span>
+                  <span className="pdf-file-name">{f.name}</span>
                   <span className="pdf-file-size">{formatBytes(f.size)}</span>
                   <button
                     className="pdf-file-remove"
@@ -386,7 +386,7 @@ export default function AudioTool() {
               onClick={buildGif}
               disabled={gifBusy || gifFiles.length < 1}
             >
-              {gifBusy ? '⏳ Building GIF…' : '🎞 Build GIF'}
+              {gifBusy ? 'Building GIF…' : 'Build GIF'}
             </button>
             {gifFiles.length > 0 && (
               <button className="btn-ghost" onClick={() => { setGifFiles([]); setGifPreview(''); }}>Clear All</button>

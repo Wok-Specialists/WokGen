@@ -297,10 +297,10 @@ Eral: Running 5 generations... ████████░░ 4/5 complete`}</Pr
 
       <H3>Navigation</H3>
       <UL>
-        <LI><Code>/go pixel</Code> — switch to Pixel Studio</LI>
-        <LI><Code>/go business</Code> — switch to Business Studio</LI>
-        <LI><Code>/go vector</Code> — switch to Vector Studio</LI>
-        <LI><Code>/go uiux</Code> — switch to UI/UX Studio</LI>
+        <LI><Code>/go pixel</Code> — switch to Pixel mode</LI>
+        <LI><Code>/go business</Code> — switch to Business mode</LI>
+        <LI><Code>/go vector</Code> — switch to Vector mode</LI>
+        <LI><Code>/go uiux</Code> — switch to UI/UX mode</LI>
         <LI><Code>/go docs</Code> — open the Docs Hub</LI>
       </UL>
 

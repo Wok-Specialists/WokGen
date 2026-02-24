@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const PRODUCT_LINKS = [
-  { label: 'Studios',      href: '/pixel/studio' },
+  { label: 'Studio',      href: '/studio' },
   { label: 'Free Tools',   href: '/tools'        },
   { label: 'Community',    href: '/community'    },
   { label: 'Eral',         href: '/eral'         },

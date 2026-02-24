@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { safeMarkdown, sanitizeHtml } from '@/lib/safe-markdown';
 import { parseWAPFromResponse, executeWAP, type WAPResponse } from '@/lib/wap';
+import { EralNotepad } from '@/components/EralNotepad';
 
 // ---------------------------------------------------------------------------
 // EralSidebar — collapsible AI companion widget for studio pages
@@ -33,10 +34,10 @@ const MINI_MODEL_OPTIONS: { value: ModelVariant; label: string }[] = [
 ];
 
 const QUICK_COMMANDS: { label: string; path: string }[] = [
-  { label: 'Pixel Studio',    path: '/pixel/studio'    },
-  { label: 'Business Studio', path: '/business/studio' },
-  { label: 'Voice Studio',    path: '/voice/studio'    },
-  { label: 'Text Studio',     path: '/text/studio'     },
+  { label: 'Pixel mode',     path: '/pixel/studio'    },
+  { label: 'Business mode',  path: '/business/studio' },
+  { label: 'Voice mode',     path: '/voice/studio'    },
+  { label: 'Text mode',      path: '/text/studio'     },
   { label: 'My Gallery',      path: '/pixel/gallery'   },
   { label: 'Pricing',         path: '/pricing'         },
 ];
@@ -61,6 +62,7 @@ function SidebarBubble({ msg, isStreaming }: { msg: SidebarMessage; isStreaming?
 export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'notes'>('chat');
   const [messages, setMessages] = useState<SidebarMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -233,7 +235,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           <div className="esb-header">
             <div className="esb-header-left">
               <span className="esb-header-icon">AI</span>
-              <span className="esb-header-name">Eral</span>
+              <span className="esb-header-name">Eral 7c</span>
               {mode && (
                 <span className="esb-ctx-badge">{mode}</span>
               )}
@@ -258,6 +260,17 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
               </button>
             </div>
           </div>
+          {/* Tabs */}
+          <div className="esb-tabs">
+            <button
+              className={`esb-tab${activeTab === 'chat' ? ' esb-tab--active' : ''}`}
+              onClick={() => setActiveTab('chat')}
+            >Chat</button>
+            <button
+              className={`esb-tab${activeTab === 'notes' ? ' esb-tab--active' : ''}`}
+              onClick={() => setActiveTab('notes')}
+            >Notes</button>
+          </div>
 
           {/* Model mini-selector */}
           <div className="esb-model-bar">
@@ -272,14 +285,17 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
             ))}
           </div>
 
+          {/* Chat panel */}
+          {activeTab === 'chat' && (
+            <>
           {/* Messages */}
           <div className="esb-messages">
             {displayedMessages.length === 0 && !streamingMsg && (
               <div className="esb-empty">
-                <p>Hi! I&apos;m Eral — your AI companion for WokGen.</p>
+                <p>Hi! I&apos;m Eral 7c — your AI companion for WokGen Studio.</p>
                 {mode && (
                   <p style={{ marginTop: 6, fontSize: 11, color: 'var(--text-faint)' }}>
-                    Context: {mode} Studio{tool ? ` · ${tool}` : ''}
+                    Context: {mode} mode{tool ? ` · ${tool}` : ''}
                   </p>
                 )}
                 <div className="esb-quick-commands">
@@ -307,7 +323,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
             <textarea
               ref={inputRef}
               className="esb-textarea"
-              placeholder="Ask Eral…"
+              placeholder="Ask Eral 7c…"
               rows={2}
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -333,6 +349,21 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
               )}
             </div>
           </div>
+            </>
+          )}
+
+          {/* Notes panel */}
+          {activeTab === 'notes' && (
+            <div className="esb-notes-panel">
+              <EralNotepad
+                contextTag={mode}
+                onSendToEral={(content, title) => {
+                  setActiveTab('chat');
+                  setInput(`[Note: ${title}]\n${content}`);
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -405,6 +436,39 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
             max-height: 70vh;
           }
           .esb-toggle-btn { bottom: 16px; right: 16px; }
+        }
+
+        /* Tabs */
+        .esb-tabs {
+          display: flex;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          background: var(--bg-surface);
+        }
+        .esb-tab {
+          flex: 1;
+          padding: 7px 0;
+          background: transparent;
+          border: none;
+          border-bottom: 2px solid transparent;
+          color: var(--text-muted);
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: color 0.15s, border-color 0.15s;
+        }
+        .esb-tab--active {
+          color: var(--text);
+          border-bottom-color: #818cf8;
+        }
+        .esb-tab:hover:not(.esb-tab--active) { color: var(--text); }
+
+        /* Notes panel */
+        .esb-notes-panel {
+          flex: 1;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
         }
 
         /* Header */

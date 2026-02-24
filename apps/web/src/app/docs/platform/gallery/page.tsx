@@ -58,7 +58,7 @@ export default function DocsGallery() {
               projects. Signing in adds the ability to save your own assets and filter to your personal history.
             </p>
             <p className="docs-p">
-              Each studio mode has its own gallery — Pixel Studio assets appear in the Pixel Gallery
+              Each studio mode has its own gallery — Pixel mode assets appear in the Pixel Gallery
               (<Link href="/pixel/gallery" className="docs-code">/pixel/gallery</Link>), and Business
               Studio assets appear in the Business Gallery (
               <Link href="/business/gallery" className="docs-code">/business/gallery</Link>). Assets

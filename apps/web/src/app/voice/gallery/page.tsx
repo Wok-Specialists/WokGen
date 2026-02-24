@@ -295,10 +295,10 @@ export default function VoiceGallery() {
           <div className="gallery-empty-icon"></div>
           <p className="gallery-empty-title">No voice clips yet</p>
           <p className="gallery-empty-desc">
-            Generate your first audio in the Voice Studio.
+            Generate your first audio in Voice mode.
           </p>
           <Link href="/voice/studio" className="btn-primary btn-sm">
-            Go to Voice Studio →
+            Go to Voice mode →
           </Link>
         </div>
       ) : (

@@ -235,7 +235,7 @@ export default function GeneratorsTool() {
 
       {tab === 'cron' && (
         <div className="gen-section gen-coming-soon">
-          <p>🔧 CRON builder coming soon</p>
+          <p>CRON builder coming soon</p>
           <p className="tool-shell-soon-desc">Interactive CRON expression builder with human-readable descriptions.</p>
         </div>
       )}

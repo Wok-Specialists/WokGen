@@ -6,7 +6,6 @@ import { useState, useRef } from 'react';
 const STUDIOS = [
   {
     href: '/pixel/studio',
-    emoji: '🎮',
     name: 'Pixel',
     tagline: 'Game assets & sprite sheets',
     color: '#f59e0b',
@@ -14,7 +13,6 @@ const STUDIOS = [
   },
   {
     href: '/business/studio',
-    emoji: '💼',
     name: 'Business',
     tagline: 'Logos, branding & brand kits',
     color: '#3b82f6',
@@ -22,7 +20,6 @@ const STUDIOS = [
   },
   {
     href: '/vector/studio',
-    emoji: '✏️',
     name: 'Vector',
     tagline: 'Scalable icons & illustrations',
     color: '#10b981',
@@ -30,7 +27,6 @@ const STUDIOS = [
   },
   {
     href: '/uiux/studio',
-    emoji: '🖥️',
     name: 'UI/UX',
     tagline: 'Components & design systems',
     color: '#ec4899',
@@ -38,7 +34,6 @@ const STUDIOS = [
   },
   {
     href: '/voice/studio',
-    emoji: '🎙️',
     name: 'Voice',
     tagline: 'AI voices & audio assets',
     color: '#8b5cf6',
@@ -46,7 +41,6 @@ const STUDIOS = [
   },
   {
     href: '/text/studio',
-    emoji: '✍️',
     name: 'Text',
     tagline: 'Copy, docs & content',
     color: '#f97316',
@@ -78,7 +72,7 @@ export function StudiosDropdown() {
         aria-haspopup="true"
         aria-expanded={open}
       >
-        Studios
+        Studio
         <svg
           className="nav-studios-chevron"
           width="10"
@@ -97,8 +91,10 @@ export function StudiosDropdown() {
       {open && (
         <div className="studios-dropdown" role="menu">
           <div className="studios-dropdown-header">
-            <span>Choose a Studio</span>
+            <span>WokGen Studio</span>
+            <span className="studios-dropdown-header-sub">Select a mode</span>
           </div>
+          <div className="studios-dropdown-modes-label">Modes</div>
           <div className="studios-dropdown-grid">
             {STUDIOS.map((studio) => (
               <Link
@@ -109,9 +105,6 @@ export function StudiosDropdown() {
                 onClick={() => setOpen(false)}
                 style={{ '--card-color': studio.color } as React.CSSProperties}
               >
-                <span className="studios-dropdown-card-emoji" aria-hidden="true">
-                  {studio.emoji}
-                </span>
                 <div className="studios-dropdown-card-body">
                   <div className="studios-dropdown-card-name">
                     {studio.name}

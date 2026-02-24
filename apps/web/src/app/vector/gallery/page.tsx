@@ -612,7 +612,7 @@ function EmptyState({ search }: { search: string }) {
           No vector assets yet
         </h3>
         <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: 20 }}>
-          Generate your first vector in the Vector Studio.
+          Generate your first vector in Vector mode.
         </p>
         <a
           href="/vector/studio"
@@ -629,7 +629,7 @@ function EmptyState({ search }: { search: string }) {
             textDecoration: 'none',
           }}
         >
-          ✦ Open Vector Studio
+          ✦ Open Vector mode
         </a>
       </div>
       {SHOWCASE_PROMPTS.map((item, i) => (

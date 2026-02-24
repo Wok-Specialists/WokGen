@@ -13,7 +13,7 @@ export default function Page() {
       id="pdf"
       label="PDF Toolkit"
       description="Merge, extract, convert, and watermark PDFs in your browser."
-      icon="📄"
+      icon="PDF"
     >
       <PdfTool />
     </ToolShell>

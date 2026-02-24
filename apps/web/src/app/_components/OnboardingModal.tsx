@@ -48,7 +48,7 @@ const USE_CASES: { id: UseCase; label: string; desc: string; prompt: string; mod
   {
     id:     'explore',
     label:  'Just Exploring',
-    desc:   'Try all the studios and see what WokGen can do.',
+    desc:   'Try all the modes and see what WokGen can do.',
     prompt: 'vibrant fantasy landscape, pixel art, wide panorama, rich color palette',
     mode:   'pixel',
   },

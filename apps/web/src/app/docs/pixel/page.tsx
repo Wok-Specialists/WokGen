@@ -188,7 +188,7 @@ export default function PixelDocs() {
 
           <H3>Step 1 — Pick a preset</H3>
           <P>
-            Open the <strong>Pixel Studio</strong> at{' '}
+            Open <strong>Pixel mode</strong> at{' '}
             <Link href="/pixel/studio">wokgen.wokspec.org/pixel/studio</Link>.
             In the top-left panel, choose a style preset. For most RPG assets, start with{' '}
             <Code>rpg_icon</Code>. For a character, use <Code>character_idle</Code>.
@@ -817,7 +817,7 @@ crystal orb,      glowing purple,   faceted glass,   arcane magic`}</Pre>
 
           <H3>Do NOT write &quot;pixel art&quot;</H3>
           <P>
-            The Pixel Studio engine prepends the pixel-art constraint automatically based on
+            The Pixel mode engine prepends the pixel-art constraint automatically based on
             your preset and size selection. Writing &quot;pixel art&quot; in the prompt itself
             often causes the model to overweight the style token and under-weight your actual
             subject description. Leave it out.

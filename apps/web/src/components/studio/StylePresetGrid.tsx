@@ -3,18 +3,17 @@
 interface QuickPreset {
   id: string;
   label: string;
-  emoji: string;
 }
 
 const QUICK_PRESETS: QuickPreset[] = [
-  { id: 'rpg_icon',       label: 'RPG Icon',     emoji: '⚔️'  },
-  { id: 'emoji',          label: 'Emoji',        emoji: '✨'  },
-  { id: 'tileset',        label: 'Tileset',      emoji: '🗺️' },
-  { id: 'sprite_sheet',   label: 'Sprite Sheet', emoji: '🎮'  },
-  { id: 'character_idle', label: 'Character',    emoji: '🧙'  },
-  { id: 'top_down_char',  label: 'Top-Down',     emoji: '🔭'  },
-  { id: 'horror',         label: 'Horror',       emoji: '💀'  },
-  { id: 'sci_fi',         label: 'Sci-Fi',       emoji: '🚀'  },
+  { id: 'rpg_icon',       label: 'RPG Icon'     },
+  { id: 'emoji',          label: 'Emoji'        },
+  { id: 'tileset',        label: 'Tileset'      },
+  { id: 'sprite_sheet',   label: 'Sprite Sheet' },
+  { id: 'character_idle', label: 'Character'    },
+  { id: 'top_down_char',  label: 'Top-Down'     },
+  { id: 'horror',         label: 'Horror'       },
+  { id: 'sci_fi',         label: 'Sci-Fi'       },
 ];
 
 interface Props {
@@ -39,7 +38,6 @@ export function StylePresetGrid({ value, onChange }: Props) {
           title={p.label}
           aria-pressed={value === p.id}
         >
-          <span className="pixel-studio-style-card__emoji" aria-hidden="true">{p.emoji}</span>
           <span className="pixel-studio-style-card__label">{p.label}</span>
         </button>
       ))}

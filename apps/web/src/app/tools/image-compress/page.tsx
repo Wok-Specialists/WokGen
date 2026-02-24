@@ -13,7 +13,7 @@ export default function Page() {
       id="image-compress"
       label="Image Compressor"
       description="Compress images with a quality slider. Live before/after size comparison."
-      icon="🗜️"
+      icon="CMP"
     >
       <ImageCompressTool />
     </ToolShell>

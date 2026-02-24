@@ -85,7 +85,7 @@ export function handleGenerate(
   if (!prompt) {
     return {
       type: 4,
-      data: { content: '❌ A `prompt` is required. Example: `/generate pixel cute dragon sprite`' },
+      data: { content: 'A `prompt` is required. Example: `/generate pixel cute dragon sprite`' },
     };
   }
 
@@ -93,7 +93,7 @@ export function handleGenerate(
   if (!validModes.includes(mode)) {
     return {
       type: 4,
-      data: { content: `❌ Invalid mode \`${mode}\`. Choose from: ${validModes.join(', ')}` },
+      data: { content: `Invalid mode \`${mode}\`. Choose from: ${validModes.join(', ')}` },
     };
   }
 
@@ -112,7 +112,7 @@ export function handleGenerate(
       if (res.ok) {
         const job = await res.json() as { resultUrl?: string; id?: string };
         if (job.resultUrl) {
-          await sendFollowUp(appId, token, `✅ Here's your **${mode}** asset!`, [
+          await sendFollowUp(appId, token, `Here's your **${mode}** asset!`, [
             {
               title: prompt.slice(0, 256),
               image: { url: job.resultUrl },
@@ -121,13 +121,13 @@ export function handleGenerate(
             },
           ]);
         } else {
-          await sendFollowUp(appId, token, `✅ Generation started! View it at ${baseUrl}/gallery`);
+          await sendFollowUp(appId, token, `Generation started! View it at ${baseUrl}/gallery`);
         }
       } else {
-        await sendFollowUp(appId, token, `⚠️ Generation failed. Try again or visit ${baseUrl}/studio`);
+        await sendFollowUp(appId, token, `Generation failed. Try again or visit ${baseUrl}/studio`);
       }
     } catch {
-      await sendFollowUp(appId, token, `⚠️ Something went wrong. Try again at ${baseUrl}/studio`).catch(() => {});
+      await sendFollowUp(appId, token, `Something went wrong. Try again at ${baseUrl}/studio`).catch(() => {});
     }
   })();
 
@@ -144,14 +144,14 @@ export function handlePixel(interaction: DiscordInteraction): DiscordInteraction
 // /tools — list WokGen tool categories
 // ---------------------------------------------------------------------------
 const TOOL_CATEGORIES = [
-  { name: '🎮 Pixel Studio', desc: 'Sprites, tilesets, animations for game devs', path: '/studio' },
-  { name: '💼 Business Studio', desc: 'Logos, brand kits, social assets', path: '/studio' },
-  { name: '✏️ Vector Studio', desc: 'SVG icons, illustrations, design systems', path: '/vector/studio' },
-  { name: '🎨 UI/UX Studio', desc: 'React/HTML/Vue components, page templates', path: '/studio' },
-  { name: '🔊 Voice Studio', desc: 'Text-to-speech, character voices, audio', path: '/studio' },
-  { name: '✍️ Text Studio', desc: 'Headlines, copy, blog posts, code snippets', path: '/text/studio' },
-  { name: '🤖 Eral AI', desc: 'AI companion — chat, plan, critique, code', path: '/eral' },
-  { name: '⚡ Automations', desc: 'Schedule recurring asset generation', path: '/automations' },
+  { name: 'Pixel Mode', desc: 'Sprites, tilesets, animations for game devs', path: '/studio' },
+  { name: 'Business Mode', desc: 'Logos, brand kits, social assets', path: '/studio' },
+  { name: 'Vector Mode', desc: 'SVG icons, illustrations, design systems', path: '/vector/studio' },
+  { name: 'UI/UX Mode', desc: 'React/HTML/Vue components, page templates', path: '/studio' },
+  { name: 'Voice Mode', desc: 'Text-to-speech, character voices, audio', path: '/studio' },
+  { name: 'Text Mode', desc: 'Headlines, copy, blog posts, code snippets', path: '/text/studio' },
+  { name: 'Eral AI', desc: 'AI companion — chat, plan, critique, code', path: '/eral' },
+  { name: 'Automations', desc: 'Schedule recurring asset generation', path: '/automations' },
 ];
 
 export function handleTools(): DiscordInteractionResponse {
@@ -167,7 +167,7 @@ export function handleTools(): DiscordInteractionResponse {
     data: {
       embeds: [
         {
-          title: '🍜 WokGen Tool Categories',
+          title: 'WokGen Tool Categories',
           description: `Explore all 8 tool categories at [wokgen.wokspec.org](${baseUrl}/tools)`,
           color: 0x5865f2,
           fields,
@@ -184,7 +184,7 @@ export function handleTools(): DiscordInteractionResponse {
 export async function handleEral(interaction: DiscordInteraction): Promise<DiscordInteractionResponse> {
   const message = opt(interaction.data?.options, 'message');
   if (!message) {
-    return { type: 4, data: { content: '❌ A `message` is required.' } };
+    return { type: 4, data: { content: 'A `message` is required.' } };
   }
 
   try {
@@ -195,10 +195,10 @@ export async function handleEral(interaction: DiscordInteraction): Promise<Disco
     );
     return {
       type: 4,
-      data: { content: `🤖 **Eral:** ${text.slice(0, 1900)}` },
+      data: { content: `**Eral:** ${text.slice(0, 1900)}` },
     };
   } catch {
-    return { type: 4, data: { content: '⚠️ Eral is unavailable right now. Try again later.' } };
+    return { type: 4, data: { content: 'Eral is unavailable right now. Try again later.' } };
   }
 }
 
@@ -216,7 +216,7 @@ export async function handleGallery(): Promise<DiscordInteractionResponse> {
     });
 
     if (items.length === 0) {
-      return { type: 4, data: { content: '📭 No gallery assets yet. Be the first to generate one!' } };
+      return { type: 4, data: { content: 'No gallery assets yet. Be the first to generate one!' } };
     }
 
     const embeds: DiscordEmbed[] = items.map((item) => ({
@@ -231,12 +231,12 @@ export async function handleGallery(): Promise<DiscordInteractionResponse> {
     return {
       type: 4,
       data: {
-        content: `🖼️ Latest from the [WokGen Gallery](${baseUrl}/gallery):`,
+        content: `Latest from the [WokGen Gallery](${baseUrl}/gallery):`,
         embeds,
       },
     };
   } catch {
-    return { type: 4, data: { content: '⚠️ Could not fetch gallery. Try again later.' } };
+    return { type: 4, data: { content: 'Could not fetch gallery. Try again later.' } };
   }
 }
 
@@ -268,11 +268,11 @@ export async function handleRoast(interaction: DiscordInteraction): Promise<Disc
     return {
       type: 4,
       data: {
-        content: `*@${username} enters the battle arena...* 🔥\n\n${text.slice(0, 1800)}`,
+        content: `*@${username} enters the battle arena...* \n\n${text.slice(0, 1800)}`,
       },
     };
   } catch {
-    return { type: 4, data: { content: '🔥 The roast engine is cooling down. Try again!' } };
+    return { type: 4, data: { content: 'The roast engine is cooling down. Try again!' } };
   }
 }
 
@@ -299,7 +299,7 @@ Keep the conversation natural, collaborative, and insightful. Total 6 exchanges.
 export async function handleSimulate(interaction: DiscordInteraction): Promise<DiscordInteractionResponse> {
   const topic = opt(interaction.data?.options, 'topic');
   if (!topic) {
-    return { type: 4, data: { content: '❌ A `topic` is required. Example: `/simulate pixel art for a horror game`' } };
+    return { type: 4, data: { content: 'A `topic` is required. Example: `/simulate pixel art for a horror game`' } };
   }
 
   try {
@@ -310,10 +310,10 @@ export async function handleSimulate(interaction: DiscordInteraction): Promise<D
     );
     return {
       type: 4,
-      data: { content: `🎭 **Simulation: ${topic}**\n\n${text.slice(0, 1900)}` },
+      data: { content: `**Simulation: ${topic}**\n\n${text.slice(0, 1900)}` },
     };
   } catch {
-    return { type: 4, data: { content: '⚠️ Simulation failed. Try again later.' } };
+    return { type: 4, data: { content: 'Simulation failed. Try again later.' } };
   }
 }
 
@@ -332,7 +332,7 @@ export async function handleAutomate(interaction: DiscordInteraction): Promise<D
   const prompt = opt(options, 'prompt');
 
   if (!prompt) {
-    return { type: 4, data: { content: '❌ A `prompt` is required.' } };
+    return { type: 4, data: { content: 'A `prompt` is required.' } };
   }
 
   const cron = SCHEDULE_MAP[schedule] ?? SCHEDULE_MAP.daily;
@@ -357,14 +357,14 @@ export async function handleAutomate(interaction: DiscordInteraction): Promise<D
     return {
       type: 4,
       data: {
-        content: `✅ **Automation created!**\n\nYou'll receive results **${schedule}**.\nPrompt: _${prompt.slice(0, 200)}_\n\nManage automations at /automations`,
+        content: `**Automation created!**\n\nYou'll receive results **${schedule}**.\nPrompt: _${prompt.slice(0, 200)}_\n\nManage automations at /automations`,
       },
     };
   } catch {
     return {
       type: 4,
       data: {
-        content: `✅ Automation acknowledged! Sign in at [WokGen](${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wokgen.wokspec.org'}/automations) to manage your **${schedule}** schedule for: _${prompt.slice(0, 200)}_`,
+        content: `Automation acknowledged! Sign in at [WokGen](${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wokgen.wokspec.org'}/automations) to manage your **${schedule}** schedule for: _${prompt.slice(0, 200)}_`,
       },
     };
   }
@@ -379,19 +379,19 @@ export function handleBattle(interaction: DiscordInteraction): DiscordInteractio
   const prompt2 = opt(options, 'prompt2');
 
   if (!prompt1 || !prompt2) {
-    return { type: 4, data: { content: '❌ Both `prompt1` and `prompt2` are required.' } };
+    return { type: 4, data: { content: 'Both `prompt1` and `prompt2` are required.' } };
   }
 
   return {
     type: 4,
     data: {
-      content: `⚔️ **Battle started!**\n\n🔵 ${prompt1}\nvs\n🔴 ${prompt2}\n\nVote with 🔵 or 🔴!`,
+      content: `**Battle started!**\n\n${prompt1}\nvs\n${prompt2}\n\nVote with Option A or Option B!`,
       embeds: [
         {
-          title: '⚔️ Asset Battle',
-          description: `Which concept wins?\n\n🔵 **${prompt1}**\nvs\n🔴 **${prompt2}**`,
+          title: 'Asset Battle',
+          description: `Which concept wins?\n\n**${prompt1}**\nvs\n**${prompt2}**`,
           color: 0x5865f2,
-          footer: { text: 'React with 🔵 or 🔴 to vote!' },
+          footer: { text: 'React with Option A or Option B to vote!' },
         },
       ],
     },
@@ -426,7 +426,7 @@ export async function dispatchCommand(interaction: DiscordInteraction): Promise<
     default:
       return {
         type: 4,
-        data: { content: `❓ Unknown command \`/${commandName}\`. Use \`/tools\` to see what I can do.` },
+        data: { content: `Unknown command \`/${commandName}\`. Use \`/tools\` to see what I can do.` },
       };
   }
 }

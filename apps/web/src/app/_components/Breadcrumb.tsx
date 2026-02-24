@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const PATH_LABELS: Record<string, string> = {
-  pixel: 'Pixel Studio',
-  business: 'Business Studio',
-  vector: 'Vector Studio',
-  uiux: 'UI/UX Studio',
-  voice: 'Voice Studio',
-  text: 'Text Studio',
+  pixel: 'Pixel mode',
+  business: 'Business mode',
+  vector: 'Vector mode',
+  uiux: 'UI/UX mode',
+  voice: 'Voice mode',
+  text: 'Text mode',
   studio: 'Studio',
   tools: 'Tools',
   docs: 'Docs',

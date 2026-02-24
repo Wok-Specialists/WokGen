@@ -206,7 +206,7 @@ export default function CssGeneratorTool() {
 
         {tab === 'animation' && (
           <div className="gen-coming-soon">
-            <p>🔧 Animation builder coming soon</p>
+            <p>Animation builder coming soon</p>
           </div>
         )}
 

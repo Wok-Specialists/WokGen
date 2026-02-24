@@ -13,7 +13,7 @@ export default function Page() {
       id="image-resize"
       label="Image Resizer"
       description="Resize and crop images with social media presets."
-      icon="↔️"
+      icon="RSZ"
     >
       <ImageResizeTool />
     </ToolShell>

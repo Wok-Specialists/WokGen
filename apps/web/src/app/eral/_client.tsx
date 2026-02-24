@@ -120,8 +120,8 @@ const MEMORY_KEY = 'wokgen:eral_memory';
 const DIRECTOR_SYSTEM_PROMPT = `You are in Director Mode. Structure your response as:
 1. Your creative direction and answer
 2. A structured asset checklist organized by Week (format: **Week 1: Phase Name**)
-3. For each item, specify which WokGen studio in parentheses: (Studio: Pixel Studio), (Studio: Business Studio), etc.
-Available studios: Pixel Studio, Business Studio, Voice Studio, Logo Studio, Whiteboard.
+3. For each item, specify which WokGen mode in parentheses: (Mode: Pixel), (Mode: Business), etc.
+Available modes: Pixel, Business, Voice, Vector, UI/UX, Text, Whiteboard.
 
 `;
 
@@ -300,7 +300,6 @@ function ToolSuggestion({
   if (suggestions.length === 0) return null;
   return (
     <div className="eral-tool-suggestion">
-      <span className="eral-tool-suggestion-icon">🔧</span>
       <span className="eral-tool-suggestion-links">
         {suggestions.map((s, i) => (
           <span key={s.href}>
@@ -872,7 +871,7 @@ export function EralPage() {
 
             {/* Memory Panel */}
             <div className="eral-v2-memory-panel">
-              <p className="eral-v2-memory-panel__title">🧠 Memory</p>
+              <p className="eral-v2-memory-panel__title">Memory</p>
               {memory.style && (
                 <div className="eral-v2-memory-item">
                   <span className="eral-v2-memory-item__label">Style</span>
@@ -902,10 +901,10 @@ export function EralPage() {
                 ✦ Plan Project
               </button>
               <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/studio'; }}>
-                ⚡ Generate Assets
+                Generate Assets
               </button>
               <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/eral/simulate'; }}>
-                🎭 Simulate
+                Simulate
               </button>
             </div>
 
@@ -947,12 +946,12 @@ export function EralPage() {
               <p className="eral-tools-title">Free Tools</p>
               <div className="eral-tools-grid">
                 {[
-                  { id: 'background-remover', icon: '✂️', label: 'BG Remove' },
-                  { id: 'image-compress', icon: '🗜️', label: 'Compress' },
-                  { id: 'color-tools', icon: '🎨', label: 'Colors' },
-                  { id: 'json-tools', icon: '📋', label: 'JSON' },
-                  { id: 'font-pairer', icon: '🔤', label: 'Fonts' },
-                  { id: 'whiteboard', icon: '🖊️', label: 'Board' },
+                  { id: 'background-remover', icon: '', label: 'BG Remove' },
+                  { id: 'image-compress', icon: '', label: 'Compress' },
+                  { id: 'color-tools', icon: '', label: 'Colors' },
+                  { id: 'json-tools', icon: '', label: 'JSON' },
+                  { id: 'font-pairer', icon: '', label: 'Fonts' },
+                  { id: 'whiteboard', icon: '', label: 'Board' },
                 ].map(t => (
                   <a key={t.id} href={`/tools/${t.id}`} className="eral-tool-chip" title={t.label}>
                     <span>{t.icon}</span>
@@ -1080,10 +1079,10 @@ export function EralPage() {
                 <p className="eral-commands-label">Commands — Eral can actually do these</p>
                 <div className="eral-commands-grid">
                   {[
-                    { text: '"Take me to Pixel Studio"' },
+                    { text: '"Take me to Pixel mode"' },
                     { text: '"Set size to 64×64"' },
                     { text: '"Write a prompt for a fire mage"' },
-                    { text: '"Go to Business Studio"' },
+                    { text: '"Go to Business mode"' },
                     { text: '"Open my gallery"' },
                     { text: '"Explain what HD mode does"' },
                   ].map((c) => (
@@ -1206,11 +1205,11 @@ export function EralPage() {
 
           {/* Studio Suggestions */}
           <div className="eral-v2-plan-panel__section">
-            <p className="eral-v2-plan-panel__section-title">Studios</p>
+            <p className="eral-v2-plan-panel__section-title">Modes</p>
             <div className="eral-v2-panel-suggestions">
-              <a href="/studio/pixel" className="eral-v2-panel-suggestion-btn">Pixel Studio</a>
-              <a href="/studio/business" className="eral-v2-panel-suggestion-btn">Business Studio</a>
-              <a href="/voice/studio" className="eral-v2-panel-suggestion-btn">Voice Studio</a>
+              <a href="/pixel/studio" className="eral-v2-panel-suggestion-btn">Pixel mode</a>
+              <a href="/business/studio" className="eral-v2-panel-suggestion-btn">Business mode</a>
+              <a href="/voice/studio" className="eral-v2-panel-suggestion-btn">Voice mode</a>
               <a href="/tools" className="eral-v2-panel-suggestion-btn">All Tools</a>
             </div>
           </div>
@@ -1289,10 +1288,10 @@ Project description: ${planForm.description}
 
 Please provide a week-by-week asset checklist using this exact format:
 **Week 1: [Phase Name]**
-- Asset item (Studio: Pixel Studio)
-- Asset item (Studio: Business Studio)
+- Asset item (Mode: Pixel)
+- Asset item (Mode: Business)
 
-Use these WokGen studios: Pixel Studio (sprites/pixel art/icons), Business Studio (branding/UI/marketing), Voice Studio (audio/narration/SFX), Logo Studio (logos/wordmarks), Whiteboard (planning/wireframes).`;
+Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (branding/UI/marketing), Voice (audio/narration/SFX), Vector (icons/illustrations), UI/UX (components/templates), Text (copy/content), Whiteboard (planning/wireframes).`;
                   setPlanModalOpen(false);
                   setRightPanelOpen(true);
                   sendMessage(prompt);
@@ -1330,7 +1329,7 @@ Use these WokGen studios: Pixel Studio (sprites/pixel art/icons), Business Studi
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 52, boxShadow: '0 0 40px rgba(129,140,248,0.2)',
             }}>
-              🧠
+              Eral
             </div>
           </div>
 

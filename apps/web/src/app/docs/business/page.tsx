@@ -103,7 +103,7 @@ export default function BusinessDocs() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/business/studio" className="btn-primary btn-sm">Open Business Studio</Link>
+            <Link href="/business/studio" className="btn-primary btn-sm">Open Business mode</Link>
           </div>
         </aside>
 
@@ -208,7 +208,7 @@ export default function BusinessDocs() {
 
           <H3>Five steps</H3>
           <OL>
-            <LI><strong>Pick a tool</strong> — open Business Studio and choose Logo Mark, Brand Kit, Slide Visual, Social Banner, or Hero Image from the tool selector.</LI>
+            <LI><strong>Pick a tool</strong> — open Business mode and choose Logo Mark, Brand Kit, Slide Visual, Social Banner, or Hero Image from the tool selector.</LI>
             <LI><strong>Describe your concept</strong> — write a short brand description: what the product does, who it is for, what feeling it should convey. One to three sentences is ideal.</LI>
             <LI><strong>Set the industry</strong> — select your industry from the dropdown (SaaS, Fintech, Healthcare, E-commerce, Agency, etc.). This shapes the composition and color instincts of the model.</LI>
             <LI><strong>Choose style and mood</strong> — pick one of the eight style presets and one mood tag (Professional, Bold, Playful, Minimal, Luxury). See the Style Guide section for details.</LI>

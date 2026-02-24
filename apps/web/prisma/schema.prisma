@@ -61,6 +61,7 @@ model User {
   webhooks           Webhook[]
   referralsGiven     Referral[] @relation("ReferralsGiven")
   referralsReceived  Referral[] @relation("ReferralsReceived")
+  eralNotes          EralNote[]
 }
 
 model Account {
@@ -386,6 +387,8 @@ model UserPreference {
   // Eral preferences
   eralDefaultModel    String?  @default("eral-7c")
   eralPersonality     String?  @default("balanced")  // balanced | technical | creative | concise
+  eralMemory          String?  @db.Text  // JSON array of remembered facts [{ key, value, savedAt }]
+  eralContext         String?  @db.Text  // JSON: { projectType, mainTool, stylePreference } from intro questions
 
   // Favorite prompts (JSON array)
   favoritePrompts String?  @db.Text
@@ -728,4 +731,36 @@ model Referral {
 
   @@index([referrerId])
   @@index([code])
+}
+
+// ---------------------------------------------------------------------------
+// EralNote — site-wide persistent notepad for Eral 7c companion
+// ---------------------------------------------------------------------------
+model EralNote {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String   @default("Untitled")
+  content   String   @db.Text
+  pinned    Boolean  @default(false)
+  /// accent color token: "default" | "purple" | "blue" | "green" | "amber" | "red"
+  color     String   @default("default")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags  EralNoteTag[]
+
+  @@index([userId, pinned])
+  @@index([userId, updatedAt])
+}
+
+model EralNoteTag {
+  id     String @id @default(cuid())
+  noteId String
+  tag    String
+
+  note EralNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, tag])
+  @@index([tag])
 }

@@ -14,7 +14,7 @@ export default function Page() {
       id="whiteboard"
       label="Infinite Whiteboard"
       description="Open-source infinite canvas powered by tldraw. Shapes, arrows, sticky notes, freehand drawing. Auto-saves to your browser."
-      icon="🖊️"
+      icon="WB"
     >
       <WhiteboardClient />
     </ToolShell>

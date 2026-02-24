@@ -835,7 +835,7 @@ export default function UIUXStudio() {
                     {/* Tabs */}
                     <div style={{ display: 'flex', gap: 2 }}>
                       {(['preview', 'code', 'accessibility'] as OutputTab[]).map((tab) => {
-                        const labels: Record<OutputTab, string> = { preview: 'Preview', code: '{ } Code', accessibility: '♿ A11y' };
+                        const labels: Record<OutputTab, string> = { preview: 'Preview', code: '{ } Code', accessibility: 'A11y' };
                         return (
                           <button key={tab} onClick={() => setOutputTab(tab)} disabled={!currentResult} style={{ padding: '3px 9px', borderRadius: 5, border: `1px solid ${outputTab === tab ? 'var(--accent-muted)' : 'transparent'}`, background: outputTab === tab ? 'var(--accent-dim)' : 'transparent', color: outputTab === tab ? 'var(--accent)' : 'var(--text-muted)', fontSize: '0.72rem', cursor: currentResult ? 'pointer' : 'not-allowed', opacity: currentResult ? 1 : 0.4 }}>
                             {labels[tab]}

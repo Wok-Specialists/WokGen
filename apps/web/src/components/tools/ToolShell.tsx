@@ -47,7 +47,6 @@ export default function ToolShell({
       <div className="tool-shell-body">
         {comingSoon || !children ? (
           <div className="tool-shell-soon">
-            <div className="tool-shell-soon-icon">🔧</div>
             <h2 className="tool-shell-soon-title">Coming Soon</h2>
             <p className="tool-shell-soon-desc">
               This tool is in development. Check back soon or{' '}

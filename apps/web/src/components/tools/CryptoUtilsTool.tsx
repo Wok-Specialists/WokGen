@@ -20,10 +20,10 @@ function detectWallet(addr: string): CoinResult {
 
   // ETH: 0x + 40 hex chars
   if (a.startsWith('0x') && a.length === 42 && /^0x[0-9a-fA-F]{40}$/.test(a)) {
-    return { coin: 'Ethereum (ETH)', icon: '⟠', valid: true, reason: 'Valid EVM address' };
+    return { coin: 'Ethereum (ETH)', icon: 'ETH', valid: true, reason: 'Valid EVM address' };
   }
   if (a.startsWith('0x')) {
-    return { coin: 'Ethereum (ETH)', icon: '⟠', valid: false, reason: `Invalid length (${a.length}/42) or non-hex chars` };
+    return { coin: 'Ethereum (ETH)', icon: 'ETH', valid: false, reason: `Invalid length (${a.length}/42) or non-hex chars` };
   }
 
   // BTC
@@ -37,7 +37,7 @@ function detectWallet(addr: string): CoinResult {
 
   // XMR: starts with 4, length ~95
   if (a.startsWith('4') && a.length >= 90 && a.length <= 100 && isBase58(a)) {
-    return { coin: 'Monero (XMR)', icon: '🔒', valid: true, reason: 'Valid Monero address' };
+    return { coin: 'Monero (XMR)', icon: 'XMR', valid: true, reason: 'Valid Monero address' };
   }
 
   // SOL: Base58, 32-44 chars
@@ -45,7 +45,7 @@ function detectWallet(addr: string): CoinResult {
     return { coin: 'Solana (SOL)', icon: '◎', valid: true, reason: 'Valid Solana address (Base58)' };
   }
 
-  return { coin: 'Unknown', icon: '❓', valid: false, reason: 'Could not detect coin type' };
+  return { coin: 'Unknown', icon: '?', valid: false, reason: 'Could not detect coin type' };
 }
 
 /* ── Number Conversion ── */
@@ -131,9 +131,9 @@ export default function CryptoUtilsTool() {
   const numResult = detectAndConvert(numInput);
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: 'qr', label: '📱 QR Code' },
-    { id: 'wallet', label: '💳 Wallet Validator' },
-    { id: 'numconv', label: '🔢 Hex / Dec / Bin' },
+    { id: 'qr', label: 'QR Code' },
+    { id: 'wallet', label: 'Wallet Validator' },
+    { id: 'numconv', label: 'Hex / Dec / Bin' },
   ];
 
   return (
@@ -191,7 +191,7 @@ export default function CryptoUtilsTool() {
               <div className="crypto-wallet-info">
                 <div className="crypto-wallet-coin">{walletResult.coin}</div>
                 <div className="crypto-wallet-status">
-                  {walletResult.valid ? '✅ Valid' : '❌ Invalid'} — {walletResult.reason}
+                  {walletResult.valid ? 'Valid' : 'Invalid'} — {walletResult.reason}
                 </div>
               </div>
             </div>

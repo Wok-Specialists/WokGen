@@ -194,8 +194,8 @@ export default function BusinessGallery() {
         <div className="gallery-empty">
           <div className="gallery-empty-icon"></div>
           <p className="gallery-empty-title">No business assets yet</p>
-          <p className="gallery-empty-desc">Generate your first business asset in the Business Studio.</p>
-          <Link href="/business/studio" className="btn-primary btn-sm">Go to Business Studio →</Link>
+          <p className="gallery-empty-desc">Generate your first business asset in Business mode.</p>
+          <Link href="/business/studio" className="btn-primary btn-sm">Go to Business mode →</Link>
         </div>
       ) : (
         <div className="gallery-grid gallery-grid--natural">

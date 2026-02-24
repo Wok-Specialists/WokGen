@@ -199,7 +199,7 @@ export default function TextStudio() {
             WokGen
           </Link>
           <span style={{ color: 'var(--text-muted)' }}>/</span>
-          <span style={{ color: ACCENT, fontWeight: 600 }}>Text Studio</span>
+          <span style={{ color: ACCENT, fontWeight: 600 }}>Text mode</span>
           <span style={{
             padding: '2px 8px', borderRadius: 4, fontSize: '0.7rem',
             background: `${ACCENT}22`, color: ACCENT,
@@ -500,7 +500,7 @@ export default function TextStudio() {
           {/* Idle state */}
           {status === 'idle' && !result && (
             <div className="studio-empty-canvas">
-              <span className="studio-empty-canvas__icon">✍️</span>
+              <span className="studio-empty-canvas__icon">T</span>
               <p className="studio-empty-canvas__title">Generate your first text</p>
               <p className="studio-empty-canvas__desc">
                 Choose a content type, set your tone and length, then click{' '}
