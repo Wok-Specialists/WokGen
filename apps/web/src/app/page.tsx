@@ -130,12 +130,15 @@ const QUICK_PROMPTS = [
   },
 ] as const;
 
-const STATS = [
-  { value: '8',  label: 'Specialized studios' },
-  { value: '6+', label: 'AI providers, routed by quality' },
-  { value: 'Free', label: 'Standard generation, always' },
-  { value: 'Open', label: 'Source — MIT licensed' },
+const TOOLS_PREVIEW = [
+  { emoji: '🖼️', name: 'Background Remover', desc: 'Remove backgrounds instantly, no uploads.', href: '/tools/background-remover' },
+  { emoji: '🎨', name: 'CSS Generator',       desc: 'Build gradients, shadows & animations visually.', href: '/tools/css-generator' },
+  { emoji: '📦', name: 'JSON Toolkit',        desc: 'Format, validate and diff JSON in-browser.', href: '/tools/json-toolkit' },
+  { emoji: '🗂️', name: 'Sprite Packer',       desc: 'Pack sprites into atlas sheets with JSON map.', href: '/tools/sprite-packer' },
+  { emoji: '📱', name: 'QR Generator',        desc: 'Create styled QR codes with custom colors.', href: '/tools/qr-generator' },
+  { emoji: '🌈', name: 'Color Palette',       desc: 'Generate harmonic palettes from any seed color.', href: '/tools/color-palette' },
 ] as const;
+
 
 export default function PlatformLanding() {
   return (
@@ -149,12 +152,11 @@ export default function PlatformLanding() {
             <span>AI asset generation platform</span>
           </div>
           <h1 className="platform-h1">
-            Every asset your project needs.<br />
-            <span className="platform-h1-accent">Generated from intent, not just prompts.</span>
+            Create anything.<br />
+            <span className="platform-h1-accent">Free forever.</span>
           </h1>
           <p className="platform-desc">
-            8 specialized studios. An AI director that plans entire asset packs.
-            Brand kits that enforce visual consistency across every generation.
+            6 AI studios · 30+ creator tools · 300+ open-source models · $0
           </p>
           <div className="platform-cta-row">
             <Link href="/pixel/studio" className="btn-primary btn-lg">
@@ -170,86 +172,10 @@ export default function PlatformLanding() {
         </div>
       </section>
 
-      {/* ── How it works ─────────────────────────────────────────────── */}
-      <section className="landing-howitworks">
-        <div className="platform-section-inner">
-          <p className="platform-section-label">How it works</p>
-          <div className="landing-steps">
-            <div className="landing-step">
-              <span className="landing-step__num">01</span>
-              <h3 className="landing-step__title">Describe what you need</h3>
-              <p className="landing-step__desc">Write a prompt or use Eral AI to plan an entire asset pack. WokGen understands project context, not just isolated prompts.</p>
-            </div>
-            <div className="landing-step__arrow">→</div>
-            <div className="landing-step">
-              <span className="landing-step__num">02</span>
-              <h3 className="landing-step__title">Choose your engine</h3>
-              <p className="landing-step__desc">8 specialized studios. Pixel sprites behave differently from brand logos. Each pipeline is tuned for its asset type.</p>
-            </div>
-            <div className="landing-step__arrow">→</div>
-            <div className="landing-step">
-              <span className="landing-step__num">03</span>
-              <h3 className="landing-step__title">Export production-ready</h3>
-              <p className="landing-step__desc">ZIP downloads, sprite atlases, brand kit packs. Assets organized by project, with relationships tracked across generations.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Differentiator ───────────────────────────────────────────── */}
-      <section className="landing-diff">
-        <div className="platform-section-inner">
-          <div className="landing-diff-grid">
-            <div className="landing-diff-card landing-diff-card--others">
-              <p className="landing-diff-card__label">Other AI generators</p>
-              <ul className="landing-diff-list landing-diff-list--bad">
-                <li>Every prompt is isolated — no memory</li>
-                <li>One-size-fits-all image model</li>
-                <li>No project organization</li>
-                <li>No brand consistency enforcement</li>
-                <li>Feature-gated by tier</li>
-                <li>Closed source</li>
-              </ul>
-            </div>
-            <div className="landing-diff-card landing-diff-card--wokgen">
-              <p className="landing-diff-card__label">WokGen</p>
-              <ul className="landing-diff-list landing-diff-list--good">
-                <li>Project-aware — Eral knows your assets</li>
-                <li>8 specialized engines per asset type</li>
-                <li>Asset relationship graph per project</li>
-                <li>Brand kit locks palette + style globally</li>
-                <li>All features free — limits are quantity only</li>
-                <li>Open source, MIT licensed</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Quick-try prompts ─────────────────────────────────────────── */}
-      <section className="platform-quicktry">
-        <div className="platform-section-inner">
-          <p className="platform-section-label">Try it now</p>
-          <div className="platform-quicktry-grid">
-            {QUICK_PROMPTS.map(q => (
-              <Link
-                key={q.label}
-                href={q.href}
-                className="platform-quicktry-card"
-                style={{ '--qt-accent': q.accent } as React.CSSProperties}
-              >
-                <span className="platform-quicktry-mode">{q.mode}</span>
-                <span className="platform-quicktry-label">{q.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Mode cards ────────────────────────────────────────────────── */}
+      {/* ── Mode cards (AI Studios) ───────────────────────────────────── */}
       <section className="platform-modes">
         <div className="platform-modes-inner">
-          <p className="platform-section-label">Choose your engine</p>
+          <p className="platform-section-label">AI Studios</p>
           <div className="platform-modes-grid">
             {MODES.map(mode => (
               <Link
@@ -285,15 +211,62 @@ export default function PlatformLanding() {
         </div>
       </section>
 
-      {/* ── Stats bar ─────────────────────────────────────────────────── */}
-      <section className="platform-stats">
-        <div className="platform-stats-inner">
-          {STATS.map(s => (
-            <div key={s.label} className="platform-stat">
-              <span className="platform-stat-value">{s.value}</span>
-              <span className="platform-stat-label">{s.label}</span>
-            </div>
-          ))}
+      {/* ── Tools Preview ─────────────────────────────────────────────── */}
+      <section className="tools-preview-section">
+        <div className="platform-section-inner">
+          <p className="platform-section-label">Free Creator Tools</p>
+          <p className="platform-desc" style={{ marginBottom: '1.5rem' }}>
+            Browser-native. No uploads. No accounts needed.
+          </p>
+          <div className="tools-preview-grid">
+            {TOOLS_PREVIEW.map(tool => (
+              <Link key={tool.href} href={tool.href} className="tool-preview-card">
+                <span className="tool-preview-card__icon">{tool.emoji}</span>
+                <span className="tool-preview-card__name">{tool.name}</span>
+                <span className="tool-preview-card__desc">{tool.desc}</span>
+              </Link>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+            <Link href="/tools" className="btn-ghost btn-lg">View all 30+ tools →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Quick-try prompts ─────────────────────────────────────────── */}
+      <section className="platform-quicktry">
+        <div className="platform-section-inner">
+          <p className="platform-section-label">Try it now</p>
+          <div className="platform-quicktry-grid">
+            {QUICK_PROMPTS.map(q => (
+              <Link
+                key={q.label}
+                href={q.href}
+                className="platform-quicktry-card"
+                style={{ '--qt-accent': q.accent } as React.CSSProperties}
+              >
+                <span className="platform-quicktry-mode">{q.mode}</span>
+                <span className="platform-quicktry-label">{q.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Open Source strip ─────────────────────────────────────────── */}
+      <section className="oss-strip">
+        <div className="oss-strip-inner">
+          <span className="oss-strip-text">
+            Powered by open source: <strong>FLUX</strong> · <strong>Stable Diffusion</strong> · <strong>Llama 3.3</strong> · <strong>Kokoro</strong> · <strong>Stable Horde</strong> · and more
+          </span>
+          <a
+            href="https://github.com/WokSpec/WokGen"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-ghost btn-sm"
+          >
+            ★ GitHub →
+          </a>
         </div>
       </section>
 

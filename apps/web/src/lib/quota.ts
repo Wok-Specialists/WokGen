@@ -1,9 +1,9 @@
 /**
- * WokGen — Generation Quota System
+ * WokGen — Anti-abuse rate limits only — all tiers have access to all features.
  *
- * Enforces daily standard-tier generation limits that work correctly across
- * Vercel's multi-instance serverless environment (where in-memory state is
- * isolated per-instance and worthless at scale).
+ * Enforces daily generation limits that work correctly across Vercel's
+ * multi-instance serverless environment (where in-memory state is isolated
+ * per-instance and worthless at scale).
  *
  * Architecture:
  *   Primary:  Upstash Redis — atomic INCR, sub-millisecond, shared across
@@ -11,18 +11,16 @@
  *   Fallback: Postgres (Prisma) — atomic updateMany with conditional WHERE.
  *             Slightly higher latency (~10ms) but fully correct at scale.
  *
- * Daily limits by tier:
- *   guest →  3 std/day   (per IP)
- *   free  → 10 std/day   (per userId)
- *   plus  → unlimited standard (paid plan)
- *   pro   → unlimited standard
- *   max   → unlimited standard
+ * Daily limits by tier (anti-abuse only — not monetization):
+ *   guest → lighter limits (per IP)
+ *   free/plus/pro → same generous limits (per userId)
+ *   max → unlimited
  *
  * Per-minute rate limits (enforced separately in rate-limit.ts):
- *   guest → 2/min   free → 5/min   plus → 15/min   pro → 30/min
+ *   guest → 3/min   free/plus → 15/min   pro → 30/min   max → 60/min
  *
  * Concurrent request limits (prevents resource exhaustion):
- *   guest → 1   free → 2   plus → 3   pro → 5   max → 10
+ *   guest → 1   free/plus → 3   pro → 5   max → 10
  */
 
 import { prisma } from '@/lib/db';
@@ -32,48 +30,48 @@ import { prisma } from '@/lib/db';
 // ---------------------------------------------------------------------------
 
 export const DAILY_STD_LIMIT: Record<string, number> = {
-  guest: 5,
-  free:  50,   // generous free tier — a real working session
-  plus:  200,
-  pro:   500,
+  guest: 10,
+  free:  100,  // anti-abuse only — plus/pro same as free
+  plus:  100,
+  pro:   100,
   max:   -1,   // -1 = unlimited
 };
 
 export const SFX_DAILY_LIMIT: Record<string, number> = {
-  guest: 3,
-  free:  10,
-  plus:  50,
-  pro:   -1,
+  guest: 5,
+  free:  20,
+  plus:  20,
+  pro:   20,
   max:   -1,
 };
 
 export const TTS_DAILY_LIMIT: Record<string, number> = {
-  guest: 3,
-  free:  10,
-  plus:  50,
-  pro:   -1,
+  guest: 5,
+  free:  20,
+  plus:  20,
+  pro:   20,
   max:   -1,
 };
 
 export const TTS_MAX_CHARS: Record<string, number> = {
   guest: 500,
-  free:  1000,
-  plus:  3000,
-  pro:   10000,
+  free:  2000,
+  plus:  2000,
+  pro:   2000,
   max:   10000,
 };
 
 export const ERAL_VOICE_DAILY_LIMIT: Record<string, number> = {
-  guest: 2,
-  free:  5,
-  plus:  -1,
+  guest: 3,
+  free:  20,
+  plus:  20,
   pro:   -1,
   max:   -1,
 };
 
 export const PER_MIN_RATE: Record<string, number> = {
-  guest:  2,
-  free:   5,
+  guest:  3,
+  free:  15,
   plus:  15,
   pro:   30,
   max:   60,
@@ -81,45 +79,45 @@ export const PER_MIN_RATE: Record<string, number> = {
 
 export const MAX_CONCURRENT: Record<string, number> = {
   guest: 1,
-  free:  2,
+  free:  3,
   plus:  3,
   pro:   5,
   max:   10,
 };
 
-// HD generation daily limits (Cycle 12)
+// HD generation daily limits — HD is free for all authenticated users
 export const DAILY_HD_LIMIT: Record<string, number> = {
-  guest:  0,
-  free:   0,
+  guest:  5,
+  free:  50,
   plus:  50,
-  pro:   -1,  // unlimited
+  pro:   50,
   max:   -1,
 };
 
-// Eral chat sessions per day (free tier is session-scoped, tracked by IP)
+// Eral chat sessions per day
 export const ERAL_CHAT_DAILY_LIMIT: Record<string, number> = {
-  guest:  3,
-  free:   3,
-  plus:  -1,
-  pro:   -1,
+  guest:  20,
+  free:  100,
+  plus:  100,
+  pro:   100,
   max:   -1,
 };
 
 // Batch generation item counts
 export const BATCH_MAX_ITEMS: Record<string, number> = {
-  guest:  1,
-  free:   1,
-  plus:   4,
-  pro:   16,
+  guest:  2,
+  free:   8,
+  plus:   8,
+  pro:    8,
   max:   16,
 };
 
 // Eral Director plan runs per day
 export const DIRECTOR_DAILY_LIMIT: Record<string, number> = {
-  guest:  0,
-  free:   1,
-  plus:  -1,
-  pro:   -1,
+  guest:  1,
+  free:  20,
+  plus:  20,
+  pro:   20,
   max:   -1,
 };
 

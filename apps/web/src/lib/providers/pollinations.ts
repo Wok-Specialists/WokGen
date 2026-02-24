@@ -15,6 +15,9 @@ import { buildPrompt, buildNegativePrompt } from '../prompt-builder';
 const BASE_URL = 'https://image.pollinations.ai/prompt';
 const TIMEOUT_MS = 15_000;
 
+// Multiple Pollinations model variants — rotate on retry for maximum availability
+const POLLINATIONS_MODELS = ['flux', 'turbo', 'flux-realism', 'flux-3d', 'any-dark'] as const;
+
 async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -69,13 +72,16 @@ export async function pollinationsGenerate(
   }
 
   const timeoutMs = _config.timeoutMs ?? TIMEOUT_MS;
-  const MAX_RETRIES = 2;
 
   let imageBuffer: ArrayBuffer;
   let contentType = 'image/jpeg';
   let lastErr: unknown;
 
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+  // Cycle through model variants on failure for maximum availability
+  for (let attempt = 0; attempt < POLLINATIONS_MODELS.length; attempt++) {
+    const model = POLLINATIONS_MODELS[attempt];
+    url.searchParams.set('model', model);
+
     try {
       const res = await fetchWithTimeout(
         url.toString(),
@@ -84,12 +90,12 @@ export async function pollinationsGenerate(
       );
 
       if (!res.ok) {
-        // Cloudflare/origin 5xx — retry with backoff before giving up
-        if (res.status >= 500 && attempt < MAX_RETRIES) {
-          await new Promise(r => setTimeout(r, 2_000 * (attempt + 1)));
+        if (res.status >= 500 && attempt < POLLINATIONS_MODELS.length - 1) {
+          // 5xx — try next model variant after short backoff
+          await new Promise(r => setTimeout(r, 1_500));
           continue;
         }
-        const pe: ProviderError = new Error(`Pollinations returned HTTP ${res.status}`) as ProviderError;
+        const pe: ProviderError = new Error(`Pollinations returned HTTP ${res.status} (model: ${model})`) as ProviderError;
         pe.provider = 'pollinations';
         pe.statusCode = res.status;
         if (res.status >= 500) pe.skipProvider = true;
@@ -101,12 +107,13 @@ export async function pollinationsGenerate(
       break; // success
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
-        const pe: ProviderError = new Error(`Request timed out after ${timeoutMs / 1000}s`) as ProviderError;
+        const pe: ProviderError = new Error(`Pollinations timed out (model: ${model})`) as ProviderError;
         pe.provider = 'pollinations';
-        if (attempt < MAX_RETRIES) { lastErr = pe; continue; }
+        if (attempt < POLLINATIONS_MODELS.length - 1) { lastErr = pe; continue; }
+        pe.skipProvider = true;
         throw pe;
       }
-      if ((err as ProviderError).provider === 'pollinations' && attempt < MAX_RETRIES) {
+      if ((err as ProviderError).skipProvider && attempt < POLLINATIONS_MODELS.length - 1) {
         lastErr = err;
         continue;
       }
@@ -115,7 +122,11 @@ export async function pollinationsGenerate(
   }
 
   if (!imageBuffer!) {
-    throw lastErr ?? Object.assign(new Error('Pollinations: all retry attempts failed'), { provider: 'pollinations', skipProvider: true });
+    const fe = Object.assign(
+      new Error('Pollinations: all model variants failed'),
+      { provider: 'pollinations', skipProvider: true },
+    );
+    throw lastErr ?? fe;
   }
 
   // Convert to base64 data URL

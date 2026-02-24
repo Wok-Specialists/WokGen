@@ -10,6 +10,7 @@ import { togetherGenerate } from './together';
 import { comfyuiGenerate } from './comfyui';
 import { pollinationsGenerate } from './pollinations';
 import { huggingfaceGenerate } from './huggingface';
+import { stablehordeGenerate } from './stablehorde';
 
 // ---------------------------------------------------------------------------
 // Re-exports for convenience
@@ -21,6 +22,7 @@ export { togetherGenerate } from './together';
 export { comfyuiGenerate } from './comfyui';
 export { pollinationsGenerate } from './pollinations';
 export { huggingfaceGenerate } from './huggingface';
+export { stablehordeGenerate } from './stablehorde';
 export { REPLICATE_MODELS } from './replicate';
 export { FAL_MODELS } from './fal';
 export { TOGETHER_MODELS } from './together';
@@ -45,6 +47,7 @@ export function resolveProviderConfig(
       case 'comfyui':      return ''; // no key needed
       case 'pollinations': return ''; // no key needed
       case 'huggingface':  return process.env.HF_TOKEN ?? '';
+      case 'stablehorde':  return process.env.STABLE_HORDE_KEY ?? '0000000000'; // anon key fallback
     }
   })();
 
@@ -68,16 +71,16 @@ export function assertKeyPresent(
   provider: ProviderName,
   config: ProviderConfig,
 ): void {
-  if (provider === 'comfyui' || provider === 'pollinations') return; // no key needed
+  if (provider === 'comfyui' || provider === 'pollinations' || provider === 'stablehorde') return; // always available
 
   if (!config.apiKey) {
-    const envVarNames: Record<Exclude<ProviderName, 'comfyui' | 'pollinations'>, string> = {
+    const envVarNames: Record<Exclude<ProviderName, 'comfyui' | 'pollinations' | 'stablehorde'>, string> = {
       replicate:   'REPLICATE_API_TOKEN',
       fal:         'FAL_KEY',
       together:    'TOGETHER_API_KEY',
       huggingface: 'HF_TOKEN',
     };
-    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui' | 'pollinations'>];
+    const envVar = envVarNames[provider as Exclude<ProviderName, 'comfyui' | 'pollinations' | 'stablehorde'>];
     throw new Error(
       `No API key configured for provider "${provider}". ` +
         `Set ${envVar} in your .env.local file, or supply your key in the ` +
@@ -195,6 +198,9 @@ export async function generate(
 
     case 'huggingface':
       return huggingfaceGenerate(params, config);
+
+    case 'stablehorde':
+      return stablehordeGenerate(params, config);
 
     default: {
       // TypeScript exhaustiveness guard — should never reach this at runtime

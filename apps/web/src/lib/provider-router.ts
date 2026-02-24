@@ -4,15 +4,16 @@
  * Quality-aware provider routing. Replaces the naive detectProvider()
  * function with a matrix that considers mode, tool, and quality tier.
  *
- * Standard tier: free providers (Together, HuggingFace, Pollinations)
+ * Standard tier: free providers (Together, HuggingFace, Pollinations, Stable Horde)
  * HD tier: premium providers (FAL, Replicate)
  *
  * Provider capabilities reference:
- *   together:    generate, scene — no animate/rotate/inpaint, no neg prompt
- *   huggingface: generate only — has neg prompt
- *   pollinations: generate only — no neg prompt, no key required
- *   fal:         generate, rotate, scene — has neg prompt, needs FAL_KEY
- *   replicate:   all tools — has neg prompt, needs REPLICATE_API_TOKEN
+ *   together:     generate, scene — no animate/rotate/inpaint, no neg prompt
+ *   huggingface:  generate only — has neg prompt
+ *   pollinations: generate only — no neg prompt, no key required, 5 model variants
+ *   stablehorde:  generate only — 300+ open-source models, no key required (anon key)
+ *   fal:          generate, rotate, scene — has neg prompt, needs FAL_KEY
+ *   replicate:    all tools — has neg prompt, needs REPLICATE_API_TOKEN
  */
 
 import type { ProviderName } from './providers/types';

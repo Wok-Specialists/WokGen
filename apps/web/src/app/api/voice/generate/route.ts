@@ -226,7 +226,7 @@ export async function POST(req: NextRequest) {
   if (text.length > maxChars) {
     return NextResponse.json(
       {
-        error: `Text too long. ${planId === 'guest' ? 'Sign up for' : 'Upgrade to Plus for'} longer TTS (${maxChars} char limit on your current plan).`,
+        error: `Text too long. ${planId === 'guest' ? 'Sign up for' : 'Reduce text length for'} longer TTS (${maxChars} char limit on your current plan).`,
         limit: maxChars,
         current: text.length,
         code: 'TTS_CHAR_LIMIT',

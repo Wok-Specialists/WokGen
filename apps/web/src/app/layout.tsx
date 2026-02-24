@@ -118,17 +118,13 @@ function NavBar() {
 
       {/* Nav links */}
         <div className="flex items-center gap-1 flex-1">
-          <NavLink href="/pixel/studio">Studio</NavLink>
+          <NavLink href="/">Studios</NavLink>
+          <NavLink href="/tools">Tools</NavLink>
           <NavLink href="/community">Community</NavLink>
           <NavLink href="/eral">
             <span className="nav-eral-badge">Eral</span>
           </NavLink>
-          <NavLink href="/eral/director">Director</NavLink>
-          <NavLink href="/eral/simulate">Simulate</NavLink>
-          <NavLink href="/brand">Brand</NavLink>
-          <NavLink href="/automations">Automate</NavLink>
-          <NavLink href="/pricing">Pricing</NavLink>
-          <NavLink href="/docs">Docs</NavLink>
+          <NavLink href="/support">Support</NavLink>
         </div>
 
       {/* Right side */}

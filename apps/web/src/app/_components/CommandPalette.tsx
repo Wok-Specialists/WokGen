@@ -32,8 +32,8 @@ const NAV_COMMANDS = [
   { id: 'nav-docs',     label: 'Documentation',        href: '/docs',             group: 'Platform' },
   { id: 'nav-settings', label: 'Notification Settings', href: '/settings',        group: 'Account'  },
   { id: 'nav-apikeys',  label: 'API Keys',             href: '/account/api-keys', group: 'Account'  },
-  { id: 'nav-billing',  label: 'Billing',              href: '/billing',          group: 'Account'  },
-  { id: 'nav-pricing',  label: 'Pricing',              href: '/pricing',          group: 'Account'  },
+  { id: 'nav-tools',    label: 'Tools',                href: '/tools',            group: 'Platform' },
+  { id: 'nav-pricing',  label: 'Open Source Models',  href: '/pricing',          group: 'Platform' },
   { id: 'nav-changelog',label: 'Changelog',            href: '/changelog',        group: 'Platform' },
 ];
 

@@ -6,7 +6,7 @@
 export type Tool = 'generate' | 'animate' | 'rotate' | 'inpaint' | 'scene';
 
 // Provider identifiers
-export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui' | 'pollinations' | 'huggingface';
+export type ProviderName = 'replicate' | 'fal' | 'together' | 'comfyui' | 'pollinations' | 'huggingface' | 'stablehorde';
 
 // Canonical export pixel sizes
 export type PixelSize = 32 | 64 | 128 | 256 | 512;
@@ -338,6 +338,19 @@ export const PROVIDER_CAPABILITIES: Record<ProviderName, ProviderCapability> = {
     free: true,
     requiresKey: false,
   },
+  stablehorde: {
+    generate: true,
+    animate: false,
+    rotate: false,
+    inpaint: false,
+    scene: false,
+    maxWidth: 1024,
+    maxHeight: 1024,
+    supportsSeed: false,
+    supportsNegativePrompt: true,
+    free: true,
+    requiresKey: false,
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -421,5 +434,16 @@ export const PROVIDER_META: Record<ProviderName, ProviderMeta> = {
     freeCredits: true,
     freeCreditsNote: 'Free with a free HF account',
     color: '#ff9d00',
+  },
+  stablehorde: {
+    id: 'stablehorde',
+    label: 'Stable Horde',
+    description: 'Federated volunteer GPU network. 300+ open-source models. Completely free — no account needed.',
+    docsUrl: 'https://stablehorde.net',
+    keyEnvVar: 'STABLE_HORDE_KEY',
+    keyLabel: 'API Key (optional — free account key gets priority)',
+    freeCredits: true,
+    freeCreditsNote: 'Completely free — anonymous key works, free signup for priority',
+    color: '#8b5cf6',
   },
 };

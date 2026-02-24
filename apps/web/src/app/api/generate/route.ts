@@ -15,8 +15,8 @@ import {
   releaseConcurrentSlot,
   getUserPlanId,
   PER_MIN_RATE,
+  DAILY_HD_LIMIT,
 } from '@/lib/quota';
-import { sendLowCreditsEmail } from '@/lib/email';
 import { isSupportedMode, getMode } from '@/lib/modes';
 import type { ProviderName, Tool, GenerateParams, GenerateResult } from '@/lib/providers';
 import {
@@ -112,9 +112,10 @@ async function isProviderThrottled(provider: string): Promise<boolean> {
 /** Ordered fallback providers to try when `primary` fails (non-self-hosted only). */
 function getFallbackChain(primary: ProviderName): ProviderName[] {
   const candidates: Array<{ provider: ProviderName; key?: string }> = [
-    { provider: 'together',    key: 'TOGETHER_API_KEY' },
-    { provider: 'huggingface', key: 'HF_TOKEN' },
-    { provider: 'pollinations' }, // always available — no key needed
+    { provider: 'together',     key: 'TOGETHER_API_KEY' },
+    { provider: 'huggingface',  key: 'HF_TOKEN' },
+    { provider: 'pollinations' },                          // free, no key — 5 model variants
+    { provider: 'stablehorde' },                           // free, no key — federated GPU pool
   ];
   return candidates
     .filter(c => c.provider !== primary && (!c.key || Boolean(process.env[c.key])))
@@ -188,7 +189,8 @@ export async function POST(req: NextRequest) {
     const requestedHD = rawBody.quality === 'hd';
     const planId      = authedUserId ? rlPlanId : 'guest'; // reuse already-fetched planId
 
-    // ── 0c. HD credits check ──────────────────────────────────────────────
+    // ── 0c. HD daily quota check ──────────────────────────────────────────
+    // HD is available to all authenticated users — no credits required.
     if (requestedHD) {
       if (!authedUserId) {
         return NextResponse.json(
@@ -196,34 +198,21 @@ export async function POST(req: NextRequest) {
           { status: 401 },
         );
       }
-      const user = await prisma.user.findUnique({
-        where: { id: authedUserId },
-        select: {
-          hdMonthlyUsed:  true,
-          hdTopUpCredits: true,
-          subscription: {
-            select: {
-              plan: { select: { creditsPerMonth: true } },
+      const hdLimit = DAILY_HD_LIMIT[planId] ?? DAILY_HD_LIMIT.free;
+      if (hdLimit !== -1) {
+        const quota = await claimStdSlot(authedUserId, clientIP, planId);
+        if (!quota.allowed) {
+          return NextResponse.json(
+            {
+              error: `Daily HD limit reached (${quota.used}/${hdLimit}). Resets in ${Math.ceil((quota.retryAfter ?? 3600) / 3600)}h.`,
+              quota: { used: quota.used, limit: hdLimit, remaining: 0, tier: quota.tier, resetsIn: quota.retryAfter },
+              code: 'QUOTA_EXCEEDED',
             },
-          },
-        },
-      });
-      const monthlyAllocation = user?.subscription?.plan.creditsPerMonth ?? 0;
-      const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
-      const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
-      const topUpBank         = user?.hdTopUpCredits ?? 0;
-
-      if (monthlyRemaining > 0 || topUpBank > 0) {
-        useHD = true;
-      } else {
-        return NextResponse.json(
-          {
-            error: 'No HD credits remaining. Buy a top-up pack or upgrade your plan.',
-            hdCredits: { monthlyRemaining: 0, topUpBank: 0 },
-          },
-          { status: 402 },
-        );
+            { status: 429 },
+          );
+        }
       }
+      useHD = true;
     }
 
     // ── 0d. Standard daily quota ──────────────────────────────────────────
@@ -986,54 +975,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Deduct HD credit on success (hosted mode + HD generation)
-    let hdCreditsRemaining: { monthly: number; topUp: number } | null = null;
-
-    if (!isSelfHosted && authedUserId && useHD) {
-      try {
-        // Use monthly credits first, then top-up bank
-        const user = await prisma.user.findUnique({ where: { id: authedUserId } });
-        const sub  = await prisma.subscription.findUnique({
-          where: { userId: authedUserId },
-          include: { plan: true },
-        });
-        const monthlyAllocation = sub?.plan.creditsPerMonth ?? 0;
-        const monthlyUsed       = user?.hdMonthlyUsed ?? 0;
-        const monthlyRemaining  = Math.max(0, monthlyAllocation - monthlyUsed);
-
-        if (monthlyRemaining > 0) {
-          await prisma.user.update({
-            where: { id: authedUserId },
-            data: { hdMonthlyUsed: { increment: 1 } },
-          });
-          hdCreditsRemaining = {
-            monthly: monthlyRemaining - 1,
-            topUp:   user?.hdTopUpCredits ?? 0,
-          };
-        } else {
-          // Draw from top-up bank
-          const updated = await prisma.user.update({
-            where: { id: authedUserId },
-            data: { hdTopUpCredits: { decrement: 1 } },
-          });
-          hdCreditsRemaining = { monthly: 0, topUp: Math.max(0, updated.hdTopUpCredits) };
-        }
-      } catch (err) {
-        logger.warn({ err: (err as Error).message }, '[generate] Failed to deduct HD credit');
-      }
-
-      // Send low-credits warning email when user hits 5 remaining (once per threshold)
-      if (hdCreditsRemaining) {
-        const totalRemaining = hdCreditsRemaining.monthly + hdCreditsRemaining.topUp;
-        if (totalRemaining === 5) {
-          const user = await prisma.user.findUnique({ where: { id: authedUserId }, select: { email: true } });
-          if (user?.email) {
-            sendLowCreditsEmail(user.email, 5).catch(() => {});
-          }
-        }
-      }
-    }
-
     // Update user generation stats (non-blocking)
     if (!isSelfHosted && authedUserId) {
       prisma.userPreference.upsert({
@@ -1090,14 +1031,10 @@ export async function POST(req: NextRequest) {
       resultUrls:          result.resultUrls,
       durationMs:          result.durationMs,
       resolvedSeed:        result.resolvedSeed,
-      hdCreditsRemaining,
       quality:             useHD ? 'hd' : 'standard',
       guestDownloadGated:  authedUserId === null,
       bgRemovalNote,
-      // Quota info for frontend display (undefined for HD/paid tiers)
-      quotaRemaining: !useHD
-        ? (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining
-        : undefined,
+      quotaRemaining: (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining,
     }, {
       headers: {
         'X-WokGen-Request-Id': requestId,
