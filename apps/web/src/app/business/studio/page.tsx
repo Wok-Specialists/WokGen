@@ -23,6 +23,8 @@ import { ColorPalette } from '@/components/color-palette';
 import { QrGenerator } from '@/components/qr-generator';
 import { FontPairing } from '@/components/font-pairing';
 import SfxBrowser from '@/components/sfx-browser';
+import BrandWizard from '@/components/studio/BrandWizard';
+import type { BrandWizardData } from '@/lib/brand-prompt-builder';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -124,6 +126,18 @@ const BUSINESS_STAGES = [
 ];
 
 // ---------------------------------------------------------------------------
+// Output format options (shown after wizard generation)
+// ---------------------------------------------------------------------------
+const OUTPUT_FORMATS = [
+  { id: 'logo_horizontal', label: 'Logo Horizontal',  size: '1200×400'  },
+  { id: 'logo_vertical',   label: 'Logo Vertical',    size: '400×600'   },
+  { id: 'icon_only',       label: 'Icon Only',        size: '512×512'   },
+  { id: 'full_lockup',     label: 'Full Lockup',      size: '1600×600'  },
+  { id: 'social_banner',   label: 'Social Banner',    size: '1200×630'  },
+  { id: 'slide_bg',        label: 'Slide Background', size: '1920×1080' },
+] as const;
+
+// ---------------------------------------------------------------------------
 // Business Studio Component (inner — needs Suspense for useSearchParams)
 // ---------------------------------------------------------------------------
 function BusinessStudioInner() {
@@ -183,6 +197,11 @@ function BusinessStudioInner() {
   const [showFontPanel, setShowFontPanel]     = useState(false);
   const [bgRemoving, setBgRemoving]           = useState(false);
   const [displayUrl, setDisplayUrl]           = useState<string | null>(null);
+
+  // ── Brand Wizard state ────────────────────────────────────────────────────
+  const [showWizard, setShowWizard]         = useState(() => !searchParams.get('prompt'));
+  const [wizardData, setWizardData]         = useState<BrandWizardData | null>(null);
+  const [selectedFormat, setSelectedFormat] = useState('logo_horizontal');
 
   // ── SFX / Audio panel ────────────────────────────────────────────────────
   const [showAudioPanel, setShowAudioPanel] = useState(false);
@@ -263,8 +282,9 @@ function BusinessStudioInner() {
   };
 
   // ── Generate ──────────────────────────────────────────────────────────────
-  const handleGenerate = useCallback(async () => {
-    if (!prompt.trim() || jobStatus === 'running') return;
+  const handleGenerate = useCallback(async (promptOverride?: unknown) => {
+    const effectivePrompt = typeof promptOverride === 'string' ? promptOverride : prompt;
+    if (!effectivePrompt.trim() || jobStatus === 'running') return;
     setJobStatus('running');
     setStudioError(null);
     setResult(null);
@@ -282,8 +302,8 @@ function BusinessStudioInner() {
       tool:           activeTool === 'brand-kit' ? 'generate' : activeTool,
       mode:           'business',
       prompt:         activeTool === 'logo' && targetAudience.trim()
-                        ? `${prompt.trim()}, target audience: ${targetAudience.trim()}`
-                        : prompt.trim(),
+                        ? `${effectivePrompt.trim()}, target audience: ${targetAudience.trim()}`
+                        : effectivePrompt.trim(),
       style,
       mood,
       industry:       industry.trim() || undefined,
@@ -362,6 +382,15 @@ function BusinessStudioInner() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prompt, activeTool, style, mood, industry, colorDirection, targetAudience, platform, slideFormat, useHD, isPublic, jobStatus]);
+
+  // ── Brand Wizard completion handler ──────────────────────────────────────
+  const handleWizardGenerate = useCallback((wizardPrompt: string, data: BrandWizardData) => {
+    setWizardData(data);
+    setShowWizard(false);
+    setPrompt(wizardPrompt);
+    handleGenerate(wizardPrompt);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleGenerate]);
 
   // ── Load history from API on mount ───────────────────────────────────────
   useEffect(() => {
@@ -443,7 +472,15 @@ function BusinessStudioInner() {
     } catch { toastError('Download failed'); }
   }, [prompt, activeTool]);
 
-  // ── Displayed output image ────────────────────────────────────────────────
+  // ── Export all format sizes ───────────────────────────────────────────────
+  const handleExportAll = useCallback(() => {
+    const url = displayUrl ?? (result?.resultUrl ?? null);
+    if (!url) return;
+    OUTPUT_FORMATS.forEach((f, i) => {
+      setTimeout(() => handleDownload(url, f.id), i * 300);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayUrl, result, handleDownload]);
   const displayResult = result ?? (history[selectedHistory ?? -1] ?? null);
   const isBrandKit    = activeTool === 'brand-kit';
 
@@ -505,6 +542,22 @@ function BusinessStudioInner() {
             Pixel
           </a>
         </div>
+
+        {showWizard ? (
+          <BrandWizard onGenerate={handleWizardGenerate} />
+        ) : (<>
+        {/* Brand Wizard re-open button */}
+        {wizardData && (
+          <div className="studio-control-section" style={{ paddingBottom: '0.5rem' }}>
+            <button
+              className="btn-secondary"
+              style={{ width: '100%', fontSize: '0.78rem' }}
+              onClick={() => setShowWizard(true)}
+            >
+              ✦ Re-run Brand Wizard
+            </button>
+          </div>
+        )}
 
         {/* Tool tabs */}
         <div className="studio-tool-tabs">
@@ -952,7 +1005,7 @@ function BusinessStudioInner() {
         <div className="studio-control-section">
           <button
             className="btn btn-primary btn-generate"
-            onClick={handleGenerate}
+            onClick={() => handleGenerate()}
             disabled={jobStatus === 'running' || !prompt.trim()}
           >
             {jobStatus === 'running'
@@ -964,6 +1017,7 @@ function BusinessStudioInner() {
           <p className="studio-hint" style={{ textAlign: 'right', marginTop: '0.25rem' }}>⌘↵</p>
         </div>
 
+        </>)}
       </aside>
 
       {/* ────────────────────────────── CANVAS ──────────────────────────────── */}
@@ -975,7 +1029,7 @@ function BusinessStudioInner() {
             <StudioErrorBanner
               error={studioError}
               onDismiss={() => setStudioError(null)}
-              onRetry={handleGenerate}
+              onRetry={() => handleGenerate()}
             />
           </div>
         )}
@@ -1024,7 +1078,7 @@ function BusinessStudioInner() {
                 {studioError && (
                   <p className="studio-error-card__msg">{studioError.message}</p>
                 )}
-                <button className="btn-secondary" onClick={handleGenerate}>↻ Retry</button>
+                <button className="btn-secondary" onClick={() => handleGenerate()}>↻ Retry</button>
               </div>
             )}
             {displayResult?.resultUrl && jobStatus !== 'running' && (
@@ -1105,6 +1159,37 @@ function BusinessStudioInner() {
                 </div>
               </>
             )}
+          </div>
+        )}
+
+        {/* ── Output format selector (shown after wizard generation) ────── */}
+        {wizardData && jobStatus === 'succeeded' && (
+          <div className="biz-studio-format-selector">
+            <p className="biz-studio-format-selector__label">Export Format</p>
+            <div className="biz-studio-format-options-grid">
+              {OUTPUT_FORMATS.map(f => (
+                <button
+                  key={f.id}
+                  type="button"
+                  className={[
+                    'biz-studio-format-option',
+                    selectedFormat === f.id ? 'biz-studio-format-option--active' : '',
+                  ].join(' ')}
+                  onClick={() => setSelectedFormat(f.id)}
+                >
+                  <span className="biz-studio-format-option__name">{f.label}</span>
+                  <span className="biz-studio-format-option__size">{f.size}</span>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ width: '100%', marginTop: '0.75rem' }}
+              onClick={handleExportAll}
+            >
+              ↓ Export All Sizes
+            </button>
           </div>
         )}
 

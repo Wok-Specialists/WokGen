@@ -15,6 +15,7 @@ import { MobileNav } from './_components/MobileNav';
 import { Breadcrumb } from './_components/Breadcrumb';
 import { Toaster } from 'sonner';
 import DonationStrip from '@/components/DonationStrip';
+import { PageLoadingBar } from '@/components/PageLoadingBar';
 
 const EralVoiceButton = nextDynamic(
   () => import('@/components/eral-voice-button').then((m) => ({ default: m.EralVoiceButton })),
@@ -169,6 +170,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={dmSans.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <PageLoadingBar />
         <Providers>
           <a href="#main-content" className="skip-link">Skip to content</a>
           <NavBar />
