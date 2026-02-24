@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
 import { pollinationsChat } from '@/lib/providers/pollinations-text';
+import { groqChat } from '@/lib/providers/groq';
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
@@ -630,6 +631,7 @@ export async function POST(req: NextRequest) {
   // ── Non-streaming path ────────────────────────────────────────────────────
   let reply: string;
   let durationMs: number;
+  let modelUsed = providerConfig.model;
   try {
     ({ reply, durationMs } = await handleNonStreaming(
       llmMessages,
@@ -638,11 +640,29 @@ export async function POST(req: NextRequest) {
       providerConfig.model,
       providerConfig.provider,
     ));
-  } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Generation failed' },
-      { status: 502 },
-    );
+  } catch (primaryErr) {
+    // Fallback to Groq (free tier) when primary provider fails
+    if (process.env.GROQ_API_KEY && providerConfig.url !== GROQ_URL) {
+      try {
+        const start = Date.now();
+        const systemContent = llmMessages.find(m => m.role === 'system')?.content ?? '';
+        const userContent = llmMessages.filter(m => m.role === 'user').at(-1)?.content ?? message.trim();
+        const groqResult = await groqChat(systemContent, userContent, { maxTokens: 2048 });
+        reply = groqResult.text;
+        durationMs = Date.now() - start;
+        modelUsed = 'llama-3.3-70b-versatile';
+      } catch {
+        return NextResponse.json(
+          { error: primaryErr instanceof Error ? primaryErr.message : 'Generation failed' },
+          { status: 502 },
+        );
+      }
+    } else {
+      return NextResponse.json(
+        { error: primaryErr instanceof Error ? primaryErr.message : 'Generation failed' },
+        { status: 502 },
+      );
+    }
   }
 
   // Persist assistant message
@@ -652,7 +672,7 @@ export async function POST(req: NextRequest) {
       conversationId: conv.id,
       role: 'assistant',
       content: cleanReply,
-      modelUsed: providerConfig.model,
+      modelUsed: modelUsed,
       durationMs,
     },
   });
@@ -662,7 +682,7 @@ export async function POST(req: NextRequest) {
     wap: wap ?? null,
     conversationId: conv.id,
     messageId: assistantMsg.id,
-    modelUsed: providerConfig.model,
+    modelUsed: modelUsed,
     durationMs,
   });
 }

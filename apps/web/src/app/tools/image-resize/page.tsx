@@ -1,5 +1,6 @@
 'use client';
 import ToolShell from '@/components/tools/ToolShell';
+import ImageResizeTool from '@/components/tools/ImageResizeTool';
 
 export default function Page() {
   return (
@@ -8,6 +9,8 @@ export default function Page() {
       label="Image Resizer"
       description="Resize and crop images with social media presets."
       icon="↔️"
-    />
+    >
+      <ImageResizeTool />
+    </ToolShell>
   );
 }

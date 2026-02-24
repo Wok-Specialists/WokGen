@@ -1203,7 +1203,30 @@ function OutputPanel({
         )}
       </div>
 
-      {/* Batch thumbnail strip */}
+      {/* Studio action bar — quick-link tools for the generated image */}
+      {activeUrl && (
+        <div className="studio-action-bar">
+          {[
+            { emoji: '✂️', label: 'Remove BG', tool: 'background-remover' },
+            { emoji: '↔️', label: 'Resize',    tool: 'image-resize'        },
+            { emoji: '🎨', label: 'Colors',    tool: 'color-palette'       },
+            { emoji: '🗜️', label: 'Compress',  tool: 'image-compress'      },
+          ].map(({ emoji, label, tool }) => (
+            <a
+              key={tool}
+              href={`/tools/${tool}?image=${encodeURIComponent(activeUrl)}`}
+              className="studio-action-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>{emoji}</span>
+              <span>{label}</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+
       {batchResults && batchResults.length > 1 && !compareMode && (
         <div
           className="flex items-center gap-2 px-4 py-2 flex-shrink-0 overflow-x-auto"

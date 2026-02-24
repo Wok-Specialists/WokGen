@@ -268,7 +268,31 @@ export async function POST(req: NextRequest) {
   };
 
   if (!elevenKey) {
-    // Fallback: return text for Web Speech API synthesis
+    // Try edge-tts as free fallback before returning text-only response
+    try {
+      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
+      const tts = new MsEdgeTTS();
+      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        const stream = tts.toStream(ttsText);
+        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
+        stream.on('end', () => resolve(Buffer.concat(chunks)));
+        stream.on('error', reject);
+      });
+      return new Response(audioBuffer, {
+        headers: {
+          'Content-Type': 'audio/mpeg',
+          'X-Eral-Response-Text': encodeURIComponent(textResponse),
+          'X-Eral-Conversation-Id': convId,
+          'Cache-Control': 'no-cache',
+          'X-TTS-Provider': 'edge-tts',
+        },
+      });
+    } catch (edgeErr) {
+      logger.warn({ err: edgeErr }, '[speak] edge-tts fallback failed, returning text');
+    }
+    // Final fallback: return text for Web Speech API synthesis
     return NextResponse.json(
       { text: textResponse, fallback: true, conversationId: convId },
       { status: 200, headers: fallbackHeaders },
@@ -301,6 +325,28 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     logger.error({ err }, '[speak] ElevenLabs request failed');
+    // Try edge-tts before returning text fallback
+    try {
+      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
+      const tts = new MsEdgeTTS();
+      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        const stream = tts.toStream(ttsText);
+        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
+        stream.on('end', () => resolve(Buffer.concat(chunks)));
+        stream.on('error', reject);
+      });
+      return new Response(audioBuffer, {
+        headers: {
+          'Content-Type': 'audio/mpeg',
+          'X-Eral-Response-Text': encodeURIComponent(textResponse),
+          'X-Eral-Conversation-Id': convId,
+          'Cache-Control': 'no-cache',
+          'X-TTS-Provider': 'edge-tts',
+        },
+      });
+    } catch { /* edge-tts also failed */ }
     return NextResponse.json(
       { text: textResponse, fallback: true, conversationId: convId, error: 'TTS unavailable' },
       { status: 200, headers: fallbackHeaders },
@@ -310,6 +356,28 @@ export async function POST(req: NextRequest) {
   if (!elevenRes.ok) {
     const errText = await elevenRes.text().catch(() => elevenRes.statusText);
     logger.error({ err: errText, status: elevenRes.status }, '[speak] ElevenLabs error');
+    // Try edge-tts before returning text fallback
+    try {
+      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
+      const tts = new MsEdgeTTS();
+      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        const stream = tts.toStream(ttsText);
+        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
+        stream.on('end', () => resolve(Buffer.concat(chunks)));
+        stream.on('error', reject);
+      });
+      return new Response(audioBuffer, {
+        headers: {
+          'Content-Type': 'audio/mpeg',
+          'X-Eral-Response-Text': encodeURIComponent(textResponse),
+          'X-Eral-Conversation-Id': convId,
+          'Cache-Control': 'no-cache',
+          'X-TTS-Provider': 'edge-tts',
+        },
+      });
+    } catch { /* edge-tts also failed */ }
     return NextResponse.json(
       { text: textResponse, fallback: true, conversationId: convId, error: 'TTS provider error' },
       { status: 200, headers: fallbackHeaders },

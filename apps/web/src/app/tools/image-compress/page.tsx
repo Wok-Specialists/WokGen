@@ -1,5 +1,6 @@
 'use client';
 import ToolShell from '@/components/tools/ToolShell';
+import ImageCompressTool from '@/components/tools/ImageCompressTool';
 
 export default function Page() {
   return (
@@ -8,6 +9,8 @@ export default function Page() {
       label="Image Compressor"
       description="Compress images with a quality slider. Live before/after size comparison."
       icon="🗜️"
-    />
+    >
+      <ImageCompressTool />
+    </ToolShell>
   );
 }

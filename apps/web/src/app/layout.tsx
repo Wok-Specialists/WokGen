@@ -11,6 +11,7 @@ import { NavAuth } from './_components/NavAuth';
 import { Providers } from './_components/Providers';
 import { ModeSwitcher } from './_components/ModeSwitcher';
 import { Toaster } from 'sonner';
+import DonationStrip from '@/components/DonationStrip';
 
 const EralVoiceButton = nextDynamic(
   () => import('@/components/eral-voice-button').then((m) => ({ default: m.EralVoiceButton })),
@@ -182,6 +183,7 @@ export default function RootLayout({
         </Providers>
         <Analytics />
         <SpeedInsights />
+        <DonationStrip />
       </body>
     </html>
   );
