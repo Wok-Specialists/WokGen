@@ -332,9 +332,11 @@ function VectorStudioInner() {
     try {
       const slug = prompt.trim().replace(/[^a-z0-9]+/gi, '-').toLowerCase().slice(0, 30);
       const suffix = batchCount > 1 ? `-${idx + 1}` : '';
-      const filename = `wokgen-vector-${activeTool}-${slug}${suffix}.png`;
       const res  = await fetch(url);
       const blob = await res.blob();
+      // Use .svg extension for actual SVG content, .png otherwise
+      const ext = blob.type === 'image/svg+xml' ? 'svg' : 'png';
+      const filename = `wokgen-vector-${activeTool}-${slug}${suffix}.${ext}`;
       const a    = document.createElement('a');
       a.href     = URL.createObjectURL(blob);
       a.download = filename;
