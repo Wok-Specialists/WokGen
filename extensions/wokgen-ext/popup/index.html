@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WokGen</title>
   <link rel="stylesheet" href="popup.css" />
+  <style>
+    .tab-bar { display: flex; gap: 2px; padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .tab-btn { flex: 1; padding: 5px 0; border-radius: 5px; background: none; border: none; color: rgba(255,255,255,0.45); font-size: 11px; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; transition: all 150ms; }
+    .tab-btn.active { background: rgba(167,139,250,0.12); color: #a78bfa; }
+    .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    /* Assets tab */
+    .assets-panel { padding: 10px; }
+    .asset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
+    .asset-item { border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03); position: relative; }
+    .asset-item img { width: 100%; height: 60px; object-fit: cover; display: block; }
+    .asset-actions { padding: 4px; text-align: center; }
+    .btn-small { font-size: 9px; color: #a78bfa; text-decoration: none; font-weight: 600; }
+    .btn-small:hover { color: #c4b5fd; }
+    .empty-state { font-size: 12px; color: rgba(255,255,255,0.3); text-align: center; padding: 20px 10px; }
+    /* Settings tab */
+    .settings-panel { padding: 10px 14px; }
+    .settings-link { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: rgba(255,255,255,0.7); text-decoration: none; }
+    .settings-link span { color: #a78bfa; font-size: 11px; }
+    .settings-link:hover { color: #fff; }
+  </style>
 </head>
 <body>
   <div id="app">
@@ -14,48 +36,87 @@
       </div>
       <a href="https://wokgen.wokspec.org" target="_blank" class="popup-open-btn">Open</a>
     </header>
-    <nav class="popup-nav">
-      <a href="https://wokgen.wokspec.org/tools" target="_blank" class="popup-nav-item">Tools</a>
-      <a href="https://wokgen.wokspec.org/studio" target="_blank" class="popup-nav-item">Studio</a>
-      <a href="https://wokgen.wokspec.org/tools/background-remover" target="_blank" class="popup-nav-item">BG Remove</a>
-    </nav>
-    <div class="popup-tools">
-      <div class="popup-section-title">Quick Tools</div>
-      <div class="popup-tool-grid">
-        <a href="https://wokgen.wokspec.org/tools/image-converter" target="_blank" class="popup-tool">
-          <span class="popup-tool-icon">CV</span>
-          <span>Converter</span>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="tools">Tools</button>
+      <button class="tab-btn" data-tab="assets">Assets</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Tools Tab -->
+    <div class="tab-panel active" id="tab-tools">
+      <nav class="popup-nav">
+        <a href="https://wokgen.wokspec.org/tools" target="_blank" class="popup-nav-item">Tools</a>
+        <a href="https://wokgen.wokspec.org/studio" target="_blank" class="popup-nav-item">Studio</a>
+        <a href="https://wokgen.wokspec.org/tools/background-remover" target="_blank" class="popup-nav-item">BG Remove</a>
+      </nav>
+      <div class="popup-tools">
+        <div class="popup-section-title">Quick Tools</div>
+        <div class="popup-tool-grid">
+          <a href="https://wokgen.wokspec.org/tools/image-converter" target="_blank" class="popup-tool">
+            <span class="popup-tool-icon">CV</span>
+            <span>Converter</span>
+          </a>
+          <a href="https://wokgen.wokspec.org/tools/background-remover" target="_blank" class="popup-tool">
+            <span class="popup-tool-icon">BG</span>
+            <span>BG Remove</span>
+          </a>
+          <a href="https://wokgen.wokspec.org/tools/color-palette" target="_blank" class="popup-tool">
+            <span class="popup-tool-icon">CLR</span>
+            <span>Colors</span>
+          </a>
+          <a href="https://wokgen.wokspec.org/tools/og-analyzer" target="_blank" class="popup-tool">
+            <span class="popup-tool-icon">OG</span>
+            <span>OG Check</span>
+          </a>
+          <a href="https://wokgen.wokspec.org/tools/link-scraper" target="_blank" class="popup-tool">
+            <span class="popup-tool-icon">SCR</span>
+            <span>Scraper</span>
+          </a>
+          <a href="https://wokgen.wokspec.org/tools" target="_blank" class="popup-tool popup-tool-more">
+            <span class="popup-tool-icon">...</span>
+            <span>All Tools</span>
+          </a>
+        </div>
+      </div>
+      <div class="popup-analyze" id="analyze-section">
+        <div class="popup-section-title">Analyze this page</div>
+        <button class="popup-analyze-btn" id="analyze-btn">Scan with Eral 7c</button>
+        <button class="popup-analyze-btn" id="eral-panel-btn" style="margin-top:6px;background:rgba(167,139,250,0.06);border-color:rgba(167,139,250,0.15);">Open Eral 7c Panel</button>
+      </div>
+    </div>
+
+    <!-- Assets Tab -->
+    <div class="tab-panel" id="tab-assets">
+      <div class="assets-panel">
+        <div class="popup-section-title" style="padding:0 0 6px;">Page Images</div>
+        <div id="assets-list"><div class="empty-state">Click to scan this page for images.</div></div>
+        <button class="popup-analyze-btn" id="harvest-btn" style="margin-top:10px;">Scan for Assets</button>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="settings-panel">
+        <div class="popup-section-title" style="padding:0 0 8px;">Extension</div>
+        <a href="settings.html" target="_blank" class="settings-link">
+          Advanced Settings <span>→</span>
         </a>
-        <a href="https://wokgen.wokspec.org/tools/background-remover" target="_blank" class="popup-tool">
-          <span class="popup-tool-icon">BG</span>
-          <span>BG Remove</span>
+        <a href="https://wokgen.wokspec.org/login" target="_blank" class="settings-link">
+          Sign in to WokGen <span>→</span>
         </a>
-        <a href="https://wokgen.wokspec.org/tools/color-palette" target="_blank" class="popup-tool">
-          <span class="popup-tool-icon">CLR</span>
-          <span>Colors</span>
-        </a>
-        <a href="https://wokgen.wokspec.org/tools/og-analyzer" target="_blank" class="popup-tool">
-          <span class="popup-tool-icon">OG</span>
-          <span>OG Check</span>
-        </a>
-        <a href="https://wokgen.wokspec.org/tools/link-scraper" target="_blank" class="popup-tool">
-          <span class="popup-tool-icon">SCR</span>
-          <span>Scraper</span>
-        </a>
-        <a href="https://wokgen.wokspec.org/tools" target="_blank" class="popup-tool popup-tool-more">
-          <span class="popup-tool-icon">...</span>
-          <span>All Tools</span>
+        <a href="https://wokgen.wokspec.org" target="_blank" class="settings-link">
+          WokGen Dashboard <span>→</span>
         </a>
       </div>
     </div>
-    <div class="popup-analyze" id="analyze-section">
-      <div class="popup-section-title">Analyze this page</div>
-      <button class="popup-analyze-btn" id="analyze-btn">Scan with Eral 7c</button>
-    </div>
+
     <footer class="popup-footer">
-      <a href="https://wokgen.wokspec.org/login" target="_blank" id="auth-link">Sign in to WokGen</a>
+      <a href="https://wokgen.wokspec.org/login" target="_blank" id="auth-link">Sign in</a>
       <span class="popup-footer-dot">·</span>
       <a href="https://wokspec.org" target="_blank">WokSpec</a>
+      <span class="popup-footer-dot">·</span>
+      <span style="color:rgba(255,255,255,0.2);">v2.0</span>
     </footer>
   </div>
   <script src="popup.js"></script>

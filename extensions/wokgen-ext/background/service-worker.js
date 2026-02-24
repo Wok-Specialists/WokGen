@@ -1,4 +1,4 @@
-// WokGen Extension — Background Service Worker
+// WokGen Extension — Background Service Worker v2
 
 const WOKGEN_BASE = 'https://wokgen.wokspec.org';
 
@@ -18,6 +18,11 @@ chrome.runtime.onInstalled.addListener(() => {
     id: 'wokgen-send-to-tools',
     title: 'Open in WokGen Tools',
     contexts: ['image'],
+  });
+  chrome.contextMenus.create({
+    id: 'wokgen-eral-panel',
+    title: 'Open Eral 7c Panel',
+    contexts: ['page', 'selection'],
   });
   chrome.contextMenus.create({
     id: 'wokgen-separator',
@@ -48,6 +53,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     'wokgen-open': () => {
       chrome.tabs.create({ url: WOKGEN_BASE });
     },
+    'wokgen-eral-panel': () => {
+      chrome.tabs.sendMessage(tab.id, { action: 'openEralPanel' });
+    },
   };
   const handler = handlers[info.menuItemId];
   if (handler) handler();
@@ -60,5 +68,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ authenticated: !!cookie });
     });
     return true; // keep channel open for async
+  }
+
+  if (msg.action === 'eralChat') {
+    // Forward to WokGen API
+    chrome.storage.local.get(['authToken'], async (result) => {
+      const token = result.authToken;
+      if (!token) {
+        sendResponse({ reply: 'Sign in to WokGen to chat with Eral 7c. Visit wokgen.wokspec.org to sign in.' });
+        return;
+      }
+      try {
+        const res = await fetch('https://wokgen.wokspec.org/api/eral/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Cookie': `next-auth.session-token=${token}` },
+          body: JSON.stringify({
+            message: msg.message,
+            systemContext: `User is browsing: ${msg.pageContext?.url || 'unknown page'}. Page title: ${msg.pageContext?.title || ''}`,
+          }),
+        });
+        const data = await res.json();
+        sendResponse({ reply: data.message || data.content || 'No response from Eral.' });
+      } catch(e) {
+        sendResponse({ reply: 'Could not reach Eral 7c. Check your connection.' });
+      }
+    });
+    return true; // async
   }
 });
