@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { safeMarkdown, sanitizeHtml } from '@/lib/safe-markdown';
-import { parseWAPFromResponse, executeWAP, type WAPResponse } from '@/lib/wap';
+import { parseWAPFromResponse, executeWAP, logWAPAction, getWAPLog, type WAPResponse, type WAPLogEntry } from '@/lib/wap';
 
 // ── SpeechRecognition type shim (not in all TS libs) ─────────────────────────
 
@@ -336,6 +336,7 @@ export function EralPage() {
   const [modelPickerOpen, setModelPickerOpen] = useState(false);
   const [conversationsLoaded, setConversationsLoaded] = useState(false);
   const [actionConfirmation, setActionConfirmation] = useState<string | null>(null);
+  const [wapLog, setWapLog] = useState<WAPLogEntry[]>([]);
 
   // ── Call Mode state ────────────────────────────────────────────────────────
   const [callActive, setCallActive] = useState(false);
@@ -529,6 +530,8 @@ export function EralPage() {
 
       if (wap) {
         setTimeout(() => executeWAP(wap, router), 500);
+        logWAPAction(wap);
+        setWapLog(getWAPLog());
         setActionConfirmation(wap.confirmation);
         setTimeout(() => setActionConfirmation(null), 3000);
       }
@@ -707,6 +710,19 @@ export function EralPage() {
                 ))
               )}
             </div>
+
+            {/* WAP Action Log */}
+            {wapLog.length > 0 && (
+              <div className="eral-wap-log">
+                <p className="eral-wap-log-title">Recent actions</p>
+                {wapLog.map(entry => (
+                  <div key={entry.id} className="eral-wap-log-item">
+                    <span className="eral-wap-log-type">{entry.type}</span>
+                    <span className="eral-wap-log-msg">{entry.confirmation}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="eral-sidebar-footer">
               <a

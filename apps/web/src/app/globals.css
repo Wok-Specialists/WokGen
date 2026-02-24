@@ -9048,3 +9048,37 @@ select:focus-visible {
 .prompt-intel-addition-reason {
   color: var(--text-muted);
 }
+
+/* ── Cycle 13: WAP Action Log ──────────────────────────────────────────────── */
+.eral-wap-log {
+  padding: 8px 10px;
+  border-top: 1px solid #252538;
+  margin-top: 8px;
+}
+.eral-wap-log-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-disabled);
+  margin: 0 0 6px;
+}
+.eral-wap-log-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 6px;
+}
+.eral-wap-log-type {
+  font-size: 10px;
+  font-family: monospace;
+  color: var(--accent);
+  font-weight: 600;
+}
+.eral-wap-log-msg {
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
