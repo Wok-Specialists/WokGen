@@ -260,6 +260,7 @@ function AssetModal({
           <img
             src={asset.imageUrl}
             alt={asset.title ?? asset.prompt}
+            loading="lazy"
             className={`community-modal-img${asset.mode === 'pixel' ? ' community-modal-img--pixel' : ''}`}
             style={{ transform: `scale(${zoom})` }}
           />
