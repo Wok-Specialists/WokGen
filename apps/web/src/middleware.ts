@@ -78,7 +78,7 @@ export default auth((req) => {
     `default-src 'self'`,
     `script-src 'self' 'nonce-${nonce}' https://js.stripe.com https://cdn.vercel-insights.com`,
     `style-src 'self' 'unsafe-inline'`,
-    `img-src 'self' data: blob: https: http:`,
+    `img-src 'self' data: blob: https://*.replicate.delivery https://replicate.delivery https://*.fal.run https://*.fal.ai https://storage.googleapis.com https://*.together.xyz https://*.together.ai https://cdn.together.ai https://*.huggingface.co https://cdn-lfs.huggingface.co https://lh3.googleusercontent.com https://avatars.githubusercontent.com`,
     `font-src 'self' data:`,
     `connect-src 'self' https://api.stripe.com https://vitals.vercel-insights.com https://*.upstash.io wss:`,
     `frame-src https://js.stripe.com https://hooks.stripe.com`,
@@ -95,6 +95,7 @@ export default auth((req) => {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   return response;
 });
