@@ -15,7 +15,7 @@ export async function POST() {
     // but we explicitly clean up models with onDelete: SetNull or no cascade.
     await prisma.eralNote.deleteMany({ where: { userId } }).catch(() => {});
     await prisma.eralConversation.deleteMany({ where: { userId } }).catch(() => {});
-    await prisma.galleryAsset.deleteMany({ where: { userId } }).catch(() => {});
+    await prisma.galleryAsset.deleteMany({ where: { job: { userId } } }).catch(() => {});
     await prisma.apiKey.deleteMany({ where: { userId } }).catch(() => {});
     await prisma.userPreference.delete({ where: { userId } }).catch(() => {});
     await prisma.usagePeriod.deleteMany({ where: { userId } }).catch(() => {});

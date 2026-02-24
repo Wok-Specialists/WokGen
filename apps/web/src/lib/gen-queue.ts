@@ -59,7 +59,7 @@ export async function queueGeneration(params: QueueGenerationParams): Promise<vo
   const conn = new IORedis(process.env.REDIS_URL!, { maxRetriesPerRequest: null, lazyConnect: true });
   const q = new Queue('generation', { connection: conn });
   try {
-    await q.add('generate', params, { jobId: params.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 }, timeout: 300_000 });
+    await q.add('generate', params, { jobId: params.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 } });
   } finally {
     await conn.quit();
   }
@@ -106,7 +106,7 @@ export async function enqueueGeneration(data: QueueGenerationParams): Promise<vo
     const IORedis = (await import('ioredis')).default;
     const conn = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true });
     const q = new Queue('generation', { connection: conn });
-    await q.add('generate', data, { jobId: data.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 }, timeout: 300_000 });
+    await q.add('generate', data, { jobId: data.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 } });
     await conn.quit();
   } catch (err) {
     log.error({ err }, '[gen-queue] Failed to enqueue, falling back to sync');

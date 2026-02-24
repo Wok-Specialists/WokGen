@@ -65,7 +65,10 @@ export default auth((req) => {
     pathname.startsWith('/account') ||
     pathname.startsWith('/billing') ||
     pathname.startsWith('/settings') ||
-    pathname.startsWith('/admin');
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/library') ||
+    pathname.startsWith('/projects') ||
+    pathname.startsWith('/dashboard');
 
   if (needsAuth && !session) {
     const loginUrl = new URL('/login', req.url);
@@ -110,6 +113,12 @@ export const config = {
     '/settings',
     '/admin/:path*',
     '/admin',
+    '/library/:path*',
+    '/library',
+    '/projects/:path*',
+    '/projects',
+    '/dashboard/:path*',
+    '/dashboard',
     '/api/:path*',
     '/api/generate/:path*',
     '/api/generate',

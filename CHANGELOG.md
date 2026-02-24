@@ -106,3 +106,33 @@ All notable changes to WokGen are documented in this file.
 - **c37**: Input validation hardening with `input-sanitize.ts`
 - **c38**: Eral docs tutorial page and link from docs hub
 - **c39**: Dockerfile health check fixed to `/api/health`; self-hosted env vars documented
+- **c40**: Final security audit — X-XSS-Protection header added, middleware protected routes expanded to /library, /projects, /dashboard; deployment readiness confirmed
+
+---
+
+## [2.0.0] — 2025 — Feature Summary
+
+### Added
+- WokAPI developer platform with `/developers` page and `@wokspec/sdk` package scaffold
+- 20+ new tools: media downloader, link scraper, shadow generator, UUID generator, SQL formatter, OG analyzer, favicon extractor, website palette, link checker, color converter, password generator, diff tool, cron builder, aspect ratio calculator, font weight tester, gradient animator, icon search, invoice generator, privacy policy generator, MD to HTML, changelog writer, JSON-to-TypeScript
+- Light/dark mode with system preference detection and per-user persistence
+- Eral Notepad — persistent site-wide notes companion
+- Eral 7c memory system — remembers user preferences across sessions
+- Google OAuth sign-in
+- Personal analytics dashboard (`/dashboard/analytics`)
+- Admin platform metrics dashboard (`/admin/metrics`)
+- Asset Library (`/library`) — unified view of all generated assets
+- Projects/Workspaces hub (`/projects`)
+- Account settings page (`/settings`) with OAuth providers, preferences, and account deletion
+- Browser extension v2 — Eral panel, asset harvester, settings page
+- Loading skeleton screens for all tool and studio routes
+- Accessibility improvements: skip-to-content link, 404/error pages, aria labels
+- WokAPI/WokSDK developer branding
+
+### Improved
+- WokGen Studio branding — unified platform with modes (not separate studios)
+- Eral 7c branding throughout
+- Zero-emoji enforcement across all UI surfaces
+- Backend hardening: standardized error responses, rate limiting, provider health tracking
+- Job queue robustness: BullMQ limits, 5-minute timeouts, dead-letter handling
+- ElevenLabs-inspired dark design system
