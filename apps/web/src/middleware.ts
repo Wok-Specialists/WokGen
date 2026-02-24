@@ -64,6 +64,7 @@ export default auth((req) => {
   const needsAuth =
     pathname.startsWith('/account') ||
     pathname.startsWith('/billing') ||
+    pathname.startsWith('/settings') ||
     pathname.startsWith('/admin');
 
   if (needsAuth && !session) {
@@ -105,6 +106,8 @@ export const config = {
     '/studio/:path*',
     '/account/:path*',
     '/billing/:path*',
+    '/settings/:path*',
+    '/settings',
     '/admin/:path*',
     '/admin',
     '/api/:path*',

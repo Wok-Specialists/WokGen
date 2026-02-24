@@ -175,8 +175,14 @@ export function NavAuth() {
           <Link href="/profile" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Profile
           </Link>
+          <Link href="/library" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
+            Asset Library
+          </Link>
           <Link href="/account" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Account
+          </Link>
+          <Link href="/settings" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
+            Settings
           </Link>
           <Link href="/account/usage" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Usage &amp; limits
