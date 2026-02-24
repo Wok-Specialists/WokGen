@@ -473,6 +473,10 @@ model ProjectBrief {
   id          String   @id @default(cuid())
   projectId   String   @unique
 
+  // Free-text project brief for Eral context (Cycle 16)
+  content     String?  @db.Text
+  projectType String?  // platformer | rpg | brand | product | content | app | puzzle | other
+
   // Game project fields
   genre       String?  // dungeon_crawler | platformer | top_down_rpg | city_builder
   artStyle    String?  // nes_16color | snes_32color | gb_monochrome | modern_pixel
