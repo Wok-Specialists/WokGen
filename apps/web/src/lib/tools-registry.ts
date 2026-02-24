@@ -10,6 +10,7 @@ export interface ToolDef {
   icon: string;
   status: 'live' | 'beta' | 'soon';
   clientOnly?: boolean;
+  isNew?: boolean;
 }
 
 export type ToolTag =
@@ -328,5 +329,61 @@ export const TOOLS: ToolDef[] = [
     icon: '📌',
     status: 'live',
     clientOnly: false,
+  },
+  // ── NEW TOOLS ────────────────────────────────────────────────────────────
+  {
+    id: 'color-extractor',
+    label: 'Color Extractor',
+    description: 'Extract a color palette from any image. Runs k-means clustering client-side — no upload.',
+    href: '/tools/color-extractor',
+    tags: ['image', 'design'],
+    icon: '💧',
+    status: 'live',
+    clientOnly: true,
+    isNew: true,
+  },
+  {
+    id: 'type-scale',
+    label: 'Type Scale',
+    description: 'Generate a visual typography scale from a base size and ratio. Export as CSS variables.',
+    href: '/tools/type-scale',
+    tags: ['design', 'dev'],
+    icon: '🔡',
+    status: 'live',
+    clientOnly: true,
+    isNew: true,
+  },
+  {
+    id: 'gradient-generator',
+    label: 'Gradient Generator',
+    description: 'Build CSS gradients (linear, radial, conic) with live preview. Adjust stops and copy CSS.',
+    href: '/tools/gradient-generator',
+    tags: ['design', 'dev'],
+    icon: '🌅',
+    status: 'live',
+    clientOnly: true,
+    isNew: true,
+  },
+  {
+    id: 'border-radius',
+    label: 'Border Radius Visualizer',
+    description: 'Interactive border-radius builder with per-corner sliders. Live preview and copy CSS.',
+    href: '/tools/border-radius',
+    tags: ['design', 'dev'],
+    icon: '⬛',
+    status: 'live',
+    clientOnly: true,
+    isNew: true,
+  },
+  {
+    id: 'image-diff',
+    label: 'Image Diff',
+    description: 'Compare two images side-by-side with an interactive drag slider. Great for before/after.',
+    href: '/tools/image-diff',
+    tags: ['image', 'design'],
+    icon: '🔀',
+    status: 'live',
+    clientOnly: true,
+    isNew: true,
   },
 ];
