@@ -10,8 +10,12 @@ import { Footer } from './_components/Footer';
 import { NavAuth } from './_components/NavAuth';
 import { Providers } from './_components/Providers';
 import { ModeSwitcher } from './_components/ModeSwitcher';
+import { StudiosDropdown } from './_components/StudiosDropdown';
+import { MobileNav } from './_components/MobileNav';
+import { Breadcrumb } from './_components/Breadcrumb';
 import { Toaster } from 'sonner';
 import DonationStrip from '@/components/DonationStrip';
+import { PageLoadingBar } from '@/components/PageLoadingBar';
 
 const EralVoiceButton = nextDynamic(
   () => import('@/components/eral-voice-button').then((m) => ({ default: m.EralVoiceButton })),
@@ -117,9 +121,9 @@ function NavBar() {
         <span style={{ color: '#a78bfa' }}>Gen</span>
       </Link>
 
-      {/* Nav links */}
-        <div className="flex items-center gap-1 flex-1">
-          <NavLink href="/">Studios</NavLink>
+      {/* Nav links — hidden on mobile (MobileNav handles mobile) */}
+        <div className="nav-links-desktop">
+          <StudiosDropdown />
           <NavLink href="/tools">Tools</NavLink>
           <NavLink href="/community">Community</NavLink>
           <NavLink href="/eral">
@@ -144,6 +148,7 @@ function NavBar() {
           </svg>
         </a>
         <NavAuth />
+        <MobileNav />
       </div>
     </nav>
   );
@@ -165,9 +170,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={dmSans.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <PageLoadingBar />
         <Providers>
           <a href="#main-content" className="skip-link">Skip to content</a>
           <NavBar />
+          <Breadcrumb />
           <ModeSwitcher />
           <main id="main-content" style={{ flex: 1 }}>{children}</main>
           <Footer />

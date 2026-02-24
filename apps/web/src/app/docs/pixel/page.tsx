@@ -83,37 +83,16 @@ const TOC = [
   { id: 'export',     label: '7. Export Guide' },
   { id: 'workspace',  label: '8. Workspace & Projects' },
   { id: 'credits',    label: '9. Credits & Limits' },
-  { id: 'faq',        label: '10. FAQ' },
+  { id: 'negative',   label: '10. Negative Prompts' },
+  { id: 'palette-extraction', label: '11. Palette Extraction' },
+  { id: 'batch',      label: '12. Batch Generation' },
+  { id: 'api',        label: '13. API Examples' },
+  { id: 'faq',        label: '14. FAQ' },
 ];
 
 export default function PixelDocs() {
   return (
-    <div className="docs-page">
-      <div className="docs-page-inner">
-
-        {/* ---------------------------------------------------------------- */}
-        {/* Sidebar TOC                                                       */}
-        {/* ---------------------------------------------------------------- */}
-        <aside className="docs-sidebar">
-          <Link href="/docs" className="docs-back">← Docs Hub</Link>
-          <div className="docs-sidebar-mode">
-            
-            <span>WokGen Pixel</span>
-          </div>
-          <nav className="docs-toc">
-            {TOC.map(t => (
-              <a key={t.id} href={`#${t.id}`} className="docs-toc-link">{t.label}</a>
-            ))}
-          </nav>
-          <div className="docs-sidebar-links">
-            <Link href="/pixel/studio" className="btn-primary btn-sm">Open Pixel Studio</Link>
-          </div>
-        </aside>
-
-        {/* ---------------------------------------------------------------- */}
-        {/* Content                                                           */}
-        {/* ---------------------------------------------------------------- */}
-        <main className="docs-content">
+    <main className="docs-main">
 
           <div className="docs-content-header">
             <div className="landing-badge">
@@ -1247,9 +1226,210 @@ wokgen-animate-warrior-idle-walk-cycle-58321.gif`}</Pre>
           </Callout>
 
           {/* ============================================================== */}
-          {/* 10. FAQ                                                          */}
+          {/* 10. NEGATIVE PROMPTS                                             */}
           {/* ============================================================== */}
-          <H2 id="faq">10. FAQ</H2>
+          <H2 id="negative">10. Negative Prompts</H2>
+
+          <P>
+            A negative prompt is a list of terms that tell the model what to <em>exclude</em>{' '}
+            from the generated image. Enter negative prompts in the <strong>Negative</strong>{' '}
+            field in the Advanced panel. Use comma-separated terms.
+          </P>
+          <P>
+            Negative prompts are most effective at excluding global visual properties —
+            colour bleed, blurriness, multiple objects, watermarks — rather than highly
+            specific compositional details.
+          </P>
+
+          <H3>Common negative prompts for pixel art</H3>
+          <div className="docs-table-wrap">
+            <table className="docs-table">
+              <thead>
+                <tr><th>Term</th><th>What it prevents</th></tr>
+              </thead>
+              <tbody>
+                {[
+                  ['blurry, soft, low detail', 'Anti-aliased or blurry output (common at 16 px)'],
+                  ['multiple items, duplicates', 'More than one object in the frame'],
+                  ['background, floor, shadow', 'Background fill when you want a transparent result'],
+                  ['text, watermark, signature', 'Embedded text or watermark artefacts'],
+                  ['3d, realistic, photographic', 'Non-pixel-art rendering styles leaking in'],
+                  ['washed out, desaturated', 'Pale, low-saturation colour output'],
+                  ['asymmetric, unbalanced', 'Enforce approximate left-right symmetry for icons'],
+                  ['extra limbs, deformed', 'Anatomical errors on character sprites'],
+                ].map(([term, desc]) => (
+                  <tr key={term}>
+                    <td><Code>{term}</Code></td>
+                    <td>{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Callout type="tip">
+            Start with an empty negative prompt — the model often produces clean output
+            without one. Only add negatives when you see a recurring artefact in multiple
+            generations with the same prompt.
+          </Callout>
+
+          {/* ============================================================== */}
+          {/* 11. PALETTE EXTRACTION                                           */}
+          {/* ============================================================== */}
+          <H2 id="palette-extraction">11. Color Palette Extraction</H2>
+
+          <P>
+            After generating a sprite you can extract its exact colour palette directly from
+            the studio — no external tool needed. This is useful for maintaining colour
+            consistency across a full asset set.
+          </P>
+
+          <H3>How to extract a palette</H3>
+          <OL>
+            <LI>Generate or open an image in the studio</LI>
+            <LI>Click the <strong>Palette</strong> button in the result card toolbar</LI>
+            <LI>The panel shows every unique colour in the sprite with its hex code</LI>
+            <LI>Click any swatch to copy the hex code</LI>
+            <LI>Click <strong>Copy All</strong> to copy all swatches as a JSON array</LI>
+            <LI>Click <strong>Save as Palette</strong> to store it in your workspace for reuse</LI>
+          </OL>
+
+          <H3>Using a saved palette in future generations</H3>
+          <P>
+            Open the Advanced panel → Palette field → select a saved palette. The model will
+            constrain its colour choices to that palette. This is the primary mechanism for
+            visual consistency across a game&apos;s entire art set.
+          </P>
+
+          <Callout type="info">
+            Palette constraint is advisory, not absolute — the model will honour the palette
+            but may add 1–2 accent colours in some cases. For strict palette adherence,
+            switch to HD quality which uses a model with stronger instruction following.
+          </Callout>
+
+          {/* ============================================================== */}
+          {/* 12. BATCH GENERATION                                             */}
+          {/* ============================================================== */}
+          <H2 id="batch">12. Batch Generation</H2>
+
+          <P>
+            Batch mode lets you generate multiple variations of the same prompt in a single
+            action — or run a list of different prompts back-to-back.
+          </P>
+
+          <H3>Variation batch (same prompt)</H3>
+          <P>
+            In the Sprite tool, set the <strong>Batch count</strong> slider (1–8) in the
+            Advanced panel. All variations run in parallel and appear in the result grid.
+            Useful for picking the best result without regenerating manually.
+          </P>
+
+          <H3>Multi-prompt batch via Eral</H3>
+          <P>Use the WAP command in the Eral chat panel:</P>
+          <Pre>{`/batch Viking warrior sprite, front view ×6`}</Pre>
+          <P>
+            Or for different prompts, use <Code>/batch csv</Code> and upload a CSV with
+            one prompt per row. Optional columns: <Code>style</Code>, <Code>width</Code>,
+            <Code>height</Code>, <Code>negative</Code>.
+          </P>
+          <Pre>{`prompt,style,width,height
+fire sword,rpg_icon,32,32
+ice staff,rpg_icon,32,32
+lightning bow,rpg_icon,32,32
+poison dagger,rpg_icon,32,32`}</Pre>
+
+          <H3>Spritesheet output</H3>
+          <P>
+            After a batch completes, click <strong>Export Spritesheet</strong> in the batch
+            results panel. WokGen packs all generated sprites into a single PNG spritesheet
+            with a JSON metadata file describing each frame&apos;s position and dimensions.
+          </P>
+
+          <Callout type="warn">
+            Each item in a batch counts as one generation. A batch count of 4 on an HD
+            generation uses 4 HD credits.
+          </Callout>
+
+          {/* ============================================================== */}
+          {/* 13. API EXAMPLES                                                 */}
+          {/* ============================================================== */}
+          <H2 id="api">13. API Examples</H2>
+
+          <P>
+            WokGen Pixel is fully accessible via the REST API. Authenticate with a Bearer
+            token from <strong>Settings → API Keys</strong>.
+          </P>
+
+          <H3>Generate a sprite — curl</H3>
+          <Pre>{`curl -X POST https://wokgen.io/api/generate \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "mode": "pixel",
+    "prompt": "RPG warrior character sprite",
+    "preset": "rpg_character",
+    "width": 64,
+    "height": 64,
+    "quality": "standard"
+  }'`}</Pre>
+
+          <H3>Generate a sprite — JavaScript (fetch)</H3>
+          <Pre>{`const response = await fetch('https://wokgen.io/api/generate', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    mode: 'pixel',
+    prompt: 'RPG warrior character sprite',
+    preset: 'rpg_character',
+    width: 64,
+    height: 64,
+    quality: 'standard',
+  }),
+});
+
+const data = await response.json();
+// data.url — CDN URL of the generated PNG
+// data.seed — seed for reproducibility
+console.log(data.url);`}</Pre>
+
+          <H3>Generate with negative prompt</H3>
+          <Pre>{`{
+  "mode": "pixel",
+  "prompt": "forest tileset, mossy stones",
+  "preset": "tileset_nature",
+  "width": 16,
+  "height": 16,
+  "negative": "blurry, background, text, watermark",
+  "quality": "standard"
+}`}</Pre>
+
+          <H3>Batch via API</H3>
+          <Pre>{`{
+  "mode": "pixel",
+  "prompt": "fire sword icon",
+  "preset": "rpg_icon",
+  "width": 32,
+  "height": 32,
+  "batch": 4,
+  "quality": "standard"
+}`}</Pre>
+          <P>
+            Batch responses return an array of generation objects under <Code>results[]</Code>.
+            Each has its own <Code>url</Code> and <Code>seed</Code>.
+          </P>
+
+          <Callout type="info">
+            See the full <Link href="/docs/api">API Reference</Link> for all parameters,
+            error codes, and the spritesheet assembly endpoint.
+          </Callout>
+
+          {/* ============================================================== */}
+          {/* 14. FAQ (renumbered)                                             */}
+          {/* ============================================================== */}
+          <H2 id="faq">14. FAQ</H2>
 
           {[
             {
@@ -1312,8 +1492,6 @@ wokgen-animate-warrior-idle-walk-cycle-58321.gif`}</Pre>
             <Link href="/docs/platform" className="btn-ghost btn-sm">Platform Docs →</Link>
           </div>
 
-        </main>
-      </div>
-    </div>
+    </main>
   );
 }

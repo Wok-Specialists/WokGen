@@ -27,6 +27,11 @@ const TONE_OPTIONS = [
 
 const PRESET_PERSONAS: Persona[][] = [
   [
+    { id: '1', name: 'Creative Director', personality: 'Visionary lead who sets the creative direction with bold, decisive choices', role: 'Creative Director' },
+    { id: '2', name: 'Art Director',      personality: 'Visual craftsperson obsessed with aesthetics, composition, and color theory', role: 'Art Director' },
+    { id: '3', name: 'Game Designer',     personality: 'Systems thinker focused on player experience, mechanics, and fun loops', role: 'Game Designer' },
+  ],
+  [
     { id: '1', name: 'Alex',   personality: 'Sarcastic tech bro who thinks they know everything', role: '' },
     { id: '2', name: 'Maya',   personality: 'Sharp-tongued designer who hates bad UX', role: '' },
     { id: '3', name: 'Jordan', personality: 'Overly optimistic startup founder on their third pivot', role: '' },
@@ -109,8 +114,9 @@ function PersonaRow({
 export default function SimulateClient() {
   const router = typeof window !== 'undefined' ? null : null; // use window.location for voice routing
   const [personas, setPersonas]   = useState<Persona[]>([
-    { id: uid(), name: 'Alex',   personality: 'Sarcastic tech bro who thinks they know everything', role: '' },
-    { id: uid(), name: 'Maya',   personality: 'Sharp-tongued designer who hates bad UX', role: '' },
+    { id: uid(), name: 'Creative Director', personality: 'Visionary lead who sets the creative direction with bold, decisive choices', role: 'Creative Director' },
+    { id: uid(), name: 'Art Director',      personality: 'Visual craftsperson obsessed with aesthetics, composition, and color theory', role: 'Art Director' },
+    { id: uid(), name: 'Game Designer',     personality: 'Systems thinker focused on player experience, mechanics, and fun loops', role: 'Game Designer' },
   ]);
   const [topic, setTopic]         = useState('');
   const [tone, setTone]           = useState('roast');
@@ -404,19 +410,36 @@ export default function SimulateClient() {
           )}
 
           <div className="simulate-feed__messages">
-            {transcript.map((t, i) => (
-              <div
-                key={i}
-                className="simulate-message"
-                style={{ '--agent-color': colorFor(t.agent) } as React.CSSProperties}
-              >
-                <div className="simulate-message__header">
-                  <span className="simulate-message__agent">{t.agent}</span>
-                  <span className="simulate-message__turn">Turn {t.turn}</span>
+            {transcript.map((t, i) => {
+              const personaIdx = personas.findIndex(p => p.name === t.agent);
+              const persona = personaIdx >= 0 ? personas[personaIdx] : null;
+              return (
+                <div
+                  key={i}
+                  className="simulate-message"
+                  style={{ '--agent-color': colorFor(t.agent) } as React.CSSProperties}
+                >
+                  <div className="simulate-message__header">
+                    <div className="simulate-message__agent-info">
+                      <span
+                        className="simulate-message__avatar"
+                        style={{ background: colorFor(t.agent) }}
+                      >
+                        {t.agent.slice(0, 2).toUpperCase()}
+                      </span>
+                      <div>
+                        <span className="simulate-message__agent">{t.agent}</span>
+                        {persona?.role && (
+                          <span className="simulate-message__role">{persona.role}</span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="simulate-message__turn">Turn {t.turn}</span>
+                  </div>
+                  <p className="simulate-message__body">{t.message}</p>
                 </div>
-                <p className="simulate-message__body">{t.message}</p>
-              </div>
-            ))}
+              );
+            })}
 
             {running && (
               <div className="simulate-message simulate-message--typing">

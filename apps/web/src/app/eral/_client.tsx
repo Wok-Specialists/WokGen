@@ -68,6 +68,7 @@ interface Message {
   durationMs?: number;
   wap?: WAPResponse | null;
   createdAt: number;
+  directorMode?: boolean;
 }
 
 interface Conversation {
@@ -76,6 +77,19 @@ interface Conversation {
   messages: Message[];
   createdAt: number;
   updatedAt: number;
+}
+
+interface PlanItem {
+  id: string;
+  week: string;
+  items: { text: string; studio: string }[];
+}
+
+interface EralMemory {
+  style?: string;
+  project?: string;
+  palette?: string;
+  mostUsed?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -101,6 +115,15 @@ const SUGGESTED_PROMPTS: { text: string }[] = [
 ];
 
 const LS_KEY = 'eral_conversations';
+const MEMORY_KEY = 'wokgen:eral_memory';
+
+const DIRECTOR_SYSTEM_PROMPT = `You are in Director Mode. Structure your response as:
+1. Your creative direction and answer
+2. A structured asset checklist organized by Week (format: **Week 1: Phase Name**)
+3. For each item, specify which WokGen studio in parentheses: (Studio: Pixel Studio), (Studio: Business Studio), etc.
+Available studios: Pixel Studio, Business Studio, Voice Studio, Logo Studio, Whiteboard.
+
+`;
 
 // ---------------------------------------------------------------------------
 // localStorage helpers
@@ -119,6 +142,57 @@ function saveConversations(convs: Conversation[]): void {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(convs));
   } catch {}
+}
+
+function loadMemory(): EralMemory {
+  try {
+    const raw = localStorage.getItem(MEMORY_KEY);
+    return raw ? (JSON.parse(raw) as EralMemory) : {};
+  } catch { return {}; }
+}
+
+function saveMemory(mem: EralMemory): void {
+  try { localStorage.setItem(MEMORY_KEY, JSON.stringify(mem)); } catch {}
+}
+
+function updateMemoryFromContent(content: string, prev: EralMemory): EralMemory {
+  const updated = { ...prev };
+  const styleMatch = content.match(/\b(dark fantasy|cyberpunk|pixel art|minimalist|retro|anime|synthwave|vaporwave|gothic|neon)\b/i);
+  if (styleMatch) updated.style = styleMatch[1];
+  const colorMatch = content.match(/\b(dark purples? and greens?|neon blues? and pinks?|warm earth tones?|muted pastels?|bold primaries?)\b/i);
+  if (colorMatch) updated.palette = colorMatch[1];
+  const projectMatch = content.match(/project\s+(?:called|named|titled)\s+["']?([A-Z][a-zA-Z0-9 ]+)["']?/i);
+  if (projectMatch) updated.project = projectMatch[1].trim();
+  return updated;
+}
+
+function parsePlanItems(content: string): PlanItem[] {
+  const items: PlanItem[] = [];
+  const lines = content.split('\n');
+  let current: PlanItem | null = null;
+  for (const line of lines) {
+    const weekMatch = line.match(/^\*{0,2}((?:week|phase)\s+\d+)[:\s]+([^\n*]+?)\*{0,2}$/i);
+    if (weekMatch) {
+      if (current) items.push(current);
+      current = { id: `plan-${Date.now()}-${Math.random().toString(36).slice(2)}`, week: `${weekMatch[1]}: ${weekMatch[2].trim()}`, items: [] };
+    } else if (current && /^\s*[-*]\s+/.test(line)) {
+      const text = line.trim().replace(/^[-*]\s+/, '');
+      const studioMatch = text.match(/\(Studio:\s*([^)]+)\)/i) || text.match(/→\s*(.+)$/);
+      current.items.push({ text: text.replace(/\s*\(Studio:[^)]+\)/gi, '').replace(/\s*→.*$/, '').trim(), studio: studioMatch ? studioMatch[1].trim() : '' });
+    }
+  }
+  if (current) items.push(current);
+  return items;
+}
+
+function studioHref(studio: string): string {
+  const lower = studio.toLowerCase();
+  if (lower.includes('pixel')) return '/studio/pixel';
+  if (lower.includes('business')) return '/studio/business';
+  if (lower.includes('voice')) return '/voice/studio';
+  if (lower.includes('logo')) return '/studio/logo';
+  if (lower.includes('whiteboard')) return '/tools/whiteboard';
+  return '/studio';
 }
 
 function newConversation(): Conversation {
@@ -315,6 +389,9 @@ function MessageBubble({
         </div>
         {!isUser && !isStreaming && (
           <div className="eral-bubble-meta">
+            {msg.directorMode && (
+              <span className="eral-v2-director-badge">✦</span>
+            )}
             {msg.modelUsed && (
               <span className="eral-model-tag">{msg.modelUsed.split('/').pop()}</span>
             )}
@@ -413,6 +490,15 @@ export function EralPage() {
   const [wapLog, setWapLog] = useState<WAPLogEntry[]>([]);
   const [dismissedSuggestions, setDismissedSuggestions] = useState<Set<string>>(new Set());
 
+  // ── Director Mode & Panel ──────────────────────────────────────────────────
+  const [directorMode, setDirectorMode] = useState(false);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
+  const [currentPlan, setCurrentPlan] = useState<PlanItem[]>([]);
+  const [memory, setMemory] = useState<EralMemory>({});
+  const [planModalOpen, setPlanModalOpen] = useState(false);
+  const [planForm, setPlanForm] = useState<{ name: string; type: string; description: string }>({ name: '', type: 'Game', description: '' });
+  const [sessionMsgCount, setSessionMsgCount] = useState(0);
+
   // ── Call Mode state ────────────────────────────────────────────────────────
   const [callActive, setCallActive] = useState(false);
   const [callState, setCallState] = useState<'idle' | 'listening' | 'processing' | 'speaking'>('idle');
@@ -438,6 +524,7 @@ export function EralPage() {
       setActiveId(conv.id);
     }
     setConversationsLoaded(true);
+    setMemory(loadMemory());
   }, []);
 
   // Persist to localStorage whenever conversations change
@@ -535,7 +622,7 @@ export function EralPage() {
         headers: { 'Content-Type': 'application/json' },
         signal: abort.signal,
         body: JSON.stringify({
-          message: text.trim(),
+          message: directorMode ? DIRECTOR_SYSTEM_PROMPT + text.trim() : text.trim(),
           conversationId: undefined, // use local-only for now
           modelVariant: model,
           stream: true,
@@ -581,6 +668,22 @@ export function EralPage() {
       // Parse WAP from collected content
       const { cleanReply, wap } = parseWAPFromResponse(fullContent);
 
+      // Update memory from response content
+      const newMemory = updateMemoryFromContent(cleanReply, memory);
+      if (JSON.stringify(newMemory) !== JSON.stringify(memory)) {
+        saveMemory(newMemory);
+        setMemory(newMemory);
+      }
+
+      // Parse plan items if response contains structured plan
+      const planItems = parsePlanItems(fullContent);
+      if (planItems.length > 0) {
+        setCurrentPlan(planItems);
+        setRightPanelOpen(true);
+      }
+
+      setSessionMsgCount((n) => n + 1);
+
       const assistantMsg: Message = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
@@ -589,6 +692,7 @@ export function EralPage() {
         durationMs,
         wap,
         createdAt: Date.now(),
+        directorMode,
       };
 
       updateConv(currentConvId, (c) => {
@@ -630,7 +734,7 @@ export function EralPage() {
       abortRef.current = null;
       inputRef.current?.focus();
     }
-  }, [loading, activeId, model, updateConv]);
+  }, [loading, activeId, model, updateConv, directorMode, memory]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -742,9 +846,9 @@ export function EralPage() {
     : null;
 
   return (
-    <div className="eral-root">
+    <div className="eral-root eral-v2-layout">
       {/* ── Sidebar ─────────────────────────────────────────────────── */}
-      <aside className={`eral-sidebar ${sidebarOpen ? 'eral-sidebar-open' : 'eral-sidebar-closed'}`}>
+      <aside className={`eral-sidebar eral-v2-sidebar ${sidebarOpen ? 'eral-sidebar-open' : 'eral-sidebar-closed'}`}>
         <div className="eral-sidebar-header">
           <div className="eral-brand">
             <span className="eral-brand-name">Eral</span>
@@ -765,6 +869,45 @@ export function EralPage() {
             <button className="eral-new-chat-btn" onClick={createNewConv}>
               <span>+</span> New chat
             </button>
+
+            {/* Memory Panel */}
+            <div className="eral-v2-memory-panel">
+              <p className="eral-v2-memory-panel__title">🧠 Memory</p>
+              {memory.style && (
+                <div className="eral-v2-memory-item">
+                  <span className="eral-v2-memory-item__label">Style</span>
+                  <span className="eral-v2-memory-item__value">{memory.style}</span>
+                </div>
+              )}
+              {memory.project && (
+                <div className="eral-v2-memory-item">
+                  <span className="eral-v2-memory-item__label">Project</span>
+                  <span className="eral-v2-memory-item__value">{memory.project}</span>
+                </div>
+              )}
+              {memory.palette && (
+                <div className="eral-v2-memory-item">
+                  <span className="eral-v2-memory-item__label">Palette</span>
+                  <span className="eral-v2-memory-item__value">{memory.palette}</span>
+                </div>
+              )}
+              {!memory.style && !memory.project && !memory.palette && (
+                <p className="eral-v2-memory-panel__empty">Chat with Eral to build memory…</p>
+              )}
+            </div>
+
+            {/* Quick actions */}
+            <div className="eral-v2-quick-actions">
+              <button className="eral-v2-quick-btn" onClick={() => setPlanModalOpen(true)}>
+                ✦ Plan Project
+              </button>
+              <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/studio'; }}>
+                ⚡ Generate Assets
+              </button>
+              <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/eral/simulate'; }}>
+                🎭 Simulate
+              </button>
+            </div>
 
             <div className="eral-conv-list">
               {!conversationsLoaded ? (
@@ -877,6 +1020,25 @@ export function EralPage() {
 
           <div style={{ flex: 1 }} />
 
+          {/* Director Mode toggle */}
+          <button
+            className={`eral-v2-director-toggle${directorMode ? ' eral-v2-director-toggle--on' : ''}`}
+            onClick={() => setDirectorMode((v) => !v)}
+            title={directorMode ? 'Director Mode ON — click to disable' : 'Enable Director Mode'}
+          >
+            {directorMode ? '✦ Director ON' : '✦ Director'}
+          </button>
+
+          {!rightPanelOpen && (
+            <button
+              className="eral-v2-panel-open-btn"
+              onClick={() => setRightPanelOpen(true)}
+              title="Open Director Panel"
+            >
+              Panel ›
+            </button>
+          )}
+
           {/* Share (future) */}
           <button className="eral-share-btn" disabled title="Share (coming soon)">
             Share
@@ -972,7 +1134,7 @@ export function EralPage() {
 
         {/* Input area */}
         <div className="eral-input-area">
-          <div className="eral-input-box">
+          <div className={`eral-input-box${directorMode ? ' eral-input-box--director' : ''}`}>
             <textarea
               ref={inputRef}
               className="eral-textarea"
@@ -999,10 +1161,149 @@ export function EralPage() {
             )}
           </div>
           <p className="eral-input-hint">
-            Enter to send · Shift+Enter for newline · ⌘K new chat · Eral can make mistakes
+            {directorMode
+              ? '✦ Director Mode active · Enter to send · Shift+Enter for newline · ⌘K new chat'
+              : 'Enter to send · Shift+Enter for newline · ⌘K new chat · Eral can make mistakes'}
           </p>
         </div>
       </div>
+
+      {/* ── Right Director Panel ────────────────────────────────────── */}
+      {rightPanelOpen && (
+        <aside className="eral-v2-plan-panel">
+          <div className="eral-v2-plan-panel__header">
+            <span className="eral-v2-plan-panel__title">✦ Director Panel</span>
+            <button
+              className="eral-v2-plan-panel__close"
+              onClick={() => setRightPanelOpen(false)}
+              title="Close panel"
+            >×</button>
+          </div>
+
+          {/* Current Plan */}
+          <div className="eral-v2-plan-panel__section">
+            <p className="eral-v2-plan-panel__section-title">Current Plan</p>
+            {currentPlan.length === 0 ? (
+              <p className="eral-v2-plan-panel__empty">No plan yet. Click <strong>✦ Plan Project</strong> to create one.</p>
+            ) : (
+              <div className="eral-v2-plan-items">
+                {currentPlan.map((phase) => (
+                  <div key={phase.id} className="eral-v2-plan-item">
+                    <p className="eral-v2-plan-item__week">{phase.week}</p>
+                    {phase.items.map((item, i) => (
+                      <div key={i} className="eral-v2-plan-item__row">
+                        <span className="eral-v2-plan-item__text">{item.text}</span>
+                        {item.studio && (
+                          <a href={studioHref(item.studio)} className="eral-v2-plan-item__gen">Generate →</a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Studio Suggestions */}
+          <div className="eral-v2-plan-panel__section">
+            <p className="eral-v2-plan-panel__section-title">Studios</p>
+            <div className="eral-v2-panel-suggestions">
+              <a href="/studio/pixel" className="eral-v2-panel-suggestion-btn">Pixel Studio</a>
+              <a href="/studio/business" className="eral-v2-panel-suggestion-btn">Business Studio</a>
+              <a href="/voice/studio" className="eral-v2-panel-suggestion-btn">Voice Studio</a>
+              <a href="/tools" className="eral-v2-panel-suggestion-btn">All Tools</a>
+            </div>
+          </div>
+
+          {/* Session Stats */}
+          <div className="eral-v2-plan-panel__section">
+            <p className="eral-v2-plan-panel__section-title">Session Stats</p>
+            <div className="eral-v2-session-stats">
+              <div className="eral-v2-stat">
+                <span className="eral-v2-stat__value">{sessionMsgCount}</span>
+                <span className="eral-v2-stat__label">Messages</span>
+              </div>
+              <div className="eral-v2-stat">
+                <span className="eral-v2-stat__value">{currentPlan.reduce((acc, p) => acc + p.items.length, 0)}</span>
+                <span className="eral-v2-stat__label">Assets planned</span>
+              </div>
+              <div className="eral-v2-stat">
+                <span className="eral-v2-stat__value">{conversations.length}</span>
+                <span className="eral-v2-stat__label">Conversations</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      )}
+
+      {/* ── Plan Project Modal ──────────────────────────────────────── */}
+      {planModalOpen && (
+        <div className="eral-v2-plan-modal-overlay" onClick={() => setPlanModalOpen(false)}>
+          <div className="eral-v2-plan-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="eral-v2-plan-modal__header">
+              <h2 className="eral-v2-plan-modal__title">✦ Plan Project</h2>
+              <button className="eral-v2-plan-modal__close" onClick={() => setPlanModalOpen(false)}>×</button>
+            </div>
+            <div className="eral-v2-plan-modal__body">
+              <div className="eral-v2-plan-modal__field">
+                <label className="eral-v2-plan-modal__label">Project Name</label>
+                <input
+                  className="eral-v2-plan-modal__input"
+                  placeholder="e.g. Dungeon Crawler"
+                  value={planForm.name}
+                  onChange={(e) => setPlanForm((f) => ({ ...f, name: e.target.value }))}
+                />
+              </div>
+              <div className="eral-v2-plan-modal__field">
+                <label className="eral-v2-plan-modal__label">Project Type</label>
+                <div className="eral-v2-plan-modal__type-grid">
+                  {['Game', 'Brand', 'Website', 'App'].map((type) => (
+                    <button
+                      key={type}
+                      className={`eral-v2-plan-modal__type-btn${planForm.type === type ? ' eral-v2-plan-modal__type-btn--active' : ''}`}
+                      onClick={() => setPlanForm((f) => ({ ...f, type }))}
+                    >{type}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="eral-v2-plan-modal__field">
+                <label className="eral-v2-plan-modal__label">Describe your project (1–2 sentences)</label>
+                <textarea
+                  className="eral-v2-plan-modal__textarea"
+                  placeholder="e.g. A top-down dungeon crawler with dark fantasy aesthetics and pixel art visuals…"
+                  value={planForm.description}
+                  onChange={(e) => setPlanForm((f) => ({ ...f, description: e.target.value }))}
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="eral-v2-plan-modal__footer">
+              <button className="eral-v2-plan-modal__cancel" onClick={() => setPlanModalOpen(false)}>Cancel</button>
+              <button
+                className="eral-v2-plan-modal__submit"
+                disabled={!planForm.name.trim() || !planForm.description.trim()}
+                onClick={() => {
+                  const prompt = `Create a complete asset creation plan for my ${planForm.type} project called "${planForm.name}".
+
+Project description: ${planForm.description}
+
+Please provide a week-by-week asset checklist using this exact format:
+**Week 1: [Phase Name]**
+- Asset item (Studio: Pixel Studio)
+- Asset item (Studio: Business Studio)
+
+Use these WokGen studios: Pixel Studio (sprites/pixel art/icons), Business Studio (branding/UI/marketing), Voice Studio (audio/narration/SFX), Logo Studio (logos/wordmarks), Whiteboard (planning/wireframes).`;
+                  setPlanModalOpen(false);
+                  setRightPanelOpen(true);
+                  sendMessage(prompt);
+                }}
+              >
+                ✦ Generate Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Call Mode overlay ──────────────────────────────────────── */}
       {callActive && (
@@ -1166,7 +1467,7 @@ export function EralPage() {
           overflow: hidden;
           flex-shrink: 0;
         }
-        .eral-sidebar-open  { width: 220px; }
+        .eral-sidebar-open  { width: 260px; }
         .eral-sidebar-closed { width: 44px; }
 
         .eral-sidebar-header {
@@ -1698,6 +1999,15 @@ export function EralPage() {
         }
         .eral-stop-btn:hover { background: rgba(239,68,68,0.25) !important; }
 
+        .eral-input-box--director {
+          border-color: rgba(234,179,8,0.3);
+          box-shadow: 0 0 0 3px rgba(234,179,8,0.05);
+        }
+        .eral-input-box--director:focus-within {
+          border-color: rgba(234,179,8,0.5);
+          box-shadow: 0 0 0 3px rgba(234,179,8,0.1);
+        }
+
         .eral-input-hint {
           margin: 6px 0 0;
           font-size: 10px;
@@ -1819,7 +2129,11 @@ export function EralPage() {
         /* Mobile */
         @media (max-width: 640px) {
           .eral-sidebar-open { width: 100%; position: absolute; top: 0; left: 0; bottom: 0; z-index: 40; }
+          .eral-v2-plan-panel { display: none; }
           .eral-msg-row { max-width: 100%; }
+        }
+        @media (max-width: 900px) {
+          .eral-v2-plan-panel { width: 220px; }
         }
       `}</style>
     </div>

@@ -21,6 +21,9 @@ import { ColorPalette } from '@/components/color-palette';
 import { StudioResult } from '@/components/StudioResult';
 import PromptIntelligenceBar from '@/app/_components/PromptIntelligenceBar';
 import SfxBrowser from '@/components/sfx-browser';
+import { CanvasPresets } from '@/components/studio/CanvasPresets';
+import { StylePresetGrid } from '@/components/studio/StylePresetGrid';
+import { GenerationHistory, type GenHistoryEntry } from '@/components/studio/GenerationHistory';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -3028,6 +3031,39 @@ function StudioInner() {
     setShowHistory(false);
   }, []);
 
+  // ── Gen history thumbnail strip select ─────────────────────────────────────
+  const handleGenHistorySelect = useCallback((entry: GenHistoryEntry) => {
+    setPrompt(entry.prompt);
+    setResult({
+      jobId:      entry.id,
+      resultUrl:  entry.url,
+      resultUrls: null,
+    });
+    setJobStatus('succeeded');
+    setSavedToGallery(false);
+    setBgDisplayUrl(null);
+  }, []);
+
+  // ── Copy prompt ────────────────────────────────────────────────────────────
+  const handleCopyPrompt = useCallback(async () => {
+    if (!prompt.trim()) return;
+    try {
+      await navigator.clipboard.writeText(prompt.trim());
+      toastSuccess('Prompt copied!');
+    } catch {
+      toastError('Clipboard not supported');
+    }
+  }, [prompt, toastSuccess, toastError]);
+
+  // ── Generate variation ─────────────────────────────────────────────────────
+  const handleGenerateVariation = useCallback(() => {
+    setSeed(String(randomSeed()));
+    setTimeout(() => {
+      const btn = document.querySelector<HTMLButtonElement>('[data-generate-btn]');
+      btn?.click();
+    }, 50);
+  }, []);
+
   // ── Save settings ──────────────────────────────────────────────────────────
   const handleSaveSettings = useCallback(
     (keys: Record<Provider, string>, host: string) => {
@@ -3160,19 +3196,31 @@ function StudioInner() {
       >
         {/* Panel header */}
         <div
-          className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+          className="pixel-studio-panel-header"
           style={{ borderBottom: '1px solid var(--surface-border)' }}
         >
-          <div className="flex items-center gap-2">
-            <span style={{ fontSize: 16, color: 'var(--accent)' }}>
-              {TOOLS.find((t) => t.id === activeTool)?.icon}
-            </span>
+          <div className="pixel-studio-panel-header__title">
+            <span style={{ fontSize: 16, color: 'var(--accent)' }}>✦</span>
             <h1 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-              {TOOLS.find((t) => t.id === activeTool)?.label}
+              Pixel Studio
             </h1>
           </div>
-          <ProviderBadge provider={provider} />
-          <QuotaBadge />
+          <div className="pixel-studio-panel-header__actions">
+            <ProviderBadge provider={provider} />
+            <QuotaBadge />
+            <button
+              type="button"
+              className="pixel-studio-eral-btn"
+              title="Toggle Eral AI assistant"
+              aria-label="Toggle Eral AI"
+              onClick={() => {
+                const btn = document.querySelector<HTMLButtonElement>('.esb-toggle-btn');
+                btn?.click();
+              }}
+            >
+              Eral
+            </button>
+          </div>
         </div>
 
         {/* Workspace selector */}
@@ -3181,6 +3229,20 @@ function StudioInner() {
             mode="pixel"
             activeWorkspaceId={activeWorkspaceId}
             onChange={setActiveWorkspaceId}
+          />
+        </div>
+
+        {/* Canvas Presets accordion */}
+        <div className="flex-shrink-0" style={{ borderBottom: '1px solid var(--surface-border)' }}>
+          <CanvasPresets currentSize={size} onSelect={setSize} />
+        </div>
+
+        {/* Style Preset quick-pick grid */}
+        <div className="flex-shrink-0 px-4 py-3" style={{ borderBottom: '1px solid var(--surface-border)' }}>
+          <p className="pixel-studio-section-label">Style Presets</p>
+          <StylePresetGrid
+            value={stylePreset}
+            onChange={(id) => handlePresetSelect(id as StylePreset)}
           />
         </div>
 
@@ -3602,6 +3664,17 @@ function StudioInner() {
 
       {/* ── Right: output canvas + history overlay ────────────────────────── */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
+        {/* Generation history strip */}
+        <GenerationHistory
+          latestResult={
+            result?.resultUrl
+              ? { id: result.jobId, url: result.resultUrl, prompt }
+              : null
+          }
+          currentResultId={result?.jobId ?? null}
+          onSelect={handleGenHistorySelect}
+        />
+
         <OutputPanel
           status={jobStatus}
           result={result}
@@ -3640,6 +3713,48 @@ function StudioInner() {
             }
           }}
         />
+
+        {/* Post-generation actions bar */}
+        {jobStatus === 'succeeded' && result?.resultUrl && (() => {
+          const resultUrl = result.resultUrl!;
+          return (
+            <div className="pixel-studio-actions-bar">
+              <button
+                type="button"
+                className="pixel-studio-action-btn"
+                onClick={handleDownload}
+                title="Download PNG"
+              >
+                ↓ Download PNG
+              </button>
+              <Link
+                href={`/tools/pixel-editor?imageUrl=${encodeURIComponent(bgDisplayUrl ?? resultUrl)}`}
+                className="pixel-studio-action-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open in Pixel Editor"
+              >
+                ✏️ Edit in Pixel Editor
+              </Link>
+              <button
+                type="button"
+                className="pixel-studio-action-btn"
+                onClick={handleCopyPrompt}
+                title="Copy prompt to clipboard"
+              >
+                ⎘ Copy Prompt
+              </button>
+              <button
+                type="button"
+                className="pixel-studio-action-btn"
+                onClick={handleGenerateVariation}
+                title="Generate a variation with a new seed"
+              >
+                🔀 Variation
+              </button>
+            </div>
+          );
+        })()}
 
         {/* History drawer overlay */}
         {showHistory && (
