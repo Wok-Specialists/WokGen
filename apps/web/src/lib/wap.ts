@@ -22,7 +22,9 @@ export type WAPActionType =
   | 'voiceText'          // Send text output to Voice Studio
   | 'exportAssets'       // Trigger ZIP export of current batch or project
   | 'openPanel'          // Open a specific control panel or modal
-  | 'setQuality';        // Switch HD/standard toggle
+  | 'setQuality'         // Switch HD/standard toggle
+  | 'openTool'           // Navigate to a /tools/* page
+  | 'processImage';      // Navigate to a tool with an image pre-loaded
 
 export interface WAPAction {
   type: WAPActionType;
@@ -61,6 +63,9 @@ export interface WAPAction {
   panel?: string;
   // For 'setQuality':
   quality?: 'hd' | 'standard';
+  // For 'openTool' | 'processImage':
+  toolId?: string;        // e.g. "background-remover", "image-compress"
+  imageUrl?: string;      // data URL or remote URL to pre-load into the tool
 }
 
 export interface WAPResponse {
@@ -73,7 +78,7 @@ export const WAP_CAPABILITIES = `
 You can perform real actions on the WokGen platform by returning a JSON block at the end of your response.
 
 Supported actions:
-- navigate: Go to a URL (path: "/pixel/studio", "/business/studio", "/vector/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs")
+- navigate: Go to a URL (path: "/pixel/studio", "/business/studio", "/vector/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs", "/tools")
 - setParam: Set a studio parameter (key: "size" | "tool" | "style" | "prompt" | "hd", value: the value)
 - setPrompt: Fill the prompt field with text (text: "your prompt here")
 - setTool: Select a studio tool
@@ -90,6 +95,8 @@ Supported actions:
 - exportAssets: Trigger ZIP export (projectId: "..." or batchJobIds: ["id1","id2"])
 - openPanel: Open a specific panel (panel: "brand-kit" | "history" | "settings" | "gallery")
 - setQuality: Switch quality mode (quality: "hd" | "standard")
+- openTool: Navigate to a free tool (toolId: "background-remover" | "image-compress" | "image-resize" | "font-pairer" | "color-tools" | "css-generator" | "json-tools" | "regex" | "encode-decode" | "hash" | "generators" | "text-tools" | "markdown" | "csv-tools" | "og-preview" | "color-palette" | "mockup" | "social-resize" | "pixel-editor" | "sprite-packer" | "whiteboard" | "snippets" | "pdf" | "crypto-tools" | "audio-tools" | "tilemap" | "font-pairer")
+- processImage: Open a specific tool with an image URL pre-loaded (toolId: "background-remover" | "image-compress" | "image-resize" | "color-palette", imageUrl: "https://...")
 
 Format (append to your reply only when taking action):
 <wap>{"actions":[{"type":"navigate","path":"/pixel/studio"},{"type":"setParam","key":"size","value":64}],"confirmation":"Opening Pixel Studio and setting size to 64×64"}</wap>
@@ -103,6 +110,9 @@ Examples:
 - User: "Save these colors to my brand kit" → saveToBrandKit action
 - User: "Send this to voice studio" → voiceText action
 - User: "Export everything to ZIP" → exportAssets action
+- User: "Open the background remover" → openTool action (toolId: "background-remover")
+- User: "Remove the background from my image" → processImage action
+- User: "Compress this image" → openTool action (toolId: "image-compress")
 - User: "How do I make better pixel art?" → NO wap block, just answer
 
 CRITICAL RULES:
@@ -157,6 +167,15 @@ export function executeWAP(wap: WAPResponse, router?: { push: (path: string) => 
     } else if (action.type === 'setQuality') {
       // Dispatch as setParam so studios can handle it
       dispatchWAPAction({ type: 'setParam', key: 'hd', value: action.quality === 'hd' });
+    } else if (action.type === 'openTool' && action.toolId) {
+      const path = `/tools/${action.toolId}`;
+      if (router) router.push(path);
+      else if (typeof window !== 'undefined') window.location.href = path;
+    } else if (action.type === 'processImage' && action.toolId) {
+      const params = action.imageUrl ? `?imageUrl=${encodeURIComponent(action.imageUrl)}` : '';
+      const path = `/tools/${action.toolId}${params}`;
+      if (router) router.push(path);
+      else if (typeof window !== 'undefined') window.location.href = path;
     } else {
       dispatchWAPAction(action);
     }

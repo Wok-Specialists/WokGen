@@ -724,6 +724,27 @@ export function EralPage() {
               </div>
             )}
 
+            {/* Tools quick-launch */}
+            <div className="eral-tools-section">
+              <p className="eral-tools-title">Free Tools</p>
+              <div className="eral-tools-grid">
+                {[
+                  { id: 'background-remover', icon: '✂️', label: 'BG Remove' },
+                  { id: 'image-compress', icon: '🗜️', label: 'Compress' },
+                  { id: 'color-tools', icon: '🎨', label: 'Colors' },
+                  { id: 'json-tools', icon: '📋', label: 'JSON' },
+                  { id: 'font-pairer', icon: '🔤', label: 'Fonts' },
+                  { id: 'whiteboard', icon: '🖊️', label: 'Board' },
+                ].map(t => (
+                  <a key={t.id} href={`/tools/${t.id}`} className="eral-tool-chip" title={t.label}>
+                    <span>{t.icon}</span>
+                    <span>{t.label}</span>
+                  </a>
+                ))}
+              </div>
+              <a href="/tools" className="eral-tools-all">All 30+ tools →</a>
+            </div>
+
             <div className="eral-sidebar-footer">
               <a
                 href="https://wokgen.wokspec.org"
@@ -1166,6 +1187,56 @@ export function EralPage() {
           text-decoration: none;
         }
         .eral-footer-link:hover { color: var(--text-muted); }
+
+        /* Tools section */
+        .eral-tools-section {
+          padding: 8px 10px;
+          border-top: 1px solid var(--border);
+        }
+        .eral-tools-title {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: .06em;
+          color: var(--text-faint);
+          margin: 0 0 6px;
+        }
+        .eral-tools-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 4px;
+          margin-bottom: 6px;
+        }
+        .eral-tool-chip {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          padding: 5px 4px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          text-decoration: none;
+          color: var(--text-muted);
+          font-size: 10px;
+          line-height: 1.2;
+          text-align: center;
+          transition: all .12s;
+        }
+        .eral-tool-chip:hover {
+          background: rgba(99,102,241,.12);
+          border-color: rgba(99,102,241,.4);
+          color: #a5b4fc;
+        }
+        .eral-tool-chip span:first-child { font-size: 14px; }
+        .eral-tools-all {
+          display: block;
+          font-size: 11px;
+          color: #818cf8;
+          text-decoration: none;
+          text-align: center;
+        }
+        .eral-tools-all:hover { color: #a5b4fc; }
 
         /* Main */
         .eral-main {

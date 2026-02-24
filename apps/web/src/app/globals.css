@@ -13699,3 +13699,104 @@ select:focus-visible {
 .snip-string { color: #86efac; }
 .snip-comment { color: #6b7280; font-style: italic; }
 .snip-number { color: #f9a8d4; }
+
+/* ============================================================
+   SPRITE SHEET PACKER
+   ============================================================ */
+
+.sprite-packer { }
+
+.sprite-packer-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 768px) { .sprite-packer-layout { grid-template-columns: 1fr; } }
+
+.sprite-packer-controls { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.sprite-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 2px dashed var(--border-subtle);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  transition: border-color .15s;
+}
+.sprite-drop-zone:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+.sprite-drop-zone div { font-size: 1.5rem; }
+
+.sprite-list { display: flex; flex-direction: column; gap: 0.3rem; max-height: 220px; overflow-y: auto; }
+
+.sprite-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+.sprite-list-thumb {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  background: rgba(255,255,255,.04);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.sprite-list-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sprite-list-size { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+.sprite-list-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.75rem; padding: 0 2px; flex-shrink: 0; }
+.sprite-list-del:hover { color: #ef4444; }
+
+.sprite-control-row { display: flex; align-items: center; gap: 0.5rem; }
+
+.sprite-packer-preview { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.sprite-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sprite-preview-size { font-size: 0.82rem; color: var(--text-muted); }
+
+.sprite-canvas-wrap {
+  overflow: auto;
+  max-height: 450px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: repeating-conic-gradient(rgba(255,255,255,.03) 0% 25%, transparent 0% 50%) 0 0 / 16px 16px;
+  padding: 0.5rem;
+}
+
+.sprite-canvas {
+  display: block;
+  image-rendering: pixelated;
+  max-width: 100%;
+}
+
+.sprite-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border: 1px dashed var(--border-subtle);
+  border-radius: 10px;
+}
