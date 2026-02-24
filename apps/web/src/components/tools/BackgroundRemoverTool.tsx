@@ -90,10 +90,9 @@ export default function BackgroundRemoverTool() {
           tabIndex={0}
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
         >
-          <div className="tool-dropzone-icon">✂️</div>
           <p className="tool-dropzone-text">Drop an image here or click to browse</p>
           <p className="tool-dropzone-sub">PNG · JPG · WebP · AVIF · BMP · TIFF</p>
-          <p className="tool-dropzone-private">🔒 Processed entirely in your browser — nothing uploaded</p>
+          <p className="tool-dropzone-private">Processed entirely in your browser — nothing uploaded</p>
           <input
             ref={inputRef}
             type="file"
@@ -107,7 +106,6 @@ export default function BackgroundRemoverTool() {
       {/* Loading / Processing */}
       {(status === 'loading-model' || status === 'processing') && (
         <div className="tool-processing">
-          <div className="tool-processing-icon">✂️</div>
           <p className="tool-processing-label">
             {status === 'loading-model'
               ? 'Loading AI model (one-time download ~3MB)…'
@@ -123,7 +121,7 @@ export default function BackgroundRemoverTool() {
       {/* Error */}
       {status === 'error' && (
         <div className="tool-error-state">
-          <p className="tool-error-text">⚠️ {error}</p>
+          <p className="tool-error-text">Warning: {error}</p>
           <button className="btn-primary" onClick={reset}>Try Again</button>
         </div>
       )}

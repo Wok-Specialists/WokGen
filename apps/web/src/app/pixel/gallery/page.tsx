@@ -812,14 +812,14 @@ function EmptyState({ search }: { search: string }) {
           No pixel assets yet
         </p>
         <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem', maxWidth: 300, margin: '0 auto 1rem' }}>
-          Generate your first pixel art in the Pixel Studio.
+          Generate your first pixel art in Pixel mode.
         </p>
         <a href="/pixel/studio" style={{
           display: 'inline-block', padding: '0.45rem 1.1rem',
           background: '#a78bfa', color: 'white', borderRadius: 6,
           fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none',
         }}>
-          Go to Pixel Studio →
+          Go to Pixel mode →
         </a>
       </div>
       {SHOWCASE_PROMPTS.map((item, i) => (

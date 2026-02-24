@@ -93,7 +93,7 @@ export default function BusinessLanding() {
             </p>
             <div className="landing-cta-row">
               <Link href="/business/studio" className="btn-primary btn-lg">
-                Open Business Studio →
+                Open Business mode →
               </Link>
               <Link href="/business/gallery" className="btn-ghost btn-lg">
                 Browse Gallery

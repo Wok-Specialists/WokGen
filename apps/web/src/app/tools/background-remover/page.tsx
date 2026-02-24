@@ -14,7 +14,7 @@ export default function Page() {
       id="background-remover"
       label="Background Remover"
       description="Remove backgrounds from images instantly. 100% browser-side — no upload, completely private."
-      icon="✂️"
+      icon="BG"
     >
       <BackgroundRemoverTool />
     </ToolShell>

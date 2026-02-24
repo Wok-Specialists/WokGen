@@ -170,7 +170,7 @@ export default function ColorTool() {
                   ['AAA Large',  contrastRatio >= 4.5],
                 ].map(([label, pass]) => (
                   <div key={String(label)} className={`wcag-badge ${pass ? 'pass' : 'fail'}`}>
-                    {pass ? '✅' : '❌'} {label}
+                    {pass ? 'Pass' : 'Fail'} {label}
                   </div>
                 ))}
               </div>

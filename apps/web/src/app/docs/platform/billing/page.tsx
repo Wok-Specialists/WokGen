@@ -162,7 +162,7 @@ export default function BillingDocs() {
             final-quality assets worth exporting.
           </P>
           <Callout type="tip">
-            Brand Kit in Business Studio generates 4 parallel images. Each counts as 1 HD credit,
+            Brand Kit in Business mode generates 4 parallel images. Each counts as 1 HD credit,
             so a single Brand Kit run at HD quality costs 4 credits.
           </Callout>
 

@@ -113,8 +113,7 @@ export default function ChopsticksPage() {
 
         {/* Hero */}
         <div className="text-center space-y-4">
-          <div className="text-5xl">🍜</div>
-          <h1 className="text-4xl font-bold tracking-tight">Chopsticks</h1>
+          <h2 className="text-lg font-semibold">Setup</h2>          <h1 className="text-4xl font-bold tracking-tight">Chopsticks</h1>
           <p className="text-zinc-400 text-lg max-w-xl mx-auto">
             The official WokGen Discord bot. Generate assets, chat with Eral, browse the gallery,
             and automate your creative workflow — all without leaving Discord.
@@ -139,7 +138,7 @@ export default function ChopsticksPage() {
 
         {/* Setup */}
         <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 space-y-3">
-          <h2 className="text-lg font-semibold">⚙️ Setup</h2>
+          <h2 className="text-lg font-semibold">Setup</h2>
           <p className="text-zinc-400 text-sm">
             Chopsticks uses Discord&apos;s Interactions Endpoint (webhook-based, no persistent bot connection required).
           </p>
@@ -154,7 +153,7 @@ export default function ChopsticksPage() {
 
         {/* Commands */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">📋 Commands</h2>
+          <h2 className="text-xl font-semibold">Commands</h2>
           <div className="space-y-4">
             {COMMANDS.map((cmd) => (
               <div
@@ -221,7 +220,7 @@ export default function ChopsticksPage() {
 
         {/* Architecture note */}
         <section className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 space-y-2">
-          <h2 className="text-base font-semibold text-zinc-300">📡 Architecture</h2>
+          <h2 className="text-base font-semibold text-zinc-300">Architecture</h2>
           <p className="text-sm text-zinc-500">
             Chopsticks uses Discord&apos;s <strong className="text-zinc-400">Interactions Endpoint</strong> pattern —
             a pure HTTP webhook with no persistent WebSocket connection. Discord POSTs to

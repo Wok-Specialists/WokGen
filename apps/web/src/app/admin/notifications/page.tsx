@@ -31,9 +31,9 @@ const DEFAULT_CONFIG: NotifyConfig = {
 
 const EVENT_META: Record<EventType, { label: string; desc: string; icon: string }> = {
   levelUp:         { label: 'Level Up',          desc: 'XP gains and user achievement unlocks',     icon: '⭐' },
-  jobComplete:     { label: 'Job Complete',       desc: 'Generation jobs that finish successfully',  icon: '✅' },
-  newGalleryAsset: { label: 'New Gallery Asset',  desc: 'Newly published public gallery assets',     icon: '🖼️' },
-  errorAlert:      { label: 'Error Alert',        desc: 'System errors and failed generation jobs',  icon: '🚨' },
+  jobComplete:     { label: 'Job Complete',       desc: 'Generation jobs that finish successfully',  icon: 'ok' },
+  newGalleryAsset: { label: 'New Gallery Asset',  desc: 'Newly published public gallery assets',     icon: 'img' },
+  errorAlert:      { label: 'Error Alert',        desc: 'System errors and failed generation jobs',  icon: '!' },
 };
 
 const EVENT_TYPES: EventType[] = ['levelUp', 'jobComplete', 'newGalleryAsset', 'errorAlert'];
@@ -190,8 +190,8 @@ export default function AdminNotificationsPage() {
                     `}
                   >
                     {ts === 'sending' ? 'Sending…'
-                      : ts === 'ok'   ? '✅ Sent!'
-                      : ts === 'error'? '❌ Failed'
+                      : ts === 'ok'   ? 'Sent'
+                      : ts === 'error'? 'Failed'
                       :                 'Test'}
                   </button>
                 </div>
@@ -215,8 +215,8 @@ export default function AdminNotificationsPage() {
           >
             {saving ? 'Saving…' : 'Save Configuration'}
           </button>
-          {saveResult === 'ok'    && <span className="text-sm text-emerald-400">✅ Saved successfully</span>}
-          {saveResult === 'error' && <span className="text-sm text-red-400">❌ Save failed — check console</span>}
+          {saveResult === 'ok'    && <span className="text-sm text-emerald-400">Saved successfully</span>}
+          {saveResult === 'error' && <span className="text-sm text-red-400">Save failed — check console</span>}
         </div>
 
         {/* Usage hint */}

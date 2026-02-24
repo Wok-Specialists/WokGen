@@ -9,7 +9,7 @@ import GradientGeneratorTool from '@/components/tools/GradientGeneratorTool';
 
 export default function Page() {
   return (
-    <ToolShell id="gradient-generator" label="Gradient Generator" description="Build CSS gradients (linear, radial, conic) with live preview. Adjust color stops and copy CSS." icon="🌅">
+    <ToolShell id="gradient-generator" label="Gradient Generator" description="Build CSS gradients (linear, radial, conic) with live preview. Adjust color stops and copy CSS." icon="FAV">
       <GradientGeneratorTool />
     </ToolShell>
   );

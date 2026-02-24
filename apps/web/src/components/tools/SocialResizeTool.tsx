@@ -131,10 +131,9 @@ export default function SocialResizeTool() {
           onDragOver={e => e.preventDefault()}
           onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) loadFile(f); }}
         >
-          <div className="tool-dropzone-icon">📱</div>
           <p className="tool-dropzone-text">Drop your image here or click to browse</p>
           <p className="tool-dropzone-sub">PNG · JPG · WebP · GIF</p>
-          <p className="tool-dropzone-private">🔒 All processing in your browser</p>
+          <p className="tool-dropzone-private">All processing in your browser</p>
           <input ref={inputRef} type="file" accept="image/*" className="tool-file-input-hidden" onChange={e => { const f = e.target.files?.[0]; if (f) loadFile(f); }} />
         </div>
       ) : (

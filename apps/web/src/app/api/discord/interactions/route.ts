@@ -91,7 +91,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       console.error('[Chopsticks] Command dispatch error:', err);
       return NextResponse.json({
         type: 4,
-        data: { content: '⚠️ An error occurred processing your command. Please try again.' },
+        data: { content: 'An error occurred processing your command. Please try again.' },
       });
     }
   }

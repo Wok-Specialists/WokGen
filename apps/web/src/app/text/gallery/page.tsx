@@ -300,10 +300,10 @@ export default function TextGallery() {
           <div className="gallery-empty-icon"></div>
           <p className="gallery-empty-title">No text assets yet</p>
           <p className="gallery-empty-desc">
-            Generate your first piece of content in the Text Studio.
+            Generate your first piece of content in Text mode.
           </p>
           <Link href="/text/studio" className="btn-primary btn-sm">
-            Go to Text Studio →
+            Go to Text mode →
           </Link>
         </div>
       ) : (

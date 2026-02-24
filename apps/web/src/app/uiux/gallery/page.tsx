@@ -234,8 +234,8 @@ export default function UIUXGallery() {
         <div className="gallery-empty">
           <div className="gallery-empty-icon"></div>
           <p className="gallery-empty-title">No UI/UX components yet</p>
-          <p className="gallery-empty-desc">Generate your first UI component in the UI/UX Studio.</p>
-          <Link href="/uiux/studio" className="btn-primary btn-sm">Go to UI/UX Studio →</Link>
+          <p className="gallery-empty-desc">Generate your first UI component in UI/UX mode.</p>
+          <Link href="/uiux/studio" className="btn-primary btn-sm">Go to UI/UX mode →</Link>
         </div>
       ) : (
         <div className="gallery-grid gallery-grid--uiux">

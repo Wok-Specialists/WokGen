@@ -49,7 +49,7 @@ export default function BorderRadiusTool() {
               onClick={() => setLinked(!linked)}
               title="Link all corners"
             >
-              {linked ? '🔒 Linked' : '🔓 Individual'}
+              {linked ? 'Linked' : 'Individual'}
             </button>
           </div>
 

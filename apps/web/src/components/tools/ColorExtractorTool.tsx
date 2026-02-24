@@ -113,7 +113,6 @@ export default function ColorExtractorTool() {
           <img src={previewUrl} alt="Preview" style={{ maxHeight: 180, maxWidth: '100%', borderRadius: 8, objectFit: 'contain' }} />
         ) : (
           <>
-            <div className="tool-dropzone-icon">🖼️</div>
             <p className="tool-dropzone-text">Drop an image or click to upload</p>
             <p className="tool-dropzone-sub">PNG, JPG, WebP, GIF supported</p>
           </>

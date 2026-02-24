@@ -53,7 +53,6 @@ function DefaultErrorFallback({ error, onReset }: { error?: Error; onReset?: () 
         width: '100%',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }} aria-hidden="true">⚠️</div>
         <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary, #f5f5f5)', margin: '0 0 0.5rem' }}>
           Something went wrong
         </h2>

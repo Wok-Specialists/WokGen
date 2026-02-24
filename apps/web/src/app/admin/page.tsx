@@ -166,13 +166,13 @@ function OverviewTab({ stats }: { stats: Stats }) {
         {actionMsg && <p className="admin-action-msg">{actionMsg}</p>}
         <div className="admin-quick-actions">
           <button className="admin-action-btn" onClick={() => quickAction('reset_stuck_jobs')}>
-            🔄 Reset Stuck Jobs
+            Reset Stuck Jobs
           </button>
           <button className="admin-action-btn" onClick={() => quickAction('clear_rate_limits')}>
-            🚫 Clear Rate Limits
+            Clear Rate Limits
           </button>
           <a href="/api/admin/users/export.csv" className="admin-action-btn" download>
-            📥 Export User CSV
+            Export User CSV
           </a>
         </div>
       </section>

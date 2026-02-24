@@ -70,7 +70,7 @@ export function StudioResult({
           )}
           {seed !== undefined && (
             <span className="studio-result__meta-chip" title="Seed">
-              🌱 {seed}
+              Seed: {seed}
             </span>
           )}
         </div>
@@ -91,7 +91,7 @@ export function StudioResult({
           disabled={saved || !onSave}
           title="Save to gallery"
         >
-          {saved ? '✓ Saved' : '💾 Save to Gallery'}
+          {saved ? '✓ Saved' : 'Save to Gallery'}
         </button>
         <Link
           href={`/tools/background-remover?image=${encoded}`}
@@ -100,7 +100,7 @@ export function StudioResult({
           rel="noopener noreferrer"
           title="Remove background"
         >
-          ✂️ Remove BG
+          Remove BG
         </Link>
         <Link
           href={`/tools/image-resize?image=${encoded}`}
@@ -109,7 +109,7 @@ export function StudioResult({
           rel="noopener noreferrer"
           title="Resize image"
         >
-          ↔️ Resize
+          Resize
         </Link>
         <Link
           href={`/tools/image-compress?image=${encoded}`}
@@ -118,14 +118,14 @@ export function StudioResult({
           rel="noopener noreferrer"
           title="Compress image"
         >
-          🗜️ Compress
+          Compress
         </Link>
         <button
           className="studio-result__btn"
           onClick={handleShare}
           title="Copy share URL"
         >
-          {copied ? '✓ Copied!' : '🔗 Share'}
+          {copied ? '✓ Copied!' : 'Share'}
         </button>
       </div>
     </div>

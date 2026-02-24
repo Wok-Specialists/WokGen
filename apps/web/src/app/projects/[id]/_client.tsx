@@ -291,7 +291,7 @@ function AssetLightbox({ job, onClose }: { job: Job; onClose: () => void }) {
               ↓ Download
             </button>
             <button className="btn btn--ghost btn--sm" onClick={copyLink}>
-              🔗 Copy link
+              Copy link
             </button>
           </div>
         </div>
@@ -638,7 +638,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                       className="btn btn--ghost btn--sm"
                       onClick={() => selectedJob && handleOpenLightbox(selectedJob)}
                     >
-                      🔍 View
+                      View
                     </button>
                     <button
                       className="btn btn--ghost btn--sm"

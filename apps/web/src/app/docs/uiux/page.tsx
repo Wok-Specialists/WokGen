@@ -108,7 +108,7 @@ export default function UIUXDocsPage() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/uiux/studio" className="btn-primary btn-sm">Open UI/UX Studio</Link>
+            <Link href="/uiux/studio" className="btn-primary btn-sm">Open UI/UX mode</Link>
           </div>
         </aside>
 
@@ -843,7 +843,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
             <P>
               Ready to generate your first component?{' '}
               <Link href="/uiux/studio" className="docs-link-primary">
-                Open the UI/UX Studio →
+                Open UI/UX mode →
               </Link>
             </P>
           </div>

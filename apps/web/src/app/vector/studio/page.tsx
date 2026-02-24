@@ -386,7 +386,7 @@ function VectorStudioInner() {
 
         {/* Mode header */}
         <div className="studio-mode-header" style={{ '--mode-accent': ACCENT } as React.CSSProperties}>
-          <span className="studio-mode-label" style={{ color: ACCENT }}>Vector Studio</span>
+          <span className="studio-mode-label" style={{ color: ACCENT }}>Vector mode</span>
           <QuotaBadge />
           <a
             href="/pixel/studio"
@@ -402,7 +402,7 @@ function VectorStudioInner() {
             }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-muted)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
-            title="Switch to Pixel Studio"
+            title="Switch to Pixel mode"
           >
             Pixel
           </a>
@@ -764,7 +764,7 @@ function VectorStudioInner() {
             <div className="studio-idle-icon" style={{ color: ACCENT }}>
               {''}
             </div>
-            <p className="studio-idle-title">Vector Studio</p>
+            <p className="studio-idle-title">Vector mode</p>
             <p className="studio-idle-desc">
               {TOOLS.find(t => t.id === activeTool)?.desc}
             </p>

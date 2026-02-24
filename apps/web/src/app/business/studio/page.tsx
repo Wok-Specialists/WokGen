@@ -521,7 +521,7 @@ function BusinessStudioInner() {
 
         {/* Mode identifier */}
         <div className="studio-mode-header" style={{ '--mode-accent': '#60a5fa' } as React.CSSProperties}>
-          <span className="studio-mode-label">Business Studio</span>
+          <span className="studio-mode-label">Business mode</span>
           <QuotaBadge />
           <a
             href="/pixel/studio"
@@ -537,7 +537,7 @@ function BusinessStudioInner() {
             }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-muted)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
-            title="Switch to Pixel Studio"
+            title="Switch to Pixel mode"
           >
             Pixel
           </a>
@@ -1073,7 +1073,6 @@ function BusinessStudioInner() {
             )}
             {jobStatus === 'failed' && (
               <div className="studio-error-card">
-                <span className="studio-error-card__icon">⚠️</span>
                 <p className="studio-error-card__title">Generation failed</p>
                 {studioError && (
                   <p className="studio-error-card__msg">{studioError.message}</p>
@@ -1197,7 +1196,7 @@ function BusinessStudioInner() {
         {jobStatus === 'idle' && (
           <div className="studio-idle">
             <div className="studio-idle-icon">⬛</div>
-            <p className="studio-idle-title">Business Studio</p>
+            <p className="studio-idle-title">Business mode</p>
             <p className="studio-idle-desc">
               {TOOLS.find(t => t.id === activeTool)?.desc}
             </p>

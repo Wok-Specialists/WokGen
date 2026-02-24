@@ -104,7 +104,7 @@ export default function GettingStarted() {
       {/* ================================================================== */}
       <H2 id="first-generation">2. Your First Generation</H2>
       <P>
-        The fastest way to learn WokGen is to generate something with the Pixel Studio.
+        The fastest way to learn WokGen is to generate something with Pixel mode.
         Pixel art has very visible, predictable outputs — great for a first experiment.
       </P>
 
@@ -112,7 +112,7 @@ export default function GettingStarted() {
         <div className="docs-step">
           <div className="docs-step-num">1</div>
           <div className="docs-step-body">
-            <div className="docs-step-title">Open the Pixel Studio</div>
+            <div className="docs-step-title">Open Pixel mode</div>
             <div className="docs-step-desc">
               Navigate to <Link href="/pixel/studio" className="docs-inline-link">wokgen.io/pixel/studio</Link>.
               You do not need an account to generate in Standard quality.

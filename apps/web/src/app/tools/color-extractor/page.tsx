@@ -9,7 +9,7 @@ import ColorExtractorTool from '@/components/tools/ColorExtractorTool';
 
 export default function Page() {
   return (
-    <ToolShell id="color-extractor" label="Color Extractor" description="Extract a color palette from any image using k-means clustering. No upload required." icon="💧">
+    <ToolShell id="color-extractor" label="Color Extractor" description="Extract a color palette from any image using k-means clustering. No upload required." icon="CE">
       <ColorExtractorTool />
     </ToolShell>
   );

@@ -6,7 +6,6 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fireConfetti } from '@/lib/confetti';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -1810,7 +1809,7 @@ function GenerateForm({
             { id: 'container',   label: 'Chest',    hint: 'Container prop, readable silhouette, centered' },
             { id: 'portrait',    label: 'Portrait', hint: 'Character bust, face and upper body, expressive' },
             { id: 'vehicle',     label: 'Vehicle',  hint: 'Vehicle or mount, side or top-down view' },
-          ] as { id: import('@/lib/prompt-builder').AssetCategory; emoji: string; label: string; hint: string }[]).map((cat) => (
+          ] as { id: import('@/lib/prompt-builder').AssetCategory; label: string; hint: string }[]).map((cat) => (
             <button
               key={cat.id}
               onClick={() => setAssetCategory(cat.id)}
@@ -1822,7 +1821,6 @@ function GenerateForm({
                 color: assetCategory === cat.id ? 'var(--accent)' : 'var(--text-secondary)',
               }}
             >
-              <span style={{ fontSize: '1rem', lineHeight: 1 }}>{cat.emoji}</span>
               <span style={{ fontSize: '0.6rem', fontWeight: 500 }}>{cat.label}</span>
             </button>
           ))}
@@ -2202,7 +2200,7 @@ function GenerateForm({
         </div>
         {size < PRESET_CONFIG[stylePreset].size && (
           <p className="form-hint mt-2" style={{ color: '#eab308' }}>
-            ⚠ Below recommended size — detail loss likely
+            Below recommended size — detail loss likely
           </p>
         )}
         <p className="form-hint mt-2">
@@ -2340,7 +2338,7 @@ function GenerateForm({
                 title="Roll random seed"
                 aria-label="Roll random seed"
               >
-                🎲
+                Rng
               </button>
               {seed && (
                 <button
@@ -2791,7 +2789,6 @@ function StudioInner() {
           resolvedSeed: baseSeed,
         };
         setResult(gen);
-        fireConfetti('generation');
         setSelectedBatch(0);
         setBatchResults([gen]);
         setJobStatus('succeeded');
@@ -2870,7 +2867,6 @@ function StudioInner() {
       if (batchCount === 1) {
         const gen = await fetchOne(baseSeed);
         setResult(gen);
-        fireConfetti('generation');
         setSelectedBatch(0);
         setBatchResults([gen]);
         setJobStatus('succeeded');
@@ -2901,7 +2897,6 @@ function StudioInner() {
           setSelectedBatch(0);
           setResult(fulfilled[0]);
         }
-        fireConfetti('generation');
         setJobStatus('succeeded');
         setPromptHistory(prev => {
           const next = [prompt.trim(), ...prev.filter(p => p !== prompt.trim())].slice(0, 20);
@@ -3127,7 +3122,7 @@ function StudioInner() {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Switch to Business Studio pill */}
+        {/* Switch to Business mode pill */}
         <Link
           href="/business/studio"
           className="flex flex-col items-center justify-center gap-1 w-10 h-12 rounded-lg transition-all duration-150"
@@ -3138,7 +3133,7 @@ function StudioInner() {
             fontSize: '0.52rem',
             letterSpacing: '0.01em',
           }}
-          title="Switch to Business Studio"
+          title="Switch to Business mode"
         >
           
           <span>Biz</span>
@@ -3202,7 +3197,7 @@ function StudioInner() {
           <div className="pixel-studio-panel-header__title">
             <span style={{ fontSize: 16, color: 'var(--accent)' }}>✦</span>
             <h1 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Pixel Studio
+              Pixel mode
             </h1>
           </div>
           <div className="pixel-studio-panel-header__actions">
@@ -3650,7 +3645,7 @@ function StudioInner() {
                   }}
                   title="Generate 2 variants side-by-side for comparison"
                 >
-                  🔀 Compare
+                  Compare
                 </button>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.125rem' }}>
@@ -3734,7 +3729,7 @@ function StudioInner() {
                 rel="noopener noreferrer"
                 title="Open in Pixel Editor"
               >
-                ✏️ Edit in Pixel Editor
+                Edit in Pixel Editor
               </Link>
               <button
                 type="button"
@@ -3750,7 +3745,7 @@ function StudioInner() {
                 onClick={handleGenerateVariation}
                 title="Generate a variation with a new seed"
               >
-                🔀 Variation
+                Variation
               </button>
             </div>
           );

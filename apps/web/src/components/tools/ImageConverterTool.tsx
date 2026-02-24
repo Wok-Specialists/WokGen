@@ -184,7 +184,7 @@ export default function ImageConverterTool() {
           </div>
         )}
         {currentFmt.warning && (
-          <p className="img-conv-warning">⚠️ {currentFmt.warning}</p>
+          <p className="img-conv-warning">Warning: {currentFmt.warning}</p>
         )}
       </div>
 
@@ -200,10 +200,9 @@ export default function ImageConverterTool() {
           tabIndex={0}
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
         >
-          <div className="tool-dropzone-icon">🖼️</div>
           <p className="tool-dropzone-text">Drop images here or click to browse</p>
           <p className="tool-dropzone-sub">PNG · JPG · WebP · GIF · BMP · up to {10 - files.length} more</p>
-          <p className="tool-dropzone-private">🔒 100% client-side — nothing uploaded</p>
+          <p className="tool-dropzone-private">100% client-side — nothing uploaded</p>
           <input
             ref={inputRef}
             type="file"
@@ -256,7 +255,7 @@ export default function ImageConverterTool() {
               <div className="img-conv-row-actions">
                 {cf.status === 'pending' && <span className="img-conv-badge pending">Pending</span>}
                 {cf.status === 'converting' && <span className="img-conv-badge converting">Converting…</span>}
-                {cf.status === 'error' && <span className="img-conv-badge error">⚠ {cf.error}</span>}
+                {cf.status === 'error' && <span className="img-conv-badge error">Error: {cf.error}</span>}
                 {cf.status === 'done' && cf.downloadUrl && (
                   <a href={cf.downloadUrl} download={cf.name} className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.3rem 0.75rem' }}>
                     ↓ Save

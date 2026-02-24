@@ -9,7 +9,7 @@ import ImageDiffTool from '@/components/tools/ImageDiffTool';
 
 export default function Page() {
   return (
-    <ToolShell id="image-diff" label="Image Diff" description="Compare two images side-by-side with an interactive slider. Perfect for before/after comparisons." icon="🔀">
+    <ToolShell id="image-diff" label="Image Diff" description="Compare two images side-by-side with an interactive slider. Perfect for before/after comparisons." icon="DIF">
       <ImageDiffTool />
     </ToolShell>
   );

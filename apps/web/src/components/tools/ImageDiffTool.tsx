@@ -62,7 +62,7 @@ export default function ImageDiffTool() {
                   <img src={img} alt={`Image ${idx}`} style={{ maxHeight: 120, maxWidth: '100%', borderRadius: 6, objectFit: 'contain' }} />
                 ) : (
                   <>
-                    <div className="tool-dropzone-icon">{idx === 1 ? '🅰️' : '🅱️'}</div>
+                    <div className="tool-dropzone-icon">{idx === 1 ? 'A' : 'B'}</div>
                     <p className="tool-dropzone-text">Image {idx === 1 ? 'A' : 'B'}</p>
                     <p className="tool-dropzone-sub">Drop or click to upload</p>
                   </>

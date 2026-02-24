@@ -282,7 +282,7 @@ function VoiceStudioInner() {
             ← Voice
           </Link>
           <span style={{ color: 'var(--text-muted)' }}>/</span>
-          <span style={{ fontSize: 14, fontWeight: 600 }}>Voice Studio</span>
+          <span style={{ fontSize: 14, fontWeight: 600 }}>Voice mode</span>
           <span
             style={{
               fontSize: 11,
@@ -531,7 +531,7 @@ function VoiceStudioInner() {
             </select>
             {hd && (
               <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
-                ✦ HD uses ElevenLabs multilingual v2 — all languages supported
+                HD uses ElevenLabs multilingual v2 — all languages supported
               </p>
             )}
           </div>
@@ -746,7 +746,6 @@ function VoiceStudioInner() {
           />
           {error && !studioError && (
             <div className="studio-error-card">
-              <span className="studio-error-card__icon">⚠️</span>
               <p className="studio-error-card__title">Generation failed</p>
               <p className="studio-error-card__msg">{error}</p>
               <button
@@ -852,7 +851,6 @@ function VoiceStudioInner() {
           {/* Idle state */}
           {!audioUrl && !generating && !error && !studioError && (
             <div className="studio-empty-canvas">
-              <span className="studio-empty-canvas__icon">🎙️</span>
               <p className="studio-empty-canvas__title">Generate your first voice</p>
               <p className="studio-empty-canvas__desc">
                 Enter text and click{' '}
@@ -975,7 +973,7 @@ function VoiceStudioInner() {
                       textDecoration: 'none',
                     }}
                   >
-                    🔒 Upgrade to Pro →
+                    Upgrade to Pro →
                   </Link>
                 </div>
               )}

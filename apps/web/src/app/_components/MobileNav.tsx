@@ -6,12 +6,12 @@ import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
-  { href: '/pixel/studio', label: '🎮 Pixel Studio' },
-  { href: '/business/studio', label: '💼 Business Studio' },
-  { href: '/vector/studio', label: '✏️ Vector Studio' },
-  { href: '/uiux/studio', label: '🖥️ UI/UX Studio' },
-  { href: '/voice/studio', label: '🎙️ Voice Studio' },
-  { href: '/text/studio', label: '✍️ Text Studio' },
+  { href: '/pixel/studio', label: 'Pixel mode' },
+  { href: '/business/studio', label: 'Business mode' },
+  { href: '/vector/studio', label: 'Vector mode' },
+  { href: '/uiux/studio', label: 'UI/UX mode' },
+  { href: '/voice/studio', label: 'Voice mode' },
+  { href: '/text/studio', label: 'Text mode' },
   { href: '/tools', label: 'Tools' },
   { href: '/community', label: 'Community' },
   { href: '/eral', label: 'Eral' },
@@ -85,7 +85,7 @@ export function MobileNav() {
         </div>
 
         <nav className="mobile-nav-drawer-nav">
-          <div className="mobile-nav-section-label">Studios</div>
+          <div className="mobile-nav-section-label">Modes</div>
           {NAV_ITEMS.filter(item => item.href.includes('/studio')).map((item) => (
             <Link
               key={item.href}

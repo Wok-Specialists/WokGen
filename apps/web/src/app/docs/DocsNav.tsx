@@ -21,7 +21,7 @@ const isSection = (e: NavEntry): e is NavSection => 'children' in e;
 const NAV: NavEntry[] = [
   { label: 'Getting Started', href: '/docs/getting-started' },
   {
-    label: 'Studios',
+    label: 'Studio',
     children: [
       { label: 'Pixel', href: '/docs/pixel' },
       { label: 'Business', href: '/docs/business' },
@@ -53,7 +53,7 @@ function CollapsibleSection({
   pathname: string;
 }) {
   const isChildActive = section.children.some((c) => pathname.startsWith(c.href));
-  const [open, setOpen] = useState(isChildActive || section.label === 'Studios' || section.label === 'Platform');
+  const [open, setOpen] = useState(isChildActive || section.label === 'Studio' || section.label === 'Platform');
 
   return (
     <div className="docs-sidebar-section">
@@ -90,7 +90,7 @@ export default function DocsNav() {
   return (
     <aside className="docs-sidebar">
       <Link href="/docs" className="docs-nav-home">
-        📚 WokGen Docs
+        WokGen Docs
       </Link>
       {NAV.map((entry) => {
         if (isSection(entry)) {

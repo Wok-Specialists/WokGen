@@ -51,8 +51,7 @@ export async function POST(
     }
   }
 
-  // For email / in_app: log the test run and update lastRunAt
-  console.log(`[automation:test] id=${auto.id} name="${auto.name}" type=${auto.targetType}`);
+  // Update lastRunAt for email / in_app automations
   await prisma.automation.update({
     where: { id: auto.id },
     data: { lastRunAt: new Date(), lastRunStatus: 'ok' },

@@ -116,7 +116,7 @@ export default function VectorDocsPage() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/vector/studio" className="btn-primary btn-sm">Open Vector Studio</Link>
+            <Link href="/vector/studio" className="btn-primary btn-sm">Open Vector mode</Link>
           </div>
         </aside>
 
@@ -749,7 +749,7 @@ outlined, 2px stroke, rounded — shopping cart`}</Pre>
 
           <H3>Creating a workspace</H3>
           <OL>
-            <LI>Open Vector Studio at <Link href="/vector/studio">/vector/studio</Link>.</LI>
+            <LI>Open Vector mode at <Link href="/vector/studio">/vector/studio</Link>.</LI>
             <LI>Click the workspace selector in the top bar.</LI>
             <LI>Select <strong>New Workspace</strong> and give it a project name.</LI>
             <LI>All generations in this session will be saved to that workspace automatically.</LI>

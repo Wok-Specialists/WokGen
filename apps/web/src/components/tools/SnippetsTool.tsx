@@ -229,10 +229,10 @@ export default function SnippetsTool() {
                 </div>
                 <div style={{ display: 'flex', gap: '0.25rem' }}>
                   <button className="tilemap-tool-btn" onClick={() => copySnippet(s)} title="Copy">
-                    {copied === s.id ? '✓' : '📋'}
+                    {copied === s.id ? '✓' : 'Copy'}
                   </button>
-                  <button className="tilemap-tool-btn" onClick={() => startEdit(s)} title="Edit">✏️</button>
-                  <button className="tilemap-tool-btn" onClick={() => deleteSnippet(s.id)} title="Delete">🗑️</button>
+                  <button className="tilemap-tool-btn" onClick={() => startEdit(s)} title="Edit">Edit</button>
+                  <button className="tilemap-tool-btn" onClick={() => deleteSnippet(s.id)} title="Delete">Delete</button>
                 </div>
               </div>
               <pre

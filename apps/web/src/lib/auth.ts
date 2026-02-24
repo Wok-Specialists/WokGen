@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 import { prisma } from '@/lib/db';
 import { sendWelcomeEmail } from '@/lib/email';
 import type { NextAuthConfig } from 'next-auth';
@@ -16,6 +17,11 @@ export const authConfig: NextAuthConfig = {
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID!,
       clientSecret: process.env.AUTH_GITHUB_SECRET!,
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 

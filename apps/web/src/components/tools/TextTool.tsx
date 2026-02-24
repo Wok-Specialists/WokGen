@@ -78,11 +78,11 @@ export default function TextTool() {
       {/* Mode tabs */}
       <div className="text-tool-modes">
         {([
-          ['count', '📊 Count'],
-          ['case', '🔤 Case'],
-          ['slug', '🔗 Slug'],
-          ['dedup', '✂️ Dedup'],
-          ['extract', '📎 Extract'],
+          ['count', 'Count'],
+          ['case', 'Case'],
+          ['slug', 'Slug'],
+          ['dedup', 'Dedup'],
+          ['extract', 'Extract'],
         ] as [Mode, string][]).map(([m, lbl]) => (
           <button
             key={m}

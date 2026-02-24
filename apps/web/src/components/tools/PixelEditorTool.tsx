@@ -155,10 +155,10 @@ export default function PixelEditorTool() {
       <div className="pixel-toolbar">
         <div className="pixel-tool-group">
           {([
-            ['pencil', '✏️', 'Draw'],
+            ['pencil', '', 'Draw'],
             ['eraser', '⬜', 'Erase'],
-            ['fill', '🪣', 'Fill'],
-            ['eyedropper', '💧', 'Pick Color'],
+            ['fill', '', 'Fill'],
+            ['eyedropper', '', 'Pick Color'],
           ] as [Tool, string, string][]).map(([t, icon, label]) => (
             <button
               key={t}

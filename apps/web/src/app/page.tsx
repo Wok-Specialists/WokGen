@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'WokGen — AI Asset Generation Platform',
   description:
-    'Every asset your project needs. 8 specialized AI studios for pixel art, brand systems, vectors, UI components, voice, and text.',
+    'WokGen Studio — one platform with modes for pixel art, brand systems, vectors, UI components, voice, and text.',
   keywords: [
     'AI asset generator', 'pixel art AI', 'brand asset generator',
     'sprite generator', 'AI logo maker', 'WokGen', 'WokSpec',
@@ -74,12 +74,12 @@ const MODES = [
 ] as const;
 
 const TOOL_CATEGORIES = [
-  { emoji: '🖼️', name: 'Image Tools',   count: 8, examples: ['Background Remover', 'Image Resizer', 'Format Converter'] },
-  { emoji: '💻', name: 'Dev Tools',      count: 6, examples: ['JSON Toolkit', 'CSS Generator', 'Color Palette'] },
-  { emoji: '🎮', name: 'Game Dev',       count: 5, examples: ['Sprite Packer', 'Tileset Slicer', 'Pixel Upscaler'] },
-  { emoji: '🎨', name: 'Design',         count: 5, examples: ['SVG Editor', 'Font Pairer', 'Gradient Builder'] },
-  { emoji: '🔗', name: 'Crypto / Web3',  count: 4, examples: ['NFT Metadata', 'QR Generator', 'Contract ABI'] },
-  { emoji: '🎵', name: 'Audio',          count: 3, examples: ['Waveform Viewer', 'BPM Detector', 'Audio Trimmer'] },
+  { icon: 'img', name: 'Image Tools',   count: 8, examples: ['Background Remover', 'Image Resizer', 'Format Converter'] },
+  { icon: 'dev', name: 'Dev Tools',      count: 6, examples: ['JSON Toolkit', 'CSS Generator', 'Color Palette'] },
+  { icon: 'game', name: 'Game Dev',       count: 5, examples: ['Sprite Packer', 'Tileset Slicer', 'Pixel Upscaler'] },
+  { icon: 'design', name: 'Design',         count: 5, examples: ['SVG Editor', 'Font Pairer', 'Gradient Builder'] },
+  { icon: 'crypto', name: 'Crypto / Web3',  count: 4, examples: ['NFT Metadata', 'QR Generator', 'Contract ABI'] },
+  { icon: 'audio', name: 'Audio',          count: 3, examples: ['Waveform Viewer', 'BPM Detector', 'Audio Trimmer'] },
 ] as const;
 
 export default function HomePage() {
@@ -104,7 +104,7 @@ export default function HomePage() {
             <span className="gradient-text">Free forever.</span>
           </h1>
           <p className="homepage-hero-sub">
-            AI studios for game devs, brand teams, and creators.<br />
+            One studio. Every creative mode.<br />
             30+ free browser tools. No paywalls.
           </p>
           <div className="homepage-hero-ctas">
@@ -120,7 +120,7 @@ export default function HomePage() {
             <span className="homepage-stat-sep">·</span>
             <span>30+ free tools</span>
             <span className="homepage-stat-sep">·</span>
-            <span>8 AI studios</span>
+            <span>WokGen Studio</span>
             <span className="homepage-stat-sep">·</span>
             <span>Open source</span>
           </div>
@@ -131,8 +131,8 @@ export default function HomePage() {
       <section className="homepage-modes">
         <div className="homepage-section-inner">
           <div className="homepage-section-head">
-            <h2 className="homepage-section-title">8 specialized AI studios</h2>
-            <p className="homepage-section-sub">Each studio is purpose-built for a creative discipline. Pick yours and start generating.</p>
+            <h2 className="homepage-section-title">WokGen Studio</h2>
+            <p className="homepage-section-sub">One platform. Six modes. Every creative asset you need.</p>
           </div>
           <div className="homepage-modes-grid">
             {MODES.map(mode => (
@@ -154,7 +154,7 @@ export default function HomePage() {
                     <li key={h}>{h}</li>
                   ))}
                 </ul>
-                <span className="homepage-mode-cta">Open Studio →</span>
+                <span className="homepage-mode-cta">Open Mode →</span>
               </Link>
             ))}
           </div>
@@ -174,7 +174,7 @@ export default function HomePage() {
           <div className="homepage-tools-grid">
             {TOOL_CATEGORIES.map(cat => (
               <div key={cat.name} className="homepage-tool-card">
-                <div className="homepage-tool-icon">{cat.emoji}</div>
+                <div className="homepage-tool-icon">{cat.icon}</div>
                 <div className="homepage-tool-name">{cat.name}</div>
                 <div className="homepage-tool-count">{cat.count} tools</div>
                 <ul className="homepage-tool-list">
@@ -237,9 +237,9 @@ export default function HomePage() {
                   <div className="homepage-chat-msg homepage-chat-eral">
                     Got it — dark fantasy RPG main menu. I&apos;d suggest starting with:
                     <br /><br />
-                    <strong>1.</strong> A moody hero background (Pixel Studio)<br />
-                    <strong>2.</strong> Logo mark with runic typography (Business Studio)<br />
-                    <strong>3.</strong> UI button set in stone/metal style (UI/UX Studio)
+                    <strong>1.</strong> A moody hero background · Pixel mode<br />
+                    <strong>2.</strong> Logo mark with runic typography · Business mode<br />
+                    <strong>3.</strong> UI button set in stone/metal style · UI/UX mode
                     <br /><br />
                     Want me to queue all three?
                   </div>
@@ -247,7 +247,7 @@ export default function HomePage() {
                     Yes, queue them all.
                   </div>
                   <div className="homepage-chat-msg homepage-chat-eral">
-                    ✓ Queued 3 generation tasks. Opening Pixel Studio first…
+                    ✓ Queued 3 generation tasks. Opening Pixel mode first…
                   </div>
                 </div>
               </div>
@@ -283,9 +283,9 @@ export default function HomePage() {
         <div className="homepage-final-cta-card">
           <div className="orb orb-purple homepage-final-orb" />
           <h2 className="homepage-final-title">Ready to create?</h2>
-          <p className="homepage-final-sub">No account. No card. Just open a studio and start.</p>
+          <p className="homepage-final-sub">No account. No card. Just open a mode and start.</p>
           <div className="homepage-final-btns">
-            <Link href="/pixel/studio" className="homepage-cta-primary">Start with Pixel Studio →</Link>
+            <Link href="/studio" className="homepage-cta-primary">Open WokGen Studio →</Link>
             <Link href="/tools" className="homepage-cta-ghost">Explore free tools →</Link>
           </div>
         </div>

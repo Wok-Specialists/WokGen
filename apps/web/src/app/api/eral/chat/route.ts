@@ -416,6 +416,29 @@ export async function POST(req: NextRequest) {
       if (recentModePrefs.length > 0) {
         userPrefsContext = `\n\n[User Preferences: ${recentModePrefs.join('; ')}]`;
       }
+      // Inject Eral memory (user-saved facts)
+      if (userPrefs.eralMemory) {
+        try {
+          const memFacts = JSON.parse(userPrefs.eralMemory) as Array<{ key: string; value: string }>;
+          if (memFacts.length > 0) {
+            const memStr = memFacts.slice(0, 10).map(f => `- ${f.key}: ${f.value}`).join('\n');
+            userPrefsContext += `\n\n[Things this user wants you to remember:\n${memStr}]`;
+          }
+        } catch { /* non-fatal */ }
+      }
+      // Inject Eral context (intro answers)
+      if (userPrefs.eralContext) {
+        try {
+          const ctx = JSON.parse(userPrefs.eralContext) as { projectType?: string; mainTool?: string; stylePreference?: string };
+          const parts: string[] = [];
+          if (ctx.projectType)     parts.push(`working on: ${ctx.projectType}`);
+          if (ctx.mainTool)        parts.push(`main tool: ${ctx.mainTool}`);
+          if (ctx.stylePreference) parts.push(`style preference: ${ctx.stylePreference}`);
+          if (parts.length > 0) {
+            userPrefsContext += `\n\n[User context: ${parts.join(', ')}]`;
+          }
+        } catch { /* non-fatal */ }
+      }
       const personality = userPrefs.eralPersonality ?? 'balanced';
       personalityModifier = PERSONALITY_MODIFIERS[personality] ?? '';
     }

@@ -13,7 +13,7 @@ export default function Page() {
       id="color-palette"
       label="Color Palette Extractor"
       description="Extract dominant colors from any image. Export as CSS variables, Tailwind, JSON, or SCSS."
-      icon="🎨"
+      icon="CLR"
     >
       <ColorPaletteTool />
     </ToolShell>

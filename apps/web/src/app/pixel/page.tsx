@@ -64,7 +64,7 @@ export default function PixelLanding() {
             </p>
             <div className="landing-cta-row">
               <Link href="/pixel/studio" className="btn-primary btn-lg">
-                Open Pixel Studio →
+                Open Pixel mode →
               </Link>
               <Link href="/pixel/gallery" className="btn-ghost btn-lg">
                 Browse Gallery
@@ -117,7 +117,7 @@ export default function PixelLanding() {
       <section className="landing-section landing-section--alt">
         <div className="landing-section-inner">
           <h2 className="landing-h2">What you can make</h2>
-          <p className="landing-section-desc">Click any prompt to open it in the Pixel Studio.</p>
+          <p className="landing-section-desc">Click any prompt to open it in Pixel mode.</p>
           <div className="landing-showcase-grid">
             {SHOWCASE.map(s => (
               <Link

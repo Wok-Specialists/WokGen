@@ -132,7 +132,6 @@ export default function ColorPaletteTool() {
           ? <img ref={imgRef} src={imgSrc} alt="source" className="cp-preview-img" />
           : (
             <div className="cp-drop-hint">
-              <span className="cp-drop-icon">🖼</span>
               <span className="cp-drop-text">Drop an image here or click to upload</span>
               <span className="cp-drop-sub">PNG, JPG, GIF, WebP…</span>
             </div>
@@ -153,7 +152,7 @@ export default function ColorPaletteTool() {
         </div>
         {imgSrc && (
           <button className="btn-primary cp-extract-btn" onClick={reExtract} disabled={loading}>
-            {loading ? '⏳ Extracting…' : '🎨 Extract Palette'}
+            {loading ? 'Extracting…' : 'Extract Palette'}
           </button>
         )}
       </div>

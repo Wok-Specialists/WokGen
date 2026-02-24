@@ -102,7 +102,7 @@ export default function TextDocs() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/text/studio" className="btn-primary btn-sm">Open Text Studio</Link>
+            <Link href="/text/studio" className="btn-primary btn-sm">Open Text mode</Link>
           </div>
         </aside>
 
@@ -224,7 +224,7 @@ export default function TextDocs() {
                   ['Creative',     'Imaginative, original, narrative-driven',         '"In a world where data breathes, your dashboard is the heartbeat."'],
                   ['Technical',    'Precise, jargon-aware, developer-focused',        '"The API accepts a JSON payload with a required prompt field and optional temperature parameter."'],
                   ['Persuasive',   'CTA-oriented, benefit-led, conversion-focused',   '"Join 12 000 teams already shipping faster — start free today."'],
-                  ['Playful',      'Light, humorous, energetic, emoji-friendly',      '"Your pixels just levelled up ✨ (and honestly? We\'re a bit proud.)"'],
+                  ['Playful',      'Light, humorous, energetic',      '"Your pixels just levelled up (and honestly? We\'re a bit proud.)"'],
                 ].map(([tone, desc, ex]) => (
                   <tr key={tone}>
                     <td><strong>{tone}</strong></td>

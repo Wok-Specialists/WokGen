@@ -95,7 +95,7 @@ export default function RegexTool() {
         />
       </div>
 
-      {error && <p className="regex-error-msg">❌ {error}</p>}
+      {error && <p className="regex-error-msg">{error}</p>}
 
       {/* Flag toggles */}
       <div className="regex-flags-row">

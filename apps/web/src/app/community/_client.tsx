@@ -38,12 +38,12 @@ interface GalleryResponse {
 
 const MODE_FILTERS = [
   { id: '',         label: 'All',      icon: '✦' },
-  { id: 'pixel',    label: 'Pixel',    icon: '🕹️' },
-  { id: 'business', label: 'Business', icon: '📊' },
-  { id: 'vector',   label: 'Vector',   icon: '✏️' },
-  { id: 'uiux',     label: 'UI/UX',    icon: '🖥️' },
-  { id: 'voice',    label: 'Voice',    icon: '🎙️' },
-  { id: 'text',     label: 'Text',     icon: '📝' },
+  { id: 'pixel',    label: 'Pixel',    icon: 'Px' },
+  { id: 'business', label: 'Business', icon: 'Biz' },
+  { id: 'vector',   label: 'Vector',   icon: 'Vec' },
+  { id: 'uiux',     label: 'UI/UX',    icon: 'host' },
+  { id: 'voice',    label: 'Voice',    icon: 'V' },
+  { id: 'text',     label: 'Text',     icon: 'Tx' },
 ] as const;
 
 const SORT_OPTIONS = [
@@ -447,9 +447,9 @@ function EmptyState({ search }: { search: string }) {
         Be the first to share. Generate something in a studio and enable &ldquo;Share to Gallery&rdquo;.
       </p>
       <div className="community-empty-cta-row">
-        <Link href="/pixel/studio" className="community-empty-link community-empty-link--pixel">🕹️ Pixel Studio</Link>
-        <Link href="/business/studio" className="community-empty-link community-empty-link--business">📊 Business Studio</Link>
-        <Link href="/uiux/studio" className="community-empty-link community-empty-link--uiux">🖥️ UI/UX Studio</Link>
+        <Link href="/pixel/studio" className="community-empty-link community-empty-link--pixel">Pixel Mode</Link>
+        <Link href="/business/studio" className="community-empty-link community-empty-link--business">Business Mode</Link>
+        <Link href="/uiux/studio" className="community-empty-link community-empty-link--uiux">UI/UX Mode</Link>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ export default function Page() {
       id="asset-manifest"
       label="Asset Manifest Builder"
       description="Generate Phaser/Pixi/Unity-compatible asset manifests."
-      icon="📋"
+      icon="JSN"
     />
   );
 }

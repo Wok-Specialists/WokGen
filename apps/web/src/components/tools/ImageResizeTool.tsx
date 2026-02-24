@@ -133,10 +133,9 @@ export default function ImageResizeTool() {
           tabIndex={0}
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
         >
-          <div className="tool-dropzone-icon">↔️</div>
           <p className="tool-dropzone-text">Drop an image here or click to browse</p>
           <p className="tool-dropzone-sub">PNG · JPG · WebP · GIF · BMP</p>
-          <p className="tool-dropzone-private">🔒 100% client-side — nothing uploaded</p>
+          <p className="tool-dropzone-private">100% client-side — nothing uploaded</p>
           <input
             ref={inputRef}
             type="file"
@@ -185,7 +184,7 @@ export default function ImageResizeTool() {
                 onClick={() => setLockAspect(l => !l)}
                 title={lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'}
               >
-                {lockAspect ? '🔒' : '🔓'}
+                {lockAspect ? 'Lock' : 'Unlock'}
               </button>
               <label className="img-conv-label" htmlFor="resize-h">Height (px)</label>
               <input

@@ -24,11 +24,11 @@ const SEARCH_INDEX = [
   { title: 'Eral — Voice Mode', path: '/docs/eral#voice', desc: 'Talk to Eral with your microphone.' },
   { title: 'API Reference', path: '/docs/api', desc: 'Full REST API documentation.' },
   { title: 'Self-Hosting', path: '/docs/self-hosting', desc: 'Run WokGen on your own infrastructure.' },
-  { title: 'Business Studio', path: '/docs/business', desc: 'Logos, brand kits, and slide visuals.' },
-  { title: 'Vector Studio', path: '/docs/vector', desc: 'SVG icons and illustration libraries.' },
-  { title: 'UI/UX Studio', path: '/docs/uiux', desc: 'React components and design-to-code.' },
-  { title: 'Voice Studio', path: '/docs/voice', desc: 'AI text-to-speech and narration.' },
-  { title: 'Text Studio', path: '/docs/text', desc: 'AI copywriting for blogs, emails, and more.' },
+  { title: 'Business mode', path: '/docs/business', desc: 'Logos, brand kits, and slide visuals.' },
+  { title: 'Vector mode', path: '/docs/vector', desc: 'SVG icons and illustration libraries.' },
+  { title: 'UI/UX mode', path: '/docs/uiux', desc: 'React components and design-to-code.' },
+  { title: 'Voice mode', path: '/docs/voice', desc: 'AI text-to-speech and narration.' },
+  { title: 'Text mode', path: '/docs/text', desc: 'AI copywriting for blogs, emails, and more.' },
   { title: 'Account & Auth', path: '/docs/platform/account', desc: 'GitHub sign-in and profile management.' },
   { title: 'Plans & Billing', path: '/docs/platform/billing', desc: 'Free tier, credits, and subscriptions.' },
   { title: 'Gallery & Projects', path: '/docs/platform/gallery', desc: 'Save, organise, and share assets.' },
@@ -48,10 +48,10 @@ const MODES = [
 ];
 
 const PLATFORM = [
-  { href: '/docs/tools',           icon: '🔧', label: 'Tools Guide',   desc: '35+ browser tools, zero install' },
-  { href: '/docs/eral',            icon: '🤖', label: 'Eral',          desc: 'AI director and WAP commands' },
-  { href: '/docs/api',             icon: '📡', label: 'API Reference', desc: 'REST endpoints and auth' },
-  { href: '/docs/self-hosting',    icon: '🖥️', label: 'Self-Hosting',  desc: 'Run WokGen locally or on-prem' },
+  { href: '/docs/tools',           icon: 'tools', label: 'Tools Guide',   desc: '35+ browser tools, zero install' },
+  { href: '/docs/eral',            icon: 'eral', label: 'Eral',          desc: 'AI director and WAP commands' },
+  { href: '/docs/api',             icon: 'api', label: 'API Reference', desc: 'REST endpoints and auth' },
+  { href: '/docs/self-hosting',    icon: 'host', label: 'Self-Hosting',  desc: 'Run WokGen locally or on-prem' },
 ];
 
 const POPULAR = [

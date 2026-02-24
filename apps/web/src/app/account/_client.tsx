@@ -190,7 +190,6 @@ function BYOCTab() {
   return (
     <div className="acct-section">
       <div className="acct-compute-hero">
-        <div className="acct-compute-icon">⚡</div>
         <div>
           <h2 className="acct-compute-title">Connect your own GPU</h2>
           <p className="acct-compute-desc">
@@ -373,7 +372,7 @@ function UsageTab() {
 
       <div className="acct-divider" />
       <Link href="/account/usage" className="acct-dev-card">
-        <span className="acct-dev-card-icon">📊</span>
+        <span className="acct-dev-card-icon">API</span>
         <div>
           <p className="acct-dev-card-title">Full Usage Report</p>
           <p className="acct-dev-card-desc">Request log, mode breakdown, detailed charts</p>
@@ -464,7 +463,7 @@ function ApiKeysTab() {
 
       {rawKey && (
         <div className="account-v2-rawkey">
-          <p className="account-v2-rawkey__warning">⚠ Copy your key now — it won&apos;t be shown again.</p>
+          <p className="account-v2-rawkey__warning">Copy your key now — it won&apos;t be shown again.</p>
           <div className="account-v2-rawkey__row">
             <code className="account-v2-rawkey__code">{rawKey}</code>
             <button
@@ -565,7 +564,7 @@ function IntegrationsTab() {
         </div>
 
         <div className="account-v2-integration-card">
-          <div className="account-v2-integration-card__icon account-v2-integration-card__icon--webhook">🔗</div>
+          <div className="account-v2-integration-card__icon account-v2-integration-card__icon--webhook">WH</div>
           <div className="account-v2-integration-card__info">
             <p className="account-v2-integration-card__name">Webhooks</p>
             <p className="account-v2-integration-card__desc">Receive HTTP callbacks on generation events.</p>

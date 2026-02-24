@@ -172,9 +172,9 @@ export default function PdfTool() {
   };
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: 'merge', label: '📎 Merge' },
-    { id: 'extract', label: '✂️ Extract Pages' },
-    { id: 'info', label: 'ℹ️ Info' },
+    { id: 'merge', label: 'Merge' },
+    { id: 'extract', label: 'Extract Pages' },
+    { id: 'info', label: 'Info' },
   ];
 
   return (
@@ -206,7 +206,7 @@ export default function PdfTool() {
               className="tool-file-input-hidden"
               onChange={e => e.target.files && addMergeFiles(e.target.files)}
             />
-            <div className="tool-dropzone-icon">📄</div>
+            <div className="tool-dropzone-icon"></div>
             <p className="tool-dropzone-text">Drop PDFs here or click to browse</p>
             <p className="tool-dropzone-sub">Select multiple files</p>
           </div>
@@ -215,7 +215,7 @@ export default function PdfTool() {
             <ul className="pdf-file-list">
               {mergeFiles.map((f, i) => (
                 <li key={i} className="pdf-file-item">
-                  <span className="pdf-file-name">📄 {f.name}</span>
+                  <span className="pdf-file-name">{f.name}</span>
                   <span className="pdf-file-size">{formatBytes(f.size)}</span>
                   <button
                     className="pdf-file-remove"
@@ -262,12 +262,12 @@ export default function PdfTool() {
                 className="tool-file-input-hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) { setExtractFile(f); setExtractError(''); } }}
               />
-              <div className="tool-dropzone-icon">✂️</div>
+              <div className="tool-dropzone-icon"></div>
               <p className="tool-dropzone-text">Drop a PDF here</p>
             </div>
           ) : (
             <div className="pdf-file-item pdf-selected-file">
-              <span className="pdf-file-name">📄 {extractFile.name}</span>
+              <span className="pdf-file-name">{extractFile.name}</span>
               <span className="pdf-file-size">{formatBytes(extractFile.size)}</span>
               <button className="pdf-file-remove" onClick={() => { setExtractFile(null); setExtractError(''); }}>✕</button>
             </div>
@@ -315,18 +315,18 @@ export default function PdfTool() {
                 className="tool-file-input-hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) { setInfoFile(f); setInfoData(null); setInfoError(''); loadInfo(f); } }}
               />
-              <div className="tool-dropzone-icon">ℹ️</div>
+              <div className="tool-dropzone-icon"></div>
               <p className="tool-dropzone-text">Drop a PDF to inspect</p>
             </div>
           ) : (
             <div className="pdf-file-item pdf-selected-file">
-              <span className="pdf-file-name">📄 {infoFile.name}</span>
+              <span className="pdf-file-name">{infoFile.name}</span>
               <span className="pdf-file-size">{formatBytes(infoFile.size)}</span>
               <button className="pdf-file-remove" onClick={() => { setInfoFile(null); setInfoData(null); setInfoError(''); }}>✕</button>
             </div>
           )}
 
-          {infoBusy && <p className="pdf-loading">🔍 Reading PDF…</p>}
+          {infoBusy && <p className="pdf-loading">Reading PDF…</p>}
           {infoError && <p className="pdf-error">{infoError}</p>}
 
           {infoData && (

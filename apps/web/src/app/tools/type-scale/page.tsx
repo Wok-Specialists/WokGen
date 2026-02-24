@@ -9,7 +9,7 @@ import TypeScaleTool from '@/components/tools/TypeScaleTool';
 
 export default function Page() {
   return (
-    <ToolShell id="type-scale" label="Type Scale" description="Generate a visual typography scale from a base size and modular ratio. Export as CSS variables." icon="🔡">
+    <ToolShell id="type-scale" label="Type Scale" description="Generate a visual typography scale from a base size and modular ratio. Export as CSS variables." icon="TYP">
       <TypeScaleTool />
     </ToolShell>
   );

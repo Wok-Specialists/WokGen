@@ -39,7 +39,7 @@ export default function DonationStrip() {
   return (
     <div className="donation-strip" role="banner" aria-label="Support WokGen">
       <p className="donation-strip-text">
-        💜 WokGen is free forever.{' '}
+        WokGen is free forever.{' '}
         If it helps you create, consider{' '}
         <Link href="/support" onClick={dismiss}>supporting the project →</Link>
       </p>

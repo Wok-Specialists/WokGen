@@ -169,7 +169,7 @@ export default function SpritePackerTool() {
             onDragOver={e => e.preventDefault()}
             onDrop={e => { e.preventDefault(); loadFiles(e.dataTransfer.files); }}
           >
-            <div>📁</div>
+            <div>Upload</div>
             <p>Drop PNGs here or click to browse</p>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Supports PNG, JPG, WebP, GIF</p>
             <input type="file" accept="image/*" multiple onChange={e => loadFiles(e.target.files)} style={{ display: 'none' }} />

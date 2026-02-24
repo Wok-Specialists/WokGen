@@ -13,7 +13,7 @@ export default function Page() {
       id="og-preview"
       label="Open Graph Preview"
       description="Preview how your link looks on Twitter, Facebook, LinkedIn, Discord, and Slack."
-      icon="👁️"
+      icon="OG"
     >
       <OgPreviewTool />
     </ToolShell>
