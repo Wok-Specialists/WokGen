@@ -18,6 +18,8 @@ export async function GET() {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
+  const since24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
   const [
     totalUsers,
     activeThisMonth,
@@ -27,6 +29,7 @@ export async function GET() {
     hdJobs,
     standardJobs,
     recentJobs,
+    providerFailures,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.job.groupBy({
@@ -49,6 +52,11 @@ export async function GET() {
         user: { select: { email: true } },
       },
     }),
+    prisma.job.groupBy({
+      by: ['provider'],
+      where: { status: 'failed', createdAt: { gte: since24h } },
+      _count: true,
+    }),
   ]);
 
   const byPlan: Record<string, number> = {};
@@ -56,7 +64,33 @@ export async function GET() {
     byPlan[row.planId] = row._count;
   }
 
-    const responseBody = {
+  // Build provider health: configured status + 24h failure counts + circuit breaker
+  const CIRCUIT_BREAKER_THRESHOLD = 5;
+  const ALL_PROVIDERS = ['replicate', 'fal', 'together', 'comfyui', 'pollinations', 'huggingface'] as const;
+  const failureMap: Record<string, number> = {};
+  for (const row of providerFailures) failureMap[row.provider] = row._count;
+
+  const providerHealth = ALL_PROVIDERS.map(p => {
+    const failures = failureMap[p] ?? 0;
+    const configured = (() => {
+      switch (p) {
+        case 'replicate':    return !!process.env.REPLICATE_API_TOKEN;
+        case 'fal':          return !!process.env.FAL_KEY;
+        case 'together':     return !!process.env.TOGETHER_API_KEY;
+        case 'comfyui':      return !!process.env.COMFYUI_URL;
+        case 'pollinations': return true; // no key required
+        case 'huggingface':  return !!process.env.HUGGINGFACE_API_KEY;
+      }
+    })();
+    return {
+      provider:  p,
+      configured,
+      failures24h: failures,
+      degraded:    failures > CIRCUIT_BREAKER_THRESHOLD,
+    };
+  });
+
+  const responseBody = {
     users: {
       total: totalUsers,
       activeThisMonth,
@@ -69,6 +103,7 @@ export async function GET() {
       standard: standardJobs,
     },
     recentJobs,
+    providerHealth,
     generatedAt: now.toISOString(),
   };
   await cache.set(CACHE_KEY, responseBody, 300); // 5 min TTL
