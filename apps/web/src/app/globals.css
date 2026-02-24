@@ -11313,3 +11313,38 @@ select:focus-visible {
 
 .favicon-ico-note p { margin: 0; }
 .favicon-ico-note code { font-family: monospace; font-size: 0.82rem; color: var(--accent-primary); }
+
+/* ── Studio action bar (S3) ─────────────────────────────────────────────── */
+.studio-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  flex-shrink: 0;
+  border-top: 1px solid var(--surface-border);
+  background: var(--surface-overlay);
+  flex-wrap: wrap;
+}
+
+.studio-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.studio-action-btn:hover {
+  background: rgba(167,139,250,.12);
+  border-color: rgba(167,139,250,.35);
+  color: var(--text-primary);
+}

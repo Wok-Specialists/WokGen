@@ -270,16 +270,8 @@ export async function POST(req: NextRequest) {
   if (!elevenKey) {
     // Try edge-tts as free fallback before returning text-only response
     try {
-      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
-      const tts = new MsEdgeTTS();
-      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
-        const chunks: Buffer[] = [];
-        const stream = tts.toStream(ttsText);
-        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
-        stream.on('end', () => resolve(Buffer.concat(chunks)));
-        stream.on('error', reject);
-      });
+      const { tts: edgeTts } = await import('edge-tts');
+      const audioBuffer = await edgeTts(ttsText, { voice: 'en-US-AriaNeural' });
       return new Response(audioBuffer, {
         headers: {
           'Content-Type': 'audio/mpeg',
@@ -327,16 +319,8 @@ export async function POST(req: NextRequest) {
     logger.error({ err }, '[speak] ElevenLabs request failed');
     // Try edge-tts before returning text fallback
     try {
-      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
-      const tts = new MsEdgeTTS();
-      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
-        const chunks: Buffer[] = [];
-        const stream = tts.toStream(ttsText);
-        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
-        stream.on('end', () => resolve(Buffer.concat(chunks)));
-        stream.on('error', reject);
-      });
+      const { tts: edgeTts } = await import('edge-tts');
+      const audioBuffer = await edgeTts(ttsText, { voice: 'en-US-AriaNeural' });
       return new Response(audioBuffer, {
         headers: {
           'Content-Type': 'audio/mpeg',
@@ -358,16 +342,8 @@ export async function POST(req: NextRequest) {
     logger.error({ err: errText, status: elevenRes.status }, '[speak] ElevenLabs error');
     // Try edge-tts before returning text fallback
     try {
-      const { MsEdgeTTS, OUTPUT_FORMAT } = await import('edge-tts');
-      const tts = new MsEdgeTTS();
-      await tts.setMetadata('en-US-AriaNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-      const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
-        const chunks: Buffer[] = [];
-        const stream = tts.toStream(ttsText);
-        stream.on('data', (chunk: Buffer) => chunks.push(chunk));
-        stream.on('end', () => resolve(Buffer.concat(chunks)));
-        stream.on('error', reject);
-      });
+      const { tts: edgeTts } = await import('edge-tts');
+      const audioBuffer = await edgeTts(ttsText, { voice: 'en-US-AriaNeural' });
       return new Response(audioBuffer, {
         headers: {
           'Content-Type': 'audio/mpeg',
