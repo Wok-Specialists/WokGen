@@ -606,17 +606,21 @@ function GalleryCard({
   asset,
   index,
   onClick,
+  selected,
+  onSelect,
 }: {
   asset: GalleryAsset;
   index: number;
   onClick: () => void;
+  selected: boolean;
+  onSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const rarityColor = asset.rarity ? (RARITY_COLORS[asset.rarity] ?? null) : null;
 
   return (
     <button
       onClick={onClick}
-      className="gallery-card animate-fade-in"
+      className={`gallery-card animate-fade-in${selected ? ' gallery-card--selected' : ''}`}
       style={{
         animationDelay: `${Math.min(index * 0.03, 0.4)}s`,
         boxShadow: rarityColor
@@ -628,6 +632,20 @@ function GalleryCard({
       }}
       aria-label={asset.title ?? asset.prompt}
     >
+      {/* Bulk-select checkbox */}
+      <label
+        className="gallery-card-checkbox"
+        onClick={e => e.stopPropagation()}
+        aria-label="Select for download"
+      >
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={onSelect}
+          onClick={e => e.stopPropagation()}
+        />
+      </label>
+
       {/* Image */}
       <div className="gallery-card-image">
         <img
@@ -834,6 +852,23 @@ export default function GalleryPage() {
 
   // Modal
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  // Bulk select
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const downloadSelected = () => {
+    assets
+      .filter(a => selectedIds.has(a.id))
+      .forEach(a => window.open(a.imageUrl, '_blank'));
+  };
 
   // Search debounce
   useEffect(() => {
@@ -1137,6 +1172,22 @@ export default function GalleryPage() {
           </div>
         )}
 
+        {/* Bulk download bar */}
+        {selectedIds.size > 0 && (
+          <div className="gallery-bulk-bar">
+            <span className="gallery-bulk-bar__count">{selectedIds.size} selected</span>
+            <button className="btn btn--sm" onClick={downloadSelected}>
+              ↓ Download selected
+            </button>
+            <button
+              className="btn btn--ghost btn--sm"
+              onClick={() => setSelectedIds(new Set())}
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         {/* Asset grid */}
         {!loading && (
           <div className="gallery-grid">
@@ -1149,6 +1200,8 @@ export default function GalleryPage() {
                   asset={asset}
                   index={i}
                   onClick={() => setSelectedIndex(i)}
+                  selected={selectedIds.has(asset.id)}
+                  onSelect={() => toggleSelect(asset.id)}
                 />
               ))
             )}
