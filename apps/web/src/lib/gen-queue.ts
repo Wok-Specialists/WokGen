@@ -18,6 +18,7 @@
  */
 
 import PQueue from 'p-queue';
+import { log } from '@/lib/logger';
 
 // Max 10 simultaneous AI provider calls per serverless instance.
 // Adjust via GENERATION_CONCURRENCY env var.
@@ -58,7 +59,7 @@ export async function queueGeneration(params: QueueGenerationParams): Promise<vo
   const conn = new IORedis(process.env.REDIS_URL!, { maxRetriesPerRequest: null, lazyConnect: true });
   const q = new Queue('generation', { connection: conn });
   try {
-    await q.add('generate', params, { jobId: params.jobId, removeOnComplete: 100, removeOnFail: 50 });
+    await q.add('generate', params, { jobId: params.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 }, timeout: 300_000 });
   } finally {
     await conn.quit();
   }
@@ -105,10 +106,10 @@ export async function enqueueGeneration(data: QueueGenerationParams): Promise<vo
     const IORedis = (await import('ioredis')).default;
     const conn = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true });
     const q = new Queue('generation', { connection: conn });
-    await q.add('generate', data, { jobId: data.jobId, removeOnComplete: 100, removeOnFail: 50 });
+    await q.add('generate', data, { jobId: data.jobId, removeOnComplete: { count: 100 }, removeOnFail: { count: 200 }, timeout: 300_000 });
     await conn.quit();
   } catch (err) {
-    console.warn('[gen-queue] Failed to enqueue, falling back to sync:', err);
+    log.error({ err }, '[gen-queue] Failed to enqueue, falling back to sync');
   }
 }
 

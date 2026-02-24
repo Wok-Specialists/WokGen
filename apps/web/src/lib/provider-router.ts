@@ -314,6 +314,11 @@ export function resolveTextProvider(): ProviderEntry | null {
 /**
  * Resolve the optimal provider for a given mode + tool + quality combination.
  *
+ * Failover chain (HD): fal → replicate → together → pollinations
+ * Failover chain (standard): together → huggingface → pollinations
+ * Each provider is tried in order; the first one with a valid env key is used.
+ * pollinations is always the final fallback — no key required.
+ *
  * Walks the preference list for the mode/tool and returns the first provider
  * whose required environment key is present. Falls back to 'pollinations' if
  * nothing else is available (always works, no key required).
