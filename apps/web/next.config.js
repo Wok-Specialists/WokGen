@@ -100,9 +100,6 @@ const nextConfig = {
   // ---------------------------------------------------------------------------
   async redirects() {
     return [
-      // Mode migration — preserve existing shared links
-      { source: '/studio',  destination: '/pixel/studio',  permanent: false },
-      { source: '/gallery', destination: '/pixel/gallery', permanent: false },
       // Legacy convenience aliases
       { source: '/generate', destination: '/pixel/studio', permanent: false },
       { source: '/art',      destination: '/pixel/gallery', permanent: false },
