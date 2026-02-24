@@ -141,8 +141,34 @@ To use Vercel CLI deploys from CI, set these GitHub Actions secrets:
 
 ## Docker / self-hosting (alternative)
 
-`Dockerfile` and `docker-compose.prod.yml` at the repo root are kept for self-hosting.
+`Dockerfile` and `docker-compose.self-hosted.yml` at the repo root are kept for self-hosting.
 To use them, re-enable `output: 'standalone'` in `apps/web/next.config.js` (see comment).
+
+### Self-hosted environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `SELF_HOSTED` | **Yes** | Set to `true` to disable auth enforcement and enable BYOK mode |
+| `DATABASE_URL` | **Yes** | SQLite path (`file:./data/dev.db`) or Postgres connection string |
+| `NODE_ENV` | **Yes** | Set to `production` |
+| `NEXT_PUBLIC_BASE_URL` | **Yes** | The public URL of your instance (e.g. `http://localhost:3000`) |
+| `TOGETHER_API_KEY` | One required | Together.ai API key |
+| `REPLICATE_API_TOKEN` | One required | Replicate API token |
+| `FAL_KEY` | One required | fal.ai API key |
+| `COMFYUI_HOST` | Optional | URL of local ComfyUI instance (e.g. `http://host.docker.internal:8188`) |
+| `GROQ_API_KEY` | Optional | Groq API key — powers Eral chat and prompt enhance |
+| `GOOGLE_AI_API_KEY` | Optional | Google AI Studio key — powers Eral Gemini variant |
+| `MISTRAL_API_KEY` | Optional | Mistral key — powers Eral Fast variant |
+| `AUTH_SECRET` | Optional | Only needed if you enable auth in self-hosted mode |
+| `NEXT_TELEMETRY_DISABLED` | Optional | Set to `1` to disable Next.js telemetry |
+
+Quick start:
+```bash
+cp .env.example .env.local  # fill in at least one provider key
+TOGETHER_API_KEY=your_key docker compose -f docker-compose.self-hosted.yml up
+```
+
+Health check endpoint: `GET /api/health` — returns `{"ok":true}` when the instance is ready.
 
 ---
 
