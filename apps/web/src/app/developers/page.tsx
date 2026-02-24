@@ -21,7 +21,7 @@ export default function DevelopersPage() {
           Programmatic access to WokGen&apos;s full AI asset generation surface. Generate images, remove backgrounds, chat with Eral 7c, and more — all via a clean REST API.
         </p>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <Link href="/dashboard/api-keys" className="btn btn-primary" style={{ padding: '0.625rem 1.25rem' }}>Get API Key</Link>
+          <Link href="/account/api-keys" className="btn btn-primary" style={{ padding: '0.625rem 1.25rem' }}>Get API Key</Link>
           <a href="#docs" className="btn btn-secondary" style={{ padding: '0.625rem 1.25rem' }}>View Docs</a>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default function DevelopersPage() {
 
       <div style={{ marginTop: '3rem', padding: '1.5rem', border: '1px solid rgba(167,139,250,0.2)', borderRadius: '10px', background: 'rgba(167,139,250,0.05)', textAlign: 'center' }}>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>WokAPI is in developer preview. Features and endpoints may change.</p>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Manage your API keys at <Link href="/dashboard/api-keys" style={{ color: '#a78bfa' }}>dashboard API keys</Link> · Full platform management at <a href="https://dashboard.wokspec.org" target="_blank" rel="noopener noreferrer" style={{ color: '#a78bfa' }}>dashboard.wokspec.org</a></p>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Manage your API keys at <Link href="/account/api-keys" style={{ color: '#a78bfa' }}>dashboard API keys</Link> · Full platform management at <a href="https://dashboard.wokspec.org" target="_blank" rel="noopener noreferrer" style={{ color: '#a78bfa' }}>dashboard.wokspec.org</a></p>
       </div>
     </div>
   );

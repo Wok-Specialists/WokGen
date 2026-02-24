@@ -178,6 +178,9 @@ export function NavAuth() {
           <Link href="/library" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Asset Library
           </Link>
+          <Link href="/projects" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
+            Projects
+          </Link>
           <Link href="/account" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Account
           </Link>
