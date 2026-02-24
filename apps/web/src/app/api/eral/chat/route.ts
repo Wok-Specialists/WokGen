@@ -7,6 +7,7 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
 import { pollinationsChat } from '@/lib/providers/pollinations-text';
 import { groqChat } from '@/lib/providers/groq';
+import { cerebrasChat } from '@/lib/providers/cerebras';
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
@@ -27,7 +28,7 @@ const GEMINI_URL   = 'https://generativelanguage.googleapis.com/v1beta/models/ge
 const MISTRAL_URL  = 'https://api.mistral.ai/v1/chat/completions';
 const COHERE_URL   = 'https://api.cohere.ai/v2/chat';
 
-const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' | 'gemini' | 'mistral' | 'anthropic' | 'cohere' }> = {
+const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' | 'gemini' | 'mistral' | 'anthropic' | 'cohere' | 'cerebras' }> = {
   'eral-7c':       { model: 'llama-3.3-70b-versatile',              provider: 'groq'      },
   'eral-mini':     { model: 'llama3-8b-8192',                       provider: 'groq'      },
   'eral-code':     { model: 'deepseek-ai/DeepSeek-V3',              provider: 'together'  },
@@ -36,6 +37,8 @@ const MODEL_MAP: Record<string, { model: string; provider: 'groq' | 'together' |
   'eral-fast':     { model: 'mistral-small-latest',                  provider: 'mistral'   },
   'eral-haiku':    { model: 'claude-haiku-4-5',                      provider: 'anthropic' },
   'eral-cohere':   { model: 'command-r-plus-08-2024',                provider: 'cohere'    },
+  'eral-speed':    { model: 'llama-4-scout-17b-16e',                 provider: 'cerebras'  },
+  'eral-cerebras': { model: 'llama3.1-70b',                          provider: 'cerebras'  },
 };
 
 // Fallback for eral-7c when Groq key is absent
@@ -104,7 +107,7 @@ const PERSONALITY_MODIFIERS: Record<string, string> = {
 interface ChatRequest {
   message: string;
   conversationId?: string;
-  modelVariant?: 'eral-7c' | 'eral-mini' | 'eral-code' | 'eral-creative' | 'eral-gemini' | 'eral-fast' | 'eral-haiku' | 'eral-cohere';
+  modelVariant?: 'eral-7c' | 'eral-mini' | 'eral-code' | 'eral-creative' | 'eral-gemini' | 'eral-fast' | 'eral-haiku' | 'eral-cohere' | 'eral-speed' | 'eral-cerebras';
   context?: {
     mode?: string;
     tool?: string;
@@ -136,8 +139,15 @@ function resolveEndpointAndKey(variant: string): {
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
   const cohereKey    = process.env.COHERE_API_KEY;
 
-  if (mapping.provider === 'anthropic') {
-    if (anthropicKey) {
+  if (mapping.provider === 'cerebras') {
+    const cerebrasKey = process.env.CEREBRAS_API_KEY;
+    if (cerebrasKey) {
+      return { url: 'cerebras', apiKey: cerebrasKey, model: mapping.model, provider: 'cerebras' };
+    }
+    // Fall through to groq fallback
+  }
+
+  if (mapping.provider === 'anthropic') {    if (anthropicKey) {
       return { url: 'anthropic', apiKey: anthropicKey, model: mapping.model, provider: 'anthropic' };
     }
     // Fall through to groq fallback
@@ -310,6 +320,13 @@ async function handleNonStreaming(
     return handleCohereNonStreaming(messages, url, apiKey, model);
   }
 
+  if (provider === 'cerebras') {
+    const systemMsg = messages.find(m => m.role === 'system')?.content ?? '';
+    const userMsg = messages.filter(m => m.role === 'user').at(-1)?.content ?? '';
+    const result = await cerebrasChat(systemMsg, userMsg, { model, maxTokens: 2048 });
+    return { reply: result.text, durationMs: Date.now() - start };
+  }
+
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -358,7 +375,7 @@ export async function POST(req: NextRequest) {
     const Schema = z.object({
       message:       z.string().min(1).max(4000),
       conversationId: z.string().cuid().optional(),
-      modelVariant:  z.enum(['eral-7c','eral-mini','eral-code','eral-creative','eral-gemini','eral-fast','eral-haiku','eral-cohere']).optional(),
+      modelVariant:  z.enum(['eral-7c','eral-mini','eral-code','eral-creative','eral-gemini','eral-fast','eral-haiku','eral-cohere','eral-speed','eral-cerebras']).optional(),
       stream:        z.boolean().optional(),
       context:       z.object({
         mode:      z.string().optional(),
@@ -483,12 +500,63 @@ export async function POST(req: NextRequest) {
     } catch { /* non-fatal */ }
   }
 
+  // ─── Web augmentation (Jina Reader + Exa) ─────────────────────────────────
+  let webContext = '';
+
+  const urlMatch = message.match(/https?:\/\/[^\s]+/);
+  if (urlMatch) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      const jinaRes = await fetch(`https://r.jina.ai/${urlMatch[0]}`, {
+        headers: { 'Accept': 'text/markdown', 'X-Return-Format': 'markdown' },
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      if (jinaRes.ok) {
+        const pageText = await jinaRes.text();
+        webContext = `\n\n[Page content from ${urlMatch[0]}]:\n${pageText.slice(0, 3000)}`;
+      }
+    } catch { /* graceful fallback */ }
+  }
+
+  const searchKeywords = /search for|look up|find me|what is.*latest|current|news about|recent/i;
+  if (searchKeywords.test(message) && process.env.EXA_API_KEY) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      const exaRes = await fetch('https://api.exa.ai/search', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.EXA_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: message,
+          num_results: 5,
+          use_autoprompt: true,
+          text: { max_characters: 500 },
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      if (exaRes.ok) {
+        const exaData = await exaRes.json();
+        const results = exaData.results?.slice(0, 3).map((r: { title: string; url: string; text?: string }) =>
+          `[${r.title}](${r.url}): ${r.text?.slice(0, 200) || ''}`
+        ).join('\n');
+        if (results) webContext += `\n\n[Web search results for "${message}"]:\n${results}`;
+      }
+    } catch { /* graceful fallback */ }
+  }
+
   const systemContent = [
     ERAL_SYSTEM_PROMPT,
     personalityModifier,
     contextNote ? `\n\n${contextNote}` : '',
     userPrefsContext,
     projectContext,
+    webContext,
   ].join('').trim();
 
   const history = conv.isNew ? [] : await fetchHistory(conv.id);

@@ -25,7 +25,9 @@ export type WAPActionType =
   | 'setQuality'         // Switch HD/standard toggle
   | 'openTool'           // Navigate to a /tools/* page
   | 'processImage'      // Navigate to a tool with an image pre-loaded
-  | 'rememberFact';     // Save a fact to user's Eral memory
+  | 'rememberFact'     // Save a fact to user's Eral memory
+  | 'readURL'          // Read and summarize any webpage
+  | 'webSearch';       // Search the web for current information
 
 export interface WAPAction {
   type: WAPActionType;
@@ -99,6 +101,8 @@ Supported actions:
 - openTool: Navigate to a free tool (toolId: "background-remover" | "image-compress" | "image-resize" | "font-pairer" | "color-tools" | "css-generator" | "json-tools" | "regex" | "encode-decode" | "hash" | "generators" | "text-tools" | "markdown" | "csv-tools" | "og-preview" | "color-palette" | "mockup" | "social-resize" | "pixel-editor" | "sprite-packer" | "whiteboard" | "snippets" | "pdf" | "crypto-tools" | "audio-tools" | "tilemap" | "font-pairer")
 - processImage: Open a specific tool with an image URL pre-loaded (toolId: "background-remover" | "image-compress" | "image-resize" | "color-palette", imageUrl: "https://...")
 - rememberFact: Save something the user wants remembered (key: short label, value: what to remember)
+- readURL: Read and summarize any webpage (url: full URL to fetch)
+- webSearch: Search the web via Exa AI for current information (query: search query)
 
 Format (append to your reply only when taking action):
 <wap>{"actions":[{"type":"navigate","path":"/pixel/studio"},{"type":"setParam","key":"size","value":64}],"confirmation":"Opening Pixel Studio and setting size to 64×64"}</wap>
@@ -116,6 +120,8 @@ Examples:
 - User: "Remove the background from my image" → processImage action
 - User: "Compress this image" → openTool action (toolId: "image-compress")
 - User: "Remember that I prefer dark themes" → rememberFact action (key: "style preference", value: "dark themes")
+- User: "What's on this page: https://example.com" → readURL action
+- User: "Search for latest AI news" → webSearch action
 - User: "How do I make better pixel art?" → NO wap block, just answer
 
 CRITICAL RULES:
