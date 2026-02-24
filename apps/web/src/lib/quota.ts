@@ -87,6 +87,42 @@ export const MAX_CONCURRENT: Record<string, number> = {
   max:   10,
 };
 
+// HD generation daily limits (Cycle 12)
+export const DAILY_HD_LIMIT: Record<string, number> = {
+  guest:  0,
+  free:   0,
+  plus:  50,
+  pro:   -1,  // unlimited
+  max:   -1,
+};
+
+// Eral chat sessions per day (free tier is session-scoped, tracked by IP)
+export const ERAL_CHAT_DAILY_LIMIT: Record<string, number> = {
+  guest:  3,
+  free:   3,
+  plus:  -1,
+  pro:   -1,
+  max:   -1,
+};
+
+// Batch generation item counts
+export const BATCH_MAX_ITEMS: Record<string, number> = {
+  guest:  1,
+  free:   1,
+  plus:   4,
+  pro:   16,
+  max:   16,
+};
+
+// Eral Director plan runs per day
+export const DIRECTOR_DAILY_LIMIT: Record<string, number> = {
+  guest:  0,
+  free:   1,
+  plus:  -1,
+  pro:   -1,
+  max:   -1,
+};
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -332,13 +368,13 @@ export async function checkConcurrent(
   const max  = MAX_CONCURRENT[tier] ?? MAX_CONCURRENT.free;
 
   if (userId) {
-    // Count jobs currently running for this user (last 10 min, covers stuck jobs)
+    // Count jobs currently running for this user (last 3 min, covers stuck jobs)
     try {
       const running = await prisma.job.count({
         where: {
           userId,
           status:    'running',
-          createdAt: { gte: new Date(Date.now() - 10 * 60_000) },
+          createdAt: { gte: new Date(Date.now() - 3 * 60_000) },
         },
       });
       return { allowed: running < max, running, max };

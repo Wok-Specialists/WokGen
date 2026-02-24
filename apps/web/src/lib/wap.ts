@@ -1,18 +1,28 @@
 // WokGen Action Protocol — structured commands Eral can dispatch to the platform
 
 export type WAPActionType =
-  | 'navigate'        // Go to a URL
-  | 'setParam'        // Set a studio parameter
-  | 'generate'        // Trigger a generation
-  | 'openModal'       // Open a modal/overlay
-  | 'showTip'         // Show a tooltip/hint overlay
-  | 'clearHistory'    // Clear studio history
-  | 'toggleHD'        // Toggle HD mode
-  | 'setPrompt'       // Fill the prompt field
-  | 'setTool'         // Select a tool in the studio
-  | 'openGallery'     // Navigate to gallery
-  | 'saveToGallery'   // Save current generation
-  | 'downloadAsset';  // Download current asset
+  | 'navigate'           // Go to a URL
+  | 'setParam'           // Set a studio parameter
+  | 'generate'           // Trigger a generation
+  | 'openModal'          // Open a modal/overlay
+  | 'showTip'            // Show a tooltip/hint overlay
+  | 'clearHistory'       // Clear studio history
+  | 'toggleHD'           // Toggle HD mode
+  | 'setPrompt'          // Fill the prompt field
+  | 'setTool'            // Select a tool in the studio
+  | 'openGallery'        // Navigate to gallery
+  | 'saveToGallery'      // Save current generation
+  | 'downloadAsset'      // Download current asset
+  // Cycle 13 additions:
+  | 'batchGenerate'      // Fire a batch with N prompts
+  | 'createProject'      // Create a named project with brief
+  | 'saveToBrandKit'     // Save current palette to active brand kit
+  | 'scheduleGeneration' // Create an automation with config and schedule
+  | 'searchGallery'      // Return public assets matching a style query
+  | 'voiceText'          // Send text output to Voice Studio
+  | 'exportAssets'       // Trigger ZIP export of current batch or project
+  | 'openPanel'          // Open a specific control panel or modal
+  | 'setQuality';        // Switch HD/standard toggle
 
 export interface WAPAction {
   type: WAPActionType;
@@ -31,6 +41,26 @@ export interface WAPAction {
   targetSelector?: string;
   // For 'setPrompt':
   text?: string;
+  // For 'batchGenerate' (Cycle 13):
+  prompts?: string[];
+  count?: number;
+  // For 'createProject':
+  name?: string;
+  brief?: string;
+  // For 'scheduleGeneration':
+  schedule?: string;   // cron expression
+  // For 'searchGallery':
+  query?: string;
+  mode?: string;
+  // For 'voiceText':
+  voiceText?: string;
+  // For 'exportAssets':
+  projectId?: string;
+  batchJobIds?: string[];
+  // For 'openPanel':
+  panel?: string;
+  // For 'setQuality':
+  quality?: 'hd' | 'standard';
 }
 
 export interface WAPResponse {
@@ -43,26 +73,37 @@ export const WAP_CAPABILITIES = `
 You can perform real actions on the WokGen platform by returning a JSON block at the end of your response.
 
 Supported actions:
-- navigate: Go to a URL (path: "/pixel/studio", "/business/studio", "/vector/studio", "/emoji/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs")
+- navigate: Go to a URL (path: "/pixel/studio", "/business/studio", "/vector/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs")
 - setParam: Set a studio parameter (key: "size" | "tool" | "style" | "prompt" | "hd", value: the value)
 - setPrompt: Fill the prompt field with text (text: "your prompt here")
-- setTool: Select a studio tool (tool: "character" | "enemy" | "tileset" | "item" | "ui" | "animation" for Pixel; "logo" | "brand-kit" | "slide" | "social" for Business; etc.)
-- generate: Trigger generation with params
+- setTool: Select a studio tool
+- generate: Trigger generation with params (prompt, tool, size, style)
 - toggleHD: Enable/disable HD mode
 - openGallery: Open the gallery for current or specified mode
 - showTip: Show a helpful tip overlay (message: "tip text")
+- batchGenerate: Fire a batch with multiple prompts (prompts: ["p1","p2"], tool: "sprite")
+- createProject: Create a named project (name: "Game Kit 2024", brief: "2D platformer assets")
+- saveToBrandKit: Save current generation palette to the user's brand kit
+- scheduleGeneration: Create an automation (prompt, schedule: "0 9 * * 1", tool)
+- searchGallery: Search public gallery assets (query: "isometric city", mode: "pixel")
+- voiceText: Send text to Voice Studio (voiceText: "the text to narrate")
+- exportAssets: Trigger ZIP export (projectId: "..." or batchJobIds: ["id1","id2"])
+- openPanel: Open a specific panel (panel: "brand-kit" | "history" | "settings" | "gallery")
+- setQuality: Switch quality mode (quality: "hd" | "standard")
 
 Format (append to your reply only when taking action):
 <wap>{"actions":[{"type":"navigate","path":"/pixel/studio"},{"type":"setParam","key":"size","value":64}],"confirmation":"Opening Pixel Studio and setting size to 64×64"}</wap>
 
-Examples of commands vs questions:
-- User: "Take me to the pixel studio" → Use navigate action
-- User: "Set the size to 64" → Use setParam action
-- User: "Generate a fire mage character" → Use setPrompt + generate action
+Examples:
+- User: "Take me to the pixel studio" → navigate action
+- User: "Set the size to 64" → setParam action
+- User: "Generate a fire mage character" → setPrompt + generate action
+- User: "Make a batch of 4 enemy sprites" → batchGenerate action
+- User: "Create a project called Game Kit" → createProject action
+- User: "Save these colors to my brand kit" → saveToBrandKit action
+- User: "Send this to voice studio" → voiceText action
+- User: "Export everything to ZIP" → exportAssets action
 - User: "How do I make better pixel art?" → NO wap block, just answer
-- User: "What's the difference between standard and HD?" → NO wap block, just answer
-- User: "Open my gallery" → Use navigate to gallery
-- User: "Go to pricing" → Use navigate to /pricing
 
 CRITICAL RULES:
 1. Only include <wap> block when you're ACTUALLY taking an action the user requested
@@ -102,8 +143,53 @@ export function executeWAP(wap: WAPResponse, router?: { push: (path: string) => 
       } else if (typeof window !== 'undefined') {
         window.location.href = action.path;
       }
+    } else if (action.type === 'voiceText' && action.voiceText && router) {
+      // Navigate to voice studio with text pre-filled via query param
+      router.push(`/voice/studio?text=${encodeURIComponent(action.voiceText)}`);
+    } else if (action.type === 'exportAssets') {
+      // Dispatch to the studio's export handler
+      dispatchWAPAction(action);
+    } else if (action.type === 'createProject') {
+      // Route to /projects/new with name+brief pre-filled
+      if (router && action.name) {
+        router.push(`/projects/new?name=${encodeURIComponent(action.name)}${action.brief ? `&brief=${encodeURIComponent(action.brief)}` : ''}`);
+      }
+    } else if (action.type === 'setQuality') {
+      // Dispatch as setParam so studios can handle it
+      dispatchWAPAction({ type: 'setParam', key: 'hd', value: action.quality === 'hd' });
     } else {
       dispatchWAPAction(action);
     }
   }
+}
+
+// WAP action log entry for Eral sidebar display
+export interface WAPLogEntry {
+  id: string;
+  type: WAPActionType;
+  confirmation: string;
+  timestamp: number;
+}
+
+// Store last N WAP actions in sessionStorage
+export function logWAPAction(wap: WAPResponse): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const existing: WAPLogEntry[] = JSON.parse(sessionStorage.getItem('wap:log') ?? '[]');
+    const entry: WAPLogEntry = {
+      id:           Math.random().toString(36).slice(2),
+      type:         wap.actions[0]?.type ?? 'navigate',
+      confirmation: wap.confirmation,
+      timestamp:    Date.now(),
+    };
+    const updated = [entry, ...existing].slice(0, 5);
+    sessionStorage.setItem('wap:log', JSON.stringify(updated));
+  } catch { /* ignore */ }
+}
+
+export function getWAPLog(): WAPLogEntry[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(sessionStorage.getItem('wap:log') ?? '[]');
+  } catch { return []; }
 }

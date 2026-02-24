@@ -3,6 +3,7 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
+import { NotificationBell } from './NotificationBell';
 
 // ─── Compact usage meter shown in nav ────────────────────────────────────────
 
@@ -131,6 +132,7 @@ export function NavAuth() {
       onMouseLeave={handleMouseLeave}
     >
       <NavUsageMeter />
+      <NotificationBell />
       <button
         className="nav-user-trigger"
         onClick={() => setOpen(v => !v)}
@@ -168,7 +170,7 @@ export function NavAuth() {
           </div>
           <div className="nav-user-menu-divider" />
           <Link href="/community" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
-            🌐 Community
+            Community
           </Link>
           <Link href="/profile" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Profile

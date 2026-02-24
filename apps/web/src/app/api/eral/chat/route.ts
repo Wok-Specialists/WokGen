@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { WAP_CAPABILITIES, parseWAPFromResponse } from '@/lib/wap';
+import { pollinationsChat } from '@/lib/providers/pollinations-text';
 
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
@@ -175,7 +177,7 @@ function resolveEndpointAndKey(variant: string): {
           : ERAL_7C_TOGETHER_FALLBACK,
       };
     }
-    throw new Error('No API key configured. Set GROQ_API_KEY or TOGETHER_API_KEY.');
+    return { url: 'pollinations', apiKey: '', model: 'openai' };
   }
 
   // Together models
@@ -184,7 +186,7 @@ function resolveEndpointAndKey(variant: string): {
     if (groqKey) {
       return { url: GROQ_URL, apiKey: groqKey, model: 'llama-3.3-70b-versatile' };
     }
-    throw new Error('No API key configured. Set TOGETHER_API_KEY.');
+    return { url: 'pollinations', apiKey: '', model: 'openai' };
   }
   return { url: TOGETHER_URL, apiKey: togetherKey, model: mapping.model };
 }
@@ -426,14 +428,24 @@ export async function POST(req: NextRequest) {
         where:   { projectId: context.projectId, userId, status: 'completed' },
         orderBy: { createdAt: 'desc' },
         take:    20,
-        select:  { tool: true, prompt: true, createdAt: true },
+        select:  { tool: true, mode: true, prompt: true, createdAt: true },
       });
       if (projectJobs.length > 0) {
         const assetList = projectJobs
-          .map(j => `- [${j.tool}] "${j.prompt.slice(0, 80)}"`)
+          .map(j => `- [${j.mode}/${j.tool}] "${j.prompt.slice(0, 80)}"`)
           .join('\n');
-        projectContext = `\n\n[Project Context — last ${projectJobs.length} assets generated in this project:\n${assetList}\nUse this context to give consistent, project-aware suggestions.]`;
+        projectContext = `\n\n[Project Context — last ${projectJobs.length} assets generated in this project:\n${assetList}\nUse this context to give consistent, project-aware suggestions. If the user asks "what am I missing?", analyze the asset types present and suggest what would complete the project.]`;
       }
+
+      // Inject project brief if available
+      const brief = await prisma.projectBrief.findUnique({
+        where:  { projectId: context.projectId },
+        select: { content: true, projectType: true },
+      });
+      if (brief?.content) {
+        projectContext += `\n[Project Brief: ${brief.content.slice(0, 500)}${brief.projectType ? ` | Type: ${brief.projectType}` : ''}]`;
+      }
+
       // Also inject brand kit if available
       const kit = await prisma.brandKit.findFirst({
         where:  { projectId: context.projectId },
@@ -478,6 +490,37 @@ export async function POST(req: NextRequest) {
       where: { id: conv.id },
       data: { title },
     }).catch(() => {});
+  }
+
+  // ── Pollinations fallback (no API key configured) ─────────────────────────
+  if (providerConfig.url === 'pollinations') {
+    const lastUserMessage = message.trim();
+    try {
+      const text = await pollinationsChat(systemContent, lastUserMessage);
+      const { cleanReply, wap } = parseWAPFromResponse(text);
+      await prisma.eralMessage.create({
+        data: {
+          conversationId: conv.id,
+          role: 'assistant',
+          content: cleanReply,
+          modelUsed: 'pollinations-openai',
+          durationMs: 0,
+        },
+      }).catch(() => {});
+      return NextResponse.json({
+        reply: cleanReply,
+        wap: wap ?? null,
+        conversationId: conv.id,
+        messageId: userMsg.id,
+        model: 'pollinations-openai',
+        variant: modelVariant,
+      });
+    } catch (err) {
+      return NextResponse.json(
+        { error: err instanceof Error ? err.message : 'Generation failed' },
+        { status: 502 },
+      );
+    }
   }
 
   // ── Streaming path ────────────────────────────────────────────────────────

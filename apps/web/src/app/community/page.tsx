@@ -40,17 +40,17 @@ interface GalleryResponse {
 // ---------------------------------------------------------------------------
 
 const MODE_FILTERS = [
-  { id: '',         label: 'All Engines', icon: '✦' },
-  { id: 'pixel',    label: 'Pixel',       icon: '🕹️' },
-  { id: 'business', label: 'Business',    icon: '📊' },
-  { id: 'uiux',     label: 'UI/UX',       icon: '🖥️' },
-  { id: 'vector',   label: 'Vector',      icon: '⬡'  },
-  { id: 'emoji',    label: 'Emoji',       icon: '😊' },
+  { id: '',         label: 'All Engines', },
+  { id: 'pixel',    label: 'Pixel',       },
+  { id: 'business', label: 'Business',    },
+  { id: 'uiux',     label: 'UI/UX',       },
+  { id: 'vector',   label: 'Vector',       },
 ] as const;
 
 const SORT_OPTIONS = [
-  { id: 'newest', label: 'Newest first' },
-  { id: 'oldest', label: 'Oldest first' },
+  { id: 'newest',   label: 'Newest first' },
+  { id: 'oldest',   label: 'Oldest first' },
+  { id: 'trending', label: 'Trending'     },
 ] as const;
 
 const PROVIDER_COLORS: Record<string, string> = {
@@ -84,7 +84,6 @@ const MODE_COLORS: Record<string, string> = {
   business: '#38B764',
   uiux:     '#41A6F6',
   vector:   '#FF9D00',
-  emoji:    '#FFCD75',
 };
 
 const MODE_LABELS: Record<string, string> = {
@@ -92,7 +91,6 @@ const MODE_LABELS: Record<string, string> = {
   business: 'Business',
   uiux:     'UI/UX',
   vector:   'Vector',
-  emoji:    'Emoji',
 };
 
 // ---------------------------------------------------------------------------
@@ -162,6 +160,7 @@ function AssetModal({
 }) {
   const [zoom, setZoom] = useState(1);
   const [copied, setCopied] = useState(false);
+  const [styleCopied, setStyleCopied] = useState(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -184,6 +183,15 @@ function AssetModal({
     a.href = asset.imageUrl;
     a.download = `wokgen-${asset.id}.png`;
     a.click();
+  };
+
+  const copyStyle = () => {
+    try {
+      const token = { mode: asset.mode, style: null, prompt: asset.prompt };
+      localStorage.setItem('wokgen:style_token', JSON.stringify(token));
+      setStyleCopied(true);
+      setTimeout(() => setStyleCopied(false), 1800);
+    } catch { /* ignore */ }
   };
 
   const ZOOM_STEPS = [1, 2, 4, 8];
@@ -232,6 +240,12 @@ function AssetModal({
               ↓ Download
             </button>
             <button
+              onClick={copyStyle}
+              className={`community-modal-btn${styleCopied ? ' community-modal-btn--copied' : ''}`}
+            >
+              {styleCopied ? 'Style copied' : '⊕ Copy style'}
+            </button>
+            <button
               onClick={onClose}
               className="community-modal-close-btn"
               aria-label="Close"
@@ -246,6 +260,7 @@ function AssetModal({
           <img
             src={asset.imageUrl}
             alt={asset.title ?? asset.prompt}
+            loading="lazy"
             className={`community-modal-img${asset.mode === 'pixel' ? ' community-modal-img--pixel' : ''}`}
             style={{ transform: `scale(${zoom})` }}
           />
@@ -261,7 +276,7 @@ function AssetModal({
                 onClick={copyPrompt}
                 className={`community-modal-copy-btn${copied ? ' community-modal-copy-btn--copied' : ''}`}
               >
-                {copied ? '✓ Copied' : '⊕ Copy'}
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
             <p
@@ -358,7 +373,7 @@ function CommunityCard({ asset, index, onClick }: { asset: CommunityAsset; index
         )}
       </div>
 
-      {/* Hover download button */}
+      {/* Hover download + remix buttons */}
       <div className="gallery-card-dl-wrap">
         <a
           href={asset.imageUrl}
@@ -370,6 +385,17 @@ function CommunityCard({ asset, index, onClick }: { asset: CommunityAsset; index
         >
           ↓
         </a>
+        {asset.mode && (
+          <a
+            href={`/${asset.mode}/studio?prompt=${encodeURIComponent(asset.prompt)}`}
+            onClick={e => e.stopPropagation()}
+            className="gallery-card-download-btn community-card-remix-btn"
+            title="Remix in studio"
+            aria-label="Remix"
+          >
+            ↻
+          </a>
+        )}
       </div>
 
       {/* Hover overlay */}
@@ -402,7 +428,7 @@ function EmptyState({ search }: { search: string }) {
   if (search) {
     return (
       <div className="empty-state community-empty-wrap">
-        <div className="empty-state-icon community-empty-icon">🔍</div>
+        <div className="empty-state-icon community-empty-icon"></div>
         <h3 className="empty-state-title">No results for &ldquo;{search}&rdquo;</h3>
         <p className="empty-state-body">Try a different search term or clear filters.</p>
       </div>
@@ -410,7 +436,7 @@ function EmptyState({ search }: { search: string }) {
   }
   return (
     <div className="empty-state community-empty-wrap">
-      <div className="empty-state-icon community-empty-icon community-empty-icon--lg">✦</div>
+      <div className="empty-state-icon community-empty-icon community-empty-icon--lg"></div>
       <h3 className="empty-state-title">Community is just getting started</h3>
       <p className="empty-state-body">
         Be the first to share. Generate something in a studio and enable &ldquo;Share to Gallery&rdquo;.
@@ -448,7 +474,7 @@ export default function CommunityPage() {
   const [modeFilter, setModeFilter]       = useState('');
   const [search, setSearch]               = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [sort, setSort]                   = useState<'newest' | 'oldest'>('newest');
+  const [sort, setSort]                   = useState<'newest' | 'oldest' | 'trending'>('newest');
 
   // Modal
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -494,6 +520,7 @@ export default function CommunityPage() {
     if (p.get('mode'))   setModeFilter(p.get('mode')!);
     if (p.get('search')) setSearch(p.get('search')!);
     if (p.get('sort') === 'oldest') setSort('oldest');
+    if (p.get('sort') === 'trending') setSort('trending');
     if (p.get('tab') === 'mine')    setGalleryTab('mine');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -641,7 +668,7 @@ export default function CommunityPage() {
                     onClick={() => setGalleryTab(tab)}
                     className={`community-gallery-tab${galleryTab === tab ? ' community-gallery-tab--active' : ''}`}
                   >
-                    {tab === 'community' ? '🌐 Community' : '🔒 My Generations'}
+                    {tab === 'community' ? 'Community' : 'My Generations'}
                   </button>
                 ))}
                 <div className="community-tab-separator" />
@@ -655,7 +682,7 @@ export default function CommunityPage() {
                 onClick={() => setModeFilter(m.id)}
                 className={`community-mode-tab${modeFilter === m.id ? ' community-mode-tab--active' : ''}`}
               >
-                <span className="community-mode-tab-icon">{m.icon}</span>
+                
                 {m.label}
               </button>
             ))}
@@ -671,7 +698,7 @@ export default function CommunityPage() {
               />
               <select
                 value={sort}
-                onChange={e => setSort(e.target.value as 'newest' | 'oldest')}
+                onChange={e => setSort(e.target.value as 'newest' | 'oldest' | 'trending')}
                 className="community-sort-select"
               >
                 {SORT_OPTIONS.map(o => (
@@ -687,7 +714,7 @@ export default function CommunityPage() {
       <div className="community-main">
         {error && (
           <div className="community-error-banner">
-            <span className="community-error-message">⚠️ Failed to load: {error}</span>
+            <span className="community-error-message">Failed to load: {error}</span>
             <button
               onClick={() => fetchAssets(null, true)}
               className="community-retry-btn"

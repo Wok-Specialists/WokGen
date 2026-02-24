@@ -18,11 +18,11 @@ interface TurnMessage {
 }
 
 const TONE_OPTIONS = [
-  { id: 'roast',      label: '🔥 Roast Battle',   desc: 'Brutal, comedic burns between personas' },
-  { id: 'debate',     label: '⚖️ Debate',           desc: 'Structured argument with positions' },
-  { id: 'brainstorm', label: '💡 Brainstorm',       desc: 'Collaborative ideation session' },
-  { id: 'interview',  label: '🎤 Interview',        desc: 'Q&A — first persona is the interviewer' },
-  { id: 'casual',     label: '☕ Casual Chat',      desc: 'Natural free-flowing conversation' },
+  { id: 'roast',      label: 'Roast Battle',   desc: 'Brutal, comedic burns between personas' },
+  { id: 'debate',     label: 'Debate',           desc: 'Structured argument with positions' },
+  { id: 'brainstorm', label: 'Brainstorm',       desc: 'Collaborative ideation session' },
+  { id: 'interview',  label: 'Interview',        desc: 'Q&A — first persona is the interviewer' },
+  { id: 'casual',     label: 'Casual Chat',      desc: 'Natural free-flowing conversation' },
 ];
 
 const PRESET_PERSONAS: Persona[][] = [
@@ -107,6 +107,7 @@ function PersonaRow({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function SimulateClient() {
+  const router = typeof window !== 'undefined' ? null : null; // use window.location for voice routing
   const [personas, setPersonas]   = useState<Persona[]>([
     { id: uid(), name: 'Alex',   personality: 'Sarcastic tech bro who thinks they know everything', role: '' },
     { id: uid(), name: 'Maya',   personality: 'Sharp-tongued designer who hates bad UX', role: '' },
@@ -119,6 +120,7 @@ export default function SimulateClient() {
   const [transcript, setTranscript] = useState<TurnMessage[]>([]);
   const [error, setError]         = useState('');
   const [done, setDone]           = useState(false);
+  const [showScenarios, setShowScenarios] = useState(false);
   const abortRef                  = useRef<AbortController | null>(null);
   const feedEndRef                = useRef<HTMLDivElement>(null);
 
@@ -220,6 +222,38 @@ export default function SimulateClient() {
       .map(t => `[${t.agent}]\n${t.message}`)
       .join('\n\n');
     await navigator.clipboard.writeText(text);
+  };
+
+  const downloadTxt = () => {
+    const text = transcript.map(t => `[${t.agent}]\n${t.message}`).join('\n\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'simulation-transcript.txt'; a.click();
+  };
+
+  const downloadMd = () => {
+    const md = transcript.map(t => `## ${t.agent}\n\n${t.message}`).join('\n\n---\n\n');
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'simulation-transcript.md'; a.click();
+  };
+
+  const voiceThis = () => {
+    if (!transcript.length) return;
+    // Format as Speaker: text for multi-speaker TTS
+    const voiceText = transcript.map(t => `${t.agent}: ${t.message}`).join('\n\n');
+    window.location.href = `/voice/studio?text=${encodeURIComponent(voiceText.slice(0, 2000))}`;
+  };
+
+  const stopSimulation = () => {
+    abortRef.current?.abort();
+  };
+
+  const addOneTurn = async () => {
+    if (!transcript.length || running) return;
+    // Re-run with 1 more turn appended
+    setTurns(1);
+    setTimeout(() => run(), 100);
   };
 
   const colorFor = (name: string) => {
@@ -333,16 +367,22 @@ export default function SimulateClient() {
 
           <div className="simulate-config__actions">
             {running ? (
-              <button className="btn btn--ghost" onClick={stop}>⏹ Stop</button>
+              <button className="btn btn--ghost" onClick={stopSimulation}>Stop</button>
             ) : (
               <button className="btn btn--primary" onClick={run} disabled={!topic.trim()}>
-                ▶ Start simulation
+                Start simulation
               </button>
             )}
             {transcript.length > 0 && !running && (
-              <button className="btn btn--ghost btn--sm" onClick={copyTranscript}>
-                📋 Copy transcript
-              </button>
+              <>
+                <button className="btn btn--ghost btn--sm" onClick={copyTranscript}>Copy</button>
+                <button className="btn btn--ghost btn--sm" onClick={downloadTxt}>.txt</button>
+                <button className="btn btn--ghost btn--sm" onClick={downloadMd}>.md</button>
+                <button className="btn btn--ghost btn--sm" onClick={voiceThis}>Voice this</button>
+              </>
+            )}
+            {done && !running && (
+              <button className="btn btn--ghost btn--sm" onClick={addOneTurn}>Add turn</button>
             )}
           </div>
         </div>
@@ -351,7 +391,7 @@ export default function SimulateClient() {
         <div className="simulate-feed">
           {transcript.length === 0 && !running && (
             <div className="simulate-feed__empty">
-              <div className="simulate-feed__empty-icon">🎭</div>
+              <div className="simulate-feed__empty-icon"></div>
               <p>Set up your personas and hit <strong>Start simulation</strong> to begin.</p>
             </div>
           )}

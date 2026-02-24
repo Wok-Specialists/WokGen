@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { safeMarkdown, sanitizeHtml } from '@/lib/safe-markdown';
-import { parseWAPFromResponse, executeWAP, type WAPResponse } from '@/lib/wap';
+import { parseWAPFromResponse, executeWAP, logWAPAction, getWAPLog, type WAPResponse, type WAPLogEntry } from '@/lib/wap';
 
 // ── SpeechRecognition type shim (not in all TS libs) ─────────────────────────
 
@@ -89,15 +89,15 @@ const MODEL_OPTIONS: { value: ModelVariant; label: string; desc: string }[] = [
   { value: 'eral-creative', label: 'Eral Creative', desc: 'Mixtral · copywriting, creative writing' },
 ];
 
-const SUGGESTED_PROMPTS: { icon: string; text: string }[] = [
-  { icon: '🔥', text: 'Write a pixel art prompt for a fire mage character' },
-  { icon: '💳', text: 'Generate a pricing page component for a SaaS app' },
-  { icon: '✦',  text: "What's the best way to create a cohesive icon set?" },
-  { icon: '📝', text: 'Write a product description for a minimal SaaS tool' },
-  { icon: '🎮', text: 'How do I export game assets for Unity?' },
-  { icon: '🔍', text: 'Critique my logo prompt: [paste your prompt]' },
-  { icon: '😄', text: 'Generate a Discord emoji pack theme for a gaming community' },
-  { icon: '🚀', text: 'Help me write a hero section headline for a startup' },
+const SUGGESTED_PROMPTS: { text: string }[] = [
+  { text: 'Write a pixel art prompt for a fire mage character' },
+  { text: 'Generate a pricing page component for a SaaS app' },
+  { text: "What's the best way to create a cohesive icon set?" },
+  { text: 'Write a product description for a minimal SaaS tool' },
+  { text: 'How do I export game assets for Unity?' },
+  { text: 'Critique my logo prompt: [paste your prompt]' },
+  { text: 'Generate a Discord emoji pack theme for a gaming community' },
+  { text: 'Help me write a hero section headline for a startup' },
 ];
 
 const LS_KEY = 'eral_conversations';
@@ -221,7 +221,7 @@ function MessageBubble({
     <div className={`eral-msg-row ${isUser ? 'eral-msg-user' : 'eral-msg-assistant'}`}>
       {!isUser && (
         <div className="eral-avatar">
-          <span style={{ fontSize: 14 }}>🧠</span>
+          <span>AI</span>
         </div>
       )}
       <div className="eral-bubble-wrap">
@@ -248,7 +248,7 @@ function MessageBubble({
               <span className="eral-time-tag">{(msg.durationMs / 1000).toFixed(1)}s</span>
             )}
             <button className="eral-copy-msg-btn" onClick={handleCopy} title="Copy message">
-              {copied ? '✓ Copied' : 'Copy'}
+              {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
         )}
@@ -262,7 +262,7 @@ function MessageBubble({
             fontSize: 12,
             color: '#818cf8',
           }}>
-            ⚡ {msg.wap.confirmation}
+            {msg.wap.confirmation}
           </div>
         )}
         {followUps.length > 0 && (
@@ -336,6 +336,7 @@ export function EralPage() {
   const [modelPickerOpen, setModelPickerOpen] = useState(false);
   const [conversationsLoaded, setConversationsLoaded] = useState(false);
   const [actionConfirmation, setActionConfirmation] = useState<string | null>(null);
+  const [wapLog, setWapLog] = useState<WAPLogEntry[]>([]);
 
   // ── Call Mode state ────────────────────────────────────────────────────────
   const [callActive, setCallActive] = useState(false);
@@ -529,6 +530,8 @@ export function EralPage() {
 
       if (wap) {
         setTimeout(() => executeWAP(wap, router), 500);
+        logWAPAction(wap);
+        setWapLog(getWAPLog());
         setActionConfirmation(wap.confirmation);
         setTimeout(() => setActionConfirmation(null), 3000);
       }
@@ -538,7 +541,7 @@ export function EralPage() {
       const errMsg: Message = {
         id: `msg-err-${Date.now()}`,
         role: 'assistant',
-        content: `⚠️ ${(err as Error).message ?? 'Something went wrong. Please try again.'}`,
+        content: `${(err as Error).message ?? 'Something went wrong. Please try again.'}`,
         createdAt: Date.now(),
       };
       updateConv(currentConvId, (c) => ({
@@ -708,6 +711,19 @@ export function EralPage() {
               )}
             </div>
 
+            {/* WAP Action Log */}
+            {wapLog.length > 0 && (
+              <div className="eral-wap-log">
+                <p className="eral-wap-log-title">Recent actions</p>
+                {wapLog.map(entry => (
+                  <div key={entry.id} className="eral-wap-log-item">
+                    <span className="eral-wap-log-type">{entry.type}</span>
+                    <span className="eral-wap-log-msg">{entry.confirmation}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="eral-sidebar-footer">
               <a
                 href="https://wokgen.wokspec.org"
@@ -776,7 +792,7 @@ export function EralPage() {
             onClick={() => callActive ? endCall() : setCallActive(true)}
             title={callActive ? 'Exit Call Mode' : 'Call Mode — talk to Eral'}
           >
-            📞 {callActive ? 'End Call' : 'Call'}
+            {callActive ? 'End Call' : 'Call'}
           </button>
         </div>
 
@@ -785,7 +801,7 @@ export function EralPage() {
           {isEmpty ? (
             <div className="eral-empty">
               <div className="eral-empty-logo">
-                <span className="eral-empty-icon">🧠</span>
+                <span className="eral-empty-icon"><span style={{fontSize:'24px',opacity:0.5}}>AI</span></span>
                 <h1 className="eral-empty-title">Eral 7c</h1>
                 <p className="eral-empty-sub">AI companion for creative work · by WokSpec</p>
               </div>
@@ -797,25 +813,24 @@ export function EralPage() {
                     className="eral-suggestion"
                     onClick={() => sendMessage(s.text)}
                   >
-                    <span className="eral-suggestion-icon">{s.icon}</span>
                     <span>{s.text}</span>
                   </button>
                 ))}
               </div>
 
               <div className="eral-commands-section">
-                <p className="eral-commands-label">⚡ Commands — Eral can actually do these</p>
+                <p className="eral-commands-label">Commands — Eral can actually do these</p>
                 <div className="eral-commands-grid">
                   {[
-                    { icon: '🎮', text: '"Take me to Pixel Studio"' },
-                    { icon: '🔧', text: '"Set size to 64×64"' },
-                    { icon: '✍️', text: '"Write a prompt for a fire mage"' },
-                    { icon: '💼', text: '"Go to Business Studio"' },
-                    { icon: '📸', text: '"Open my gallery"' },
-                    { icon: '📖', text: '"Explain what HD mode does"' },
+                    { text: '"Take me to Pixel Studio"' },
+                    { text: '"Set size to 64×64"' },
+                    { text: '"Write a prompt for a fire mage"' },
+                    { text: '"Go to Business Studio"' },
+                    { text: '"Open my gallery"' },
+                    { text: '"Explain what HD mode does"' },
                   ].map((c) => (
                     <button key={c.text} className="eral-command-chip" onClick={() => sendMessage(c.text.replace(/"/g, ''))}>
-                      <span>{c.icon}</span> {c.text}
+                      {c.text}
                     </button>
                   ))}
                 </div>
@@ -974,8 +989,8 @@ export function EralPage() {
             disabled={callState === 'processing'}
             style={{
               width: 72, height: 72, borderRadius: '50%',
-              background: callState === 'listening' ? '#dc2626' :
-                          callState === 'speaking'  ? '#7c3aed' : '#312e81',
+              background: callState === 'listening' ? 'Listening…' :
+                          callState === 'speaking' ? 'Speaking' : 'Call',
               border: '2px solid rgba(129,140,248,0.4)',
               cursor: callState === 'processing' ? 'default' : 'pointer',
               fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -985,8 +1000,8 @@ export function EralPage() {
             title={callState === 'idle' ? 'Tap to speak' : 'Tap to stop'}
           >
             {callState === 'processing' ? '⏳' :
-             callState === 'listening'  ? '🎤' :
-             callState === 'speaking'   ? '🔊' : '🎙️'}
+             callState === 'listening' ? 'Listening…' :
+             callState === 'speaking' ? 'Speaking' : 'Call'}
           </button>
 
           {/* End Call */}
@@ -1014,7 +1029,7 @@ export function EralPage() {
           maxWidth: 320,
           pointerEvents: 'none',
         }}>
-          ⚡ {actionConfirmation}
+          {actionConfirmation}
         </div>
       )}
 

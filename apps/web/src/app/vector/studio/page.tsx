@@ -42,9 +42,9 @@ interface HistoryItem {
 // Constants
 // ---------------------------------------------------------------------------
 
-const TOOLS: { id: VectorTool; label: string; icon: string; desc: string }[] = [
-  { id: 'icon',         label: 'Icon Generator', icon: '◈', desc: 'Generate icons and symbols at precise sizes' },
-  { id: 'illustration', label: 'Illustration',   icon: '✿', desc: 'Generate vector-style spot illustrations' },
+const TOOLS: { id: VectorTool; label: string; icon?: string; desc: string }[] = [
+  { id: 'icon',         label: 'Icon Generator', desc: 'Generate icons and symbols at precise sizes' },
+  { id: 'illustration', label: 'Illustration',   desc: 'Generate vector-style spot illustrations' },
 ];
 
 const PRESETS: { id: StylePreset; label: string; desc: string }[] = [
@@ -332,9 +332,11 @@ function VectorStudioInner() {
     try {
       const slug = prompt.trim().replace(/[^a-z0-9]+/gi, '-').toLowerCase().slice(0, 30);
       const suffix = batchCount > 1 ? `-${idx + 1}` : '';
-      const filename = `wokgen-vector-${activeTool}-${slug}${suffix}.png`;
       const res  = await fetch(url);
       const blob = await res.blob();
+      // Use .svg extension for actual SVG content, .png otherwise
+      const ext = blob.type === 'image/svg+xml' ? 'svg' : 'png';
+      const filename = `wokgen-vector-${activeTool}-${slug}${suffix}.${ext}`;
       const a    = document.createElement('a');
       a.href     = URL.createObjectURL(blob);
       a.download = filename;
@@ -402,7 +404,7 @@ function VectorStudioInner() {
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
             title="Switch to Pixel Studio"
           >
-            <span style={{ fontSize: 10 }}>✦</span> Pixel
+            Pixel
           </a>
         </div>
 
@@ -498,7 +500,7 @@ function VectorStudioInner() {
           <label className="studio-label">Background</label>
           <div className="studio-preset-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
             {([
-              { id: 'transparent', label: '🔲 Clear' },
+              { id: 'transparent', label: 'Clear' },
               { id: 'white',       label: '⬜ White' },
               { id: 'dark',        label: '⬛ Dark'  },
             ] as { id: BgMode; label: string }[]).map(opt => (
@@ -578,8 +580,8 @@ function VectorStudioInner() {
             {jobStatus === 'running'
               ? `Generating… ${(elapsedMs / 1000).toFixed(1)}s`
               : batchCount > 1
-              ? `✦ Generate ×${batchCount}`
-              : '✦ Generate'}
+              ? `Generate ×${batchCount}`
+              : 'Generate'}
           </button>
           <p className="studio-hint" style={{ textAlign: 'right', marginTop: '0.25rem' }}>⌘↵</p>
         </div>
@@ -697,7 +699,7 @@ function VectorStudioInner() {
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '0'; }}
                     title="Remove background"
                   >
-                    {bgRemoving ? '⏳ Removing…' : '✂ Remove BG'}
+                    {bgRemoving ? 'Removing…' : 'Remove BG'}
                   </button>
                 </div>
                 {/* Color palette */}
@@ -760,7 +762,7 @@ function VectorStudioInner() {
         {jobStatus === 'idle' && (
           <div className="studio-idle">
             <div className="studio-idle-icon" style={{ color: ACCENT }}>
-              {activeTool === 'icon' ? '◈' : '✿'}
+              {''}
             </div>
             <p className="studio-idle-title">Vector Studio</p>
             <p className="studio-idle-desc">

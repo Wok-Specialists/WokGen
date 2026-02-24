@@ -53,12 +53,12 @@ type JobStatus = 'idle' | 'running' | 'succeeded' | 'failed';
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const TOOLS: { id: BusinessTool; label: string; icon: string; desc: string }[] = [
-  { id: 'logo',       label: 'Logo Mark',        icon: '⬛', desc: 'Brand symbols and marks' },
-  { id: 'brand-kit',  label: 'Brand Kit (4×)',   icon: '🎨', desc: 'Full 4-image brand set' },
-  { id: 'slide',      label: 'Slide Visual',     icon: '📊', desc: '16:9 presentation backgrounds' },
-  { id: 'social',     label: 'Social Banner',    icon: '📱', desc: 'Platform-optimised sizes' },
-  { id: 'web-hero',   label: 'Hero Image',       icon: '🌐', desc: 'Website hero backgrounds' },
+const TOOLS: { id: BusinessTool; label: string; icon?: string; desc: string }[] = [
+  { id: 'logo',       label: 'Logo Mark',        desc: 'Brand symbols and marks' },
+  { id: 'brand-kit',  label: 'Brand Kit (4×)',   desc: 'Full 4-image brand set' },
+  { id: 'slide',      label: 'Slide Visual',     desc: '16:9 presentation backgrounds' },
+  { id: 'social',     label: 'Social Banner',    desc: 'Platform-optimised sizes' },
+  { id: 'web-hero',   label: 'Hero Image',       desc: 'Website hero backgrounds' },
 ];
 
 const STYLES: { id: BusinessStyle; label: string }[] = [
@@ -81,14 +81,16 @@ const MOODS: { id: BusinessMood; label: string }[] = [
   { id: 'technical',    label: 'Technical' },
 ];
 
-const PLATFORMS: { id: BusinessPlatform; label: string; size: string; icon: string }[] = [
-  { id: 'og_image',         label: 'OG / Meta',         size: '1200×630',  icon: '🔗' },
-  { id: 'twitter_header',   label: 'X/Twitter Header',  size: '1500×500',  icon: '𝕏' },
-  { id: 'twitter_post',     label: 'X/Twitter Post',    size: '1080×1080', icon: '𝕏' },
-  { id: 'instagram_square', label: 'Instagram Post',    size: '1080×1080', icon: '📸' },
-  { id: 'instagram_story',  label: 'Instagram Story',   size: '1080×1920', icon: '📲' },
-  { id: 'linkedin_banner',  label: 'LinkedIn Banner',   size: '1584×396',  icon: '💼' },
-  { id: 'youtube_art',      label: 'YouTube Art',       size: '2560×1440', icon: '▶' },
+const PLATFORMS: { id: BusinessPlatform; label: string; size: string; icon?: string }[] = [
+  { id: 'og_image',         label: 'OG / Meta',         size: '1200×630',  },
+  { id: 'twitter_header',   label: 'X/Twitter Header',  size: '1500×500',  },
+  { id: 'twitter_post',     label: 'X/Twitter Post',    size: '1080×1080', },
+  { id: 'instagram_square', label: 'Instagram Post',    size: '1080×1080', },
+  { id: 'instagram_story',  label: 'Instagram Story',   size: '1080×1920', },
+  { id: 'linkedin_banner',  label: 'LinkedIn Banner',   size: '1584×396',  },
+  { id: 'youtube_art',      label: 'YouTube Art',       size: '2560×1440', },
+  { id: 'youtube_thumbnail', label: 'YouTube Thumbnail', size: '1280×720',  },
+  { id: 'tiktok_cover',     label: 'TikTok Cover',      size: '1080×1920', },
 ];
 
 const SLIDE_FORMATS = [
@@ -137,6 +139,7 @@ function BusinessStudioInner() {
   const [mood, setMood]                 = useState<BusinessMood>('professional');
   const [industry, setIndustry]         = useState('');
   const [colorDirection, setColorDir]   = useState('');
+  const [targetAudience, setTargetAudience] = useState('');
   const [platform, setPlatform]         = useState<BusinessPlatform>('og_image');
   const [slideFormat, setSlideFormat]   = useState(SLIDE_FORMATS[0]);
   const [logoBg, setLogoBg]             = useState<'white' | 'dark' | 'transparent'>('white');
@@ -278,7 +281,9 @@ function BusinessStudioInner() {
     const body = {
       tool:           activeTool === 'brand-kit' ? 'generate' : activeTool,
       mode:           'business',
-      prompt:         prompt.trim(),
+      prompt:         activeTool === 'logo' && targetAudience.trim()
+                        ? `${prompt.trim()}, target audience: ${targetAudience.trim()}`
+                        : prompt.trim(),
       style,
       mood,
       industry:       industry.trim() || undefined,
@@ -356,7 +361,7 @@ function BusinessStudioInner() {
       stageTimers.forEach(clearTimeout);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prompt, activeTool, style, mood, industry, colorDirection, platform, slideFormat, useHD, isPublic, jobStatus]);
+  }, [prompt, activeTool, style, mood, industry, colorDirection, targetAudience, platform, slideFormat, useHD, isPublic, jobStatus]);
 
   // ── Load history from API on mount ───────────────────────────────────────
   useEffect(() => {
@@ -497,7 +502,7 @@ function BusinessStudioInner() {
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
             title="Switch to Pixel Studio"
           >
-            <span style={{ fontSize: 10 }}>✦</span> Pixel
+            Pixel
           </a>
         </div>
 
@@ -536,7 +541,7 @@ function BusinessStudioInner() {
                 onClick={savePromptAsFavorite}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: favSaved ? '#f59e0b' : 'var(--text-disabled)', transition: 'color 0.15s' }}
               >
-                {favSaved ? '★' : '☆'}
+                {favSaved ? '✓' : '+'}
               </button>
               {/* My Prompts dropdown */}
               {favPrompts.length > 0 && (
@@ -639,7 +644,7 @@ function BusinessStudioInner() {
               {([
                 { id: 'white',       label: '⬜ White'       },
                 { id: 'dark',        label: '⬛ Dark'         },
-                { id: 'transparent', label: '🔲 Transparent' },
+                { id: 'transparent', label: 'Transparent' },
               ] as { id: typeof logoBg; label: string }[]).map(opt => (
                 <button
                   key={opt.id}
@@ -650,6 +655,20 @@ function BusinessStudioInner() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Target audience (logo only) */}
+        {activeTool === 'logo' && (
+          <div className="studio-control-section">
+            <label className="studio-label">Target Audience <span className="studio-label-opt">(optional)</span></label>
+            <input
+              className="studio-input"
+              type="text"
+              value={targetAudience}
+              onChange={e => setTargetAudience(e.target.value)}
+              placeholder="e.g. senior engineers, Gen Z founders"
+            />
           </div>
         )}
 
@@ -726,7 +745,7 @@ function BusinessStudioInner() {
           </div>
         )}
 
-        {/* ── 🔊 Audio panel ──────────────────────────────────────────────── */}
+        {/* Audio panel */}
         <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-150"
@@ -736,7 +755,7 @@ function BusinessStudioInner() {
             onKeyDown={(e) => e.key === 'Enter' && setShowAudioPanel((v) => !v)}
             aria-expanded={showAudioPanel}
           >
-            <span className="studio-control-label" style={{ fontWeight: 600 }}>🔊 Audio</span>
+            <span className="studio-control-label" style={{ fontWeight: 600 }}>Audio</span>
             <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>
               {showAudioPanel ? '▾' : '▸'}
             </span>
@@ -859,7 +878,7 @@ function BusinessStudioInner() {
                   }
                 }}
               >
-                {sfxLoading ? 'Generating…' : <span>🎵 Generate Audio</span>}
+                {sfxLoading ? 'Generating…' : 'Generate Audio'}
               </button>
 
               {/* Error */}
@@ -891,7 +910,7 @@ function BusinessStudioInner() {
           )}
         </div>
 
-        {/* ── 🔗 QR Code panel ────────────────────────────────────────────── */}
+        {/* QR Code panel */}
         <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer"
@@ -900,7 +919,7 @@ function BusinessStudioInner() {
             tabIndex={0}
             onKeyDown={e => e.key === 'Enter' && setShowQrPanel(v => !v)}
           >
-            <span className="studio-control-label" style={{ fontWeight: 600 }}>🔗 QR Code</span>
+            <span className="studio-control-label" style={{ fontWeight: 600 }}>QR Code</span>
             <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showQrPanel ? '▾' : '▸'}</span>
           </div>
           {showQrPanel && (
@@ -910,7 +929,7 @@ function BusinessStudioInner() {
           )}
         </div>
 
-        {/* ── 🔤 Font Pairing panel ────────────────────────────────────────── */}
+        {/* Font Pairing panel */}
         <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer"
@@ -919,7 +938,7 @@ function BusinessStudioInner() {
             tabIndex={0}
             onKeyDown={e => e.key === 'Enter' && setShowFontPanel(v => !v)}
           >
-            <span className="studio-control-label" style={{ fontWeight: 600 }}>🔤 Font Pairing</span>
+            <span className="studio-control-label" style={{ fontWeight: 600 }}>Font Pairing</span>
             <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showFontPanel ? '▾' : '▸'}</span>
           </div>
           {showFontPanel && (
@@ -939,8 +958,8 @@ function BusinessStudioInner() {
             {jobStatus === 'running'
               ? `Generating… ${(elapsedMs / 1000).toFixed(1)}s`
               : isBrandKit
-              ? '✦ Generate Brand Kit (4 images)'
-              : '✦ Generate'}
+              ? 'Generate Brand Kit (4 images)'
+              : 'Generate'}
           </button>
           <p className="studio-hint" style={{ textAlign: 'right', marginTop: '0.25rem' }}>⌘↵</p>
         </div>
@@ -1025,7 +1044,7 @@ function BusinessStudioInner() {
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '0'; }}
                     title="Remove background"
                   >
-                    {bgRemoving ? '⏳ Removing…' : '✂ Remove BG'}
+                    {bgRemoving ? 'Removing…' : 'Remove BG'}
                   </button>
                 </div>
                 {/* Color palette */}

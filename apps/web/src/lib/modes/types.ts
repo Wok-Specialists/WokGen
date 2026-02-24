@@ -3,7 +3,7 @@
 // Hard separation enforced at: UI state, model profiles, prompt scaffolding,
 // output formats, tooling, galleries, presets, projects.
 
-export type ModeId = 'pixel' | 'business' | 'vector' | 'emoji' | 'uiux' | 'voice' | 'text';
+export type ModeId = 'pixel' | 'business' | 'vector' | 'uiux' | 'voice' | 'text';
 
 export type ModeStatus = 'live' | 'beta' | 'coming_soon';
 
@@ -22,7 +22,7 @@ export type LicenseKey =
   | 'design_system'
   | 'code_ownership';
 
-export type PromptBuilderKey = 'pixel' | 'business' | 'vector' | 'emoji' | 'uiux' | 'voice' | 'text';
+export type PromptBuilderKey = 'pixel' | 'business' | 'vector' | 'uiux' | 'voice' | 'text';
 
 // ---------------------------------------------------------------------------
 // Tool definition per mode
@@ -31,7 +31,7 @@ export interface ModeToolDef {
   id: string;
   label: string;
   description: string;
-  icon: string;
+  icon?: string;
   aspectRatios?: string[];
   maxBatch?: number;
   outputType: OutputType;

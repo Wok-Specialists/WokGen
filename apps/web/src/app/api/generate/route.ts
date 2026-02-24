@@ -28,12 +28,9 @@ import {
 } from '@/lib/prompt-builder-business';
 import {
   buildVectorPrompt,
-  buildEmojiPrompt,
   type VectorTool,
   type VectorStyle,
   type VectorWeight,
-  type EmojiStyle,
-  type EmojiPlatform,
 } from '@/lib/prompt-builder-vector';
 import { buildPixelPrompt } from '@/lib/prompt-builder-pixel';
 import { removeBackground, removeBackgroundWithFallback } from '@/lib/bg-remove';
@@ -43,6 +40,7 @@ import { validateAndSanitize, autoEnrichPrompt } from '@/lib/prompt-validator';
 import { resolveQualityProfile, getQualityProfile } from '@/lib/quality-profiles';
 import { buildVariantPrompt } from '@/lib/variant-builder';
 import { buildPrompt as buildEnginePrompt } from '@/lib/prompt-engine';
+import { validatePrompt } from '@/lib/input-sanitize';
 
 // ---------------------------------------------------------------------------
 // POST /api/generate
@@ -57,14 +55,36 @@ export const runtime = 'nodejs';
 export const maxDuration = 300;
 
 // ---------------------------------------------------------------------------
-// Module-level provider failure tracker
+// Module-level provider failure tracker (Redis-backed with in-memory fallback)
 // Skips providers that have failed ≥3 times in the last 60 seconds.
 // ---------------------------------------------------------------------------
 const _providerFailureCounts = new Map<string, { count: number; resetAt: number }>();
 const _FAILURE_WINDOW_MS = 60_000;
 const _MAX_FAILURES = 3;
+const _FAILURE_KEY_PREFIX = 'wokgen:provider:fail:';
+const _FAILURE_TTL = 60; // seconds
 
-function recordProviderFailure(provider: string): void {
+function _getRedisClient() {
+  const url   = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Redis } = require('@upstash/redis');
+    return new Redis({ url, token });
+  } catch { return null; }
+}
+
+async function recordProviderFailure(provider: string): Promise<void> {
+  const redis = _getRedisClient();
+  if (redis) {
+    try {
+      await redis.incr(`${_FAILURE_KEY_PREFIX}${provider}`);
+      await redis.expire(`${_FAILURE_KEY_PREFIX}${provider}`, _FAILURE_TTL);
+      return;
+    } catch { /* fall through to in-memory */ }
+  }
+  // In-memory fallback
   const now = Date.now();
   const entry = _providerFailureCounts.get(provider);
   if (!entry || now > entry.resetAt) {
@@ -74,7 +94,15 @@ function recordProviderFailure(provider: string): void {
   }
 }
 
-function isProviderThrottled(provider: string): boolean {
+async function isProviderThrottled(provider: string): Promise<boolean> {
+  const redis = _getRedisClient();
+  if (redis) {
+    try {
+      const val = await redis.get(`${_FAILURE_KEY_PREFIX}${provider}`) as number | null;
+      return (val ?? 0) >= _MAX_FAILURES;
+    } catch { /* fall through to in-memory */ }
+  }
+  // In-memory fallback
   const now = Date.now();
   const entry = _providerFailureCounts.get(provider);
   if (!entry || now > entry.resetAt) return false;
@@ -95,6 +123,8 @@ function getFallbackChain(primary: ProviderName): ProviderName[] {
 
 export async function POST(req: NextRequest) {
   const isSelfHosted = process.env.SELF_HOSTED === 'true';
+  // Generate a request ID for tracing
+  const requestId = randomUUID().slice(0, 10);
 
   // --------------------------------------------------------------------------
   // 0. Auth + quota enforcement (hosted mode only)
@@ -228,6 +258,30 @@ export async function POST(req: NextRequest) {
 
       // Attach quota info to response headers for frontend to read
       (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining = quota.remaining;
+
+      // Fire quota_warning notification at 80% usage (once per day, non-blocking)
+      if (authedUserId && quota.limit > 0 && quota.remaining > 0) {
+        const usedPct = quota.used / quota.limit;
+        if (usedPct >= 0.8) {
+          const warnKey = `wokgen:quota_warn:${authedUserId}:${new Date().toISOString().slice(0, 10)}`;
+          import('@/lib/cache').then(({ cache }) =>
+            cache.get<boolean>(warnKey).then(already => {
+              if (!already) {
+                cache.set(warnKey, true, 86400); // once per day
+                prisma.notification.create({
+                  data: {
+                    userId: authedUserId!,
+                    type:   'quota_warning',
+                    title:  'Approaching daily limit',
+                    body:   `You've used ${quota.used} of your ${quota.limit} daily generations (${Math.round(usedPct * 100)}%).`,
+                    link:   '/billing',
+                  },
+                }).catch(() => {});
+              }
+            })
+          ).catch(() => {});
+        }
+      }
     }
 
     // ── 0e. Concurrent request limit ─────────────────────────────────────
@@ -242,7 +296,7 @@ export async function POST(req: NextRequest) {
           concurrent: { running: concur.running, max: concur.max },
           code: 'CONCURRENT_LIMIT',
         },
-        { status: 503 },
+        { status: 503, headers: { 'Retry-After': '60' } },
       );
     }
   }
@@ -266,7 +320,7 @@ export async function POST(req: NextRequest) {
   const {
     tool       = 'generate',
     provider   = detectProvider(),
-    mode       = 'pixel',        // product line: pixel | business | vector | emoji | uiux
+    mode       = 'pixel',        // product line: pixel | business | vector | uiux
     prompt,
     negPrompt,
     width      = 512,
@@ -290,6 +344,14 @@ export async function POST(req: NextRequest) {
     extra,
     async: asyncFlag = false, // flag for BullMQ async path
   } = body;
+
+  // Validate prompt length and sanitize at API boundary
+  if (prompt !== undefined) {
+    const promptCheck = validatePrompt(prompt);
+    if (!promptCheck.ok) {
+      return NextResponse.json({ error: promptCheck.error }, { status: 400 });
+    }
+  }
 
   // Async path: enqueue and return immediately if REDIS_URL + async flag
   if (asyncFlag === true && process.env.REDIS_URL && authedUserId) {
@@ -320,7 +382,7 @@ export async function POST(req: NextRequest) {
   // Resolve and validate mode — reject unknown modes with a 400
   if (mode !== undefined && mode !== null && !isSupportedMode(mode)) {
     return NextResponse.json(
-      { error: `Invalid mode "${mode}". Must be one of: pixel, business, vector, emoji, uiux` },
+      { error: `Invalid mode "${mode}". Must be one of: pixel, business, vector, uiux` },
       { status: 400 },
     );
   }
@@ -361,8 +423,8 @@ export async function POST(req: NextRequest) {
   // Guard: HD requires REPLICATE_API_TOKEN on server
   if (useHD && !process.env.REPLICATE_API_TOKEN) {
     return NextResponse.json(
-      { error: 'HD generation is temporarily unavailable. Please try standard quality.' },
-      { status: 503 },
+      { error: 'HD generation is temporarily unavailable. Please try standard quality.', code: 'PROVIDER_ERROR' },
+      { status: 503, headers: { 'Retry-After': '60' } },
     );
   }
 
@@ -503,28 +565,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // --------------------------------------------------------------------------
-  // Emoji mode: enrich prompt via buildEmojiPrompt
-  // --------------------------------------------------------------------------
-  if (resolvedMode === 'emoji' && effectivePrompt && !_promptBuilt) {
-    const eStyle    = (extraRecord.emojiStyle    ?? 'expressive')  as EmojiStyle;
-    const ePlatform = (extraRecord.emojiPlatform ?? 'universal')   as EmojiPlatform;
-    const eSize     = typeof body.targetSize === 'number' ? body.targetSize : 64;
-    const built     = buildEmojiPrompt({
-      concept:    effectivePrompt,
-      style:      eStyle,
-      targetSize: eSize as 16 | 32 | 64 | 128 | 256,
-      platform:   ePlatform,
-      category:   typeof body.category === 'string' ? body.category : undefined,
-    });
-    effectivePrompt  = built.prompt;
-    effectiveNeg     = effectiveNeg ? `${effectiveNeg}, ${built.negPrompt}` : built.negPrompt;
-    if (effectiveWidth === 512 && effectiveHeight === 512) {
-      effectiveWidth  = built.width;
-      effectiveHeight = built.height;
-    }
-  }
-
   // Validate required fields
   if (effectivePrompt.length === 0) {
     return NextResponse.json(
@@ -542,7 +582,6 @@ export async function POST(req: NextRequest) {
     pixel:    'best quality, masterpiece, highly detailed pixel art, game-ready, crisp pixel grid',
     business: 'professional quality, clean design, high resolution, polished, masterpiece',
     vector:   'clean vector art, crisp edges, scalable, professional quality, print ready',
-    emoji:    'clean emoji design, high contrast, readable at small size, expressive, crisp',
     uiux:     'clean UI design, professional interface, modern, accessible, pixel perfect',
   };
 
@@ -617,7 +656,6 @@ export async function POST(req: NextRequest) {
         ? String((body.extra as Record<string, unknown>).vectorTool)
         : 'standard';
     }
-    if (resolvedMode === 'emoji') return 'standard';
     if (resolvedMode === 'uiux') {
       return typeof stylePreset === 'string' ? stylePreset.replace('uiux_', '') : 'standard';
     }
@@ -637,7 +675,7 @@ export async function POST(req: NextRequest) {
   // --------------------------------------------------------------------------
   if (isSupportedMode(resolvedMode)) {
     const engineHint = buildEnginePrompt({
-      mode: resolvedMode as 'pixel' | 'business' | 'vector' | 'emoji' | 'uiux',
+      mode: resolvedMode as 'pixel' | 'business' | 'vector' | 'uiux',
       userPrompt: typeof prompt === 'string' ? prompt.trim() : '',
       backgroundMode: typeof backgroundMode === 'string'
         ? (backgroundMode as 'default' | 'transparent' | 'custom')
@@ -759,9 +797,12 @@ export async function POST(req: NextRequest) {
 
   try {
     // Build provider chain: primary first, then key-available fallbacks (skip throttled ones).
+    const fallbacks = getFallbackChain(resolvedProvider);
+    const throttledChecks = await Promise.all(fallbacks.map(p => isProviderThrottled(p)));
+    const availableFallbacks = fallbacks.filter((_, i) => !throttledChecks[i]);
     const providerChain: ProviderName[] = isSelfHosted
       ? [resolvedProvider]
-      : [resolvedProvider, ...getFallbackChain(resolvedProvider).filter(p => !isProviderThrottled(p))];
+      : [resolvedProvider, ...availableFallbacks];
 
     let usedProvider: ProviderName = resolvedProvider;
     let result: GenerateResult | undefined;
@@ -801,7 +842,7 @@ export async function POST(req: NextRequest) {
         break;
       } catch (err) {
         lastErr = err;
-        recordProviderFailure(candidateProvider);
+        void recordProviderFailure(candidateProvider);
         const statusCode = (err as { statusCode?: number }).statusCode ?? 0;
         const errorMsg = err instanceof Error ? err.message.toLowerCase() : '';
         
@@ -1047,6 +1088,11 @@ export async function POST(req: NextRequest) {
       quotaRemaining: !useHD
         ? (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining
         : undefined,
+    }, {
+      headers: {
+        'X-WokGen-Request-Id': requestId,
+        'X-WokGen-Provider':   usedProvider,
+      },
     });
   } catch (err) {
     // ------------------------------------------------------------------------
@@ -1074,6 +1120,7 @@ export async function POST(req: NextRequest) {
         ok:    false,
         jobId: job?.id ?? null,
         hint,
+        code:  'PROVIDER_ERROR',
         ...serialized,
       },
       { status: statusCode >= 400 ? statusCode : 500 },

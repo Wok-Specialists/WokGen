@@ -9,10 +9,18 @@ import AdminCharts from './_charts';
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
+interface ProviderHealthEntry {
+  provider: string;
+  configured: boolean;
+  failures24h: number;
+  degraded: boolean;
+}
+
 interface Stats {
   users: { total: number; activeThisMonth: number; byPlan: Record<string, number> };
   jobs:  { total: number; today: number; hd: number; standard: number };
   recentJobs: { id: string; prompt: string; provider: string; status: string; createdAt: string; user?: { email: string } }[];
+  providerHealth?: ProviderHealthEntry[];
   generatedAt: string;
 }
 
@@ -46,7 +54,7 @@ function StatCard({ label, value, sub }: { label: string; value: string | number
 
 /* ── Tabs ────────────────────────────────────────────────────────────────── */
 
-type Tab = 'overview' | 'users' | 'jobs' | 'revenue' | 'system' | 'charts';
+type Tab = 'overview' | 'users' | 'jobs' | 'revenue' | 'system' | 'charts' | 'health';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
@@ -55,6 +63,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'revenue',  label: 'Revenue'  },
   { id: 'charts',   label: 'Charts'   },
   { id: 'system',   label: 'System'   },
+  { id: 'health',   label: 'Provider Health' },
 ];
 
 /* ── Overview tab ────────────────────────────────────────────────────────── */
@@ -234,6 +243,49 @@ function RevenueTab() {
   );
 }
 
+/* ── Provider Health tab ─────────────────────────────────────────────────── */
+
+function ProviderHealthTab({ stats }: { stats: Stats }) {
+  const entries = stats.providerHealth ?? [];
+
+  return (
+    <>
+      <p className="admin-section-label" style={{ marginBottom: '1rem' }}>
+        Provider health — last 24 hours
+      </p>
+      <div className="admin-system-grid">
+        {entries.map(entry => {
+          const status = !entry.configured ? 'unconfigured' : entry.degraded ? 'degraded' : 'ok';
+          return (
+            <div key={entry.provider} className="admin-system-card">
+              <div className={`admin-system-card__dot ${
+                status === 'ok'           ? 'admin-system-card__dot--ok' :
+                status === 'degraded'     ? 'admin-system-card__dot--fail' :
+                                            'admin-system-card__dot--warn'
+              }`} />
+              <div>
+                <p className="admin-system-card__label" style={{ textTransform: 'capitalize' }}>
+                  {entry.provider}
+                </p>
+                <p className="admin-system-card__sub">
+                  {!entry.configured
+                    ? 'Not configured'
+                    : entry.degraded
+                      ? `Degraded — ${entry.failures24h} failures (circuit open)`
+                      : `OK — ${entry.failures24h} failure${entry.failures24h !== 1 ? 's' : ''}`}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+        {entries.length === 0 && (
+          <p className="admin-table-cell admin-table-cell--faint">No provider data available.</p>
+        )}
+      </div>
+    </>
+  );
+}
+
 /* ── System tab ──────────────────────────────────────────────────────────── */
 
 function SystemTab() {
@@ -316,6 +368,7 @@ export default function AdminPage() {
           {tab === 'revenue'  && <RevenueTab />}
           {tab === 'charts'   && <AdminCharts />}
           {tab === 'system'   && <SystemTab />}
+          {tab === 'health'   && <ProviderHealthTab stats={stats} />}
         </>
       )}
     </main>

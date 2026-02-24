@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'WokGen — Multi-Vertical AI Asset Generation Platform',
+  title: 'WokGen — AI Asset Generation Platform',
   description:
-    'WokGen is a multi-engine AI asset factory — specialized pipelines for pixel art, brand systems, vectors, UI components, and more.',
+    'Every asset your project needs. 8 specialized AI studios for pixel art, brand systems, vectors, UI components, voice, and text.',
   keywords: [
     'AI asset generator', 'pixel art AI', 'brand asset generator',
     'sprite generator', 'AI logo maker', 'WokGen', 'WokSpec',
@@ -24,7 +24,6 @@ const MODES = [
     status: 'live' as const,
     tagline: 'For game developers',
     desc: 'Sprites, animations, tilesets, and game-ready assets. Pixel-perfect sizes, GIF output, game engine exports.',
-    icon: '👾',
     highlights: ['Sprites & Characters', 'Tilesets & Scenes', 'GIF Animations', 'Game-ready export'],
     href: '/pixel',
     studioCta: '/pixel/studio',
@@ -36,7 +35,6 @@ const MODES = [
     status: 'live' as const,
     tagline: 'For brands and teams',
     desc: 'Logos, brand kits, slide visuals, social banners, and web hero images. Platform-smart sizing built in.',
-    icon: '💼',
     highlights: ['Brand Logos & Kits', 'Slide Backgrounds', 'Social Banners', 'Web Hero Images'],
     href: '/business',
     studioCta: '/business/studio',
@@ -48,22 +46,9 @@ const MODES = [
     status: 'beta' as const,
     tagline: 'For design systems',
     desc: 'SVG icon sets, illustration libraries, and design system components. Pure vector, stroke-consistent.',
-    icon: '✦',
     highlights: ['SVG Icon Packs', 'Illustration Sets', 'UI Kits', 'Design Tokens'],
     href: '/vector',
     studioCta: '/vector/studio',
-  },
-  {
-    id: 'emoji',
-    label: 'WokGen Emoji',
-    accent: '#fb923c',
-    status: 'beta' as const,
-    tagline: 'For platforms and apps',
-    desc: 'Custom emoji packs, reaction sets, Discord/Slack icons, and app icon sets. Platform-correct sizing.',
-    icon: '😄',
-    highlights: ['Emoji Packs', 'Reaction Sets', 'Sticker Packs', 'App Icons'],
-    href: '/emoji',
-    studioCta: '/emoji/studio',
   },
   {
     id: 'uiux',
@@ -72,7 +57,6 @@ const MODES = [
     status: 'live' as const,
     tagline: 'For product teams',
     desc: 'React components, Tailwind sections, landing pages, and design system tokens. Prompt → production-ready code.',
-    icon: '⌨',
     highlights: ['React Components', 'Tailwind Sections', 'Page Templates', 'Design Tokens'],
     href: '/uiux',
     studioCta: '/uiux/studio',
@@ -84,7 +68,6 @@ const MODES = [
     status: 'beta' as const,
     tagline: 'Speech & Audio Generation',
     desc: 'Generate natural speech, character voices, and audio clips with AI.',
-    icon: '🎙️',
     highlights: ['Character narration', 'Product demos', 'Podcast intros', 'Game NPC dialogue'],
     href: '/voice',
     studioCta: '/voice/studio',
@@ -96,66 +79,51 @@ const MODES = [
     status: 'beta' as const,
     tagline: 'AI Copywriting Engine',
     desc: 'Headlines, blogs, product copy, social posts, and creative writing at scale.',
-    icon: '✍️',
     highlights: ['Brand headlines', 'Blog posts', 'Ad copy', 'Email campaigns'],
     href: '/text',
     studioCta: '/text/studio',
   },
-] satisfies Array<{ id: string; label: string; accent: string; status: 'live' | 'beta' | 'coming_soon'; tagline: string; desc: string; icon: string; highlights: readonly string[]; href: string; studioCta: string }>;
+] satisfies Array<{ id: string; label: string; accent: string; status: 'live' | 'beta' | 'coming_soon'; tagline: string; desc: string; highlights: readonly string[]; href: string; studioCta: string }>;
 
 const QUICK_PROMPTS = [
   {
     mode: 'Pixel',
-    icon: '🗡',
     label: 'Fantasy sword item icon, RPG style, transparent bg',
     href: '/pixel/studio?tool=generate&prompt=Fantasy+sword+item+icon+RPG+style+transparent+background',
     accent: '#a78bfa',
   },
   {
     mode: 'Pixel',
-    icon: '🏰',
     label: 'Medieval castle tileset, top-down perspective',
     href: '/pixel/studio?tool=generate&prompt=Medieval+castle+tileset+top-down+perspective+seamless',
     accent: '#a78bfa',
   },
   {
     mode: 'Business',
-    icon: '⬛',
     label: 'Minimal tech startup logo mark, dark modern',
     href: '/business/studio?tool=logo&prompt=Minimal+tech+startup+focused+on+AI+security+dark+modern',
     accent: '#60a5fa',
   },
   {
     mode: 'Business',
-    icon: '📱',
     label: 'Product launch social banner, SaaS minimal flat',
     href: '/business/studio?tool=social&prompt=Product+launch+announcement+SaaS+app+minimal+flat+dark',
     accent: '#60a5fa',
   },
   {
     mode: 'Vector',
-    icon: '✦',
     label: 'Settings gear icon, outline style, rounded corners',
     href: '/vector/studio?preset=outline&prompt=Settings+gear+icon+outline+style+rounded+corners',
     accent: '#34d399',
   },
   {
-    mode: 'Emoji',
-    icon: '😄',
-    label: 'Happy blob emoji, Discord-style, expressive',
-    href: '/emoji/studio?preset=blob&prompt=Happy+laughing+blob+emoji+expressive',
-    accent: '#fb923c',
-  },
-  {
     mode: 'UI/UX',
-    icon: '⌨',
     label: 'SaaS pricing section, 3 tiers, dark theme',
     href: '/uiux/studio?prompt=SaaS+pricing+section+3+tiers+dark+minimal',
     accent: '#f472b6',
   },
   {
     mode: 'Pixel',
-    icon: '👾',
     label: 'Chibi character sprite, front-facing idle pose',
     href: '/pixel/studio?tool=generate&prompt=Cute+chibi+character+sprite+front-facing+idle+pose',
     accent: '#a78bfa',
@@ -163,10 +131,10 @@ const QUICK_PROMPTS = [
 ] as const;
 
 const STATS = [
-  { value: '7',  label: 'Product Modes' },
-  { value: '6+', label: 'AI Providers' },
-  { value: '∞',  label: 'Standard Generations' },
-  { value: '0',  label: 'Setup Required' },
+  { value: '8',  label: 'Specialized studios' },
+  { value: '6+', label: 'AI providers, routed by quality' },
+  { value: 'Free', label: 'Standard generation, always' },
+  { value: 'Open', label: 'Source — MIT licensed' },
 ] as const;
 
 export default function PlatformLanding() {
@@ -177,30 +145,27 @@ export default function PlatformLanding() {
       <section className="platform-hero">
         <div className="platform-hero-inner">
           <div className="platform-hero-eyebrow">
-            <span className="platform-hero-dot platform-hero-dot--pixel" />
-            <span className="platform-hero-dot platform-hero-dot--business" />
-            <span className="platform-hero-dot platform-hero-dot--vector" />
-            <span>Multi-vertical AI generation</span>
+            <span className="platform-hero-rule" />
+            <span>AI asset generation platform</span>
           </div>
           <h1 className="platform-h1">
-            The AI generator that<br />
-            <span className="platform-h1-accent">knows your project.</span>
+            Every asset your project needs.<br />
+            <span className="platform-h1-accent">Generated from intent, not just prompts.</span>
           </h1>
           <p className="platform-desc">
-            WokGen is the only multi-engine AI asset platform built around context, not just prompts.
-            8 specialized studios. An AI Director that plans entire asset packs.
+            8 specialized studios. An AI director that plans entire asset packs.
             Brand kits that enforce visual consistency across every generation.
           </p>
           <div className="platform-cta-row">
             <Link href="/pixel/studio" className="btn-primary btn-lg">
-              Start Free — Pixel Studio →
+              Open Pixel Studio →
             </Link>
-            <Link href="/business/studio" className="btn-ghost btn-lg">
-              Business Studio →
+            <Link href="/pixel" className="btn-ghost btn-lg">
+              See all studios
             </Link>
           </div>
           <p className="platform-hero-note">
-            No account needed to start. Standard generation is always free.
+            No account needed. Standard generation is always free.
           </p>
         </div>
       </section>
@@ -273,7 +238,6 @@ export default function PlatformLanding() {
                 className="platform-quicktry-card"
                 style={{ '--qt-accent': q.accent } as React.CSSProperties}
               >
-                <span className="platform-quicktry-icon">{q.icon}</span>
                 <span className="platform-quicktry-mode">{q.mode}</span>
                 <span className="platform-quicktry-label">{q.label}</span>
               </Link>
@@ -295,7 +259,7 @@ export default function PlatformLanding() {
                 style={{ '--mode-card-accent': mode.accent } as React.CSSProperties}
               >
                 <div className="platform-mode-card-header">
-                  <span className="platform-mode-icon">{mode.icon}</span>
+                  <span className="platform-mode-accent-bar" />
                   <div>
                     <div className="platform-mode-label">{mode.label}</div>
                     <div className="platform-mode-tagline">{mode.tagline}</div>
