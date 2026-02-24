@@ -105,7 +105,7 @@ export default function HomePage() {
           </h1>
           <p className="homepage-hero-sub">
             One studio. Every creative mode.<br />
-            30+ free browser tools. No paywalls.
+            60+ free browser tools. No paywalls.
           </p>
           <div className="homepage-hero-ctas">
             <Link href="/pixel/studio" className="homepage-cta-primary">
@@ -118,7 +118,7 @@ export default function HomePage() {
           <div className="homepage-stat-bar">
             <span>12,400+ assets generated</span>
             <span className="homepage-stat-sep">·</span>
-            <span>30+ free tools</span>
+            <span>60+ free tools</span>
             <span className="homepage-stat-sep">·</span>
             <span>WokGen Studio</span>
             <span className="homepage-stat-sep">·</span>
@@ -166,7 +166,7 @@ export default function HomePage() {
         <div className="homepage-section-inner">
           <div className="homepage-section-head">
             <h2 className="homepage-section-title">
-              30+ free tools.<br />
+              60+ free tools.<br />
               <span className="gradient-text">No signup required.</span>
             </h2>
             <p className="homepage-section-sub">Browser-native utilities. Open, use, close. No accounts, no server uploads, no paywalls.</p>

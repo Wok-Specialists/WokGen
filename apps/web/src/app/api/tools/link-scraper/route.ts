@@ -1,7 +1,16 @@
 import { NextRequest } from 'next/server';
 import { checkSsrf } from '@/lib/ssrf-check';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limiter';
 
 export async function POST(req: NextRequest) {
+  const rl = checkRateLimit(getRateLimitKey(req, 'link-scraper'), 20, 60_000);
+  if (!rl.ok) {
+    return Response.json({ error: 'Too many requests. Try again in a minute.' }, {
+      status: 429,
+      headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+    });
+  }
+
   try {
     const body = await req.json();
     const { url } = body;
