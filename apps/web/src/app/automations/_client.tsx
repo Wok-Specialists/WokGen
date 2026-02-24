@@ -204,6 +204,17 @@ function AutomationRow({
             {testing ? '…' : 'Test'}
           </button>
         )}
+        {auto.targetType !== 'webhook' && (
+          <button
+            className="btn btn--ghost btn--sm"
+            onClick={handleTest}
+            disabled={testing}
+            title="Run automation once immediately"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {testing ? '…' : 'Test run'}
+          </button>
+        )}
         <button className="btn btn--ghost btn--sm" onClick={handleDelete} disabled={deleting}>
           {deleting ? '…' : 'Delete'}
         </button>

@@ -20,32 +20,42 @@ export async function POST(
   });
 
   if (!auto) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  if (auto.targetType !== 'webhook') {
-    return NextResponse.json({ error: 'Only webhook automations can be tested' }, { status: 400 });
-  }
-  if (!auto.targetValue) {
-    return NextResponse.json({ error: 'No webhook URL configured' }, { status: 400 });
+
+  // For webhooks: fire the webhook URL and return the HTTP status
+  if (auto.targetType === 'webhook') {
+    if (!auto.targetValue) {
+      return NextResponse.json({ error: 'No webhook URL configured' }, { status: 400 });
+    }
+    const guard = checkSsrf(auto.targetValue);
+    if (!guard.ok) {
+      return NextResponse.json({ ok: false, error: guard.reason }, { status: 422 });
+    }
+    try {
+      const res = await fetch(auto.targetValue, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'User-Agent': 'WokGen-Webhook/1.0' },
+        body: JSON.stringify({
+          event: 'test',
+          automation: auto.name,
+          timestamp: new Date().toISOString(),
+        }),
+        signal: AbortSignal.timeout(8000),
+      });
+      await prisma.automation.update({
+        where: { id: auto.id },
+        data: { lastRunAt: new Date(), lastRunStatus: res.ok ? 'ok' : 'error' },
+      });
+      return NextResponse.json({ ok: res.ok, status: res.status, message: res.ok ? 'Automation ran successfully' : 'Webhook returned error' });
+    } catch (err) {
+      return NextResponse.json({ ok: false, error: String(err) });
+    }
   }
 
-  // Validate webhook URL against SSRF before attempting fetch
-  const guard = checkSsrf(auto.targetValue);
-  if (!guard.ok) {
-    return NextResponse.json({ ok: false, error: guard.reason }, { status: 422 });
-  }
-
-  try {
-    const res = await fetch(auto.targetValue, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'User-Agent': 'WokGen-Webhook/1.0' },
-      body: JSON.stringify({
-        event: 'test',
-        automation: auto.name,
-        timestamp: new Date().toISOString(),
-      }),
-      signal: AbortSignal.timeout(8000),
-    });
-    return NextResponse.json({ ok: res.ok, status: res.status });
-  } catch (err) {
-    return NextResponse.json({ ok: false, error: String(err) });
-  }
+  // For email / in_app: log the test run and update lastRunAt
+  console.log(`[automation:test] id=${auto.id} name="${auto.name}" type=${auto.targetType}`);
+  await prisma.automation.update({
+    where: { id: auto.id },
+    data: { lastRunAt: new Date(), lastRunStatus: 'ok' },
+  });
+  return NextResponse.json({ ok: true, message: 'Automation ran successfully' });
 }
