@@ -19321,3 +19321,106 @@ select:focus-visible {
   margin-left: auto;
 }
 /* ── End Eral Notepad ─────────────────────────────────────────────────────── */
+
+/* ================================================================
+   LIGHT MODE THEME
+   ================================================================ */
+[data-theme="light"] {
+  --bg-base: #f8f8f8;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #f3f3f3;
+  --bg-elevated: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --text-primary: #0f0f0f;
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-muted: rgba(0, 0, 0, 0.38);
+  --text-inverse: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  color-scheme: light;
+}
+
+[data-theme="light"] .nav-root {
+  background: rgba(248, 248, 248, 0.92);
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .card,
+[data-theme="light"] .toolhub-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .toolhub-card:hover {
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .toolhub-sidebar {
+  background: rgba(0,0,0,0.02);
+  border-right-color: rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .toolhub-sidebar-item.--active {
+  background: rgba(124,58,237,0.08);
+  color: #7c3aed;
+}
+
+[data-theme="light"] .toolhub-search {
+  background: #f0f0f0;
+  border-color: rgba(0,0,0,0.1);
+  color: #0f0f0f;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.12);
+  color: #0f0f0f;
+}
+
+[data-theme="light"] .btn-primary {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+[data-theme="light"] .btn-secondary,
+[data-theme="light"] .btn-ghost {
+  background: transparent;
+  border-color: rgba(0,0,0,0.14);
+  color: #0f0f0f;
+}
+
+[data-theme="light"] code,
+[data-theme="light"] pre {
+  background: #f0f0f0;
+  color: #1a1a1a;
+}
+
+/* ── Theme Toggle ──────────────────────────────────────────────── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  background: transparent;
+  color: var(--text-secondary, rgba(255,255,255,0.65));
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary, #f1f0fb);
+}
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0,0,0,0.05);
+  color: #0f0f0f;
+}
