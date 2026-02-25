@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type Status = 'idle' | 'loading-model' | 'processing' | 'done' | 'error';
 
-export default function BackgroundRemoverTool() {
+function BackgroundRemoverToolInner() {
   const [status, setStatus] = useState<Status>('idle');
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
@@ -76,6 +77,22 @@ export default function BackgroundRemoverTool() {
     setProgress(0);
     if (inputRef.current) inputRef.current.value = '';
   };
+
+  // Pre-load image from WAP processImage action (imageUrl query param)
+  const searchParams = useSearchParams();
+  const preloadUrl = searchParams.get('imageUrl');
+
+  useEffect(() => {
+    if (!preloadUrl) return;
+    fetch(preloadUrl)
+      .then(r => r.blob())
+      .then(blob => {
+        const ext = blob.type.split('/')[1] ?? 'png';
+        processFile(new File([blob], `image.${ext}`, { type: blob.type }));
+      })
+      .catch(() => setError('Failed to load image from URL.'));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preloadUrl]);
 
   return (
     <div className="bgr-tool">
@@ -162,5 +179,13 @@ export default function BackgroundRemoverTool() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BackgroundRemoverTool() {
+  return (
+    <Suspense fallback={null}>
+      <BackgroundRemoverToolInner />
+    </Suspense>
   );
 }

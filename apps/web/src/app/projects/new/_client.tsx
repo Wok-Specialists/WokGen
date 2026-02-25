@@ -1,0 +1,83 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function NewProjectClient({ name, brief }: { name: string; brief: string }) {
+  const router = useRouter();
+  const [projectName, setProjectName] = useState(name);
+  const [projectBrief, setProjectBrief] = useState(brief);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!projectName.trim()) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: projectName.trim(), description: projectBrief.trim() }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error ?? 'Failed to create project');
+      const data = await res.json();
+      router.push(`/projects/${data.project?.id ?? ''}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}>
+      <h1 style={{ fontSize: '1.5rem', color: '#e2e8f0', marginBottom: '1.5rem' }}>New Project</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div>
+          <label style={{ display: 'block', fontSize: 13, color: '#94a3b8', marginBottom: 4 }}>
+            Project name <span style={{ color: '#ef4444' }}>*</span>
+          </label>
+          <input
+            type="text"
+            value={projectName}
+            onChange={e => setProjectName(e.target.value)}
+            placeholder="e.g. Game Kit 2024"
+            required
+            style={{ width: '100%', padding: '8px 12px', borderRadius: 6, background: '#1a1a2e', border: '1px solid #2d2d4e', color: '#e2e8f0', fontSize: 14, boxSizing: 'border-box' }}
+          />
+        </div>
+        <div>
+          <label style={{ display: 'block', fontSize: 13, color: '#94a3b8', marginBottom: 4 }}>
+            Brief (optional)
+          </label>
+          <textarea
+            value={projectBrief}
+            onChange={e => setProjectBrief(e.target.value)}
+            placeholder="Describe the project..."
+            rows={3}
+            style={{ width: '100%', padding: '8px 12px', borderRadius: 6, background: '#1a1a2e', border: '1px solid #2d2d4e', color: '#e2e8f0', fontSize: 14, resize: 'vertical', boxSizing: 'border-box' }}
+          />
+        </div>
+        {error && <p style={{ color: '#ef4444', fontSize: 13 }}>{error}</p>}
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button
+            type="submit"
+            disabled={loading || !projectName.trim()}
+            style={{ background: '#4f8ef7', color: '#fff', padding: '8px 20px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, opacity: loading ? 0.6 : 1 }}
+          >
+            {loading ? 'Creating…' : 'Create Project'}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/projects')}
+            style={{ background: 'transparent', color: '#94a3b8', padding: '8px 16px', borderRadius: 6, border: '1px solid #2d2d4e', cursor: 'pointer', fontSize: 14 }}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

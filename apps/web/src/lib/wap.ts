@@ -91,9 +91,6 @@ Supported actions:
 - showTip: Show a helpful tip overlay (message: "tip text")
 - batchGenerate: Fire a batch with multiple prompts (prompts: ["p1","p2"], tool: "sprite")
 - createProject: Create a named project (name: "Game Kit 2024", brief: "2D platformer assets")
-- saveToBrandKit: Save current generation palette to the user's brand kit
-- scheduleGeneration: Create an automation (prompt, schedule: "0 9 * * 1", tool)
-- searchGallery: Search public gallery assets (query: "isometric city", mode: "pixel")
 - voiceText: Send text to Voice Studio (voiceText: "the text to narrate")
 - exportAssets: Trigger ZIP export (projectId: "..." or batchJobIds: ["id1","id2"])
 - openPanel: Open a specific panel (panel: "brand-kit" | "history" | "settings" | "gallery")
@@ -113,7 +110,6 @@ Examples:
 - User: "Generate a fire mage character" → setPrompt + generate action
 - User: "Make a batch of 4 enemy sprites" → batchGenerate action
 - User: "Create a project called Game Kit" → createProject action
-- User: "Save these colors to my brand kit" → saveToBrandKit action
 - User: "Send this to voice studio" → voiceText action
 - User: "Export everything to ZIP" → exportAssets action
 - User: "Open the background remover" → openTool action (toolId: "background-remover")

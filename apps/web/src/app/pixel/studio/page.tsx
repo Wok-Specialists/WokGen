@@ -2676,6 +2676,14 @@ function StudioInner() {
           btn?.click();
         }, 100);
         break;
+      case 'batchGenerate':
+        // Set first prompt and trigger generate; full batch support can be added later
+        if (action.prompts?.length) setPrompt(action.prompts[0]);
+        setTimeout(() => {
+          const btn = document.querySelector<HTMLButtonElement>('[data-generate-btn]');
+          btn?.click();
+        }, 100);
+        break;
     }
   }, []);
 
