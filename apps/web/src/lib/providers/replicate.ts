@@ -212,6 +212,18 @@ function snapToSdxlSize(n: number): number {
   return Math.max(512, Math.min(1024, rounded));
 }
 
+const TIMEOUT_MS = 60_000;
+
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function createPrediction(
   model: string,
   input: Record<string, unknown>,
@@ -229,7 +241,7 @@ async function createPrediction(
     body.version = version;
   }
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -237,7 +249,7 @@ async function createPrediction(
       Prefer: 'wait=5', // short-circuit if finishes fast
     },
     body: JSON.stringify(body),
-  });
+  }, TIMEOUT_MS);
 
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText);
@@ -261,10 +273,10 @@ async function pollPrediction(
   let backoff = 1500; // ms between polls — start at 1.5s
 
   while (Date.now() < deadline) {
-    const res = await fetch(getUrl, {
+    const res = await fetchWithTimeout(getUrl, {
       // ask Replicate to hold the connection up to 60s if still processing
       headers: { Authorization: `Bearer ${apiKey}`, Prefer: 'wait=60' } as HeadersInit,
-    });
+    }, Math.min(TIMEOUT_MS, deadline - Date.now()));
 
     if (!res.ok) {
       const text = await res.text().catch(() => res.statusText);

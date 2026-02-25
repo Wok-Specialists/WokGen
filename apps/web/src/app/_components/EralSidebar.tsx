@@ -36,7 +36,7 @@ const MINI_MODEL_OPTIONS: { value: ModelVariant; label: string }[] = [
 ];
 
 const QUICK_COMMANDS: { label: string; path: string }[] = [
-  { label: 'Pixel mode',     path: '/pixel/studio'    },
+  { label: 'Pixel mode',     path: '/studio'    },
   { label: 'Business mode',  path: '/business/studio' },
   { label: 'Voice mode',     path: '/voice/studio'    },
   { label: 'Text mode',      path: '/text/studio'     },

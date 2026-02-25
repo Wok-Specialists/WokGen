@@ -124,18 +124,18 @@ ${code
   .replace(/^import.*$/gm, '')
   .replace(/export default /g, '')
   .replace(/export /g, '')}
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(typeof Component !== 'undefined' ? Component : () => React.createElement('div', { className: 'text-white p-4' }, 'Component could not be rendered')));
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(typeof Component !== 'undefined' ? Component : () => React.createElement('div', { className: 'text-[var(--text)] p-4' }, 'Component could not be rendered')));
 <\/script>
 </body>
 </html>`;
 
   return (
-    <div className="min-h-screen text-white" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen text-[var(--text)]" style={{ background: 'var(--bg)' }}>
       <div className="border-b border-white/5 px-6 py-4 flex items-center gap-3">
         <span className="text-blue-400"><IconCode2 size={20} /></span>
         <div>
           <h1 className="font-semibold text-sm">Code Studio</h1>
-          <p className="text-xs text-white/30">Generate React + Tailwind components with AI</p>
+          <p className="text-xs text-[var(--text)]/30">Generate React + Tailwind components with AI</p>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
         {/* Left panel — input */}
         <div className="w-80 border-r border-white/5 flex flex-col">
           <div className="p-4 flex-1 flex flex-col">
-            <label className="text-xs text-white/40 mb-2">Describe your component</label>
+            <label className="text-xs text-[var(--text)]/40 mb-2">Describe your component</label>
             <textarea
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
@@ -154,7 +154,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generate();
               }}
             />
-            <p className="text-[10px] text-white/20 mt-1 mb-3">⌘+Enter to generate</p>
+            <p className="text-[10px] text-[var(--text)]/20 mt-1 mb-3">⌘+Enter to generate</p>
 
             <button
               onClick={() => generate()}
@@ -178,13 +178,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
 
           {/* Templates */}
           <div className="border-t border-white/5 p-4">
-            <p className="text-[10px] text-white/30 uppercase tracking-wider mb-2">Templates</p>
+            <p className="text-[10px] text-[var(--text)]/30 uppercase tracking-wider mb-2">Templates</p>
             <div className="space-y-1">
               {TEMPLATES.map(t => (
                 <button
                   key={t.label}
                   onClick={() => { setPrompt(t.prompt); generate(t.prompt); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-white/50 hover:text-white/80 hover:bg-white/5 rounded-lg transition-colors"
+                  className="w-full text-left px-3 py-1.5 text-xs text-[var(--text)]/50 hover:text-[var(--text)]/80 hover:bg-white/5 rounded-lg transition-colors"
                 >
                   {t.label}
                 </button>
@@ -202,25 +202,25 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
                 <div className="flex rounded-lg overflow-hidden border border-white/10">
                   <button
                     onClick={() => setView('code')}
-                    className={`px-3 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${view === 'code' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/60'}`}
+                    className={`px-3 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${view === 'code' ? 'bg-white/10 text-[var(--text)]' : 'text-[var(--text)]/40 hover:text-[var(--text)]/60'}`}
                   >
                     <IconCode2 size={12} /> Code
                   </button>
                   <button
                     onClick={() => setView('preview')}
-                    className={`px-3 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${view === 'preview' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/60'}`}
+                    className={`px-3 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${view === 'preview' ? 'bg-white/10 text-[var(--text)]' : 'text-[var(--text)]/40 hover:text-[var(--text)]/60'}`}
                   >
                     <IconEye /> Preview
                   </button>
                 </div>
                 <div className="ml-auto flex gap-2">
-                  <button onClick={copyCode} className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
+                  <button onClick={copyCode} className="text-xs text-[var(--text)]/40 hover:text-[var(--text)]/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
                     <IconCopy /> {copied ? 'Copied!' : 'Copy'}
                   </button>
-                  <button onClick={downloadCode} className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
+                  <button onClick={downloadCode} className="text-xs text-[var(--text)]/40 hover:text-[var(--text)]/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
                     <IconDownload /> .tsx
                   </button>
-                  <button onClick={() => generate()} className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
+                  <button onClick={() => generate()} className="text-xs text-[var(--text)]/40 hover:text-[var(--text)]/70 flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-white/5">
                     <IconRefreshCw /> Regenerate
                   </button>
                 </div>
@@ -230,10 +230,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
                 <div className="flex-1 overflow-auto">
                   <div className="flex h-full">
                     {/* Line numbers */}
-                    <div className="bg-white/[0.02] text-white/20 px-3 py-4 text-right select-none min-w-[3rem] font-mono text-xs leading-5 border-r border-white/5">
+                    <div className="bg-white/[0.02] text-[var(--text)]/20 px-3 py-4 text-right select-none min-w-[3rem] font-mono text-xs leading-5 border-r border-white/5">
                       {code.split('\n').map((_, i) => <div key={i}>{i + 1}</div>)}
                     </div>
-                    <pre className="flex-1 p-4 text-xs font-mono text-white/80 leading-5 overflow-x-auto whitespace-pre">
+                    <pre className="flex-1 p-4 text-xs font-mono text-[var(--text)]/80 leading-5 overflow-x-auto whitespace-pre">
                       {code}
                     </pre>
                   </div>
@@ -251,9 +251,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-              <span className="text-white/10 mb-4"><IconCode2 size={48} /></span>
-              <p className="text-white/30 text-sm mb-1">No component generated yet</p>
-              <p className="text-white/15 text-xs">Describe a component or pick a template</p>
+              <span className="text-[var(--text)]/10 mb-4"><IconCode2 size={48} /></span>
+              <p className="text-[var(--text)]/30 text-sm mb-1">No component generated yet</p>
+              <p className="text-[var(--text)]/15 text-xs">Describe a component or pick a template</p>
             </div>
           )}
         </div>

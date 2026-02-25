@@ -46,9 +46,9 @@ function ToolButton({
         className={[
           'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all',
           state === 'idle'
-            ? 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90 hover:border-white/20 cursor-pointer'
+            ? 'bg-white/5 border-white/10 text-[var(--text)]/60 hover:bg-white/10 hover:text-[var(--text)]/90 hover:border-white/20 cursor-pointer'
             : state === 'loading'
-            ? 'bg-white/5 border-white/10 text-white/30 cursor-not-allowed'
+            ? 'bg-white/5 border-white/10 text-[var(--text)]/30 cursor-not-allowed'
             : state === 'done'
             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-pointer'
             : 'bg-red-500/10 border-red-500/20 text-red-400 cursor-pointer',
@@ -70,7 +70,7 @@ function ToolButton({
         <button
           onClick={() => download(result)}
           title={`Download ${result.ext.toUpperCase()}`}
-          className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/50 hover:text-white/80 hover:bg-white/10 transition-all"
+          className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-[var(--text)]/50 hover:text-[var(--text)]/80 hover:bg-white/10 transition-all"
         >
           <Download className="w-3 h-3" />
           {result.ext.toUpperCase()}
@@ -156,8 +156,8 @@ export function PostProcessToolbar({ imageUrl, prompt: _prompt, mode, onResult }
   };
 
   return (
-    <div className="mt-2 p-2.5 bg-white/[0.02] border border-white/[0.06] rounded-xl">
-      <p className="text-[10px] text-white/20 uppercase tracking-wider mb-2 px-0.5">Post-process</p>
+    <div className="mt-2 p-2.5 bg-white/[0.02] border border-white/[0.06] rounded">
+      <p className="text-[10px] text-[var(--text)]/20 uppercase tracking-wider mb-2 px-0.5">Post-process</p>
       <div className="flex flex-wrap gap-1.5">
 
         <ToolButton
@@ -178,7 +178,7 @@ export function PostProcessToolbar({ imageUrl, prompt: _prompt, mode, onResult }
 
         <button
           onClick={download}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90 hover:border-white/20 transition-all"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-[var(--text)]/60 hover:bg-white/10 hover:text-[var(--text)]/90 hover:border-white/20 transition-all"
         >
           <Download className="w-3 h-3" />
           Download
@@ -186,7 +186,7 @@ export function PostProcessToolbar({ imageUrl, prompt: _prompt, mode, onResult }
 
         <button
           onClick={copyUrl}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90 hover:border-white/20 transition-all"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-[var(--text)]/60 hover:bg-white/10 hover:text-[var(--text)]/90 hover:border-white/20 transition-all"
         >
           <Copy className="w-3 h-3" />
           {copied ? 'Copied!' : 'Copy URL'}
@@ -196,7 +196,7 @@ export function PostProcessToolbar({ imageUrl, prompt: _prompt, mode, onResult }
           href={`/studio?type=${mode === 'pixel' ? 'pixel' : mode}&imageUrl=${encodeURIComponent(imageUrl)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90 hover:border-white/20 transition-all"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-[var(--text)]/60 hover:bg-white/10 hover:text-[var(--text)]/90 hover:border-white/20 transition-all"
         >
           <ExternalLink className="w-3 h-3" />
           Edit in Studio

@@ -1053,7 +1053,7 @@ function UIUXAccessibilityPanel({ hints }: { hints: string[] }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
         {hints.map((hint, i) => {
-          const isWarning = /warning|missing|lacks|no\s+alt|no\s+label/i.test(hint) || hint.includes('⚠');
+          const isWarning = /warning|missing|lacks|no\s+alt|no\s+label/i.test(hint) || hint.includes('Warning');
           return (
             <div key={i} style={{ display: 'flex', gap: 9, padding: '9px 11px', borderRadius: 7, background: isWarning ? '!' : '→', border: `1px solid ${isWarning ? '!' : '→'}` }}>
               <span style={{ fontSize: '0.95rem', flexShrink: 0, marginTop: 1 }}>{isWarning ? '!' : '→'}</span>

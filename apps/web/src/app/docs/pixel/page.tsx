@@ -189,7 +189,7 @@ export default function PixelDocs() {
           <H3>Step 1 — Pick a preset</H3>
           <P>
             Open <strong>Pixel mode</strong> at{' '}
-            <Link href="/studio">wokgen.wokspec.org/pixel/studio</Link>.
+            <Link href="/studio">wokgen.wokspec.org/studio</Link>.
             In the top-left panel, choose a style preset. For most RPG assets, start with{' '}
             <Code>rpg_icon</Code>. For a character, use <Code>character_idle</Code>.
             For a dungeon tile, use <Code>tileset</Code>.
@@ -812,7 +812,7 @@ crystal orb,      glowing purple,   faceted glass,   arcane magic`}</Pre>
             Keep prompts under <strong>200 characters</strong>. Beyond that, additional words
             tend to interfere rather than help. If you find yourself writing a long description,
             prioritise: subject noun → primary material → most important visual detail → mood.
-            Cut everything else.
+            'Cut' everything else.
           </P>
 
           <H3>Do NOT write &quot;pixel art&quot;</H3>

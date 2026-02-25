@@ -100,7 +100,7 @@ export default function PixelLanding() {
                 </div>
                 <p className="landing-tool-desc">{t.desc}</p>
                 <Link
-                  href={`/pixel/studio?tool=${t.id}&prompt=${encodeURIComponent(t.example)}`}
+                  href={`/studio?tool=${t.id}&prompt=${encodeURIComponent(t.example)}`}
                   className="landing-tool-example"
                 >
                   <span className="landing-tool-example-label">Try:</span>
@@ -122,7 +122,7 @@ export default function PixelLanding() {
             {SHOWCASE.map(s => (
               <Link
                 key={s.label}
-                href={`/pixel/studio?prompt=${encodeURIComponent(s.prompt)}`}
+                href={`/studio?prompt=${encodeURIComponent(s.prompt)}`}
                 className="landing-showcase-card"
               >
                 <div className="landing-showcase-label">{s.label}</div>

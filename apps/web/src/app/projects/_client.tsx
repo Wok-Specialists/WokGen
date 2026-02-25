@@ -87,18 +87,18 @@ export default function ProjectsClient() {
       {/* Search + sort bar */}
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text)]/30" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search projects..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white/80 placeholder:text-white/30 focus:outline-none focus:border-white/30"
+            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded text-sm text-[var(--text)]/80 placeholder:text-[var(--text)]/30 focus:outline-none focus:border-white/30"
           />
         </div>
         <select
           value={sort}
           onChange={e => setSort(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/60"
+          className="bg-white/5 border border-white/10 rounded px-3 py-2.5 text-sm text-[var(--text)]/60"
         >
           <option value="updated">Last updated</option>
           <option value="name">Name</option>
@@ -155,7 +155,7 @@ export default function ProjectsClient() {
                 {/* Quick action buttons */}
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <Link
-                    href={`/pixel/studio?projectId=${p.id}`}
+                    href={`/studio?projectId=${p.id}`}
                     style={{ fontSize: 12, background: '#4f8ef7', color: '#fff', padding: '5px 12px', borderRadius: 6, textDecoration: 'none' }}
                   >
                     Open Studio

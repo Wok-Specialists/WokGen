@@ -114,7 +114,7 @@ export function NavAuth() {
     return (
       <button
         className="btn-primary btn-sm"
-        onClick={() => signIn(undefined, { callbackUrl: '/pixel/studio' })}
+        onClick={() => signIn(undefined, { callbackUrl: '/studio' })}
       >
         Sign in
       </button>

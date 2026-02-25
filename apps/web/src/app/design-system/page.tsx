@@ -12,18 +12,18 @@ export const metadata: Metadata = {
 
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-screen bg-[#0d0d14] text-white p-8 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#0d0d14] text-[var(--text)] p-8 max-w-5xl mx-auto">
       <div className="mb-12">
         <h1 className="text-3xl font-bold mb-2">WokGen Design System</h1>
-        <p className="text-white/40 text-sm">Internal component reference — not indexed</p>
+        <p className="text-[var(--text)]/40 text-sm">Internal component reference — not indexed</p>
       </div>
 
       {/* WokGen Native Components */}
       <section className="mb-16">
-        <h2 className="text-lg font-semibold mb-6 text-white/60 uppercase tracking-wider text-xs">WokGen Components</h2>
+        <h2 className="text-lg font-semibold mb-6 text-[var(--text)]/60 uppercase tracking-wider text-xs">WokGen Components</h2>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Button — Variants</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Button — Variants</h3>
           <div className="flex flex-wrap gap-3">
             {(['primary', 'secondary', 'ghost', 'danger', 'success', 'outline', 'link'] as const).map(v => (
               <Button key={v} variant={v}>{v}</Button>
@@ -32,7 +32,7 @@ export default function DesignSystemPage() {
         </div>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Button — Sizes</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Button — Sizes</h3>
           <div className="flex flex-wrap gap-3 items-center">
             {(['xs', 'sm', 'md', 'lg'] as const).map(s => (
               <Button key={s} size={s} variant="primary">{s}</Button>
@@ -41,7 +41,7 @@ export default function DesignSystemPage() {
         </div>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Badge</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Badge</h3>
           <div className="flex flex-wrap gap-3">
             <Badge>default</Badge>
           </div>
@@ -50,10 +50,10 @@ export default function DesignSystemPage() {
 
       {/* shadcn/ui Components */}
       <section className="mb-16">
-        <h2 className="text-lg font-semibold mb-6 text-white/60 uppercase tracking-wider text-xs">shadcn/ui Components</h2>
+        <h2 className="text-lg font-semibold mb-6 text-[var(--text)]/60 uppercase tracking-wider text-xs">shadcn/ui Components</h2>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Button</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Button</h3>
           <div className="flex flex-wrap gap-3">
             {(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'] as const).map(v => (
               <ShadcnButton key={v} variant={v}>{v}</ShadcnButton>
@@ -62,7 +62,7 @@ export default function DesignSystemPage() {
         </div>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Card</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Card</h3>
           <div className="grid grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -70,14 +70,14 @@ export default function DesignSystemPage() {
                 <CardDescription>An example card component using shadcn/ui</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-white/60">Card content goes here.</p>
+                <p className="text-sm text-[var(--text)]/60">Card content goes here.</p>
               </CardContent>
             </Card>
           </div>
         </div>
 
         <div className="mb-8">
-          <h3 className="text-sm font-medium mb-3 text-white/80">Input</h3>
+          <h3 className="text-sm font-medium mb-3 text-[var(--text)]/80">Input</h3>
           <div className="max-w-sm">
             <Input placeholder="Enter prompt..." className="mb-3" />
             <Input placeholder="Disabled input" disabled />
@@ -87,7 +87,7 @@ export default function DesignSystemPage() {
 
       {/* Color Palette */}
       <section className="mb-16">
-        <h2 className="text-lg font-semibold mb-6 text-white/60 uppercase tracking-wider text-xs">Color Palette</h2>
+        <h2 className="text-lg font-semibold mb-6 text-[var(--text)]/60 uppercase tracking-wider text-xs">Color Palette</h2>
         <div className="grid grid-cols-4 gap-3">
           {[
             { name: 'Background', value: '#0d0d14' },
@@ -106,8 +106,8 @@ export default function DesignSystemPage() {
             <div key={c.name} className="rounded-lg overflow-hidden border border-white/5">
               <div className="h-12" style={{ background: c.value }} />
               <div className="p-2">
-                <p className="text-xs font-medium text-white/80">{c.name}</p>
-                <p className="text-[10px] text-white/30 font-mono">{c.value}</p>
+                <p className="text-xs font-medium text-[var(--text)]/80">{c.name}</p>
+                <p className="text-[10px] text-[var(--text)]/30 font-mono">{c.value}</p>
               </div>
             </div>
           ))}
@@ -116,18 +116,18 @@ export default function DesignSystemPage() {
 
       {/* Typography */}
       <section className="mb-16">
-        <h2 className="text-lg font-semibold mb-6 text-white/60 uppercase tracking-wider text-xs">Typography</h2>
+        <h2 className="text-lg font-semibold mb-6 text-[var(--text)]/60 uppercase tracking-wider text-xs">Typography</h2>
         <div className="space-y-4">
           {[
             { label: 'text-3xl', className: 'text-3xl font-bold', text: 'Heading Large' },
             { label: 'text-2xl', className: 'text-2xl font-semibold', text: 'Heading Medium' },
             { label: 'text-xl', className: 'text-xl font-semibold', text: 'Heading Small' },
             { label: 'text-base', className: 'text-base', text: 'Body — Regular text for paragraphs and descriptions' },
-            { label: 'text-sm', className: 'text-sm text-white/70', text: 'Small — Labels, captions, secondary info' },
-            { label: 'text-xs', className: 'text-xs text-white/40', text: 'Extra small — Timestamps, badges, micro copy' },
+            { label: 'text-sm', className: 'text-sm text-[var(--text)]/70', text: 'Small — Labels, captions, secondary info' },
+            { label: 'text-xs', className: 'text-xs text-[var(--text)]/40', text: 'Extra small — Timestamps, badges, micro copy' },
           ].map(t => (
             <div key={t.label} className="flex items-baseline gap-6">
-              <span className="text-[10px] text-white/20 font-mono w-20 shrink-0">{t.label}</span>
+              <span className="text-[10px] text-[var(--text)]/20 font-mono w-20 shrink-0">{t.label}</span>
               <span className={t.className}>{t.text}</span>
             </div>
           ))}

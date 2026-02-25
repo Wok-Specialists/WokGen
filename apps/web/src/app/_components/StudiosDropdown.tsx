@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 
 const STUDIOS = [
   {
-    href: '/pixel/studio',
+    href: '/studio',
     name: 'Pixel',
     tagline: 'Game assets & sprite sheets',
     color: '#f59e0b',
@@ -19,7 +19,7 @@ const STUDIOS = [
     beta: false,
   },
   {
-    href: '/vector/studio',
+    href: '/studio',
     name: 'Vector',
     tagline: 'Scalable icons & illustrations',
     color: '#10b981',

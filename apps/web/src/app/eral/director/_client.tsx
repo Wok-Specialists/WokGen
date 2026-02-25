@@ -18,7 +18,7 @@ const MODE_COLORS: Record<string, string> = {
 };
 
 const MODE_STUDIOS: Record<string, string> = {
-  pixel: '/pixel/studio', business: '/business/studio', vector: '/vector/studio',
+  pixel: '/studio', business: '/business/studio', vector: '/studio',
   emoji: '/emoji/studio', uiux: '/uiux/studio', voice: '/voice/studio', text: '/text/studio',
 };
 
@@ -127,7 +127,7 @@ function PlanItemCard({
         )}
         {item.status === 'done' && item.jobId && (
           <a
-            href={`${MODE_STUDIOS[item.mode] ?? '/pixel/studio'}?jobId=${item.jobId}`}
+            href={`${MODE_STUDIOS[item.mode] ?? '/studio'}?jobId=${item.jobId}`}
             className="btn btn--ghost btn--sm"
             target="_blank"
             rel="noopener noreferrer"

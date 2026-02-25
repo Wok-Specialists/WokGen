@@ -96,7 +96,7 @@ export const pixelMode: ModeContract = {
 
   routes: {
     landing: '/pixel',
-    studio:  '/pixel/studio',
+    studio:  '/studio',
     gallery: '/pixel/gallery',
     docs:    '/docs/pixel',
   },

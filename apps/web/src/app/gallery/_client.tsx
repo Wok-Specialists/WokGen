@@ -85,18 +85,18 @@ export default function GalleryClient() {
       {/* Filter + search bar */}
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text)]/30" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search by prompt..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white/80 placeholder:text-white/30 focus:outline-none focus:border-white/30"
+            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded text-sm text-[var(--text)]/80 placeholder:text-[var(--text)]/30 focus:outline-none focus:border-white/30"
           />
         </div>
         <select
           value={modeFilter}
           onChange={e => setModeFilter(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/60"
+          className="bg-white/5 border border-white/10 rounded px-3 py-2.5 text-sm text-[var(--text)]/60"
         >
           <option value="all">All modes</option>
           <option value="pixel">Pixel</option>
@@ -120,7 +120,7 @@ export default function GalleryClient() {
               <div
                 key={a.id}
                 onClick={() => setSelectedAsset(a)}
-                className="break-inside-avoid group relative cursor-pointer rounded-xl overflow-hidden border border-white/5 hover:border-white/20 transition-all"
+                className="break-inside-avoid group relative cursor-pointer rounded overflow-hidden border border-white/5 hover:border-white/20 transition-all"
               >
                 <Image
                   src={a.thumbUrl ?? a.imageUrl}
@@ -133,10 +133,10 @@ export default function GalleryClient() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-all">
                   <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <p className="text-xs text-white line-clamp-2">{a.prompt}</p>
+                    <p className="text-xs text-[var(--text)] line-clamp-2">{a.prompt}</p>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-[10px] text-white/40">{a.mode}</span>
-                      <button className="text-xs text-white/60 hover:text-white">View</button>
+                      <span className="text-[10px] text-[var(--text)]/40">{a.mode}</span>
+                      <button className="text-xs text-[var(--text)]/60 hover:text-[var(--text)]">View</button>
                     </div>
                   </div>
                 </div>
@@ -168,9 +168,9 @@ export default function GalleryClient() {
               />
             </div>
             <div className="p-4">
-              <p className="text-sm text-white/80 mb-3">{selectedAsset.prompt}</p>
+              <p className="text-sm text-[var(--text)]/80 mb-3">{selectedAsset.prompt}</p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-white/30">
+                <span className="text-xs text-[var(--text)]/30">
                   {selectedAsset.mode} • {new Date(selectedAsset.createdAt).toLocaleDateString()}
                 </span>
                 <a

@@ -315,7 +315,7 @@ function AssetModal({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Link
-              href={`/vector/studio?prompt=${encodeURIComponent(asset.prompt)}`}
+              href={`/studio?prompt=${encodeURIComponent(asset.prompt)}`}
               style={{
                 padding: '5px 10px',
                 borderRadius: 6,
@@ -569,7 +569,7 @@ const SHOWCASE_PROMPTS = [
 function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; index: number }) {
   return (
     <a
-      href={`/vector/studio?prompt=${encodeURIComponent(item.prompt)}&tool=${item.tool}`}
+      href={`/studio?prompt=${encodeURIComponent(item.prompt)}&tool=${item.tool}`}
       className="gallery-card"
       style={{ textDecoration: 'none', animationDelay: `${index * 0.04}s` }}
     >

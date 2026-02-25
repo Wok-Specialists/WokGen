@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function VectorPage() {
-  redirect('/vector/studio');
+  redirect('/studio');
 }

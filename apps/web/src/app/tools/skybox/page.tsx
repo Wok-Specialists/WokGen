@@ -128,8 +128,8 @@ export default function SkyboxPage() {
               onClick={() => setStyle(s.value)}
               className={`px-3 py-2 rounded-lg border text-xs text-left transition-all ${
                 style === s.value
-                  ? 'border-white/40 bg-white/10 text-white'
-                  : 'border-white/10 text-white/40 hover:border-white/20'
+                  ? 'border-white/40 bg-white/10 text-[var(--text)]'
+                  : 'border-white/10 text-[var(--text)]/40 hover:border-white/20'
               }`}
             >
               {s.label}
@@ -159,19 +159,19 @@ export default function SkyboxPage() {
         )}
 
         {result?.fileUrl && (
-          <div className="rounded-xl overflow-hidden border border-white/10" style={{ marginTop: '1.5rem' }}>
+          <div className="rounded overflow-hidden border border-white/10" style={{ marginTop: '1.5rem' }}>
             <div ref={viewerRef} style={{ width: '100%', height: 400 }} />
             <div style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)' }}>
               <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>Click and drag to look around</p>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <a href={result.fileUrl} download="skybox-panorama.jpg"
-                   className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white/70"
+                   className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70"
                    style={{ textDecoration: 'none' }}>
                   Download Panorama
                 </a>
                 {result.depthMapUrl && (
                   <a href={result.depthMapUrl} download="skybox-depth.jpg"
-                     className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white/70"
+                     className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70"
                      style={{ textDecoration: 'none' }}>
                     Depth Map
                   </a>

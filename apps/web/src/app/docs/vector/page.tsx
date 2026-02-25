@@ -749,7 +749,7 @@ outlined, 2px stroke, rounded — shopping cart`}</Pre>
 
           <H3>Creating a workspace</H3>
           <OL>
-            <LI>Open Vector mode at <Link href="/studio">/vector/studio</Link>.</LI>
+            <LI>Open Vector mode at <Link href="/studio">/studio</Link>.</LI>
             <LI>Click the workspace selector in the top bar.</LI>
             <LI>Select <strong>New Workspace</strong> and give it a project name.</LI>
             <LI>All generations in this session will be saved to that workspace automatically.</LI>

@@ -146,7 +146,7 @@ export function handlePixel(interaction: DiscordInteraction): DiscordInteraction
 const TOOL_CATEGORIES = [
   { name: 'Pixel Mode', desc: 'Sprites, tilesets, animations for game devs', path: '/studio' },
   { name: 'Business Mode', desc: 'Logos, brand kits, social assets', path: '/studio' },
-  { name: 'Vector Mode', desc: 'SVG icons, illustrations, design systems', path: '/vector/studio' },
+  { name: 'Vector Mode', desc: 'SVG icons, illustrations, design systems', path: '/studio' },
   { name: 'UI/UX Mode', desc: 'React/HTML/Vue components, page templates', path: '/studio' },
   { name: 'Voice Mode', desc: 'Text-to-speech, character voices, audio', path: '/studio' },
   { name: 'Text Mode', desc: 'Headlines, copy, blog posts, code snippets', path: '/text/studio' },

@@ -151,7 +151,7 @@ export default function TextTo3DPage() {
           return (
             <div style={{ marginTop: '1.5rem' }}>
               {glbUrl ? (
-                <div className="relative rounded-xl overflow-hidden border border-white/10 bg-black"
+                <div className="relative rounded overflow-hidden border border-white/10 bg-black"
                      style={{ minHeight: 400 }}>
                   {/* model-viewer is a web component — typed via @types/wc-polyfill */}
                   <model-viewer
@@ -165,11 +165,11 @@ export default function TextTo3DPage() {
                     exposure="0.5"
                   />
                   <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center">
-                    <p className="text-xs text-white/40">Drag to rotate • Scroll to zoom • Right-click to pan</p>
+                    <p className="text-xs text-[var(--text)]/40">Drag to rotate • Scroll to zoom • Right-click to pan</p>
                     <div className="flex gap-2">
-                      {glbUrl && <a href={glbUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white/70">GLB</a>}
-                      {fbxUrl && <a href={fbxUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white/70">FBX</a>}
-                      {objUrl && <a href={objUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white/70">OBJ</a>}
+                      {glbUrl && <a href={glbUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70">GLB</a>}
+                      {fbxUrl && <a href={fbxUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70">FBX</a>}
+                      {objUrl && <a href={objUrl} download className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70">OBJ</a>}
                     </div>
                   </div>
                 </div>

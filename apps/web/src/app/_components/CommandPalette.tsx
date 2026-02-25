@@ -19,9 +19,9 @@ interface SearchResult {
 }
 
 const NAV_COMMANDS = [
-  { id: 'nav-pixel',    label: 'Pixel mode',           href: '/pixel/studio',     group: 'Modes'    },
+  { id: 'nav-pixel',    label: 'Pixel mode',           href: '/studio',     group: 'Modes'    },
   { id: 'nav-business', label: 'Business mode',        href: '/business/studio',  group: 'Modes'    },
-  { id: 'nav-vector',   label: 'Vector mode',          href: '/vector/studio',    group: 'Modes'    },
+  { id: 'nav-vector',   label: 'Vector mode',          href: '/studio',    group: 'Modes'    },
   { id: 'nav-voice',    label: 'Voice mode',           href: '/voice/studio',     group: 'Modes'    },
   { id: 'nav-uiux',     label: 'UI/UX mode',           href: '/uiux/studio',      group: 'Modes'    },
   { id: 'nav-gallery',  label: 'Community Gallery',    href: '/gallery',          group: 'Platform' },

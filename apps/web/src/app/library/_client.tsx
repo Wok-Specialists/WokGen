@@ -84,18 +84,18 @@ export default function LibraryClient() {
       {/* Search + filter bar */}
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text)]/30" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search by prompt..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white/80 placeholder:text-white/30 focus:outline-none focus:border-white/30"
+            className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded text-sm text-[var(--text)]/80 placeholder:text-[var(--text)]/30 focus:outline-none focus:border-white/30"
           />
         </div>
         <select
           value={modeFilter}
           onChange={e => setModeFilter(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/60"
+          className="bg-white/5 border border-white/10 rounded px-3 py-2.5 text-sm text-[var(--text)]/60"
         >
           <option value="all">All modes</option>
           <option value="pixel">Pixel</option>
@@ -106,7 +106,7 @@ export default function LibraryClient() {
         <select
           value={sort}
           onChange={e => setSort(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/60"
+          className="bg-white/5 border border-white/10 rounded px-3 py-2.5 text-sm text-[var(--text)]/60"
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -143,7 +143,7 @@ export default function LibraryClient() {
           {assets.map(asset => (
             <div
               key={asset.id}
-              className="group relative rounded-xl overflow-hidden border border-white/5 hover:border-white/20 transition-all"
+              className="group relative rounded overflow-hidden border border-white/5 hover:border-white/20 transition-all"
               style={{ background: 'rgba(255,255,255,0.02)' }}
             >
               <div style={{ aspectRatio: '1', overflow: 'hidden', background: 'rgba(0,0,0,0.3)', position: 'relative' }}>
@@ -160,19 +160,19 @@ export default function LibraryClient() {
                 )}
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-3">
-                  <p className="text-xs text-white line-clamp-3">{asset.prompt}</p>
+                  <p className="text-xs text-[var(--text)] line-clamp-3">{asset.prompt}</p>
                   <div className="flex gap-2 mt-2">
                     <a
                       href={asset.imageUrl}
                       download
-                      className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-white"
+                      className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-[var(--text)]"
                       onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                       Save
                     </a>
                     <Link
-                      href={`/pixel/studio?prompt=${encodeURIComponent(asset.prompt)}&mode=${asset.mode}`}
-                      className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-white"
+                      href={`/studio?prompt=${encodeURIComponent(asset.prompt)}&mode=${asset.mode}`}
+                      className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-[var(--text)]"
                       onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                       Reuse

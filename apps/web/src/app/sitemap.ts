@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Pixel mode
     { url: `${base}/pixel`,               lastModified: now, changeFrequency: 'monthly',  priority: 0.9 },
-    { url: `${base}/pixel/studio`,        lastModified: now, changeFrequency: 'monthly',  priority: 0.85 },
+    { url: `${base}/studio`,        lastModified: now, changeFrequency: 'monthly',  priority: 0.85 },
     { url: `${base}/pixel/gallery`,       lastModified: now, changeFrequency: 'daily',    priority: 0.8 },
 
     // Business mode

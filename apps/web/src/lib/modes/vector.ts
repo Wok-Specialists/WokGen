@@ -25,7 +25,7 @@ export const vectorMode: ModeContract = {
   galleryAspect: 'square',
   galleryFilters: ['tool', 'style'],
   licenseKey: 'design_system',
-  routes: { landing: '/vector', studio: '/vector/studio', gallery: '/vector/gallery', docs: '/docs/vector' },
+  routes: { landing: '/vector', studio: '/studio', gallery: '/vector/gallery', docs: '/docs/vector' },
   servicePairing: { label: 'WokSpec Design Systems', description: 'Need a complete icon system? WokSpec builds consistent design systems.', href: 'https://wokspec.org' },
   status: 'beta',
   targetUsers: ['UI/UX designers', 'Design system maintainers', 'Front-end engineers'],

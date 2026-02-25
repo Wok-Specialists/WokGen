@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation';
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/studio', label: 'Studio' },
-  { href: '/projects', label: 'Projects' },
   { href: '/tools', label: 'Tools' },
-  { href: '/eral', label: 'Eral 7c' },
-  { href: '/community', label: 'Community' },
-  { href: '/developers', label: 'Developers' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/eral', label: 'Eral' },
   { href: '/support', label: 'Support' },
 ];
 

@@ -59,7 +59,7 @@ function Callout({
   children: React.ReactNode;
   type?: 'info' | 'tip' | 'warn';
 }) {
-  const icons = { info: 'ℹ', tip: '→', warn: '⚠' };
+  const icons = { info: 'ℹ', tip: '→', warn: 'Warning' };
   return (
     <div className={`docs-callout docs-callout--${type}`}>
       <span className="docs-callout-icon">{icons[type]}</span>

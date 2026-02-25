@@ -871,7 +871,7 @@ function OutputPanel({
       <div className="output-canvas flex-1 flex flex-col gap-6 items-center justify-center p-8">
         <div className="flex flex-col items-center gap-4">
           <div
-            className="w-20 h-20 rounded-2xl flex items-center justify-center"
+            className="w-20 h-20 rounded flex items-center justify-center"
             style={{
               background: 'var(--surface-overlay)',
               border: '1px solid var(--surface-border)',
@@ -904,7 +904,7 @@ function OutputPanel({
     return (
       <div className="output-canvas flex-1 flex flex-col gap-4 items-center justify-center p-8">
         <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl"
+          className="w-16 h-16 rounded flex items-center justify-center text-2xl"
           style={{
             background: 'var(--danger-muted)',
             border: '1px solid var(--danger)',
@@ -2250,7 +2250,7 @@ function GenerateForm({
                   reader.readAsDataURL(file);
                 }
               }}
-              className="text-xs text-white/50 file:mr-2 file:text-xs file:bg-white/10 file:border-0 file:text-white/70 file:px-2 file:py-1 file:rounded"
+              className="text-xs text-[var(--text)]/50 file:mr-2 file:text-xs file:bg-white/10 file:border-0 file:text-[var(--text)]/70 file:px-2 file:py-1 file:rounded"
             />
             {maskUrl && <img src={maskUrl} alt="Mask preview" className="mt-2 w-20 h-20 object-cover rounded opacity-70" />}
           </div>
@@ -3691,7 +3691,7 @@ function StudioInner() {
             <p className="pixel-studio-section-label mb-2">Tools</p>
             <div className="space-y-0.5">
               {[
-                { label: 'Background Remover', href: '/tools/background-remover', icon: '✂' },
+                { label: 'Background Remover', href: '/tools/background-remover', icon: ''Cut'' },
                 { label: 'Vectorize', href: '/tools/vectorize', icon: '⬡' },
                 { label: 'Image Resize', href: '/tools/image-resize', icon: '⤡' },
                 { label: 'Image Compress', href: '/tools/image-compress', icon: '⊡' },
@@ -3703,7 +3703,7 @@ function StudioInner() {
                   href={t.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-[var(--text)]/40 hover:text-[var(--text)]/70 hover:bg-white/5 transition-all"
                 >
                   <span className="text-[10px]">{t.icon}</span>
                   {t.label}
@@ -4054,7 +4054,7 @@ export default function StudioPage() {
         >
           <div className="flex flex-col items-center gap-4">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
+              className="w-16 h-16 rounded flex items-center justify-center text-3xl"
               style={{
                 background: 'var(--surface-overlay)',
                 border: '1px solid var(--surface-border)',

@@ -5,7 +5,7 @@ export default function SettingsLoading() {
       {Array(4).fill(0).map((_, i) => (
         <div key={i} className="space-y-3">
           <div className="h-4 w-32 rounded bg-white/[0.04]" />
-          <div className="h-28 rounded-xl bg-white/[0.04] border border-white/5" />
+          <div className="h-28 rounded bg-white/[0.04] border border-white/5" />
         </div>
       ))}
     </div>

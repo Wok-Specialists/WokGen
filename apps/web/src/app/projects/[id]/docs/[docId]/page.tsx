@@ -34,7 +34,7 @@ export default async function DocumentPage({ params }: Props) {
       docId={params.docId}
       initialTitle={doc.title}
       initialContent={doc.content}
-      initialEmoji={doc.emoji ?? '📄'}
+      initialEmoji={doc.emoji ?? 'Document'}
     />
   );
 }

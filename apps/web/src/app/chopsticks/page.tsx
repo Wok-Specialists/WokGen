@@ -114,7 +114,7 @@ export default function ChopsticksPage() {
         {/* Hero */}
         <div className="text-center space-y-4">
           <h2 className="text-lg font-semibold">Setup</h2>          <h1 className="text-4xl font-bold tracking-tight">Chopsticks</h1>
-          <p className="text-zinc-400 text-lg max-w-xl mx-auto">
+          <p className="text-[var(--text-muted)] text-lg max-w-xl mx-auto">
             The official WokGen Discord bot. Generate assets, chat with Eral, browse the gallery,
             and automate your creative workflow — all without leaving Discord.
           </p>
@@ -123,13 +123,13 @@ export default function ChopsticksPage() {
               href="https://discord.com/api/oauth2/authorize?client_id=DISCORD_APPLICATION_ID&scope=applications.commands"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm"
             >
               Add to Discord
             </Link>
             <Link
               href="/studio"
-              className="inline-flex items-center gap-2 bg-[var(--surface-raised)] hover:bg-zinc-700 text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm"
+              className="inline-flex items-center gap-2 bg-[var(--surface-raised)] hover:bg-[var(--bg-elevated)] text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm"
             >
               Open Studio
             </Link>
@@ -137,12 +137,12 @@ export default function ChopsticksPage() {
         </div>
 
         {/* Setup */}
-        <section className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6 space-y-3">
+        <section className="rounded border border-[var(--border)] bg-[var(--bg-elevated)] p-6 space-y-3">
           <h2 className="text-lg font-semibold">Setup</h2>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-[var(--text-muted)] text-sm">
             Chopsticks uses Discord&apos;s Interactions Endpoint (webhook-based, no persistent bot connection required).
           </p>
-          <ol className="list-decimal list-inside text-sm text-zinc-400 space-y-1.5">
+          <ol className="list-decimal list-inside text-sm text-[var(--text-muted)] space-y-1.5">
             <li>Go to the <a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Discord Developer Portal</a> and create an Application.</li>
             <li>Under <strong className="text-[var(--text)]">Bot</strong>, copy the Bot Token → set <code className="bg-[var(--surface-raised)] px-1 py-0.5 rounded text-xs">DISCORD_BOT_TOKEN</code>.</li>
             <li>Under <strong className="text-[var(--text)]">General Information</strong>, copy the Public Key → set <code className="bg-[var(--surface-raised)] px-1 py-0.5 rounded text-xs">DISCORD_PUBLIC_KEY</code>.</li>
@@ -158,7 +158,7 @@ export default function ChopsticksPage() {
             {COMMANDS.map((cmd) => (
               <div
                 key={cmd.syntax}
-                className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5 space-y-3"
+                className="rounded border border-[var(--border)] bg-[var(--bg-elevated)] p-5 space-y-3"
               >
                 {/* Header row */}
                 <div className="flex flex-wrap items-start gap-3">
@@ -189,7 +189,7 @@ export default function ChopsticksPage() {
                       </thead>
                       <tbody className="divide-y divide-zinc-800/60">
                         {cmd.args.map((arg) => (
-                          <tr key={arg.name} className="text-zinc-400">
+                          <tr key={arg.name} className="text-[var(--text-muted)]">
                             <td className="py-1.5 pr-4">
                               <code className="text-[var(--text-secondary)] font-mono">{arg.name}</code>
                             </td>
@@ -197,7 +197,7 @@ export default function ChopsticksPage() {
                             <td className="py-1.5 pr-4">
                               {arg.required
                                 ? <span className="text-red-400">required</span>
-                                : <span className="text-zinc-600">optional</span>
+                                : <span className="text-[var(--text-muted)]">optional</span>
                               }
                             </td>
                             <td className="py-1.5">{arg.desc}</td>
@@ -219,10 +219,10 @@ export default function ChopsticksPage() {
         </section>
 
         {/* Architecture note */}
-        <section className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/50 p-5 space-y-2">
+        <section className="rounded border border-[var(--border)] bg-[var(--bg-elevated)]/50 p-5 space-y-2">
           <h2 className="text-base font-semibold text-[var(--text-secondary)]">Architecture</h2>
           <p className="text-sm text-[var(--text-muted)]">
-            Chopsticks uses Discord&apos;s <strong className="text-zinc-400">Interactions Endpoint</strong> pattern —
+            Chopsticks uses Discord&apos;s <strong className="text-[var(--text-muted)]">Interactions Endpoint</strong> pattern —
             a pure HTTP webhook with no persistent WebSocket connection. Discord POSTs to
             <code className="bg-[var(--surface-raised)] px-1 py-0.5 rounded text-xs mx-1">/api/discord/interactions</code>
             when a slash command is used. Signatures are verified using Ed25519 before any command is processed.

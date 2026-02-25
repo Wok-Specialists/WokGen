@@ -127,10 +127,11 @@ function NavBar() {
       {/* Nav links — hidden on mobile (MobileNav handles mobile) */}
         <div className="nav-links-desktop">
           <NavLink href="/studio">Studio</NavLink>
-          <NavLink href="/projects">Projects</NavLink>
           <NavLink href="/tools">Tools</NavLink>
-          <NavLink href="/community">Community</NavLink>
-          <NavLink href="/developers">Developers</NavLink>
+          <NavLink href="/gallery">Gallery</NavLink>
+          <NavLink href="/projects">Projects</NavLink>
+          <NavLink href="/dashboard">Dashboard</NavLink>
+          <NavLink href="/eral">Eral</NavLink>
         </div>
 
       {/* Right side */}

@@ -220,9 +220,9 @@ export default async function DashboardPage() {
         <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', flexShrink: 0 }}>Quick create</span>
         <div style={{ display: 'flex', gap: '0.625rem', flexWrap: 'wrap' }}>
           {[
-            { label: 'Pixel Studio', href: '/pixel/studio' },
+            { label: 'Pixel Studio', href: '/studio' },
             { label: 'Business Studio', href: '/business/studio' },
-            { label: 'Vector Studio', href: '/vector/studio' },
+            { label: 'Vector Studio', href: '/studio' },
             { label: 'Voice Studio', href: '/voice/studio' },
             { label: 'Code Studio', href: '/studio/code' },
             { label: 'All Tools', href: '/tools' },

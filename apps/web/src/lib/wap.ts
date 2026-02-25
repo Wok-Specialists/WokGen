@@ -81,7 +81,7 @@ export const WAP_CAPABILITIES = `
 You can perform real actions on the WokGen platform by returning a JSON block at the end of your response.
 
 Supported actions:
-- navigate: Go to a URL (path: "/pixel/studio", "/business/studio", "/vector/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs", "/tools")
+- navigate: Go to a URL (path: "/studio", "/business/studio", "/studio", "/uiux/studio", "/voice/studio", "/text/studio", "/eral", "/community", "/pricing", "/docs", "/tools")
 - setParam: Set a studio parameter (key: "size" | "tool" | "style" | "prompt" | "hd", value: the value)
 - setPrompt: Fill the prompt field with text (text: "your prompt here")
 - setTool: Select a studio tool
@@ -102,7 +102,7 @@ Supported actions:
 - webSearch: Search the web via Exa AI for current information (query: search query)
 
 Format (append to your reply only when taking action):
-<wap>{"actions":[{"type":"navigate","path":"/pixel/studio"},{"type":"setParam","key":"size","value":64}],"confirmation":"Opening Pixel Studio and setting size to 64×64"}</wap>
+<wap>{"actions":[{"type":"navigate","path":"/studio"},{"type":"setParam","key":"size","value":64}],"confirmation":"Opening Pixel Studio and setting size to 64×64"}</wap>
 
 Examples:
 - User: "Take me to the pixel studio" → navigate action

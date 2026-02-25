@@ -493,7 +493,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
           <Callout type="warn">
             Avoid vague superlatives like "beautiful", "modern", "clean", "perfect". These
             add noise without direction. Instead, describe <em>what</em> makes it clean or
-            modern in concrete terms: "lots of white space", "16px base font", "rounded-2xl
+            modern in concrete terms: "lots of white space", "16px base font", "rounded
             cards with subtle shadows".
           </Callout>
 
@@ -604,7 +604,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
 
           <H3>Changing colors</H3>
           <UL>
-            <LI><strong>Tailwind classes</strong> — find color classes like <Code>bg-indigo-600</Code> or <Code>text-gray-900</Code> and replace them with your brand colors (e.g., <Code>bg-brand-500</Code> if you have a custom palette configured).</LI>
+            <LI><strong>Tailwind classes</strong> — find color classes like <Code>bg-indigo-600</Code> or <Code>text-[var(--text)]</Code> and replace them with your brand colors (e.g., <Code>bg-brand-500</Code> if you have a custom palette configured).</LI>
             <LI><strong>CSS variables</strong> — for Vanilla CSS outputs, colors are often defined as CSS custom properties at the top of the <Code>&lt;style&gt;</Code> block. Update the variable values to retheme the entire component at once.</LI>
             <LI><strong>Inline styles</strong> — some gradient backgrounds are defined as inline <Code>style</Code> props. These are clearly visible in the code and easy to swap.</LI>
           </UL>

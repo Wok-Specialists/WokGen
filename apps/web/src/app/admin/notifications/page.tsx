@@ -30,7 +30,7 @@ const DEFAULT_CONFIG: NotifyConfig = {
 };
 
 const EVENT_META: Record<EventType, { label: string; desc: string; icon: string }> = {
-  levelUp:         { label: 'Level Up',          desc: 'XP gains and user achievement unlocks',     icon: '⭐' },
+  levelUp:         { label: 'Level Up',          desc: 'XP gains and user achievement unlocks',     icon: 'Star' },
   jobComplete:     { label: 'Job Complete',       desc: 'Generation jobs that finish successfully',  icon: 'ok' },
   newGalleryAsset: { label: 'New Gallery Asset',  desc: 'Newly published public gallery assets',     icon: 'img' },
   errorAlert:      { label: 'Error Alert',        desc: 'System errors and failed generation jobs',  icon: '!' },
@@ -104,7 +104,7 @@ export default function AdminNotificationsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-zinc-400">Loading notification config…</div>
+        <div className="text-[var(--text-muted)]">Loading notification config…</div>
       </div>
     );
   }
@@ -116,7 +116,7 @@ export default function AdminNotificationsPage() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Notification Routing</h1>
-          <p className="mt-1 text-zinc-400 text-sm">
+          <p className="mt-1 text-[var(--text-muted)] text-sm">
             Configure which Discord channel receives each system event. Paste a Discord Webhook URL for each event type.
           </p>
         </div>
@@ -132,7 +132,7 @@ export default function AdminNotificationsPage() {
             return (
               <div
                 key={type}
-                className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5 space-y-4"
+                className="rounded border border-[var(--border)] bg-[var(--bg-elevated)] p-5 space-y-4"
               >
                 {/* Title row */}
                 <div className="flex items-start justify-between gap-4">
@@ -184,7 +184,7 @@ export default function AdminNotificationsPage() {
                     className={`
                       shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition
                       ${canTest
-                        ? 'bg-[var(--surface-raised)] hover:bg-zinc-600 cursor-pointer'
+                        ? 'bg-[var(--surface-raised)] hover:bg-[var(--bg-elevated)] cursor-pointer'
                         : 'bg-[var(--surface-raised)] text-[var(--text-faint)] cursor-not-allowed'}
                       ${ts === 'sending' ? 'animate-pulse' : ''}
                     `}
@@ -210,7 +210,7 @@ export default function AdminNotificationsPage() {
               rounded-lg px-6 py-2.5 text-sm font-semibold transition
               ${saving
                 ? 'bg-indigo-700 text-indigo-200 animate-pulse cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer'}
+                : 'bg-indigo-600 hover:bg-indigo-500 text-[var(--text)] cursor-pointer'}
             `}
           >
             {saving ? 'Saving…' : 'Save Configuration'}
@@ -221,7 +221,7 @@ export default function AdminNotificationsPage() {
 
         {/* Usage hint */}
         <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)]/50 p-4 text-xs text-[var(--text-muted)] space-y-1">
-          <p className="font-semibold text-zinc-400">How to create a Discord Webhook URL:</p>
+          <p className="font-semibold text-[var(--text-muted)]">How to create a Discord Webhook URL:</p>
           <ol className="list-decimal list-inside space-y-0.5">
             <li>Open Discord → go to the channel you want notifications in</li>
             <li>Channel Settings → Integrations → Webhooks → New Webhook</li>
