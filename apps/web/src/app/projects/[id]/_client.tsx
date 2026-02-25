@@ -335,6 +335,129 @@ function timeAgo(iso: string): string {
   return `${Math.floor(secs / 86400)}d ago`;
 }
 
+function DocumentsPanel({
+  projectId, documents, loaded, onRefresh,
+}: {
+  projectId: string;
+  documents: { id: string; title: string; emoji: string | null; updatedAt: string }[];
+  loaded: boolean;
+  onRefresh: () => void;
+}) {
+  const [creating, setCreating] = useState(false);
+
+  const createDoc = async (template?: string) => {
+    setCreating(true);
+    try {
+      const res = await fetch(`/api/projects/${projectId}/documents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: template ? getTemplateName(template) : 'Untitled', template: template ?? null }),
+      });
+      if (res.ok) {
+        const { document: doc } = await res.json();
+        window.location.href = `/projects/${projectId}/docs/${doc.id}`;
+      }
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  function getTemplateName(t: string): string {
+    const names: Record<string, string> = {
+      gdd: 'Game Design Document', brand: 'Brand Book',
+      content: 'Content Calendar', spec: 'Tech Spec', release: 'Release Notes',
+    };
+    return names[t] ?? 'Untitled';
+  }
+
+  if (!loaded) {
+    return <div style={{ padding: '2rem', color: 'var(--text-faint)' }}>Loading documents…</div>;
+  }
+
+  return (
+    <div style={{ padding: '1.5rem' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+        <h2 style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+          Documents
+        </h2>
+        <button
+          className="btn btn--primary btn--sm"
+          onClick={() => createDoc()}
+          disabled={creating}
+        >
+          {creating ? 'Creating…' : '+ New document'}
+        </button>
+      </div>
+
+      {/* Templates */}
+      {documents.length === 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-faint)', marginBottom: '0.75rem' }}>
+            Start from a template:
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {[
+              { key: 'gdd',     label: 'GDD',           emoji: '📋' },
+              { key: 'brand',   label: 'Brand Book',    emoji: '🎨' },
+              { key: 'content', label: 'Content Plan',  emoji: '📅' },
+              { key: 'spec',    label: 'Tech Spec',     emoji: '⚙️' },
+              { key: 'release', label: 'Release Notes', emoji: '🚀' },
+            ].map(t => (
+              <button
+                key={t.key}
+                className="btn btn--ghost btn--sm"
+                onClick={() => createDoc(t.key)}
+                disabled={creating}
+                style={{ fontSize: '0.72rem', gap: '4px', display: 'flex', alignItems: 'center' }}
+              >
+                {t.emoji} {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Document list */}
+      {documents.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          {documents.map(doc => (
+            <a
+              key={doc.id}
+              href={`/projects/${projectId}/docs/${doc.id}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '10px 12px',
+                background: 'var(--surface-raised)',
+                border: '1px solid var(--surface-border)',
+                borderRadius: 'var(--radius)',
+                textDecoration: 'none',
+                transition: 'border-color 0.1s',
+              }}
+            >
+              <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{doc.emoji ?? '📄'}</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500, flex: 1 }}>
+                {doc.title}
+              </span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-faint)' }}>
+                {new Date(doc.updatedAt).toLocaleDateString()}
+              </span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {documents.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)', fontSize: '0.78rem' }}>
+          No documents yet. Create one to start organizing your project.
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ActivityFeed({ projectId }: { projectId: string }) {
   const [events, setEvents]     = useState<ActivityEvent[]>([]);
   const [loading, setLoading]   = useState(true);
@@ -468,9 +591,11 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
   const [showRelPanel, setShowRelPanel] = useState(false);
   const [showBriefPanel, setShowBriefPanel] = useState(!initialBrief);
   const [exporting, setExporting]     = useState(false);
-  const [view, setView]               = useState<'grid' | 'relationships' | 'activity' | 'settings'>('grid');
+  const [view, setView]               = useState<'grid' | 'relationships' | 'activity' | 'settings' | 'documents'>('grid');
   const [extractingPalette, setExtractingPalette] = useState(false);
   const [extractedPalette, setExtractedPalette]   = useState<{hex:string;name:string;ratio:number}[]|null>(null);
+  const [documents, setDocuments]     = useState<{ id: string; title: string; emoji: string | null; updatedAt: string }[]>([]);
+  const [docsLoaded, setDocsLoaded]   = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/projects/${projectId}/assets`);
@@ -483,6 +608,16 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
   }, [projectId]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Load documents when Documents tab is first opened
+  useEffect(() => {
+    if (view === 'documents' && !docsLoaded) {
+      fetch(`/api/projects/${projectId}/documents`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d?.documents) setDocuments(d.documents); })
+        .finally(() => setDocsLoaded(true));
+    }
+  }, [view, docsLoaded, projectId]);
 
   // Compute set of job IDs that have at least one relationship
   const linkedIds = new Set<string>();
@@ -618,6 +753,12 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
           Activity
         </button>
         <button
+          className={`project-tab ${view === 'documents' ? 'project-tab--active' : ''}`}
+          onClick={() => setView('documents')}
+        >
+          Documents
+        </button>
+        <button
           className={`project-tab ${view === 'settings' ? 'project-tab--active' : ''}`}
           onClick={() => setView('settings')}
         >
@@ -630,6 +771,8 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
         <div className="project-dashboard__main">
           {view === 'settings' ? (
             <BriefPanel projectId={projectId} brief={brief} mode={projectMode} onSaved={b => { setBrief(b); setView('grid'); }} />
+          ) : view === 'documents' ? (
+            <DocumentsPanel projectId={projectId} documents={documents} loaded={docsLoaded} onRefresh={() => setDocsLoaded(false)} />
           ) : view === 'activity' ? (
             <ActivityFeed projectId={projectId} />
           ) : loading ? (

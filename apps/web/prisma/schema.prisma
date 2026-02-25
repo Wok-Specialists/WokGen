@@ -62,6 +62,7 @@ model User {
   referralsGiven    Referral[]         @relation("ReferralsGiven")
   referralsReceived Referral[]         @relation("ReferralsReceived")
   eralNotes         EralNote[]
+  documents         Document[]
   generationPresets GenerationPreset[]
 }
 
@@ -334,6 +335,7 @@ model Project {
   relationships AssetRelationship[]
   activity      ActivityEvent[]
   invitations   WorkspaceInvitation[]
+  documents     Document[]
 
   @@index([userId, mode])
   @@index([userId, isArchived])
@@ -732,6 +734,31 @@ model Referral {
 
   @@index([referrerId])
   @@index([code])
+}
+
+// ---------------------------------------------------------------------------
+// Document — rich text documents inside projects (Tiptap/ProseMirror JSON)
+// ---------------------------------------------------------------------------
+model Document {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+
+  title     String   @default("Untitled")
+  /// Tiptap ProseMirror JSON stored as text
+  content   String   @db.Text   @default("{\"type\":\"doc\",\"content\":[]}")
+  /// Template key: "gdd" | "brand" | "content" | "spec" | "release" | null
+  template  String?
+  emoji     String?  @default("📄")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
