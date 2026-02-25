@@ -417,6 +417,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 
+  // Record activity event for new conversations in a project context (non-blocking)
+  if (conv.isNew && userId && context?.projectId) {
+    prisma.activityEvent.create({
+      data: {
+        projectId: context.projectId,
+        userId,
+        type: 'eral.conversation',
+        message: `Started Eral conversation`,
+        refId: conv.id,
+      },
+    }).catch(() => {});
+  }
+
   // Build message list
   const contextNote = buildContextNote(context);
 
@@ -500,6 +513,22 @@ export async function POST(req: NextRequest) {
     } catch { /* non-fatal */ }
   }
 
+  // Fetch recent EralNotes to inject into system prompt
+  let notesSection = '';
+  if (userId) {
+    try {
+      const eralNotes = await prisma.eralNote.findMany({
+        where: { userId },
+        orderBy: { updatedAt: 'desc' },
+        take: 10,
+        select: { title: true, content: true, color: true },
+      });
+      if (eralNotes.length > 0) {
+        notesSection = `\n\nUSER NOTES (things the user has saved for Eral to remember):\n${eralNotes.map(n => `- [${n.color || 'note'}] ${n.title}: ${n.content?.slice(0, 200)}`).join('\n')}`;
+      }
+    } catch { /* non-fatal */ }
+  }
+
   // ─── Web augmentation (Jina Reader + Exa) ─────────────────────────────────
   let webContext = '';
 
@@ -556,6 +585,7 @@ export async function POST(req: NextRequest) {
     contextNote ? `\n\n${contextNote}` : '',
     userPrefsContext,
     projectContext,
+    notesSection,
     webContext,
   ].join('').trim();
 

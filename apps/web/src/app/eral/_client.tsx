@@ -1712,6 +1712,18 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-model-option-label { font-size: 13px; font-weight: 500; color: #818cf8; }
         .eral-model-option-desc  { font-size: 11px; color: var(--text-muted); }
 
+        .eral-project-select {
+          font-size: 11px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 4px;
+          color: var(--text-muted);
+          padding: 3px 6px;
+          cursor: pointer;
+          max-width: 160px;
+        }
+        .eral-project-select:focus { outline: none; border-color: rgba(129,140,248,0.35); }
+
         .eral-share-btn {
           padding: 4px 12px;
           background: rgba(255,255,255,0.04);

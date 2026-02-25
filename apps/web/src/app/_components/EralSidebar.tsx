@@ -70,6 +70,8 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
   const [streamingContent, setStreamingContent] = useState('');
   const [model, setModel] = useState<ModelVariant>('eral-7c');
   const [actionConfirmation, setActionConfirmation] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -100,6 +102,13 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
+    if (open && projects.length === 0) {
+      const stored = sessionStorage.getItem('eral-project');
+      if (stored) setSelectedProjectId(stored);
+      fetch('/api/projects').then(r => r.ok ? r.json() : null).then(d => {
+        if (d?.projects) setProjects(d.projects as { id: string; name: string }[]);
+      }).catch(() => {});
+    }
   }, [open]);
 
   const sendMessage = useCallback(async (text: string) => {
@@ -127,7 +136,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         body: JSON.stringify({
           message: text.trim(),
           modelVariant: model,
-          context: { mode, tool, prompt, studioContext },
+          context: { mode, tool, prompt, studioContext, projectId: selectedProjectId || undefined },
           stream: true,
         }),
       });
@@ -200,7 +209,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
       setStreamingContent('');
       abortRef.current = null;
     }
-  }, [loading, model, mode, tool, prompt, studioContext]);
+  }, [loading, model, mode, tool, prompt, studioContext, selectedProjectId]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -285,6 +294,28 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
               </button>
             ))}
           </div>
+
+          {/* Project selector */}
+          {projects.length > 0 && (
+            <div className="esb-project-bar">
+              <select
+                value={selectedProjectId || ''}
+                onChange={e => {
+                  const val = e.target.value || null;
+                  setSelectedProjectId(val);
+                  if (val) sessionStorage.setItem('eral-project', val);
+                  else sessionStorage.removeItem('eral-project');
+                }}
+                className="esb-project-select"
+                title="Select project context"
+              >
+                <option value="">No project context</option>
+                {projects.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Chat panel */}
           {activeTab === 'chat' && (
@@ -565,6 +596,23 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           border-color: rgba(129,140,248,0.3) !important;
           color: #818cf8 !important;
         }
+
+        .esb-project-bar {
+          padding: 4px 12px 6px;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+          flex-shrink: 0;
+        }
+        .esb-project-select {
+          width: 100%;
+          font-size: 11px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 4px;
+          color: var(--text-muted, #888);
+          padding: 3px 6px;
+          cursor: pointer;
+        }
+        .esb-project-select:focus { outline: none; border-color: rgba(129,140,248,0.35); }
 
         /* Messages */
         .esb-messages {
