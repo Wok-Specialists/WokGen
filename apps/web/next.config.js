@@ -109,8 +109,14 @@ const nextConfig = {
   async redirects() {
     return [
       // Legacy convenience aliases
-      { source: '/generate', destination: '/pixel/studio', permanent: false },
-      { source: '/art',      destination: '/pixel/gallery', permanent: false },
+      { source: '/generate',        destination: '/studio?type=pixel',    permanent: false },
+      { source: '/art',             destination: '/pixel/gallery',         permanent: false },
+      // Old studio routes → unified studio
+      { source: '/pixel/studio',    destination: '/studio?type=pixel',    permanent: false },
+      { source: '/vector/studio',   destination: '/studio?type=vector',   permanent: false },
+      { source: '/uiux/studio',     destination: '/studio?type=uiux',     permanent: false },
+      { source: '/voice/studio',    destination: '/studio?type=voice',    permanent: false },
+      { source: '/business/studio', destination: '/studio?type=business', permanent: false },
     ];
   },
 

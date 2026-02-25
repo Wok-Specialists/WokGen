@@ -10,7 +10,6 @@ import { Footer } from './_components/Footer';
 import { NavAuth } from './_components/NavAuth';
 import { Providers } from './_components/Providers';
 import { ModeSwitcher } from './_components/ModeSwitcher';
-import { StudiosDropdown } from './_components/StudiosDropdown';
 import { MobileNav } from './_components/MobileNav';
 import { Breadcrumb } from './_components/Breadcrumb';
 import { Toaster } from 'sonner';
@@ -128,7 +127,7 @@ function NavBar() {
 
       {/* Nav links — hidden on mobile (MobileNav handles mobile) */}
         <div className="nav-links-desktop">
-          <StudiosDropdown />
+          <NavLink href="/studio">Studio</NavLink>
           <NavLink href="/tools">Tools</NavLink>
           <NavLink href="/community">Community</NavLink>
           <NavLink href="/eral">
