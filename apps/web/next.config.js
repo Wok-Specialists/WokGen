@@ -155,6 +155,12 @@ const nextConfig = {
         crypto: false,
       };
     }
+    // Ensure monorepo root node_modules is included in module resolution
+    config.resolve = config.resolve ?? {};
+    config.resolve.modules = [
+      ...(config.resolve.modules ?? ['node_modules']),
+      path.resolve(__dirname, '../../node_modules'),
+    ];
     return config;
   },
 
