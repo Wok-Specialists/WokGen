@@ -1,56 +1,345 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import {
+  ImageOff,
+  Spline,
+  Maximize2,
+  Search,
+  Link2,
+  Braces,
+  Mic,
+  Box,
+  Globe,
+  Code2,
+  Layers,
+} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Studio Tools — WokGen',
-  description: 'Post-processing tools for your generated assets.',
+  description: 'All tools, integrated into your workflow.',
 };
 
-const STUDIO_TOOLS = [
-  { name: 'Background Remover', href: '/tools/background-remover', desc: 'Remove background from any image', category: 'Image' },
-  { name: 'Vectorize', href: '/tools/vectorize', desc: 'Convert raster images to SVG vectors', category: 'Image' },
-  { name: 'Image Resize', href: '/tools/image-resize', desc: 'Resize and crop images to any dimensions', category: 'Image' },
-  { name: 'Image Compress', href: '/tools/image-compress', desc: 'Compress PNG, JPG, WebP files', category: 'Image' },
-  { name: 'Color Extractor', href: '/tools/color-extractor', desc: 'Extract color palette from any image', category: 'Color' },
-  { name: 'Color Palette', href: '/tools/color-palette', desc: 'Generate and export color palettes', category: 'Color' },
-  { name: 'Sprite Packer', href: '/tools/sprite-packer', desc: 'Pack sprites into a single atlas', category: 'Game' },
-  { name: 'Pixel Editor', href: '/tools/pixel-editor', desc: 'Edit pixel art in-browser', category: 'Game' },
-  { name: 'Ideogram', href: '/tools/ideogram', desc: 'Generate text-in-image designs', category: 'AI Generate' },
-  { name: 'Recraft', href: '/tools/recraft', desc: 'Generate vector art and icons', category: 'AI Generate' },
-  { name: 'Text to 3D', href: '/tools/text-to-3d', desc: 'Generate 3D models from text', category: 'AI Generate' },
-  { name: 'Skybox', href: '/tools/skybox', desc: 'Generate 360° environment skyboxes', category: 'AI Generate' },
-  { name: 'Transcribe', href: '/tools/transcribe', desc: 'Transcribe audio files to text', category: 'AI' },
-  { name: 'Exa Search', href: '/tools/exa-search', desc: 'Semantic web search with AI', category: 'AI' },
+type ToolStatus = 'available' | 'pro';
+
+interface Tool {
+  id: string;
+  label: string;
+  href: string;
+  description: string;
+  status: ToolStatus;
+  icon: React.ElementType;
+}
+
+interface Category {
+  id: string;
+  label: string;
+  tools: Tool[];
+}
+
+const CATEGORIES: Category[] = [
+  {
+    id: 'image',
+    label: 'Image Processing',
+    tools: [
+      {
+        id: 'bg-remove',
+        label: 'Background Remover',
+        href: '/tools/bg-remove',
+        description: 'Remove backgrounds from images automatically with AI precision.',
+        status: 'available',
+        icon: ImageOff,
+      },
+      {
+        id: 'vectorize',
+        label: 'Vectorize',
+        href: '/tools/vectorize',
+        description: 'Convert raster images into clean, scalable SVG vectors.',
+        status: 'available',
+        icon: Spline,
+      },
+      {
+        id: 'resize',
+        label: 'Resize',
+        href: '/tools/resize',
+        description: 'Resize and crop images to exact dimensions for any platform.',
+        status: 'available',
+        icon: Maximize2,
+      },
+    ],
+  },
+  {
+    id: 'content',
+    label: 'Content & Research',
+    tools: [
+      {
+        id: 'exa-search',
+        label: 'Exa Search',
+        href: '/tools/exa-search',
+        description: 'Perform semantic web search powered by the Exa neural search engine.',
+        status: 'available',
+        icon: Search,
+      },
+      {
+        id: 'link-scraper',
+        label: 'Link Scraper',
+        href: '/tools/link-scraper',
+        description: 'Extract and analyze all links from any webpage URL.',
+        status: 'available',
+        icon: Link2,
+      },
+      {
+        id: 'json-viewer',
+        label: 'JSON Viewer',
+        href: '/tools/json-viewer',
+        description: 'Visualize, format, and explore JSON data with a tree view.',
+        status: 'available',
+        icon: Braces,
+      },
+    ],
+  },
+  {
+    id: 'media',
+    label: 'Media & Audio',
+    tools: [
+      {
+        id: 'transcribe',
+        label: 'Transcription',
+        href: '/tools/transcribe',
+        description: 'Transcribe audio and video files to text using AI speech recognition.',
+        status: 'pro',
+        icon: Mic,
+      },
+    ],
+  },
+  {
+    id: '3d',
+    label: '3D & Immersive',
+    tools: [
+      {
+        id: 'text-to-3d',
+        label: 'Text to 3D',
+        href: '/tools/text-to-3d',
+        description: 'Generate 3D models from text prompts using generative AI.',
+        status: 'pro',
+        icon: Box,
+      },
+      {
+        id: 'skybox',
+        label: 'Skybox 360°',
+        href: '/tools/skybox',
+        description: 'Create immersive 360° skybox environments from text descriptions.',
+        status: 'pro',
+        icon: Globe,
+      },
+    ],
+  },
+  {
+    id: 'code',
+    label: 'Code & UI',
+    tools: [
+      {
+        id: 'code-studio',
+        label: 'Code Studio',
+        href: '/studio/code',
+        description: 'Generate production-ready React and Tailwind components from a prompt.',
+        status: 'available',
+        icon: Code2,
+      },
+      {
+        id: 'design-system',
+        label: 'Design System',
+        href: '/design-system',
+        description: 'Browse and export WokGen design tokens, colors, and component styles.',
+        status: 'available',
+        icon: Layers,
+      },
+    ],
+  },
 ];
 
-const categories = [...new Set(STUDIO_TOOLS.map(t => t.category))];
+function StatusBadge({ status }: { status: ToolStatus }) {
+  if (status === 'pro') {
+    return <span className="tools-badge tools-badge--pro">Pro</span>;
+  }
+  return <span className="tools-badge tools-badge--available">Available</span>;
+}
 
 export default function StudioToolsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
-      <div className="mb-10">
-        <Link href="/studio" className="text-xs text-white/30 hover:text-white/60 mb-4 inline-flex items-center gap-1">← Studio</Link>
-        <h1 className="text-2xl font-bold text-white mt-2">Studio Tools</h1>
-        <p className="text-white/40 text-sm mt-1">Post-processing and utility tools for your generated assets.</p>
+    <div className="tools-page">
+      <div className="tools-page__inner">
+        {/* Header */}
+        <div className="tools-page__header">
+          <h1 className="tools-page__title">Studio Tools</h1>
+          <p className="tools-page__subtitle">All tools, integrated into your workflow</p>
+        </div>
+
+        {/* Categories grid */}
+        <div className="tools-page__categories">
+          {CATEGORIES.map((category) => (
+            <div key={category.id} className="tools-category">
+              <h2 className="tools-category__label">{category.label}</h2>
+              <div className="tools-category__grid">
+                {category.tools.map((tool) => {
+                  const Icon = tool.icon;
+                  return (
+                    <div key={tool.id} className="tool-card">
+                      <div className="tool-card__top">
+                        <div className="tool-card__icon-wrap">
+                          <Icon size={16} strokeWidth={1.5} />
+                        </div>
+                        <StatusBadge status={tool.status} />
+                      </div>
+                      <p className="tool-card__name">{tool.label}</p>
+                      <p className="tool-card__desc">{tool.description}</p>
+                      <Link href={tool.href} className="tool-card__cta">
+                        Open tool →
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="tools-page__footer">
+          <Link href="/studio" className="tools-page__footer-link">Back to Studio</Link>
+          <Link href="/tools" className="tools-page__footer-link">Browse all free tools</Link>
+        </div>
       </div>
 
-      {categories.map(cat => (
-        <div key={cat} className="mb-10">
-          <h2 className="text-xs text-white/30 uppercase tracking-wider mb-4">{cat}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {STUDIO_TOOLS.filter(t => t.category === cat).map(tool => (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                className="p-4 bg-white/[0.03] border border-white/[0.07] rounded-xl hover:border-white/20 hover:bg-white/5 transition-all group"
-              >
-                <p className="text-sm font-medium text-white/80 group-hover:text-white mb-1">{tool.name}</p>
-                <p className="text-xs text-white/30">{tool.desc}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
+      <style>{`
+        .tools-page {
+          min-height: 80vh;
+          padding: 48px 24px;
+        }
+        .tools-page__inner {
+          width: 100%;
+          max-width: 960px;
+          margin: 0 auto;
+        }
+        .tools-page__header {
+          margin-bottom: 40px;
+        }
+        .tools-page__title {
+          font-size: clamp(1.75rem, 4vw, 2.5rem);
+          font-weight: 700;
+          color: var(--text);
+          margin: 0 0 8px;
+          letter-spacing: -0.02em;
+        }
+        .tools-page__subtitle {
+          font-size: 1rem;
+          color: var(--text-secondary);
+          margin: 0;
+        }
+        .tools-page__categories {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 40px 32px;
+          margin-bottom: 40px;
+        }
+        @media (max-width: 640px) {
+          .tools-page__categories { grid-template-columns: 1fr; }
+        }
+        .tools-category__label {
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--text-muted);
+          margin: 0 0 12px;
+        }
+        .tools-category__grid {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .tool-card {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 16px;
+          background: var(--bg-surface);
+          border: 1px solid var(--surface-border);
+          border-radius: 10px;
+          transition: border-color 0.15s, background 0.15s;
+        }
+        .tool-card:hover {
+          border-color: rgba(129,140,248,0.4);
+          background: rgba(129,140,248,0.04);
+        }
+        .tool-card__top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2px;
+        }
+        .tool-card__icon-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 7px;
+          background: rgba(129,140,248,0.1);
+          color: #818cf8;
+        }
+        .tools-badge {
+          font-size: 10px;
+          font-weight: 600;
+          padding: 2px 7px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+        .tools-badge--available {
+          background: rgba(52,211,153,0.1);
+          color: #34d399;
+          border: 1px solid rgba(52,211,153,0.2);
+        }
+        .tools-badge--pro {
+          background: rgba(245,158,11,0.1);
+          color: #f59e0b;
+          border: 1px solid rgba(245,158,11,0.2);
+        }
+        .tool-card__name {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text);
+          margin: 0;
+        }
+        .tool-card__desc {
+          font-size: 12px;
+          color: var(--text-secondary);
+          line-height: 1.5;
+          margin: 0;
+          flex: 1;
+        }
+        .tool-card__cta {
+          font-size: 12px;
+          color: #818cf8;
+          font-weight: 500;
+          text-decoration: none;
+          margin-top: 4px;
+          transition: opacity 0.12s;
+        }
+        .tool-card__cta:hover { opacity: 0.8; }
+        .tools-page__footer {
+          display: flex;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+        .tools-page__footer-link {
+          font-size: 13px;
+          color: var(--text-secondary);
+          text-decoration: none;
+          transition: color 0.12s;
+        }
+        .tools-page__footer-link:hover { color: var(--text); }
+      `}</style>
     </div>
   );
 }

@@ -69,6 +69,14 @@ const MODES = [
     status: 'live' as const,
     tags: ['React', 'Tailwind', 'Components'],
   },
+  {
+    id: 'tools',
+    label: 'Tools',
+    href: '/studio/tools',
+    description: 'All WokGen tools in one place — image processing, AI, 3D, and more.',
+    status: 'live' as const,
+    tags: ['Image', 'AI', '3D', 'Utilities'],
+  },
 ] as const;
 
 export default function StudioHub() {
