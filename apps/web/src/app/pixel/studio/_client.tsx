@@ -1222,7 +1222,7 @@ function OutputPanel({
           <PostProcessToolbar
             imageUrl={displayUrl ?? activeUrl}
             mode="pixel"
-            onResult={(url, tool) => { console.log('Post-process result:', tool, url); }}
+            onResult={(_url, _tool) => { /* post-process result handled by toolbar */ }}
           />
         </div>
       )}

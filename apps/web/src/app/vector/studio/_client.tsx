@@ -792,7 +792,7 @@ function VectorStudioInner() {
                   imageUrl={displayUrl ?? displayResult.resultUrl}
                   prompt={prompt}
                   mode="vector"
-                  onResult={(url, tool) => { console.log('Post-process result:', tool, url); }}
+                  onResult={(_url, _tool) => { /* post-process result handled by toolbar */ }}
                 />
               </div>
             )}
