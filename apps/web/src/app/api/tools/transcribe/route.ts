@@ -8,6 +8,7 @@ import { NextRequest } from 'next/server';
 import { apiSuccess, apiError, API_ERRORS } from '@/lib/api-response';
 import { auth } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { withCircuitBreaker } from '@/lib/circuit-breaker';
 
 export const runtime = 'nodejs';
 export const maxDuration = 120;
@@ -41,25 +42,38 @@ export async function POST(req: NextRequest) {
   const { audioUrl, speakerLabels = true, autoChapters = false, entityDetection = true, sentimentAnalysis = false } = body;
 
   // Step 1: Submit for transcription
-  const submitRes = await fetch(`${ASMBL_BASE}/v2/transcript`, {
-    method: 'POST',
-    headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      audio_url: audioUrl,
-      speaker_labels: speakerLabels,
-      auto_chapters: autoChapters,
-      entity_detection: entityDetection,
-      sentiment_analysis: sentimentAnalysis,
-      speech_model: 'universal',
-    }),
-  });
+  let transcriptId: string;
+  try {
+    const submitRes = await withCircuitBreaker('assemblyai', () =>
+      fetch(`${ASMBL_BASE}/v2/transcript`, {
+        method: 'POST',
+        headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          audio_url: audioUrl,
+          speaker_labels: speakerLabels,
+          auto_chapters: autoChapters,
+          entity_detection: entityDetection,
+          sentiment_analysis: sentimentAnalysis,
+          speech_model: 'universal',
+        }),
+      })
+    );
 
-  if (!submitRes.ok) {
-    const err = await submitRes.json().catch(() => ({}));
-    return apiError({ code: 'ASSEMBLYAI_ERROR', message: err.error || 'AssemblyAI error', status: submitRes.status });
+    if (!submitRes.ok) {
+      const err = await submitRes.json().catch(() => ({}));
+      return apiError({ code: 'ASSEMBLYAI_ERROR', message: err.error || 'AssemblyAI error', status: submitRes.status });
+    }
+
+    const data = await submitRes.json();
+    transcriptId = data.id;
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('circuit open')) {
+      return Response.json({ error: 'Service temporarily unavailable. Please try again in a moment.' }, { status: 503 });
+    }
+    throw err;
   }
 
-  const { id } = await submitRes.json();
+  const { id } = { id: transcriptId };
 
   // Step 2: Poll for completion (up to 90 seconds)
   const startTime = Date.now();

@@ -87,7 +87,14 @@ export class WokGen {
     return res.json() as Promise<T>;
   }
 
-  /** Generate an AI asset */
+  /**
+   * Generate an AI asset (image, pixel art, vector, UI/UX mockup, voice, or text).
+   * @param options - Generation options including prompt, mode, and dimensions
+   * @returns Generated asset with URL and metadata
+   * @example
+   * const asset = await wok.generate({ prompt: 'pixel art wizard', mode: 'pixel' });
+   * console.log(asset.url);
+   */
   async generate(options: GenerateOptions): Promise<GeneratedAsset> {
     return this.request<GeneratedAsset>('/api/v1/generate', {
       method: 'POST',
@@ -95,7 +102,13 @@ export class WokGen {
     });
   }
 
-  /** List your generated assets */
+  /**
+   * List your previously generated assets with optional filters.
+   * @param options - Pagination and filter options (page, perPage, mode)
+   * @returns Paginated list of assets and total count
+   * @example
+   * const { assets, total } = await wok.listAssets({ page: 1, perPage: 20, mode: 'pixel' });
+   */
   async listAssets(options: AssetListOptions = {}): Promise<{ assets: GeneratedAsset[]; total: number }> {
     const params = new URLSearchParams();
     if (options.page) params.set('page', String(options.page));
@@ -104,7 +117,15 @@ export class WokGen {
     return this.request(`/api/v1/assets?${params}`);
   }
 
-  /** Chat with Eral 7c */
+  /**
+   * Chat with Eral 7c, the WokGen AI assistant.
+   * @param options - Chat options including message, optional conversationId, and history
+   * @returns AI reply and conversationId for continuing the conversation
+   * @example
+   * const { reply, conversationId } = await wok.chat({ message: 'Help me design a logo' });
+   * // Continue conversation:
+   * await wok.chat({ message: 'Make it more colorful', conversationId });
+   */
   async chat(options: EralChatOptions): Promise<EralChatResult> {
     return this.request<EralChatResult>('/api/v1/eral/chat', {
       method: 'POST',
@@ -112,7 +133,13 @@ export class WokGen {
     });
   }
 
-  /** Remove background from an image */
+  /**
+   * Remove the background from an image URL.
+   * @param imageUrl - Public URL of the image to process
+   * @returns Object containing the URL of the background-removed image
+   * @example
+   * const { url } = await wok.removeBackground('https://example.com/photo.jpg');
+   */
   async removeBackground(imageUrl: string): Promise<{ url: string }> {
     return this.request('/api/v1/tools/bg-remove', {
       method: 'POST',
@@ -120,7 +147,13 @@ export class WokGen {
     });
   }
 
-  /** Get authenticated user info */
+  /**
+   * Get the authenticated user's profile and usage statistics.
+   * @returns User info including plan details and credit usage
+   * @example
+   * const user = await wok.me();
+   * console.log(`Credits used: ${user.usage.creditsUsed}/${user.usage.creditsLimit}`);
+   */
   async me(): Promise<UserInfo> {
     return this.request<UserInfo>('/api/v1/me');
   }

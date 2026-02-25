@@ -8,6 +8,8 @@ import { NextRequest } from 'next/server';
 import { apiSuccess, apiError, API_ERRORS } from '@/lib/api-response';
 import { auth } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { withCircuitBreaker } from '@/lib/circuit-breaker';
+import { withRetry } from '@/lib/retry';
 
 export const runtime = 'nodejs';
 
@@ -46,12 +48,24 @@ export async function POST(req: NextRequest) {
 
   const { prompt, style = 'digital_illustration', n = 1, size = '1024x1024' } = body;
 
-  const res = await fetch('https://external.api.recraft.ai/v1/images/generations', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, style, n, size }),
-    signal: AbortSignal.timeout(45_000),
-  });
+  let res: Response;
+  try {
+    res = await withCircuitBreaker('recraft', () =>
+      withRetry(() =>
+        fetch('https://external.api.recraft.ai/v1/images/generations', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, style, n, size }),
+          signal: AbortSignal.timeout(45_000),
+        })
+      )
+    );
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('circuit open')) {
+      return Response.json({ error: 'Service temporarily unavailable. Please try again in a moment.' }, { status: 503 });
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     const errBody = await res.json().catch(() => ({}));

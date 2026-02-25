@@ -8,6 +8,8 @@ import { NextRequest } from 'next/server';
 import { apiSuccess, apiError, API_ERRORS } from '@/lib/api-response';
 import { auth } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { withCircuitBreaker } from '@/lib/circuit-breaker';
+import { withRetry } from '@/lib/retry';
 
 export const runtime = 'nodejs';
 
@@ -37,21 +39,33 @@ export async function POST(req: NextRequest) {
 
   const { prompt, negativePrompt = '', aspectRatio = 'ASPECT_1_1', model = 'V_2', styleType = 'AUTO', magicPrompt = 'AUTO' } = body;
 
-  const res = await fetch('https://api.ideogram.ai/generate', {
-    method: 'POST',
-    headers: { 'Api-Key': apiKey, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      image_request: {
-        prompt,
-        negative_prompt: negativePrompt,
-        aspect_ratio: aspectRatio,
-        model,
-        style_type: styleType,
-        magic_prompt_option: magicPrompt,
-        num_images: 1,
-      },
-    }),
-  });
+  let res: Response;
+  try {
+    res = await withCircuitBreaker('ideogram', () =>
+      withRetry(() =>
+        fetch('https://api.ideogram.ai/generate', {
+          method: 'POST',
+          headers: { 'Api-Key': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image_request: {
+              prompt,
+              negative_prompt: negativePrompt,
+              aspect_ratio: aspectRatio,
+              model,
+              style_type: styleType,
+              magic_prompt_option: magicPrompt,
+              num_images: 1,
+            },
+          }),
+        })
+      )
+    );
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('circuit open')) {
+      return Response.json({ error: 'Service temporarily unavailable. Please try again in a moment.' }, { status: 503 });
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     const errBody = await res.json().catch(() => ({}));

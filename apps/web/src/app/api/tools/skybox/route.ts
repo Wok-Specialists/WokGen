@@ -9,6 +9,7 @@ import { NextRequest } from 'next/server';
 import { apiSuccess, apiError, API_ERRORS } from '@/lib/api-response';
 import { auth } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { withCircuitBreaker } from '@/lib/circuit-breaker';
 
 export const runtime = 'nodejs';
 
@@ -55,16 +56,26 @@ export async function POST(req: NextRequest) {
   const { prompt, style = 'fantasy-landscape', negativeText = '' } = body;
   const skyboxStyleId = SKYBOX_STYLES[style] || 2;
 
-  const res = await fetch(`${SKYBOX_BASE}/skybox`, {
-    method: 'POST',
-    headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      prompt,
-      skybox_style_id: skyboxStyleId,
-      negative_text: negativeText,
-      return_depth: false,
-    }),
-  });
+  let res: Response;
+  try {
+    res = await withCircuitBreaker('skybox', () =>
+      fetch(`${SKYBOX_BASE}/skybox`, {
+        method: 'POST',
+        headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          skybox_style_id: skyboxStyleId,
+          negative_text: negativeText,
+          return_depth: false,
+        }),
+      })
+    );
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('circuit open')) {
+      return Response.json({ error: 'Service temporarily unavailable. Please try again in a moment.' }, { status: 503 });
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     const errText = await res.text().catch(() => '');

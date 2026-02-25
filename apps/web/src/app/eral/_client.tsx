@@ -1196,6 +1196,28 @@ export function EralPage() {
               ? '✦ Director Mode active · Enter to send · Shift+Enter for newline · ⌘K new chat'
               : 'Enter to send · Shift+Enter for newline · ⌘K new chat · Eral can make mistakes'}
           </p>
+          {/* Capabilities strip */}
+          <div className="eral-caps-strip">
+            {[
+              { icon: '✦', label: 'Generate', prompt: 'Generate a pixel art ' },
+              { icon: '🎙', label: 'Transcribe', prompt: 'Transcribe this audio or help me write a script for ' },
+              { icon: '✂', label: 'Remove BG', prompt: 'Help me remove the background from an image of ' },
+              { icon: '🔍', label: 'Search Web', prompt: 'Search for the latest information about ' },
+              { icon: '🔗', label: 'Analyze URL', prompt: 'Analyze this URL for me: ' },
+              { icon: '+', label: 'New Project', prompt: 'Help me plan a new project for ' },
+            ].map((cap) => (
+              <button
+                key={cap.label}
+                className="eral-cap-chip"
+                onClick={() => { setInput(cap.prompt); inputRef.current?.focus(); }}
+                title={cap.label}
+                disabled={loading}
+              >
+                <span className="eral-cap-chip-icon">{cap.icon}</span>
+                <span className="eral-cap-chip-label">{cap.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
