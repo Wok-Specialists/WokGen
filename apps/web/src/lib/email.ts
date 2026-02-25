@@ -4,8 +4,9 @@
  * local dev and self-hosted deployments without email configured.
  */
 
-const FROM = 'WokGen <noreply@wokspec.org>';
-const REPLY_TO = 'team@wokspec.org';
+const BASE_URL   = (process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wokgen.wokspec.org').replace(/\/$/, '');
+const FROM       = process.env.EMAIL_FROM    ?? 'WokGen <noreply@wokspec.org>';
+const REPLY_TO   = process.env.EMAIL_REPLY_TO ?? 'team@wokspec.org';
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -45,7 +46,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
           Your account is ready. Standard pixel art generation is free — no setup, no key needed.
           Upgrade to a paid plan for HD quality via Replicate.
         </p>
-        <a href="https://wokgen.wokspec.org/studio" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
+        <a href="${BASE_URL}/studio" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
           Open Studio →
         </a>
         <p style="color:#464646;font-size:.8rem;margin:2rem 0 0">
@@ -53,7 +54,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
         </p>
       </div>
     `,
-    text: `Hey ${displayName}, your WokGen account is ready. Visit https://wokgen.wokspec.org/studio to start generating.`,
+    text: `Hey ${displayName}, your WokGen account is ready. Visit ${BASE_URL}/studio to start generating.`,
   });
 }
 
@@ -69,12 +70,12 @@ export async function sendLowCreditsEmail(to: string, remaining: number) {
           You have <strong style="color:#f59e0b">${remaining} HD credit${remaining === 1 ? '' : 's'}</strong> remaining this month.
           Top up or upgrade your plan to keep generating high-quality assets.
         </p>
-        <a href="https://wokgen.wokspec.org/billing" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
+        <a href="${BASE_URL}/billing" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
           Add credits →
         </a>
       </div>
     `,
-    text: `You have ${remaining} HD credits left. Top up at https://wokgen.wokspec.org/billing`,
+    text: `You have ${remaining} HD credits left. Top up at ${BASE_URL}/billing`,
   });
 }
 
@@ -91,12 +92,12 @@ export async function sendBillingReceiptEmail(to: string, amountUsd: number, pla
           Your ${desc} of <strong style="color:#ebebeb">$${amountUsd.toFixed(2)}</strong> was processed.
           Credits have been added to your account.
         </p>
-        <a href="https://wokgen.wokspec.org/account" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
+        <a href="${BASE_URL}/account" style="display:inline-block;padding:.75rem 1.5rem;background:#a78bfa;color:#0d0d0d;font-weight:700;text-decoration:none;border-radius:4px">
           View account →
         </a>
       </div>
     `,
-    text: `Payment of $${amountUsd.toFixed(2)} confirmed. View your account at https://wokgen.wokspec.org/account`,
+    text: `Payment of $${amountUsd.toFixed(2)} confirmed. View your account at ${BASE_URL}/account`,
   });
 }
 
@@ -116,7 +117,7 @@ export async function sendSubscriptionCanceledEmail(to: string, periodEnd: Date)
         <p style="color:#888;line-height:1.7">
           Standard generation remains free forever.
         </p>
-        <a href="https://wokgen.wokspec.org/billing" style="display:inline-block;padding:.75rem 1.5rem;background:rgba(167,139,250,.12);color:#a78bfa;font-weight:700;text-decoration:none;border-radius:4px;border:1px solid rgba(167,139,250,.25)">
+        <a href="${BASE_URL}/billing" style="display:inline-block;padding:.75rem 1.5rem;background:rgba(167,139,250,.12);color:#a78bfa;font-weight:700;text-decoration:none;border-radius:4px;border:1px solid rgba(167,139,250,.25)">
           Reactivate subscription →
         </a>
       </div>
