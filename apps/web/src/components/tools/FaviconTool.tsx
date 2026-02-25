@@ -191,7 +191,7 @@ export default function FaviconTool() {
           {/* Actions */}
           <div className="bgr-actions">
             <button className="btn-primary" onClick={downloadAll} disabled={isZipping}>
-              {isZipping ? 'Creating ZIP…' : '⬇ Download All as ZIP'}
+              {isZipping ? 'Creating ZIP…' : 'Download All as ZIP'}
             </button>
             <button className="btn-ghost" onClick={reset}>
               Load Another

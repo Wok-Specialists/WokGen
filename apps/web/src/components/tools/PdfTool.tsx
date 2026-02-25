@@ -235,7 +235,7 @@ export default function PdfTool() {
               onClick={doMerge}
               disabled={mergeBusy || mergeFiles.length < 2}
             >
-              {mergeBusy ? '⏳ Merging…' : '⬇ Merge & Download'}
+              {mergeBusy ? 'Merging…' : 'Merge & Download'}
             </button>
             {mergeFiles.length > 0 && (
               <button className="btn-ghost" onClick={() => setMergeFiles([])}>Clear All</button>
@@ -291,7 +291,7 @@ export default function PdfTool() {
               onClick={doExtract}
               disabled={extractBusy || !extractFile}
             >
-              {extractBusy ? '⏳ Extracting…' : '⬇ Extract & Download'}
+              {extractBusy ? 'Extracting…' : 'Extract & Download'}
             </button>
           </div>
         </div>

@@ -163,8 +163,8 @@ export default function CryptoUtilsTool() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qrPng} alt="QR Code" className="crypto-qr-img" />
               <div className="pdf-actions">
-                <button className="btn-primary" onClick={downloadQrPng}>⬇ PNG</button>
-                <button className="btn-ghost" onClick={downloadQrSvg}>⬇ SVG</button>
+                <button className="btn-primary" onClick={downloadQrPng}>PNG</button>
+                <button className="btn-ghost" onClick={downloadQrSvg}>SVG</button>
               </div>
             </div>
           )}

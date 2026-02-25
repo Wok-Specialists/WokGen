@@ -294,7 +294,7 @@ export default function CsvTool() {
             <span className="csv-output-label">Output</span>
             <div className="csv-output-actions">
               <button className="btn-ghost-xs" onClick={copyOutput}>{copiedOut ? '✓ Copied' : 'Copy'}</button>
-              <button className="btn-ghost-xs" onClick={downloadOutput}>⬇ Download</button>
+              <button className="btn-ghost-xs" onClick={downloadOutput}>Download</button>
             </div>
           </div>
           <textarea className="csv-textarea output" readOnly value={convertOutput} spellCheck={false} />
