@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 const PatchSchema = z.object({
   step:       z.number().int().min(0).max(4).optional(),
-  useCase:    z.enum(['game-dev', 'brand', 'creative', 'developer']).optional(),
+  useCase:    z.enum(['game-dev', 'brand', 'creative', 'developer', 'product', 'explore']).optional(),
   completed:  z.boolean().optional(),
 });
 

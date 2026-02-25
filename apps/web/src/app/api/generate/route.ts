@@ -991,9 +991,9 @@ export async function POST(req: NextRequest) {
     }
 
     // ------------------------------------------------------------------------
-    // 5b. If the generation succeeded and isPublic, also create a GalleryAsset
+    // 5b. Always create a GalleryAsset on success; isPublic controls visibility
     // ------------------------------------------------------------------------
-    if (job && Boolean(isPublic) && result.resultUrl) {
+    if (job && result.resultUrl) {
       await prisma.galleryAsset.create({
         data: {
           jobId:    job.id,
@@ -1003,7 +1003,7 @@ export async function POST(req: NextRequest) {
           tool:     tool as Tool,
           provider: usedProvider,
           prompt:   String(prompt).trim(),
-          isPublic: true,
+          isPublic: Boolean(isPublic),
           mode:     resolvedMode,
         },
       }).catch((err) => {
@@ -1087,10 +1087,11 @@ export async function GET(req: NextRequest) {
   const mode      = searchParams.get('mode')      ?? undefined;
   const projectId = searchParams.get('projectId') ?? undefined;
 
-  // Optional: require auth for ?mine=true or ?projectId=
+  const isPublicGallery = searchParams.get('public') === 'true';
+
+  // Require authentication for all non-public requests
   let userId: string | undefined;
-  const mine = searchParams.get('mine') === 'true';
-  if ((mine || projectId) && !process.env.SELF_HOSTED) {
+  if (!process.env.SELF_HOSTED) {
     try {
       const { auth } = await import('@/lib/auth');
       const session = await auth();
@@ -1098,20 +1099,63 @@ export async function GET(req: NextRequest) {
     } catch { /* ignore */ }
   }
 
-  const where: Record<string, unknown> = {};
+  if (!isPublicGallery && !userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // For public gallery: only return isPublic jobs
+  if (isPublicGallery) {
+    const where: Record<string, unknown> = { isPublic: true };
+    if (tool && isValidTool(tool)) where.tool = tool;
+    if (status)                    where.status = status;
+    if (mode)                      where.mode   = mode;
+
+    const jobs = await prisma.job.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      select: {
+        id:           true,
+        tool:         true,
+        status:       true,
+        provider:     true,
+        prompt:       true,
+        width:        true,
+        height:       true,
+        seed:         true,
+        resultUrl:    true,
+        resultUrls:   true,
+        isPublic:     true,
+        createdAt:    true,
+        updatedAt:    true,
+      },
+    });
+
+    const hasMore    = jobs.length > limit;
+    const trimmed    = hasMore ? jobs.slice(0, limit) : jobs;
+    const nextCursor = hasMore ? trimmed[trimmed.length - 1].id : null;
+
+    return NextResponse.json({
+      jobs:       trimmed.map(j => ({ ...j, imageUrl: j.resultUrl })),
+      nextCursor,
+      hasMore,
+    });
+  }
+
+  // Authenticated request — always filter by userId
+  const where: Record<string, unknown> = { userId };
   if (tool   && isValidTool(tool))     where.tool   = tool;
   if (status)                          where.status = status;
   if (mode)                            where.mode   = mode;
-  if (userId)                          where.userId = userId;
 
   // projectId filter — verify ownership before applying
-  if (projectId && userId) {
+  if (projectId) {
     try {
       const project = await prisma.project.findUnique({ where: { id: projectId } });
       if (project && project.userId === userId) {
         where.projectId = projectId;
       }
-      // If project doesn't belong to user, silently ignore filter (returns all their jobs)
     } catch { /* ignore */ }
   }
 

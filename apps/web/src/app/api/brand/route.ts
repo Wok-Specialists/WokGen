@@ -11,7 +11,11 @@ import { z } from 'zod';
 
 const CreateBrandKitSchema = z.object({
   name:        z.string().min(1).max(80),
-  paletteJson: z.array(z.string()).optional().default([]),
+  paletteJson: z.array(z.object({
+    hex:  z.string(),
+    name: z.string().optional(),
+    role: z.string().optional(),
+  })).or(z.array(z.string())).optional().default([]),
   typography:  z.record(z.unknown()).optional(),
   styleGuide:  z.string().max(4000).optional(),
   industry:    z.string().max(80).optional(),
