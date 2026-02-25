@@ -333,6 +333,7 @@ model Project {
   members       ProjectMember[]
   relationships AssetRelationship[]
   activity      ActivityEvent[]
+  invitations   WorkspaceInvitation[]
 
   @@index([userId, mode])
   @@index([userId, isArchived])
@@ -782,4 +783,22 @@ model GenerationPreset {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Workspace (Project) Invitations
+// ---------------------------------------------------------------------------
+model WorkspaceInvitation {
+  id        String   @id @default(cuid())
+  projectId String
+  email     String
+  role      String   @default("member")
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([email])
 }

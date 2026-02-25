@@ -276,7 +276,7 @@ export default function GettingStarted() {
         <LI>Unlimited Standard-quality generations across all studios</LI>
         <LI>Gallery storage for all your generations (no expiry)</LI>
         <LI>Up to 3 workspaces to organise projects</LI>
-        <LI>Access to Eral AI assistant</LI>
+        <LI>Access to Eral 7c</LI>
         <LI>Project history and seed reproducibility</LI>
         <LI>API access with personal API key</LI>
       </UL>

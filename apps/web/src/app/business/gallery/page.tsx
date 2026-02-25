@@ -248,7 +248,7 @@ export default function BusinessGallery() {
       {selected && (
         <div className="gallery-lightbox" onClick={() => setSelected(null)}>
           <div className="gallery-lightbox-inner" onClick={e => e.stopPropagation()}>
-            <button className="gallery-lightbox-close" onClick={() => setSelected(null)}>×</button>
+            <button className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={selected.imageUrl}

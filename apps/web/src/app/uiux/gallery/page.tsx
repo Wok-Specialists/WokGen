@@ -300,7 +300,7 @@ export default function UIUXGallery() {
       {selected && (
         <div className="gallery-lightbox" onClick={() => setSelected(null)}>
           <div className="gallery-lightbox-inner gallery-lightbox-inner--uiux" onClick={e => e.stopPropagation()}>
-            <button className="gallery-lightbox-close" onClick={() => setSelected(null)}>×</button>
+            <button className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
 
             {/* Preview area */}
             {selected.imageUrl ? (

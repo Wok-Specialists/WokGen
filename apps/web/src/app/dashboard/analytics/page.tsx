@@ -202,10 +202,7 @@ export default async function AnalyticsPage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={job.resultUrl}
-                    alt=""
-                    width={48}
-                    height={48}
-                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }}
+                    alt={job.prompt?.slice(0, 50) || 'Generated asset'}
                   />
                 ) : (
                   <div

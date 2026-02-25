@@ -335,13 +335,13 @@ function VectorStudioInner() {
   // ── Download ──────────────────────────────────────────────────────────────
   const handleDownload = useCallback(async (url: string, idx = 0) => {
     try {
-      const slug = prompt.trim().replace(/[^a-z0-9]+/gi, '-').toLowerCase().slice(0, 30);
+      const words = prompt.trim().split(/\s+/).slice(0, 5).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '');
       const suffix = batchCount > 1 ? `-${idx + 1}` : '';
       const res  = await fetch(url);
       const blob = await res.blob();
       // Use .svg extension for actual SVG content, .png otherwise
       const ext = blob.type === 'image/svg+xml' ? 'svg' : 'png';
-      const filename = `wokgen-vector-${activeTool}-${slug}${suffix}.${ext}`;
+      const filename = `wokgen-vector-${activeTool}-${words}-${Date.now()}${suffix}.${ext}`;
       const a    = document.createElement('a');
       a.href     = URL.createObjectURL(blob);
       a.download = filename;
@@ -350,6 +350,27 @@ function VectorStudioInner() {
       toastSuccess('Download started');
     } catch { toastError('Download failed'); }
   }, [prompt, activeTool, batchCount]);
+
+  // ── Enhance prompt ────────────────────────────────────────────────────────
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const handleEnhancePrompt = useCallback(async () => {
+    if (!prompt.trim() || isEnhancing) return;
+    setIsEnhancing(true);
+    try {
+      const res = await fetch('/api/prompt/enhance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt.trim(), mode: 'vector' }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { variations?: string[] };
+        const enhanced = data.variations?.[0];
+        if (enhanced) setPrompt(enhanced);
+      }
+    } catch { /* silent */ } finally {
+      setIsEnhancing(false);
+    }
+  }, [prompt, isEnhancing]);
 
   // ── Displayed result ──────────────────────────────────────────────────────
   const primaryResult  = results[0] ?? null;
@@ -453,6 +474,27 @@ function VectorStudioInner() {
             placeholder={EXAMPLE_PROMPTS[activeTool]}
             rows={4}
           />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+            <button
+              type="button"
+              onClick={handleEnhancePrompt}
+              disabled={isEnhancing || !prompt.trim()}
+              title="AI-enhance your prompt with style details"
+              style={{
+                fontSize: '0.65rem',
+                padding: '2px 8px',
+                borderRadius: 4,
+                background: isEnhancing ? 'var(--surface-overlay)' : 'rgba(139,92,246,0.15)',
+                border: '1px solid rgba(139,92,246,0.4)',
+                color: isEnhancing ? 'var(--text-disabled)' : '#a78bfa',
+                cursor: isEnhancing || !prompt.trim() ? 'not-allowed' : 'pointer',
+                opacity: !prompt.trim() ? 0.4 : 1,
+                transition: 'all 0.15s',
+              }}
+            >
+              {isEnhancing ? '✨ Enhancing…' : '✨ Enhance'}
+            </button>
+          </div>
         </div>
 
         {/* Style presets */}
@@ -835,7 +877,7 @@ function VectorStudioInner() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={item.resultUrl}
-                  alt=""
+                  alt={item.prompt?.slice(0, 50) || 'Generated vector'}
                   className="studio-history-thumb"
                   style={{ imageRendering: 'auto' }}
                 />

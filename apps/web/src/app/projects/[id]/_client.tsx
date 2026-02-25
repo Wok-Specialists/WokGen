@@ -130,7 +130,7 @@ function RelationshipPanel({
     <div className="rel-panel">
       <div className="rel-panel__header">
         <h3 className="rel-panel__title">Link asset</h3>
-        <button className="btn btn--ghost btn--sm" onClick={onClose}>&times;</button>
+        <button className="btn btn--ghost btn--sm" onClick={onClose} aria-label="Close">&times;</button>
       </div>
       <div className="rel-panel__from">
         <span className="rel-panel__label">From:</span>
@@ -736,7 +736,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                   return (
                     <div key={r.id} className="project-rel-row">
                       <div className="project-rel-row__asset">
-                        {from?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={from.resultUrl} alt="" fill className="object-cover" sizes="64px" /></div>}
+                        {from?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={from.resultUrl} alt={from?.prompt?.slice(0, 50) || 'Source asset'} fill className="object-cover" sizes="64px" /></div>}
                         <span className="project-rel-row__prompt">{from?.prompt.slice(0, 40)}…</span>
                       </div>
                       <span
@@ -746,7 +746,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                         ──{REL_LABELS[r.type]}──▶
                       </span>
                       <div className="project-rel-row__asset">
-                        {to?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={to.resultUrl} alt="" fill className="object-cover" sizes="64px" /></div>}
+                        {to?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={to.resultUrl} alt={to?.prompt?.slice(0, 50) || 'Target asset'} fill className="object-cover" sizes="64px" /></div>}
                         <span className="project-rel-row__prompt">{to?.prompt.slice(0, 40)}…</span>
                       </div>
                     </div>

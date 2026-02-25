@@ -150,7 +150,7 @@ const { items, total } = await res.json();`,
     method: 'POST',
     path: '/api/eral/chat',
     title: 'Chat with Eral',
-    description: 'Send a message to the Eral AI assistant. Supports multi-turn conversations via conversationId.',
+    description: 'Send a message to Eral 7c. Supports multi-turn conversations via conversationId.',
     headers: [
       { name: 'Authorization', required: true, description: 'Bearer <api-key>' },
       { name: 'Content-Type', required: true, description: 'application/json' },

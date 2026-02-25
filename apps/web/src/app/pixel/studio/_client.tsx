@@ -212,11 +212,11 @@ const SIZES = [32, 64, 128, 256, 512] as const;
 type PixelSize = (typeof SIZES)[number];
 
 const ASPECT_RATIOS = [
-  { id: '1:1',   label: '1:1',   w: 1, h: 1 },
-  { id: '4:3',   label: '4:3',   w: 4, h: 3 },
-  { id: '3:4',   label: '3:4',   w: 3, h: 4 },
-  { id: '16:9',  label: '16:9',  w: 16, h: 9 },
-  { id: '9:16',  label: '9:16',  w: 9, h: 16 },
+  { id: '1:1',   label: '1:1',   w: 1, h: 1,  use: 'Profile' },
+  { id: '4:3',   label: '4:3',   w: 4, h: 3,  use: 'Classic' },
+  { id: '3:4',   label: '3:4',   w: 3, h: 4,  use: 'Portrait' },
+  { id: '16:9',  label: '16:9',  w: 16, h: 9, use: 'Landscape' },
+  { id: '9:16',  label: '9:16',  w: 9, h: 16, use: 'Mobile' },
 ] as const;
 type AspectRatio = (typeof ASPECT_RATIOS)[number]['id'];
 
@@ -683,8 +683,7 @@ function HistoryPanel({
               {item.resultUrl ? (
                 <img
                   src={item.resultUrl}
-                  alt=""
-                  className="w-full h-full pixel-art object-contain"
+                  alt={item.prompt?.slice(0, 50) || 'Generated pixel art'}
                   loading="lazy"
                   decoding="async"
                 />
@@ -1553,8 +1552,28 @@ function GenerateForm({
   setShowPromptHistory: (v: boolean | ((prev: boolean) => boolean)) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   // Derived control visibility for the active tool
   const toolControls = TOOL_CONTROLS[tool];
+
+  const handleEnhancePrompt = useCallback(async () => {
+    if (!prompt.trim() || isEnhancing) return;
+    setIsEnhancing(true);
+    try {
+      const res = await fetch('/api/prompt/enhance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt.trim(), mode: 'pixel' }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { variations?: string[] };
+        const enhanced = data.variations?.[0];
+        if (enhanced) setPrompt(enhanced.slice(0, 200));
+      }
+    } catch { /* silent */ } finally {
+      setIsEnhancing(false);
+    }
+  }, [prompt, isEnhancing, setPrompt]);
 
   // react-dropzone for reference image upload
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -1682,6 +1701,27 @@ function GenerateForm({
             maxLength={200}
             style={{ resize: 'none', minHeight: 72 }}
           />
+          <div className="flex justify-end mt-1">
+            <button
+              type="button"
+              onClick={handleEnhancePrompt}
+              disabled={isEnhancing || !prompt.trim()}
+              title="AI-enhance your prompt with style details (⌘↑)"
+              style={{
+                fontSize: '0.65rem',
+                padding: '2px 8px',
+                borderRadius: 4,
+                background: isEnhancing ? 'var(--surface-overlay)' : 'rgba(139,92,246,0.15)',
+                border: '1px solid rgba(139,92,246,0.4)',
+                color: isEnhancing ? 'var(--text-disabled)' : '#a78bfa',
+                cursor: isEnhancing || !prompt.trim() ? 'not-allowed' : 'pointer',
+                opacity: !prompt.trim() ? 0.4 : 1,
+                transition: 'all 0.15s',
+              }}
+            >
+              {isEnhancing ? '✨ Enhancing…' : '✨ Enhance'}
+            </button>
+          </div>
           <PromptIntelligenceBar
             prompt={prompt}
             mode="pixel"
@@ -2218,24 +2258,40 @@ function GenerateForm({
       <SectionHeader>Aspect Ratio</SectionHeader>
       <div className="p-4">
         <div className="flex gap-1.5 flex-wrap">
-          {ASPECT_RATIOS.map((ar) => (
-            <button
-              key={ar.id}
-              onClick={() => setAspectRatio(ar.id)}
-              className="flex-1 py-2 rounded-md text-xs font-medium transition-all duration-150"
-              style={{
-                background: aspectRatio === ar.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
-                border: `1px solid ${aspectRatio === ar.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
-                color: aspectRatio === ar.id ? 'var(--accent)' : 'var(--text-muted)',
-                minWidth: 42,
-              }}
-            >
-              {ar.label}
-            </button>
-          ))}
+          {ASPECT_RATIOS.map((ar) => {
+            const maxDim = 20;
+            const tw = ar.w >= ar.h ? maxDim : Math.round(maxDim * ar.w / ar.h);
+            const th = ar.h >= ar.w ? maxDim : Math.round(maxDim * ar.h / ar.w);
+            return (
+              <button
+                key={ar.id}
+                onClick={() => setAspectRatio(ar.id)}
+                className="flex-1 py-2 rounded-md text-xs font-medium transition-all duration-150 flex flex-col items-center gap-1"
+                title={`${ar.label} — ${ar.use}`}
+                style={{
+                  background: aspectRatio === ar.id ? 'var(--accent-dim)' : 'var(--surface-overlay)',
+                  border: `1px solid ${aspectRatio === ar.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`,
+                  color: aspectRatio === ar.id ? 'var(--accent)' : 'var(--text-muted)',
+                  minWidth: 42,
+                }}
+              >
+                <svg width={tw} height={th} viewBox={`0 0 ${tw} ${th}`} style={{ display: 'block' }}>
+                  <rect x={0.5} y={0.5} width={tw - 1} height={th - 1} rx={1}
+                    fill={aspectRatio === ar.id ? 'var(--accent-dim)' : 'transparent'}
+                    stroke={aspectRatio === ar.id ? 'var(--accent)' : 'var(--text-disabled)'}
+                    strokeWidth={1}
+                  />
+                </svg>
+                <span style={{ fontSize: '0.6rem' }}>{ar.label}</span>
+              </button>
+            );
+          })}
         </div>
         <p className="form-hint mt-2">
-          {aspectRatio === '1:1' ? 'Square output' : `${aspectRatio} — size scales to fit`}
+          {(() => {
+            const ar = ASPECT_RATIOS.find(a => a.id === aspectRatio) ?? ASPECT_RATIOS[0];
+            return `${ar.label} — ${ar.use}`;
+          })()}
         </p>
       </div>
 
@@ -2975,20 +3031,17 @@ function StudioInner() {
       result?.resultUrls?.[0];
     if (!url) return;
 
-    // Smart filename: wokgen-{preset}-{slug}-{seed}.ext
-    const promptSlug = prompt.trim().slice(0, 30).replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+    // Smart filename: wokgen-pixel-{first-5-words}-{timestamp}.ext
+    const words = prompt.trim().split(/\s+/).slice(0, 5).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '');
     const ext = url.startsWith('data:image/gif') || url.includes('.gif') ? 'gif' : 'png';
-    const seedStr = (result?.resolvedSeed ?? (result as GenerationResult & { seed?: number })?.seed) != null
-      ? `-s${(result?.resolvedSeed ?? (result as GenerationResult & { seed?: number })?.seed)}`
-      : '';
-    const filename = `wokgen-${stylePreset}-${promptSlug || 'asset'}${seedStr}.${ext}`;
+    const filename = `wokgen-pixel-${words || 'asset'}-${Date.now()}.${ext}`;
 
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
     toastSuccess('Image downloaded');
-  }, [result, stylePreset, prompt, toastSuccess]);
+  }, [result, prompt, toastSuccess]);
 
   // ── Save to gallery ────────────────────────────────────────────────────────
   const handleSaveToGallery = useCallback(async () => {

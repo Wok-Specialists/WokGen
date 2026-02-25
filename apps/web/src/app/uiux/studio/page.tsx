@@ -1259,9 +1259,9 @@ function UIUXPageBuilder({
                 <div style={{ fontSize: '0.62rem', color: 'var(--text-disabled)' }}>{fw?.label} · {item.result.code.split('\n').length} lines</div>
               </div>
               <div style={{ display: 'flex', gap: 3 }}>
-                <button onClick={() => onMove(id, 'up')} disabled={idx === 0} style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === 0 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↑</button>
-                <button onClick={() => onMove(id, 'down')} disabled={idx === order.length - 1} style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === order.length - 1 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === order.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↓</button>
-                <button onClick={() => onRemove(id)} style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem' }}>✕</button>
+                <button onClick={() => onMove(id, 'up')} disabled={idx === 0} aria-label="Move up" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === 0 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↑</button>
+                <button onClick={() => onMove(id, 'down')} disabled={idx === order.length - 1} aria-label="Move down" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === order.length - 1 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === order.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↓</button>
+                <button onClick={() => onRemove(id)} aria-label="Remove" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem' }}>✕</button>
               </div>
             </div>
           );

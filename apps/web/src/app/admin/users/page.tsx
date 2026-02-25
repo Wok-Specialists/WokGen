@@ -138,8 +138,7 @@ export default async function AdminUsersPage({
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={user.image}
-                        alt=""
-                        style={{ width: '28px', height: '28px', borderRadius: '50%' }}
+                        alt={user.name || 'User avatar'}
                       />
                     ) : (
                       <div

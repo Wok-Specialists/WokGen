@@ -1295,7 +1295,7 @@ export function EralPage() {
           <div className="eral-v2-plan-modal" onClick={(e) => e.stopPropagation()}>
             <div className="eral-v2-plan-modal__header">
               <h2 className="eral-v2-plan-modal__title">✦ Plan Project</h2>
-              <button className="eral-v2-plan-modal__close" onClick={() => setPlanModalOpen(false)}>×</button>
+              <button className="eral-v2-plan-modal__close" onClick={() => setPlanModalOpen(false)} aria-label="Close">×</button>
             </div>
             <div className="eral-v2-plan-modal__body">
               <div className="eral-v2-plan-modal__field">
