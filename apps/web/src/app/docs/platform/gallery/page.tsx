@@ -93,7 +93,7 @@ export default function DocsGallery() {
             <div className="docs-callout docs-callout--info">
               <span className="docs-callout-icon">i</span>
               <span>
-                A search bar to filter gallery assets by prompt text is coming soon. For now,
+                A prompt-based search filter for gallery assets is in development. For now,
                 use the mode and sort filters to navigate the community feed.
               </span>
             </div>

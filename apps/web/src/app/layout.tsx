@@ -27,6 +27,11 @@ const CommandPalette = nextDynamic(
   { ssr: false },
 );
 
+const KeyboardShortcuts = nextDynamic(
+  () => import('./_components/KeyboardShortcuts'),
+  { ssr: false },
+);
+
 const OnboardingGate = nextDynamic(
   () => import('./_components/OnboardingGate'),
   { ssr: false },
@@ -183,6 +188,7 @@ export default function RootLayout({
           <Footer />
           <EralVoiceButton />
           <CommandPalette />
+          <KeyboardShortcuts />
           <OnboardingGate />
           <Toaster
             theme="dark"
