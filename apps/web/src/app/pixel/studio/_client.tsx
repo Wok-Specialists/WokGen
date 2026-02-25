@@ -2649,6 +2649,15 @@ function StudioInner() {
   const [refImageUrl, setRefImageUrl]     = useState<string | null>(null);
   const refImageInputRef                  = useRef<HTMLInputElement>(null);
 
+  // Inpaint tool state
+  const [maskUrl, setMaskUrl]             = useState<string | null>(null);
+
+  // Tileset/scene tool state
+  const [mapSize, setMapSize]             = useState<string>('4x4');
+
+  // AbortController for cancelling in-flight generate requests
+  const abortControllerRef                = useRef<AbortController | null>(null);
+
   // Output panel state
   const [outputZoom, setOutputZoom]       = useState<1 | 2 | 4>(1);
   const [showPixelGrid, setShowPixelGrid] = useState(false);
@@ -2722,6 +2731,11 @@ function StudioInner() {
   }, [isSelfHosted]);
 
   useEffect(() => { refreshCredits(); }, [refreshCredits]);
+
+  // Abort in-flight generate request on unmount
+  useEffect(() => {
+    return () => { abortControllerRef.current?.abort(); };
+  }, []);
 
   // ── Init isPublic from user's default preference ───────────────────────────
   useEffect(() => {
@@ -2888,6 +2902,13 @@ function StudioInner() {
   const handleGenerate = useCallback(async () => {
     if (!prompt.trim()) return;
 
+    // Cancel any previous in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
+
     // Compute dimensions from size + aspect ratio
     const ar = ASPECT_RATIOS.find(a => a.id === aspectRatio) ?? ASPECT_RATIOS[0];
     const baseSize = size;
@@ -2925,6 +2946,7 @@ function StudioInner() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(animBody),
+          signal,
         });
         let data: Record<string, unknown> = {};
         try { data = await res.json(); } catch { throw new Error(`Server error (HTTP ${res.status})`); }
@@ -3000,6 +3022,7 @@ function StudioInner() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(makeBody(s, idx)),
+          signal,
         });
         let data: Record<string, unknown> = {};
         try { data = await res.json(); } catch { throw new Error(`Server error (HTTP ${res.status})`); }
@@ -3071,6 +3094,7 @@ function StudioInner() {
       if (isPublic) setSavedToGallery(true);
       if (useHD) refreshCredits();
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       setStudioError(parseApiError({ status: 0 }, err instanceof Error ? err.message : String(err)));
       setJobStatus('failed');
     }
@@ -3078,7 +3102,7 @@ function StudioInner() {
     activeTool, prompt, negPrompt, size, aspectRatio, stylePreset, assetCategory, pixelEra,
     bgMode, outlineStyle, paletteSize, steps, guidance,
     provider, seed, lockSeed, isPublic, apiKeys, comfyuiHost, useHD, refreshCredits, batchCount, compareMode,
-    animationType, animFrameCount, animFps, animLoop,
+    animationType, animFrameCount, animFps, animLoop, maskUrl, mapSize,
   ]);
 
   // ── Download ───────────────────────────────────────────────────────────────
