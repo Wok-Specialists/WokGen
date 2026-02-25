@@ -134,6 +134,30 @@ cd apps/web && npx prisma db push
 Vercel automatically deploys on every push to `main`. No CI configuration needed.
 Preview deployments are created for every pull request.
 
+> **Git remote note:** The GitHub remote for this repo is named `public`, not `origin`.
+> Always push with `git push public main` (not `git push origin main`).
+
+---
+
+## Schema changes
+
+After every Prisma schema change, run migrations against the production database before deploying:
+
+```bash
+cd apps/web
+DIRECT_URL="<neon-direct-url>" DATABASE_URL="<neon-pooled-url>" npx prisma migrate deploy
+```
+
+Never use `prisma db push` against production — it bypasses migration history.
+
+---
+
+## Vercel cron limitations
+
+Vercel Hobby plan only supports **daily cron schedules** (e.g. `0 0 * * *`).
+Per-minute or per-hour crons require **Vercel Pro** or an external scheduler (e.g. Upstash QStash).
+See `.vercel/project.json` and `vercel.json` for current cron configuration.
+
 ---
 
 ## GitHub Actions (optional)

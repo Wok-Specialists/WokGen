@@ -9,13 +9,14 @@ See [docs/INTERNALS.md](./docs/INTERNALS.md) for a deep-dive on each system and 
 - Node.js 20+
 - npm (the repo uses npm workspaces — **not** pnpm or yarn)
 - PostgreSQL 14+ (or a free [Neon](https://neon.tech) instance)
+- Redis (local or [Upstash](https://upstash.com) free tier — required for rate limiting)
 - Git
 
 ## Local Development Setup
 
 ```bash
 # 1. Clone the repo
-git clone git@github.com:WokSpec/WokGen.git
+git clone https://github.com/WokSpec/WokGen.git
 cd WokGen
 
 # 2. Install dependencies
@@ -24,15 +25,46 @@ npm install --legacy-peer-deps
 # 3. Configure environment
 cp apps/web/.env.example apps/web/.env.local
 # Edit apps/web/.env.local — see docs/ENV.md for all variables
+# Minimum: DATABASE_URL, AUTH_SECRET, AUTH_GITHUB_ID, AUTH_GITHUB_SECRET
 
 # 4. Initialize database
-cd apps/web && npx prisma db push && cd ../..
+cd apps/web
+npx prisma migrate dev
+npx prisma generate
+cd ../..
 
 # 5. Start development server
 npm run web:dev
 ```
 
 The app runs at http://localhost:3000. API routes are at `/api/*`.
+
+## Running Tests
+
+```bash
+cd apps/web && npm test
+# or: cd apps/web && npx vitest run
+```
+
+## Directory Guide
+
+| Path | What lives here |
+|------|----------------|
+| `apps/web/src/app/` | Next.js App Router pages and API routes |
+| `apps/web/src/app/api/` | All server-side API endpoints |
+| `apps/web/src/lib/` | Core server utilities — circuit breaker, WAP, SSRF guard, provider router, prompt engine, rate limiter, billing |
+| `apps/web/src/components/` | Shared React UI components |
+| `apps/web/src/hooks/` | Custom React hooks |
+| `apps/web/prisma/` | Prisma schema and migration history |
+| `packages/woksdk/` | WokGen SDK (npm-publishable, `@wokspec/woksdk`) |
+| `packages/core/` | Domain interfaces and TypeScript contracts shared across packages |
+| `packages/prompts/` | OSS-compatible stub prompt builders |
+| `packages/schemas/` | API request/response Zod schemas |
+| `modes/` | Per-mode schema, exporters, and prompt definitions |
+| `scripts/` | Generation, data, and asset pipeline scripts |
+| `docs/` | Architecture, internals, env, and pipeline docs |
+| `extensions/` | Browser extension (Chrome/Firefox, WIP) |
+| `.github/workflows/` | CI/CD pipeline definitions |
 
 ## Systems Open for Contribution
 

@@ -1,166 +1,202 @@
 # WokGen
 
-> Multi-mode generative asset platform. Full production codebase — quality layer, pipeline tooling, and all generation systems are open for contribution.
->
-> Live platform: **[wokgen.wokspec.org](https://wokgen.wokspec.org)**
+**Multi-mode generative asset platform for creators, developers, and teams.**
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
+WokGen is a production Next.js 14 platform for AI-powered asset generation across multiple creative domains — images, vectors, UI mockups, 3D models, skyboxes, voice, and more. Built with a focus on developer experience, team workspaces, and production reliability.
 
----
+**Live:** [wokgen.wokspec.org](https://wokgen.wokspec.org) · **Eral 7c** — site-wide AI companion
 
-## Internal Documentation
-
-| Doc | What it covers |
-|-----|----------------|
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | Dev setup, adding modes/providers, PR rules |
-| [docs/PIPELINES.md](./docs/PIPELINES.md) | Every pipeline — CI/CD, generation, data/asset, deployment, web app — with contribution guides |
-| [docs/INTERNALS.md](./docs/INTERNALS.md) | All internal systems: prompt engine, quality profiles, provider router, negative banks, billing, rate limiting |
-| [docs/ENV.md](./docs/ENV.md) | Complete env var reference organized by system |
-| [docs/architecture.md](./docs/architecture.md) | System architecture and data flow |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | Vercel, Render, Docker, Prisma migration flow |
-| [COMMANDS.md](./COMMANDS.md) | All `npm run` commands with flags |
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)](https://prisma.io)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](./LICENSE)
 
 ---
 
-## What WokGen is
+## What's Inside
 
-WokGen is a multi-mode generative asset platform. Each mode is a sealed pipeline with its own prompt schema, model routing, quality constraints, output formats, and tooling.
+| Studio | What it generates | Providers |
+|--------|-------------------|-----------|
+| **Pixel Studio** | Images — realistic, concept, anime, 3D render | Replicate, Fal, SDXL, Flux |
+| **Vector Studio** | SVG icons, illustrations, logos | Recraft, Ideogram |
+| **UI/UX Studio** | UI mockups, wireframes, design specs | Replicate |
+| **Business Studio** | Branded marketing assets with brand kit injection | Replicate + brand context |
+| **Voice Studio** | Speech synthesis from text | ElevenLabs, PlayHT |
+| **Text Studio** | Copy, brand voice, structured content | Groq, Together, OpenAI |
+| **3D Studio** | 3D models (GLB/FBX/OBJ) from text/image | Meshy |
+| **Skybox** | 360° environment panoramas | Blockade Labs |
 
-It is **not** a generic image generator. It is a purpose-built factory.
+### Tools
+- **Background Remover** — SSRF-protected, before/after slider
+- **Vectorize** — Raster-to-SVG with local file upload
+- **Transcribe** — Audio-to-text with word-level confidence (AssemblyAI)
+- **Exa Search** — Semantic web search with filters and export
+- **Link Scraper** — Firecrawl-powered full-page scrape
+- **JSON Toolkit** — Format, validate, minify with line numbers
 
-## Asset Engines
+### Eral 7c
+Site-wide AI companion with persistent memory, project/brand context, WAP (Workflow Action Protocol) — Eral can trigger generation jobs, manage projects, and inject brand kit into generations. Powered by Llama 3.3 70B (Groq), with 8 model variants.
 
-| Engine | Purpose | Status |
-|--------|---------|--------|
-| **Pixel** | Game sprites, tilesets, animations, HUD elements | ✅ Live |
-| **Business** | Logos, brand kits, slide visuals, banners | ✅ Live |
-| **UI/UX** | React/HTML components, landing pages, dashboards | ✅ Live |
-| **Vector** | SVG icons, illustration sets, design systems | ✅ Live |
-| **Emoji** | Emoji packs, sticker sets, platform reactions | ✅ Live |
-| **Voice** | AI voice generation (ElevenLabs, OpenAI TTS, HF Kokoro) | ✅ Live |
-| **Text** | LLM-powered text generation (Groq, Cerebras, Together) | ✅ Live |
+---
 
-## Standalone Tools (no auth required)
-
-| Tool | Description |
-|------|-------------|
-| **Ideogram** | Text-to-image via Ideogram API |
-| **Recraft** | Icon & vector generation via Recraft API |
-| **Skybox** | 360° panorama / skybox generation (Blockade Labs) |
-| **Text-to-3D** | 3D model generation via Meshy |
-| **Transcribe** | Audio transcription via AssemblyAI |
-| **Vectorize** | Raster → SVG via Vectorizer.AI |
-| **BG Remove** | Background removal |
-| **Link Scraper** | Extract metadata / content from URLs (Firecrawl) |
-| **Media Downloader** | Download media from URLs |
-| **Favicon Extractor** | Extract favicons from any domain |
-| **OG Analyzer** | Preview Open Graph tags |
-| **Website Palette** | Extract color palettes from websites |
-| **Exa Search** | Semantic web search via Exa AI |
-
-## Repository Layout
+## Tech Stack
 
 ```
-apps/
-  web/               Next.js 14 app (frontend + API routes)
-    src/lib/         Server-side engine — all internal systems live here
-    src/app/         Pages and API routes
-    prisma/          Database schema and seed
-
-packages/
-  core/              Domain interfaces and TypeScript contracts
-  prompts/           OSS-compatible stub prompt builders
-  schemas/           API request/response schemas
-
-modes/
-  pixel/             Pixel mode schema, exporters, prompts
-  business/          Business mode schema, exporters, prompts
-  vector/            Vector mode schema
-  emoji/             Emoji mode schema
-  uiux/              UI/UX mode schema
-
-scripts/             All generation, data, and asset pipeline scripts
-comfyui/             ComfyUI workflow JSON files
-dataset/             Dataset intake workspace
-docs/                Architecture, internals, env, pipeline docs
-examples/            Workflow examples per engine
-.github/workflows/   CI/CD pipelines
+Framework:     Next.js 14 (App Router)
+Language:      TypeScript 5
+Database:      PostgreSQL via Prisma ORM (Neon recommended)
+Auth:          NextAuth v5 (GitHub + Google OAuth)
+Queue:         BullMQ + Redis (Upstash recommended)
+Payments:      Stripe (subscriptions + credit packs)
+Monitoring:    Sentry
+Rate limiting: Redis-backed (all generation routes)
+Circuit breaker: Custom implementation (CLOSED/OPEN/HALF_OPEN)
+Tests:         Vitest (30 tests)
+Deploy:        Vercel (Hobby/Pro/Enterprise)
 ```
 
-## Local Dev Setup
+---
 
-**Prerequisites:** Node.js 20+, PostgreSQL (or [Neon](https://neon.tech) free tier)
+## Getting Started
+
+### Prerequisites
+- Node.js 20+
+- PostgreSQL (local or [Neon](https://neon.tech) free tier)
+- Redis (local or [Upstash](https://upstash.com) free tier)
+
+### 1. Clone and install
 
 ```bash
-# 1. Clone
-git clone git@github.com:WokSpec/WokGen.git
+git clone https://github.com/wokspec/WokGen.git
 cd WokGen
-
-# 2. Install dependencies
 npm install --legacy-peer-deps
-
-# 3. Configure environment
-cp apps/web/.env.example apps/web/.env.local
-# Edit apps/web/.env.local:
-#   - Set DATABASE_URL (Neon free tier or local Postgres)
-#   - Set AUTH_SECRET (openssl rand -base64 32)
-#   - Set GROQ_API_KEY (free at console.groq.com) for Eral AI + Text studio
-#   - Set AUTH_GITHUB_ID/SECRET for GitHub login
-# See docs/ENV.md for all variables
-
-# 4. Initialize database
-cd apps/web && npx prisma db push && cd ../..
-
-# 5. Start dev server
-npm run web:dev
 ```
 
-App runs at http://localhost:3000. See [docs/ENV.md](./docs/ENV.md) for full variable reference.
-
-## Generation Pipeline (Quick Reference)
+### 2. Configure environment
 
 ```bash
-npm run cycle              # Full 5-item quality cycle (default)
-npm run cycle:fresh        # Clean then cycle
-npm run cycle -- --category world/food   # Cycle a specific category
-npm run gen                # Cloud generation only
-npm run gen:hq             # High-quality one-shot
-npm run gen:cpu            # CPU/procedural fallback
+cp apps/web/.env.example apps/web/.env.local
+# Edit apps/web/.env.local with your values
 ```
 
-See [COMMANDS.md](./COMMANDS.md) for all flags and [docs/PIPELINES.md](./docs/PIPELINES.md) for how each pipeline works internally.
+Minimum required variables for local dev:
+```
+DATABASE_URL=postgresql://...
+AUTH_SECRET=<run: openssl rand -base64 32>
+AUTH_GITHUB_ID=...
+AUTH_GITHUB_SECRET=...
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-## Generation Flow
+See [apps/web/.env.example](./apps/web/.env.example) for all variables with descriptions.
+
+### 3. Set up database
+
+```bash
+cd apps/web
+npx prisma migrate dev
+npx prisma generate
+```
+
+### 4. Run development server
+
+```bash
+cd apps/web
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Project Structure
 
 ```
-Request → Auth/Rate limit → Mode router → Prompt validation
-       → Negative bank assembly → Provider quality matrix
-       → Provider dispatch → Fallback chain → Job persistence → Response
+WokGen/
+├── apps/
+│   └── web/                  # Next.js 14 app
+│       ├── src/
+│       │   ├── app/          # App Router pages + API routes
+│       │   │   ├── api/      # All API endpoints
+│       │   │   ├── pixel/    # Pixel Studio
+│       │   │   ├── vector/   # Vector Studio
+│       │   │   ├── uiux/     # UI/UX Studio
+│       │   │   ├── eral/     # Eral 7c AI companion
+│       │   │   ├── tools/    # Individual tools
+│       │   │   └── dashboard/
+│       │   ├── components/   # Shared UI components
+│       │   ├── lib/          # Core utilities (circuit breaker, WAP, SSRF, etc.)
+│       │   └── hooks/        # React hooks
+│       └── prisma/           # Schema + migrations
+├── packages/
+│   └── woksdk/               # WokGen SDK (npm-publishable)
+├── extensions/               # Browser extension (Chrome/Firefox WIP)
+├── docs/                     # Architecture and internal docs
+└── scripts/                  # Database and deployment scripts
 ```
 
-Full details: [docs/INTERNALS.md](./docs/INTERNALS.md)
+---
 
-## WokSpec Relationship
+## API / WokSDK
 
-WokGen is the generation engine. WokSpec is the services layer above it.
+WokGen exposes a REST API at `/api/v1/` authenticated via API keys (manage in Settings → API Keys).
 
-| WokGen Output | WokSpec Service |
-|---------------|-----------------|
-| Pixel sprites | Game art pipelines, engine integration, atlas packing |
-| Business assets | Brand system finalization, multi-channel rollout |
-| UI/UX mockups | Production frontend scaffolding, design systems |
-| Vector icons | Design system build-out |
+```bash
+npm install @wokspec/woksdk
+```
+
+```typescript
+import { WokSDK } from '@wokspec/woksdk';
+
+const wok = new WokSDK({ apiKey: 'wok_...' });
+
+// Generate an image
+const job = await wok.generate({
+  mode: 'pixel',
+  prompt: 'A cyberpunk cityscape at night',
+  aspectRatio: '16:9',
+});
+```
+
+See [packages/woksdk/README.md](./packages/woksdk/README.md) for full SDK documentation.
+
+---
+
+## Security
+
+- All generation routes are rate-limited (Redis-backed, serverless-safe)
+- SSRF protection on all URL-accepting routes
+- API key authentication with per-key scoping
+- Conversation ownership validation on Eral
+- HMAC-signed webhook payloads
+- Circuit breaker on external provider calls
+
+Found a vulnerability? See [SECURITY.md](./SECURITY.md).
+
+---
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Internal team members have full access to all systems — quality profiles, negative banks, provider router, billing logic, and prompt chains are all editable.
-
-## License
-
-Apache-2.0. See [docs/licensing.md](./docs/licensing.md) for the full boundary definition.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
+- Development setup
+- Adding a new generation mode
+- Adding a new AI provider
+- PR guidelines and review process
 
 ---
 
-Built by [WokSpec](https://wokspec.org)
+## Deployment
 
+Full deployment guide: [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+Quick deploy to Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wokspec/WokGen&env=DATABASE_URL,AUTH_SECRET,AUTH_GITHUB_ID,AUTH_GITHUB_SECRET)
+
+---
+
+## License
+
+Apache 2.0 — see [LICENSE](./LICENSE).
+
+Copyright 2024 WokSpec.
