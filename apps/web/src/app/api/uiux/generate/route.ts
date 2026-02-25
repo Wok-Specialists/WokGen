@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export const maxDuration = 30;
 
@@ -434,47 +435,6 @@ function buildTailwindConfig(style: StylePreset): Record<string, unknown> {
   };
 }
 
-// ─── Rate limiting — sliding window, keyed by userId ─────────────────────────
-
-interface RateLimitEntry {
-  timestamps: number[]; // epoch-ms of each request within the window
-}
-
-const rateLimitStore = new Map<string, RateLimitEntry>();
-
-// Limits per tier over a 1-hour sliding window
-const RATE_LIMITS: Record<'anonymous' | 'free' | 'paid', number> = {
-  anonymous: 3,
-  free: 15,
-  paid: Infinity,
-};
-const RATE_WINDOW_MS = 60 * 60 * 1_000; // 1 hour
-
-function checkRateLimit(
-  userId: string | null,
-  userTier: 'anonymous' | 'free' | 'paid',
-): { allowed: boolean; retryAfter?: number } {
-  if (userTier === 'paid') return { allowed: true };
-
-  const key = userId ?? 'anon';
-  const limit = RATE_LIMITS[userTier];
-  const now = Date.now();
-  const cutoff = now - RATE_WINDOW_MS;
-
-  const entry = rateLimitStore.get(key) ?? { timestamps: [] };
-  entry.timestamps = entry.timestamps.filter(t => t > cutoff); // prune expired
-
-  if (entry.timestamps.length >= limit) {
-    const retryAfter = Math.ceil((entry.timestamps[0] + RATE_WINDOW_MS - now) / 1000);
-    rateLimitStore.set(key, entry);
-    return { allowed: false, retryAfter };
-  }
-
-  entry.timestamps.push(now);
-  rateLimitStore.set(key, entry);
-  return { allowed: true };
-}
-
 // ─── Provider call helpers ───────────────────────────────────────────────────
 
 interface LLMCallOptions {
@@ -707,8 +667,10 @@ export async function POST(req: NextRequest) {
 
   // Simple tier heuristic — extend with a DB lookup for paid status as needed
   const userTier: 'anonymous' | 'free' | 'paid' = userId ? 'free' : 'anonymous';
-  const { allowed, retryAfter } = checkRateLimit(userId, userTier);
 
+  const rlKey = userTier === 'anonymous' ? `uiux-generate:anon` : `uiux-generate:${userId}`;
+  const rlMax = userTier === 'anonymous' ? 3 : 15;
+  const { allowed, retryAfter } = await checkRateLimit(rlKey, rlMax, 60 * 60 * 1_000);
   if (!allowed) {
     return NextResponse.json(
       { error: 'Rate limit exceeded. Please wait before trying again.', code: 'RATE_LIMITED', retryable: true },
