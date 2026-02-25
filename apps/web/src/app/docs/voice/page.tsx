@@ -99,7 +99,7 @@ export default function VoiceDocs() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/voice/studio" className="btn-primary btn-sm">Open Voice mode</Link>
+            <Link href="/studio" className="btn-primary btn-sm">Open Voice mode</Link>
           </div>
         </aside>
 
@@ -153,7 +153,7 @@ export default function VoiceDocs() {
           <P>Generating your first voice clip takes under a minute:</P>
 
           <UL>
-            <LI><strong>Step 1</strong> — Navigate to <Link href="/voice/studio">Voice mode</Link> from the top nav or the WokGen home page.</LI>
+            <LI><strong>Step 1</strong> — Navigate to <Link href="/studio">Voice mode</Link> from the top nav or the WokGen home page.</LI>
             <LI><strong>Step 2</strong> — Enter your text in the script box. Keep it under 200 words for fastest results.</LI>
             <LI><strong>Step 3</strong> — Pick a Voice Type from the selector (Natural, Character, Whisper, etc.).</LI>
             <LI><strong>Step 4</strong> — Choose a language and set your speed if needed.</LI>

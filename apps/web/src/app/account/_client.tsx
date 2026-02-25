@@ -367,7 +367,7 @@ function UsageTab() {
           )}
         </>
       ) : (
-        <p className="acct-empty">No generation history yet. <Link href="/pixel/studio" className="acct-link">Open Studio →</Link></p>
+        <p className="acct-empty">No generation history yet. <Link href="/studio" className="acct-link">Open Studio →</Link></p>
       )}
 
       <div className="acct-divider" />

@@ -137,7 +137,7 @@ export default function PricingPage() {
               <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>The full WokGen experience. Always free, no credit card required.</p>
             </div>
-            <Link href="/pixel/studio" className="btn-primary" style={{ textAlign: 'center' }}>
+            <Link href="/studio" className="btn-primary" style={{ textAlign: 'center' }}>
               Start creating →
             </Link>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -308,7 +308,7 @@ export default function PricingPage() {
             Open the studio, pick a model, and start generating — no account required.
           </p>
           <div className="manifesto-actions">
-            <Link href="/pixel/studio" className="btn-primary btn-lg">
+            <Link href="/studio" className="btn-primary btn-lg">
               Open Studio →
             </Link>
             <Link href="/support" className="btn-ghost btn-lg">

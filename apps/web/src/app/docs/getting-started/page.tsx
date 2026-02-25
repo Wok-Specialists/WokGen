@@ -114,7 +114,7 @@ export default function GettingStarted() {
           <div className="docs-step-body">
             <div className="docs-step-title">Open Pixel mode</div>
             <div className="docs-step-desc">
-              Navigate to <Link href="/pixel/studio" className="docs-inline-link">wokgen.io/pixel/studio</Link>.
+              Navigate to <Link href="/studio" className="docs-inline-link">wokgen.io/pixel/studio</Link>.
               You do not need an account to generate in Standard quality.
             </div>
           </div>

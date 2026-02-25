@@ -108,7 +108,7 @@ export default function UIUXDocsPage() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/uiux/studio" className="btn-primary btn-sm">Open UI/UX mode</Link>
+            <Link href="/studio" className="btn-primary btn-sm">Open UI/UX mode</Link>
           </div>
         </aside>
 
@@ -147,7 +147,7 @@ export default function UIUXDocsPage() {
             WokGen UI/UX is <strong>not</strong> an image generator. It does not produce
             screenshots, mockups, or design files. Every output is runnable source code you can
             drop straight into your project. If you need pixel art or general images, use{' '}
-            <Link href="/pixel/studio">WokGen Pixel</Link> instead.
+            <Link href="/studio">WokGen Pixel</Link> instead.
           </P>
 
           <H3>Who it&apos;s for</H3>
@@ -842,7 +842,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
           <div className="docs-section docs-section--cta" style={{ marginTop: '3rem' }}>
             <P>
               Ready to generate your first component?{' '}
-              <Link href="/uiux/studio" className="docs-link-primary">
+              <Link href="/studio" className="docs-link-primary">
                 Open UI/UX mode →
               </Link>
             </P>

@@ -103,7 +103,7 @@ export default function BusinessDocs() {
             ))}
           </nav>
           <div className="docs-sidebar-links">
-            <Link href="/business/studio" className="btn-primary btn-sm">Open Business mode</Link>
+            <Link href="/studio" className="btn-primary btn-sm">Open Business mode</Link>
           </div>
         </aside>
 

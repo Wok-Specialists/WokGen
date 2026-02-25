@@ -54,7 +54,7 @@ function LoginForm() {
           <span>or</span>
         </div>
 
-        <a href="/pixel/studio" className="login-guest">
+        <a href="/studio" className="login-guest">
           Try without an account →
         </a>
 

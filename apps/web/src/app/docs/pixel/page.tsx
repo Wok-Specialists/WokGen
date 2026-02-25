@@ -189,7 +189,7 @@ export default function PixelDocs() {
           <H3>Step 1 — Pick a preset</H3>
           <P>
             Open <strong>Pixel mode</strong> at{' '}
-            <Link href="/pixel/studio">wokgen.wokspec.org/pixel/studio</Link>.
+            <Link href="/studio">wokgen.wokspec.org/pixel/studio</Link>.
             In the top-left panel, choose a style preset. For most RPG assets, start with{' '}
             <Code>rpg_icon</Code>. For a character, use <Code>character_idle</Code>.
             For a dungeon tile, use <Code>tileset</Code>.

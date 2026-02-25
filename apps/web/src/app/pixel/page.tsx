@@ -63,7 +63,7 @@ export default function PixelLanding() {
               Free standard quality. HD for serious projects.
             </p>
             <div className="landing-cta-row">
-              <Link href="/pixel/studio" className="btn-primary btn-lg">
+              <Link href="/studio" className="btn-primary btn-lg">
                 Open Pixel mode →
               </Link>
               <Link href="/pixel/gallery" className="btn-ghost btn-lg">

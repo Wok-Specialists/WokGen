@@ -92,7 +92,7 @@ export default function BusinessLanding() {
               HD quality for serious work.
             </p>
             <div className="landing-cta-row">
-              <Link href="/business/studio" className="btn-primary btn-lg">
+              <Link href="/studio" className="btn-primary btn-lg">
                 Open Business mode →
               </Link>
               <Link href="/business/gallery" className="btn-ghost btn-lg">

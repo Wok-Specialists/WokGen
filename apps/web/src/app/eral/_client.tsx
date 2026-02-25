@@ -1348,9 +1348,9 @@ export function EralPage({ userId }: { userId?: string }) {
           <div className="eral-v2-plan-panel__section">
             <p className="eral-v2-plan-panel__section-title">Modes</p>
             <div className="eral-v2-panel-suggestions">
-              <a href="/pixel/studio" className="eral-v2-panel-suggestion-btn">Pixel mode</a>
-              <a href="/business/studio" className="eral-v2-panel-suggestion-btn">Business mode</a>
-              <a href="/voice/studio" className="eral-v2-panel-suggestion-btn">Voice mode</a>
+              <a href="/studio" className="eral-v2-panel-suggestion-btn">Pixel mode</a>
+              <a href="/studio" className="eral-v2-panel-suggestion-btn">Business mode</a>
+              <a href="/studio" className="eral-v2-panel-suggestion-btn">Voice mode</a>
               <a href="/tools" className="eral-v2-panel-suggestion-btn">All Tools</a>
             </div>
           </div>
