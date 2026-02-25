@@ -139,6 +139,7 @@ export default async function AdminUsersPage({
                       <img
                         src={user.image}
                         alt={user.name || 'User avatar'}
+                        style={{ width: '28px', height: '28px', borderRadius: '50%' }}
                       />
                     ) : (
                       <div

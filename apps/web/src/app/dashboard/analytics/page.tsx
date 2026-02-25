@@ -203,6 +203,9 @@ export default async function AnalyticsPage() {
                   <img
                     src={job.resultUrl}
                     alt={job.prompt?.slice(0, 50) || 'Generated asset'}
+                    width={48}
+                    height={48}
+                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }}
                   />
                 ) : (
                   <div
