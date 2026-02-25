@@ -1236,7 +1236,7 @@ function BusinessStudioInner() {
               {item.resultUrl
                 ? (
                     <div className="studio-history-thumb biz-history-thumb" style={{ position: 'relative' }}>
-                      <Image src={item.resultUrl} alt="" fill className="object-cover" sizes="48px" />
+                      <Image src={item.resultUrl} alt={item.prompt?.slice(0, 50) || 'Generated business asset'} fill className="object-cover" sizes="48px" />
                     </div>
                   )
                 : <div className="studio-history-thumb studio-history-thumb--empty">⬛</div>

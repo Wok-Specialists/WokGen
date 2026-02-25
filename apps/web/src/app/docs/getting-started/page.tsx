@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Getting Started — WokGen Docs',
   description:
     'New to WokGen? This guide walks you through your first generation in under 5 minutes, ' +
-    'explains all six studio modes, introduces the Eral AI director, shows you how to access ' +
+    'explains all six studio modes, introduces Eral 7c, shows you how to access ' +
     '35+ free browser tools, and covers accounts, community, and the API.',
 };
 

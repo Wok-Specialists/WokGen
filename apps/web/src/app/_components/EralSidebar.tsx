@@ -231,7 +231,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         <button
           className="esb-toggle-btn"
           onClick={() => setOpen(true)}
-          aria-label="Open Eral AI companion"
+          aria-label="Open Eral 7c"
           title="Open Eral"
         >
           <span className="esb-toggle-label">Eral</span>
@@ -240,7 +240,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
       {/* ── Expanded drawer ───────────────────────────────────────── */}
       {open && (
-        <div className="esb-drawer" role="complementary" aria-label="Eral AI companion">
+        <div className="esb-drawer" role="complementary" aria-label="Eral 7c">
           {/* Header */}
           <div className="esb-header">
             <div className="esb-header-left">
