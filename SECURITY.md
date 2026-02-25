@@ -1,5 +1,23 @@
 # Security Policy
 
+## Supported Versions
+
+| Version | Supported |
+|---------|-----------|
+| main branch | ✅ |
+| Older releases | ❌ |
+
+We only patch the latest `main` branch. Pin to a specific commit SHA for stability in self-hosted deployments.
+
+## Automated Security
+
+This repository uses:
+- GitHub CodeQL analysis on every push
+- Dependency vulnerability scanning via `npm audit`
+- Automated secret detection via GitHub secret scanning
+
+Found a secret accidentally committed? See our [security response process](#reporting-a-vulnerability).
+
 ## Reporting a Vulnerability
 
 **Do not open a public GitHub issue for security vulnerabilities.**

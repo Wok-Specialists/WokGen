@@ -1,5 +1,8 @@
 node_modules/
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
 *.log
 .cache/
 registry/validation-report.json
@@ -12,3 +15,45 @@ dataset/train/
 dataset/manifests/
 .vercel
 .env*.local
+
+# Env files — actual secrets
+.env
+.env.local
+.env.*.local
+apps/**/.env
+apps/**/.env.local
+apps/**/.env.*.local
+
+# Build artifacts
+.next/
+out/
+dist/
+build/
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temp
+tmp/
+temp/
+
+# Prisma
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Turbo
+.turbo/
+
+# TypeScript
+*.tsbuildinfo
