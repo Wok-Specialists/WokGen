@@ -69,6 +69,8 @@ interface Message {
   wap?: WAPResponse | null;
   createdAt: number;
   directorMode?: boolean;
+  isError?: boolean;
+  retryText?: string;
 }
 
 interface Conversation {
@@ -77,6 +79,7 @@ interface Conversation {
   messages: Message[];
   createdAt: number;
   updatedAt: number;
+  serverId?: string;
 }
 
 interface PlanItem {

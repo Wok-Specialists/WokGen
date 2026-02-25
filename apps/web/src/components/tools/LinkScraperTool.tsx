@@ -116,7 +116,11 @@ export default function LinkScraperTool() {
             <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.5rem' }}>
               <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.375rem 0.75rem' }} onClick={exportJson}>Export JSON</button>
               {activeTab === 'links' && (
-                <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.375rem 0.75rem' }} onClick={() => copyAll(result.links.map(l => l.url))}>Copy URLs</button>
+                <>
+                  <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.375rem 0.75rem' }} onClick={() => exportLinks('csv')}>CSV</button>
+                  <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.375rem 0.75rem' }} onClick={() => exportLinks('md')}>MD</button>
+                  <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.375rem 0.75rem' }} onClick={() => copyAll(result.links.map((l: { url: string }) => l.url))}>Copy URLs</button>
+                </>
               )}
             </div>
           </div>

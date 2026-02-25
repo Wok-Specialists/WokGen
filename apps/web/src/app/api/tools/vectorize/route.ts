@@ -39,24 +39,39 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => null);
-  if (!body?.imageUrl?.trim()) {
-    return NextResponse.json({ error: 'imageUrl is required' }, { status: 400 });
+  const imageUrl: string | undefined = body?.imageUrl?.trim();
+  const imageBase64: string | undefined = body?.imageBase64;
+
+  if (!imageUrl && !imageBase64) {
+    return NextResponse.json({ error: 'imageUrl or imageBase64 is required' }, { status: 400 });
   }
 
-  // SSRF protection
-  const ssrfResult = checkSsrf(body.imageUrl as string);
-  if (!ssrfResult.ok) {
-    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
-  }
+  let imgBuffer: ArrayBuffer;
+  let contentType: string;
 
-  // Fetch the source image
-  const imgRes = await fetch(body.imageUrl as string, { signal: AbortSignal.timeout(15_000) });
-  if (!imgRes.ok) {
-    return NextResponse.json({ error: 'Could not fetch image from URL' }, { status: 400 });
-  }
+  if (imageBase64) {
+    // Decode data URL (data:<mime>;base64,<data>) or raw base64
+    const commaIdx = imageBase64.indexOf(',');
+    const mimeMatch = imageBase64.match(/^data:([^;]+);/);
+    contentType = mimeMatch ? mimeMatch[1] : 'image/png';
+    const base64Data = commaIdx >= 0 ? imageBase64.slice(commaIdx + 1) : imageBase64;
+    imgBuffer = Buffer.from(base64Data, 'base64').buffer;
+  } else {
+    // SSRF protection
+    const ssrfResult = checkSsrf(imageUrl as string);
+    if (!ssrfResult.ok) {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    }
 
-  const imgBuffer = await imgRes.arrayBuffer();
-  const contentType = imgRes.headers.get('content-type') || 'image/png';
+    // Fetch the source image
+    const imgRes = await fetch(imageUrl as string, { signal: AbortSignal.timeout(15_000) });
+    if (!imgRes.ok) {
+      return NextResponse.json({ error: 'Could not fetch image from URL' }, { status: 400 });
+    }
+
+    imgBuffer = await imgRes.arrayBuffer();
+    contentType = imgRes.headers.get('content-type') || 'image/png';
+  }
 
   // Submit to Vectorizer.AI
   const formData = new FormData();
