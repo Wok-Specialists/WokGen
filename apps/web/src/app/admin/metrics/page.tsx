@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { formatDate } from '@/lib/format';
 
 interface ToolCount {
   tool:  string;
@@ -130,7 +131,7 @@ export default function MetricsDashboard() {
                   <span className="admin-table-cell">{u.name ?? '—'}</span>
                   <span className="admin-table-cell admin-table-cell--muted">{u.email}</span>
                   <span className="admin-table-cell admin-table-cell--faint">
-                    {new Date(u.createdAt).toLocaleDateString()}
+                    {formatDate(u.createdAt)}
                   </span>
                 </div>
               ))}

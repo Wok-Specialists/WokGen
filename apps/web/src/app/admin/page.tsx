@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import AdminCharts from './_charts';
+import { formatNumber, formatDate } from '@/lib/format';
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
@@ -107,10 +108,10 @@ function OverviewTab({ stats }: { stats: Stats }) {
       <section style={{ marginBottom: '2rem' }}>
         <p className="admin-section-label">Generations</p>
         <div className="admin-grid">
-          <StatCard label="Total jobs" value={stats.jobs.total.toLocaleString()} />
-          <StatCard label="Today" value={stats.jobs.today.toLocaleString()} />
-          <StatCard label="HD (Replicate)" value={stats.jobs.hd.toLocaleString()} />
-          <StatCard label="Standard" value={stats.jobs.standard.toLocaleString()} />
+          <StatCard label="Total jobs" value={formatNumber(stats.jobs.total)} />
+          <StatCard label="Today" value={formatNumber(stats.jobs.today)} />
+          <StatCard label="HD (Replicate)" value={formatNumber(stats.jobs.hd)} />
+          <StatCard label="Standard" value={formatNumber(stats.jobs.standard)} />
         </div>
       </section>
 
@@ -153,7 +154,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
                 </div>
                 <span className={`admin-table-cell ${job.provider === 'replicate' ? 'admin-table-cell--hd' : 'admin-table-cell--std'}`}>{job.provider}</span>
                 <span className="admin-table-cell admin-table-cell--fail">failed</span>
-                <span className="admin-table-cell admin-table-cell--faint">{new Date(job.createdAt).toLocaleDateString()}</span>
+                <span className="admin-table-cell admin-table-cell--faint">{formatDate(job.createdAt)}</span>
               </div>
             ))}
           </div>
@@ -198,7 +199,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
               <span className={`admin-table-cell ${job.status === 'completed' ? 'admin-table-cell--ok' : job.status === 'failed' ? 'admin-table-cell--fail' : 'admin-table-cell--run'}`}>
                 {job.status}
               </span>
-              <span className="admin-table-cell admin-table-cell--faint">{new Date(job.createdAt).toLocaleDateString()}</span>
+              <span className="admin-table-cell admin-table-cell--faint">{formatDate(job.createdAt)}</span>
             </div>
           ))}
         </div>
@@ -241,9 +242,9 @@ function UsersTab() {
             <p className="admin-table-cell admin-table-cell--faint" style={{ margin: '0.1rem 0 0', fontSize: '0.7rem' }}>{u.email}</p>
           </div>
           <span><span className={`admin-badge admin-badge--${u.planId}`}>{u.planId}</span></span>
-          <span className="admin-table-cell">{u.jobCount.toLocaleString()}</span>
-          <span className="admin-table-cell admin-table-cell--muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : 'Never'}</span>
-          <span className="admin-table-cell admin-table-cell--faint">{new Date(u.createdAt).toLocaleDateString()}</span>
+          <span className="admin-table-cell">{formatNumber(u.jobCount)}</span>
+          <span className="admin-table-cell admin-table-cell--muted">{u.lastActive ? formatDate(u.lastActive) : 'Never'}</span>
+          <span className="admin-table-cell admin-table-cell--faint">{formatDate(u.createdAt)}</span>
         </div>
       ))}
     </div>
@@ -256,10 +257,10 @@ function JobsTab({ stats }: { stats: Stats }) {
   return (
     <>
       <div className="admin-grid" style={{ marginBottom: '2rem' }}>
-        <StatCard label="Total" value={stats.jobs.total.toLocaleString()} />
-        <StatCard label="Today" value={stats.jobs.today.toLocaleString()} />
-        <StatCard label="HD jobs" value={stats.jobs.hd.toLocaleString()} sub="Replicate provider" />
-        <StatCard label="Standard" value={stats.jobs.standard.toLocaleString()} sub="Pollinations + others" />
+        <StatCard label="Total" value={formatNumber(stats.jobs.total)} />
+        <StatCard label="Today" value={formatNumber(stats.jobs.today)} />
+        <StatCard label="HD jobs" value={formatNumber(stats.jobs.hd)} sub="Replicate provider" />
+        <StatCard label="Standard" value={formatNumber(stats.jobs.standard)} sub="Pollinations + others" />
       </div>
       <p className="admin-section-label">Recent (last 10)</p>
       <div className="admin-table-wrap">
@@ -276,7 +277,7 @@ function JobsTab({ stats }: { stats: Stats }) {
             <span className="admin-table-cell admin-table-cell--muted">{job.user?.email ?? 'guest'}</span>
             <span className={`admin-table-cell ${job.provider === 'replicate' ? 'admin-table-cell--hd' : 'admin-table-cell--std'}`}>{job.provider}</span>
             <span className={`admin-table-cell ${job.status === 'completed' ? 'admin-table-cell--ok' : job.status === 'failed' ? 'admin-table-cell--fail' : 'admin-table-cell--run'}`}>{job.status}</span>
-            <span className="admin-table-cell admin-table-cell--faint">{new Date(job.createdAt).toLocaleDateString()}</span>
+            <span className="admin-table-cell admin-table-cell--faint">{formatDate(job.createdAt)}</span>
           </div>
         ))}
       </div>

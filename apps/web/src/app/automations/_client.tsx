@@ -251,7 +251,10 @@ export default function AutomationsClient() {
     <div className="automations-page">
       <div className="automations-page__header">
         <div>
-          <h1 className="automations-page__title">Automations</h1>
+          <h1 className="automations-page__title">
+            Automations
+            <span style={{ fontSize: '0.625rem', padding: '0.2rem 0.5rem', borderRadius: '999px', fontWeight: 600, marginLeft: '0.5rem', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', verticalAlign: 'middle', letterSpacing: '0.04em' }}>Beta</span>
+          </h1>
           <p className="automations-page__subtitle">Schedule messages, webhooks, and alerts on a cron timer.</p>
         </div>
         <button className="btn btn--primary" onClick={() => setShowForm(v => !v)}>

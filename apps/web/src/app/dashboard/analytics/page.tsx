@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import { formatNumber } from '@/lib/format';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Analytics — WokGen' };
@@ -89,10 +90,10 @@ export default async function AnalyticsPage() {
         }}
       >
         {[
-          { label: 'TOTAL GENERATIONS', value: totalGenerations },
-          { label: 'TOOLS USED', value: uniqueTools },
-          { label: 'ERAL MESSAGES', value: eralMessages },
-          { label: 'CREDITS THIS MONTH', value: creditsUsed },
+          { label: 'TOTAL GENERATIONS', value: formatNumber(totalGenerations) },
+          { label: 'TOOLS USED', value: formatNumber(uniqueTools) },
+          { label: 'ERAL MESSAGES', value: formatNumber(eralMessages) },
+          { label: 'CREDITS THIS MONTH', value: formatNumber(creditsUsed) },
         ].map(({ label, value }) => (
           <div key={label} className="card" style={{ padding: '1.25rem' }}>
             <div style={{ fontSize: '0.7rem', letterSpacing: '0.05em', opacity: 0.5, marginBottom: '0.5rem' }}>

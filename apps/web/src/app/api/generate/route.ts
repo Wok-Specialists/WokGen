@@ -246,7 +246,8 @@ export async function POST(req: NextRequest) {
       }
 
       // Attach quota info to response headers for frontend to read
-      (req as NextRequest & { _quotaRemaining?: number })._quotaRemaining = quota.remaining;
+      (req as NextRequest & { _quotaRemaining?: number; _quotaLimit?: number })._quotaRemaining = quota.remaining;
+      (req as NextRequest & { _quotaRemaining?: number; _quotaLimit?: number })._quotaLimit = quota.limit;
 
       // Fire quota_warning notification at 80% usage (once per day, non-blocking)
       if (authedUserId && quota.limit > 0 && quota.remaining > 0) {
@@ -1074,6 +1075,9 @@ export async function POST(req: NextRequest) {
       headers: {
         'X-WokGen-Request-Id': requestId,
         'X-WokGen-Provider':   usedProvider,
+        'X-RateLimit-Limit':     String((req as NextRequest & { _quotaLimit?: number })._quotaLimit ?? 100),
+        'X-RateLimit-Remaining': String((req as NextRequest & { _quotaRemaining?: number })._quotaRemaining ?? 0),
+        'X-RateLimit-Reset':     String(Math.floor(new Date().setHours(24, 0, 0, 0) / 1000)),
       },
     });
   } catch (err) {

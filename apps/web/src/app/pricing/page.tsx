@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import ProWaitlistForm from './_waitlist-form';
 
 export const metadata: Metadata = {
   title: 'Pricing — WokGen',
@@ -61,6 +62,41 @@ const MODELS = [
   },
 ] as const;
 
+/* ── Tier data ───────────────────────────────────────────────────────────── */
+
+const FREE_FEATURES = [
+  '100 generations / day',
+  'Standard quality',
+  'Up to 10 projects',
+  'All creative tools',
+  'Eral 7c (10 msgs/hr)',
+  'Public gallery',
+  'Community support',
+  'API access (WokAPI)',
+];
+
+const PRO_FEATURES = [
+  'Unlimited generations',
+  'HD quality (unlimited)',
+  'Unlimited projects',
+  'All tools + early access',
+  'Eral 7c (unlimited)',
+  'Private workspace',
+  'Priority support',
+  'Higher API rate limits',
+];
+
+const ENTERPRISE_FEATURES = [
+  'Everything in Pro',
+  'Dedicated infrastructure',
+  'SSO + audit logs',
+  'Custom model fine-tuning',
+  'Priority Eral 7c',
+  'White-label option',
+  'SLA guarantees',
+  'Dedicated account manager',
+];
+
 /* ── Page ────────────────────────────────────────────────────────────────── */
 
 export default function PricingPage() {
@@ -77,6 +113,120 @@ export default function PricingPage() {
         <p className="pricing-sub">
           No subscriptions. No feature gates. No paywalls.
         </p>
+      </section>
+
+      {/* Tier comparison */}
+      <section style={{ maxWidth: '1060px', margin: '0 auto', padding: '0 1.5rem 4rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+
+          {/* FREE */}
+          <div style={{
+            border: '2px solid rgba(167,139,250,0.4)',
+            borderRadius: '14px',
+            padding: '1.75rem',
+            background: 'rgba(167,139,250,0.05)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.25rem',
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#a78bfa' }}>FREE</span>
+                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'rgba(167,139,250,0.15)', color: '#a78bfa', fontWeight: 600 }}>Forever</span>
+              </div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>The full WokGen experience. Always free, no credit card required.</p>
+            </div>
+            <Link href="/pixel/studio" className="btn-primary" style={{ textAlign: 'center' }}>
+              Start creating →
+            </Link>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {FREE_FEATURES.map(f => (
+                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  <span style={{ color: '#a78bfa', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* PRO */}
+          <div style={{
+            border: '2px solid rgba(96,165,250,0.35)',
+            borderRadius: '14px',
+            padding: '1.75rem',
+            background: 'rgba(96,165,250,0.04)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.25rem',
+            position: 'relative',
+          }}>
+            <div style={{ position: 'absolute', top: '-13px', left: '50%', transform: 'translateX(-50%)', background: '#1e3a5f', border: '1px solid rgba(96,165,250,0.4)', borderRadius: '99px', padding: '0.2rem 0.875rem', fontSize: '0.75rem', fontWeight: 600, color: '#60a5fa', whiteSpace: 'nowrap' }}>
+              Coming Soon
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#60a5fa' }}>PRO</span>
+              </div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1, color: 'rgba(255,255,255,0.5)' }}>TBD<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Power-user features with unlimited generation and private workspace.</p>
+            </div>
+            <ProWaitlistForm />
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {PRO_FEATURES.map(f => (
+                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  <span style={{ color: '#60a5fa', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ENTERPRISE */}
+          <div style={{
+            border: '2px solid rgba(52,211,153,0.3)',
+            borderRadius: '14px',
+            padding: '1.75rem',
+            background: 'rgba(52,211,153,0.03)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.25rem',
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#34d399' }}>ENTERPRISE</span>
+              </div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>Custom</div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Dedicated infrastructure, SSO, audit logs, and white-label options for teams.</p>
+            </div>
+            <a
+              href="mailto:enterprise@wokspec.ai?subject=WokGen%20Enterprise%20Inquiry"
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '0.625rem 1.25rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(52,211,153,0.4)',
+                color: '#34d399',
+                fontWeight: 600,
+                fontSize: '0.9375rem',
+                textDecoration: 'none',
+                background: 'rgba(52,211,153,0.08)',
+              }}
+            >
+              Contact us →
+            </a>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {ENTERPRISE_FEATURES.map(f => (
+                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  <span style={{ color: '#34d399', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        </div>
       </section>
 
       {/* Models */}
@@ -108,9 +258,9 @@ export default function PricingPage() {
             No investors. No ads. Just you.
           </h2>
           <p className="manifesto-section-desc">
-            WokGen has no pricing tiers because we don&apos;t believe creative tools should cost
-            money to access. Server costs and model hosting are covered entirely through voluntary
-            crypto donations from people who find WokGen useful.
+            WokGen is open-source and community-funded. Server costs and model hosting are covered
+            entirely through voluntary crypto donations from people who find WokGen useful.
+            The core product is and always will be free.
           </p>
           <div className="manifesto-actions">
             <Link href="/support" className="btn-primary btn-lg">

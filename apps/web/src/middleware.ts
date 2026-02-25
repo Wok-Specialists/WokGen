@@ -43,7 +43,7 @@ export default auth((req) => {
   if (process.env.MAINTENANCE_MODE === 'true' && pathname !== '/api/health') {
     return NextResponse.json(
       { error: 'WokGen is undergoing maintenance. Back shortly.' },
-      { status: 503, headers: { 'Retry-After': '300' } },
+      { status: 503, headers: { 'Retry-After': '300', 'X-Request-ID': crypto.randomUUID() } },
     );
   }
 
@@ -53,7 +53,7 @@ export default auth((req) => {
     if (!edgeRateLimit(ip)) {
       return NextResponse.json(
         { error: 'Too many requests. Slow down.' },
-        { status: 429, headers: { 'Retry-After': '10', 'X-RateLimit-Limit': String(EDGE_RL_MAX) } },
+        { status: 429, headers: { 'Retry-After': '10', 'X-RateLimit-Limit': String(EDGE_RL_MAX), 'X-Request-ID': crypto.randomUUID() } },
       );
     }
   }
@@ -93,7 +93,9 @@ export default auth((req) => {
   ].join('; ');
 
   const response = NextResponse.next();
-  response.headers.set('X-WokGen-Request-Id', crypto.randomUUID());
+  const reqId = crypto.randomUUID();
+  response.headers.set('X-Request-ID', reqId);
+  response.headers.set('X-WokGen-Request-Id', reqId);
   response.headers.set('Content-Security-Policy', cspHeader);
   response.headers.set('X-Nonce', nonce);
   response.headers.set('X-Content-Type-Options', 'nosniff');

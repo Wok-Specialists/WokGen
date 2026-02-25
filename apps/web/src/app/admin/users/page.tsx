@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
+import { formatDate } from '@/lib/format';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Users — Admin | WokGen' };
@@ -166,7 +167,7 @@ export default async function AdminUsersPage({
                   {user.email || '-'}
                 </td>
                 <td style={{ padding: '0.875rem 1rem', color: 'var(--text-muted)' }}>
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {formatDate(user.createdAt)}
                 </td>
                 <td style={{ padding: '0.875rem 1rem' }}>
                   {user.isAdmin ? (

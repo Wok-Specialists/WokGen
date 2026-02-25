@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { StatBar } from './_components/StatBar';
 
 export const metadata: Metadata = {
   title: 'WokGen — AI Asset Generation Platform',
@@ -115,15 +116,7 @@ export default function HomePage() {
               Browse Gallery
             </Link>
           </div>
-          <div className="homepage-stat-bar">
-            <span>12,400+ assets generated</span>
-            <span className="homepage-stat-sep">·</span>
-            <span>60+ free tools</span>
-            <span className="homepage-stat-sep">·</span>
-            <span>WokGen Studio</span>
-            <span className="homepage-stat-sep">·</span>
-            <span>Open source</span>
-          </div>
+          <StatBar />
         </div>
       </section>
 

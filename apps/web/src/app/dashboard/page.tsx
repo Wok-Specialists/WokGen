@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import { prisma } from '@/lib/db';
+import { DAILY_STD_LIMIT } from '@/lib/quota';
 
 export const metadata: Metadata = {
   title: 'Dashboard | WokGen',
@@ -13,7 +15,19 @@ export default async function DashboardPage() {
   if (!session?.user?.id) redirect('/login');
 
   const user = session.user;
+  const userId = user.id;
   const initial = (user.name || user.email || 'U')[0].toUpperCase();
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+
+  const [generationsToday, generationsMonth, totalAssets] = await Promise.all([
+    prisma.job.count({ where: { userId, createdAt: { gte: today } } }),
+    prisma.job.count({ where: { userId, createdAt: { gte: monthStart } } }),
+    prisma.galleryAsset.count({ where: { job: { userId } } }),
+  ]);
+
+  const dailyLimit = DAILY_STD_LIMIT['free'] ?? 100;
 
   return (
     <div style={{ maxWidth: '960px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
@@ -152,6 +166,31 @@ export default async function DashboardPage() {
               {a.label}
             </Link>
           ))}
+        </div>
+      </div>
+
+      {/* Usage widget */}
+      <div style={{ marginTop: '1rem', padding: '1.25rem 1.5rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'rgba(167,139,250,0.04)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Usage</span>
+          <Link href="/account/usage" style={{ fontSize: '0.8125rem', color: '#a78bfa', textDecoration: 'none' }}>View full report →</Link>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Daily generations</div>
+            <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{generationsToday} <span style={{ fontSize: '0.8rem', fontWeight: 400, color: 'var(--text-muted)' }}>/ {dailyLimit}</span></div>
+            <div style={{ marginTop: '0.375rem', height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${Math.min(100, Math.round((generationsToday / dailyLimit) * 100))}%`, background: generationsToday / dailyLimit >= 0.9 ? '#f87171' : '#a78bfa', borderRadius: '2px', transition: 'width 0.3s' }} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Monthly total</div>
+            <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{generationsMonth}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Assets stored</div>
+            <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{totalAssets}</div>
+          </div>
         </div>
       </div>
     </div>
