@@ -1070,6 +1070,74 @@ function BusinessStudioInner() {
           )}
         </div>
 
+        {/* Brand Copy panel */}
+        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+          <div
+            className="px-4 py-3 flex items-center justify-between cursor-pointer"
+            onClick={() => setShowCopyPanel(v => !v)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && setShowCopyPanel(v => !v)}
+          >
+            <span className="studio-control-label" style={{ fontWeight: 600 }}>Brand Copy</span>
+            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showCopyPanel ? '▾' : '▸'}</span>
+          </div>
+          {showCopyPanel && (
+            <div className="px-4 pb-4 flex flex-col gap-3">
+              <p className="text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+                Generate taglines, elevator pitch, and social bio from your brand context.
+              </p>
+              <button
+                className="btn-primary w-full"
+                style={{ height: 36, fontSize: '0.85rem', fontWeight: 600 }}
+                disabled={copyLoading || !prompt.trim()}
+                onClick={handleGenerateCopy}
+              >
+                {copyLoading ? 'Generating…' : 'Generate Brand Copy'}
+              </button>
+              {copyError && (
+                <p className="text-xs" style={{ color: 'var(--error, #ef4444)' }}>{copyError}</p>
+              )}
+              {brandCopy && (
+                <div className="flex flex-col gap-3" style={{ fontSize: '0.78rem' }}>
+                  <div>
+                    <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Taglines</p>
+                    {brandCopy.taglines.map((t, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '3px 0', borderBottom: '1px solid var(--surface-border)' }}>
+                        <span style={{ color: 'var(--text-primary)', flex: 1 }}>{t}</span>
+                        <button
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
+                          onClick={() => { navigator.clipboard.writeText(t); toastSuccess('Copied'); }}
+                        >Copy</button>
+                      </div>
+                    ))}
+                  </div>
+                  {brandCopy.pitch && (
+                    <div>
+                      <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Elevator Pitch</p>
+                      <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.pitch}</p>
+                      <button
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
+                        onClick={() => { navigator.clipboard.writeText(brandCopy.pitch); toastSuccess('Copied'); }}
+                      >Copy</button>
+                    </div>
+                  )}
+                  {brandCopy.bio && (
+                    <div>
+                      <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Social Bio</p>
+                      <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.bio}</p>
+                      <button
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
+                        onClick={() => { navigator.clipboard.writeText(brandCopy.bio); toastSuccess('Copied'); }}
+                      >Copy</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* Generate button */}
         <div className="studio-control-section">
           <button
@@ -1125,6 +1193,15 @@ function BusinessStudioInner() {
                 </div>
               ) : null;
             })}
+          </div>
+          {/* Export brand kit as JSON */}
+          <div style={{ padding: '8px 0 4px', display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+              className="btn-ghost btn-sm"
+              onClick={handleExportBrandKitJson}
+            >
+              Export Brand Kit
+            </button>
           </div>
         )}
 
