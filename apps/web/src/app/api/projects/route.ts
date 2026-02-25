@@ -37,10 +37,24 @@ export async function GET(req: NextRequest) {
     take: limit,
     include: {
       _count: { select: { jobs: true } },
+      jobs: {
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        where: { status: 'succeeded' },
+        select: {
+          asset: { select: { id: true, imageUrl: true, thumbUrl: true } },
+        },
+      },
     },
   });
 
-  return NextResponse.json({ projects });
+  const projectsWithAssets = projects.map(p => ({
+    ...p,
+    recentAssets: p.jobs.flatMap(j => j.asset ? [j.asset] : []).slice(0, 4),
+    jobs: undefined,
+  }));
+
+  return NextResponse.json({ projects: projectsWithAssets });
 }
 
 export async function POST(req: NextRequest) {
