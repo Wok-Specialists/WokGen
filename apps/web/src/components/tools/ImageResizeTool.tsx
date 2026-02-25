@@ -25,16 +25,23 @@ export default function ImageResizeTool() {
   const [fileName, setFileName] = useState('resized');
   const [naturalW, setNaturalW] = useState(0);
   const [naturalH, setNaturalH] = useState(0);
+  const [originalSize, setOriginalSize] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [outputFormat, setOutputFormat] = useState<'image/png'|'image/jpeg'|'image/webp'>('image/png');
+  const [quality, setQuality] = useState(90);
   const inputRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
   const loadFile = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) return;
+    setError(null);
     if (originalUrl) URL.revokeObjectURL(originalUrl);
     if (resultUrl) URL.revokeObjectURL(resultUrl);
     setResultUrl(null);
     const url = URL.createObjectURL(file);
     setOriginalUrl(url);
+    setOriginalSize(file.size);
     setFileName(file.name.replace(/\.[^.]+$/, ''));
     const img = new window.Image();
     img.onload = () => {
@@ -134,12 +141,12 @@ export default function ImageResizeTool() {
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
         >
           <p className="tool-dropzone-text">Drop an image here or click to browse</p>
-          <p className="tool-dropzone-sub">PNG · JPG · WebP · GIF · BMP</p>
+          <p className="tool-dropzone-sub">PNG · JPG · WebP · GIF</p>
           <p className="tool-dropzone-private">100% client-side — nothing uploaded</p>
           <input
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept=".png,.jpg,.jpeg,.webp,.gif"
             className="tool-file-input-hidden"
             onChange={e => { const f = e.target.files?.[0]; if (f) loadFile(f); }}
           />

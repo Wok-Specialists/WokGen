@@ -6,6 +6,7 @@ import { log as logger } from '@/lib/logger';
 import { checkSsrf } from '@/lib/ssrf-check';
 import { z } from 'zod';
 import { withErrorHandler, dbQuery } from '@/lib/api-handler';
+import { API_ERRORS } from '@/lib/api-response';
 import { validateBody } from '@/lib/validate';
 
 const BgRemoveSchema = z.object({
@@ -19,10 +20,7 @@ export const dynamic = 'force-dynamic';
 
 export const POST = withErrorHandler(async (req) => {
   if (!process.env.HF_TOKEN) {
-    return NextResponse.json(
-      { error: 'Background removal is not configured. Set HF_TOKEN environment variable.' },
-      { status: 503 }
-    );
+    return API_ERRORS.INTERNAL('Background removal is not configured. Set HF_TOKEN environment variable.');
   }
 
   const session = await auth();
@@ -56,10 +54,7 @@ export const POST = withErrorHandler(async (req) => {
         create: { key: rateLimitKey, count: 1, reset_at: resetAt },
       });
       if (rl.count > 3) {
-        return NextResponse.json(
-          { error: 'Daily limit reached (3/day on free plan). Upgrade for unlimited.' },
-          { status: 429 }
-        );
+        return API_ERRORS.RATE_LIMITED();
       }
     }
   } catch {
@@ -75,7 +70,7 @@ export const POST = withErrorHandler(async (req) => {
   if (imageUrl) {
     const ssrfResult = checkSsrf(imageUrl);
     if (!ssrfResult.ok) {
-      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+      return API_ERRORS.BAD_REQUEST('Invalid URL');
     }
   }
 
@@ -100,10 +95,7 @@ export const POST = withErrorHandler(async (req) => {
 
       if (!res.ok) {
         const errText = await res.text().catch(() => '');
-        return NextResponse.json(
-          { error: `Background removal failed: ${res.status} ${errText.slice(0, 200)}` },
-          { status: 502 }
-        );
+        return API_ERRORS.INTERNAL(`Background removal failed: ${res.status} ${errText.slice(0, 200)}`);
       }
 
       const resultBuffer = await res.arrayBuffer();
