@@ -22,80 +22,43 @@ const LINE_BREAK_KEYWORDS = new Set([
 function formatSQL(raw: string): string {
   if (!raw.trim()) return '';
 
-  // Uppercase keywords
-  let sql = raw;
-  // Sort by length descending so multi-word keywords match first
-  const sorted = [...KEYWORDS].sort((a, b) => b.length - a.length);
-  for (const kw of sorted) {
-    const re = new RegExp(`\\b${kw.replace(/ /g, '\\s+')}\\b`, 'gi');
+  // Normalize whitespace
+  let sql = raw.replace(/\s+/g, ' ').trim();
+
+  // Uppercase keywords (handle multi-word first)
+  const sortedKeywords = [...KEYWORDS].sort((a, b) => b.length - a.length);
+  for (const kw of sortedKeywords) {
+    const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
     sql = sql.replace(re, kw);
   }
 
-  // Split into tokens preserving strings and parens
-  const lines: string[] = [];
-  let indent = 0;
-  let current = '';
-
-  const flush = (extra = '') => {
-    const trimmed = current.trim();
-    if (trimmed) lines.push('  '.repeat(indent) + trimmed + extra);
-    current = '';
-  };
-
-  // Simple token-based approach: split on newlines first, then process each chunk
-  const normalized = sql.replace(/\s+/g, ' ').trim();
-  const tokens = normalized.split(/\b/);
-
-  let i = 0;
-  while (i < tokens.length) {
-    const token = tokens[i];
-    const upper = token.toUpperCase().trim();
-
-    // Check two-word keyword
-    const twoWord = upper + (tokens[i+1] ?? '').toUpperCase().trim() + (tokens[i+2] ?? '').toUpperCase().trim();
-    let matched = false;
-    for (const kw of LINE_BREAK_KEYWORDS) {
-      if (kw.includes(' ')) {
-        const kwNorm = kw.replace(/ /g, '');
-        if (twoWord.startsWith(kwNorm)) {
-          flush();
-          if (kw === 'SELECT' || kw === 'INSERT INTO' || kw === 'UPDATE' || kw === 'DELETE FROM' || kw === 'CREATE TABLE' || kw === 'DROP TABLE' || kw === 'WITH') {
-            indent = 0;
-          }
-          current = kw + ' ';
-          i += kw.split(' ').length * 2 - 1;
-          matched = true;
-          break;
-        }
-      }
-    }
-    if (!matched) {
-      if (LINE_BREAK_KEYWORDS.has(upper)) {
-        flush();
-        if (upper === 'SELECT' || upper === 'UPDATE' || upper === 'DELETE' || upper === 'CREATE' || upper === 'DROP' || upper === 'WITH') {
-          indent = 0;
-        } else {
-          indent = 1;
-        }
-        current = upper + ' ';
-      } else if (token === '(') {
-        current += token;
-        indent++;
-      } else if (token === ')') {
-        indent = Math.max(0, indent - 1);
-        current += token;
-      } else if (token === ';') {
-        flush(';');
-        indent = 0;
-      } else {
-        current += token;
-      }
-    }
-    i++;
+  // Insert line breaks before major keywords to make formatting simpler
+  const breakers = [...LINE_BREAK_KEYWORDS].sort((a, b) => b.length - a.length);
+  for (const br of breakers) {
+    const re = new RegExp('\\s+' + br.replace(/ /g, '\\s+') + '\\b', 'gi');
+    sql = sql.replace(re, '\n' + br);
   }
-  flush();
 
-  return lines.join('\n');
+  // Split into lines and indent simply
+  const lines = sql.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  let outLines: string[] = [];
+  for (const line of lines) {
+    if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|WITH)\b/i.test(line)) {
+      outLines.push(line);
+      // For SELECT lists, try to break columns onto separate lines
+      if (line.startsWith('SELECT')) {
+        const rest = line.slice(6).trim();
+        if (rest) {
+          const cols = rest.split(/,\s*/).map(c => '  ' + c.trim());
+          outLines = outLines.concat(cols);
+        }
+      }
+    } else {
+      outLines.push('  ' + line);
+    }
+  }
+
+  return outLines.join('\n');
 }
 
 export default function SqlFormatterTool() {

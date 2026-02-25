@@ -6,6 +6,7 @@ type HashAlgo = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 const ALGOS: HashAlgo[] = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
 
 async function hashText(algo: HashAlgo, text: string): Promise<string> {
+  // Use Web Crypto API for secure hashing (MD5 removed since it's not available in SubtleCrypto)
   const enc = new TextEncoder();
   const buf = await crypto.subtle.digest(algo, enc.encode(text));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');

@@ -13,37 +13,40 @@ const PRESETS = [
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-function describePart(val: string, unit: string, names?: string[]): string {
+function describePart(val: string, unit: string, names?: string[], offset = 0): string {
   if (val === '*') return `every ${unit}`;
   if (val.startsWith('*/')) return `every ${val.slice(2)} ${unit}s`;
   if (val.includes(',')) {
-    const parts = val.split(',').map(v => names ? names[parseInt(v)] ?? v : v);
+    const parts = val.split(',').map(v => names ? names[parseInt(v) - offset] ?? v : v);
     return parts.join(', ');
   }
   if (val.includes('-')) {
     const [a, b] = val.split('-');
-    const na = names ? names[parseInt(a)] ?? a : a;
-    const nb = names ? names[parseInt(b)] ?? b : b;
+    const na = names ? names[parseInt(a) - offset] ?? a : a;
+    const nb = names ? names[parseInt(b) - offset] ?? b : b;
     return `${na} to ${nb}`;
   }
-  return names ? names[parseInt(val)] ?? val : val;
+  return names ? names[parseInt(val) - offset] ?? val : val;
 }
 
 function describeExpression(expr: string): string {
-  const parts = expr.trim().split(/\s+/);
-  if (parts.length !== 5) return 'Invalid cron expression (need 5 fields)';
+  const rawParts = expr.trim().split(/\s+/);
+  if (rawParts.length !== 5 && rawParts.length !== 6) return 'Invalid cron expression (need 5 or 6 fields)';
+  // If 6 fields (seconds included), drop the seconds for description
+  const parts = rawParts.length === 6 ? rawParts.slice(1) : rawParts;
   const [min, hr, dom, mon, dow] = parts;
   const phrases: string[] = [];
   if (min !== '*') phrases.push(`at minute ${describePart(min, 'minute')}`);
   if (hr  !== '*') phrases.push(`hour ${describePart(hr, 'hour')}`);
   if (dom !== '*') phrases.push(`on day ${describePart(dom, 'day')} of the month`);
-  if (mon !== '*') phrases.push(`in ${describePart(mon, 'month', MONTHS)}`);
+  if (mon !== '*') phrases.push(`in ${describePart(mon, 'month', MONTHS, 1)}`);
   if (dow !== '*') phrases.push(`on ${describePart(dow, 'weekday', WEEKDAYS)}`);
   if (phrases.length === 0) return 'Every minute';
   return phrases.join(', ');
 }
 
 function matchesCron(date: Date, parts: string[]): boolean {
+  // parts should be 5 fields: minute, hour, dom, month, dow
   const [min, hr, dom, mon, dow] = parts;
   const match = (val: string, n: number, offset = 0): boolean => {
     if (val === '*') return true;
@@ -58,15 +61,16 @@ function matchesCron(date: Date, parts: string[]): boolean {
   return (
     match(min, date.getMinutes()) &&
     match(hr,  date.getHours()) &&
-    match(dom, date.getDate(), 1) &&
-    match(mon, date.getMonth(), -1) &&
-    match(dow, date.getDay())
+    match(dom, date.getDate(), 0) &&
+    match(mon, date.getMonth(), 1) &&
+    match(dow, date.getDay(), 0)
   );
 }
 
 function nextRuns(expr: string, count = 5): Date[] {
-  const parts = expr.trim().split(/\s+/);
-  if (parts.length !== 5) return [];
+  const rawParts = expr.trim().split(/\s+/);
+  if (rawParts.length !== 5 && rawParts.length !== 6) return [];
+  const parts = rawParts.length === 6 ? rawParts.slice(1) : rawParts;
   const results: Date[] = [];
   const now = new Date();
   now.setSeconds(0, 0);

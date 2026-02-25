@@ -41,9 +41,31 @@ function rot13(s: string) {
 
 function transform(op: Op, input: string): string {
   try {
+    const b64UrlToUtf8 = (s: string) => {
+      const padded = s.replace(/-/g, '+').replace(/_/g, '/').trim();
+      const padLen = (4 - (padded.length % 4)) % 4;
+      const b64 = padded + '='.repeat(padLen);
+      return decodeURIComponent(
+        atob(b64)
+          .split('')
+          .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join('')
+      );
+    };
+
     switch (op) {
       case 'base64-enc': return btoa(unescape(encodeURIComponent(input)));
-      case 'base64-dec': return decodeURIComponent(escape(atob(input)));
+      case 'base64-dec': {
+          const s = input.replace(/-/g, '+').replace(/_/g, '/').trim();
+          const padLen = (4 - (s.length % 4)) % 4;
+          const b64 = s + '='.repeat(padLen);
+          return decodeURIComponent(
+            atob(b64)
+              .split('')
+              .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+              .join('')
+          );
+        }
       case 'url-enc':    return encodeURIComponent(input);
       case 'url-dec':    return decodeURIComponent(input);
       case 'html-enc':   return htmlEncode(input);
@@ -56,11 +78,13 @@ function transform(op: Op, input: string): string {
       case 'jwt': {
         const parts = input.trim().split('.');
         if (parts.length !== 3) return 'Invalid JWT (expected 3 parts)';
-        const dec = (s: string) => {
-          const pad = s.length % 4 === 0 ? s : s + '='.repeat(4 - (s.length % 4));
-          return JSON.parse(decodeURIComponent(escape(atob(pad.replace(/-/g,'+').replace(/_/g,'/')))));
-        };
-        return JSON.stringify({ header: dec(parts[0]), payload: dec(parts[1]), signature: parts[2] }, null, 2);
+        try {
+          const header = JSON.parse(b64UrlToUtf8(parts[0]));
+          const payload = JSON.parse(b64UrlToUtf8(parts[1]));
+          return JSON.stringify({ header, payload, signature: parts[2] }, null, 2);
+        } catch (e) {
+          return 'Invalid JWT payload/header';
+        }
       }
     }
   } catch (e) {
