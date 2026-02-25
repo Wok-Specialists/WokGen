@@ -184,7 +184,7 @@ export default function JsonTool() {
             <span className="json-panel-label">Input JSON</span>
             <div className="json-panel-actions">
               <button className="btn-ghost-xs" onClick={loadExample}>Load Example</button>
-              <button className="btn-ghost-xs" onClick={() => { setInput(''); setOutput(''); setError(null); }}>Clear</button>
+              <button className="btn-ghost-xs" onClick={() => { setInput(''); setOutput(''); setError(null); setParsedData(null); }}>Clear</button>
             </div>
           </div>
           <textarea

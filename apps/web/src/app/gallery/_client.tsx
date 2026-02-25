@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
 import { EmptyState } from '@/app/_components/EmptyState';
+import { Search } from 'lucide-react';
 
 interface GalleryAsset {
   id: string;
@@ -17,14 +18,6 @@ interface GalleryAsset {
 
 const PAGE_SIZE = 24;
 const BLUR_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-    </svg>
-  );
-}
 
 export default function GalleryClient() {
   const [assets, setAssets] = useState<GalleryAsset[]>([]);
@@ -54,11 +47,13 @@ export default function GalleryClient() {
     setLoading(false);
   }, []);
 
+  // Reset and fetch on filter change
   useEffect(() => {
     setCursor(null);
     fetchAssets({ search: searchQuery, mode: modeFilter, reset: true });
   }, [searchQuery, modeFilter, fetchAssets]);
 
+  // Load more when sentinel is visible
   useEffect(() => {
     if (inView && hasMore && !loading && cursor) {
       fetchAssets({ cursor, search: searchQuery, mode: modeFilter, reset: false });
@@ -76,7 +71,7 @@ export default function GalleryClient() {
       {/* Filter + search bar */}
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
@@ -100,8 +95,8 @@ export default function GalleryClient() {
       {assets.length === 0 && !loading ? (
         <EmptyState
           title="No assets yet"
-          description="Generate your first image in Pixel Studio and it will appear here."
-          action={{ label: 'Open Pixel Studio', href: '/pixel/studio' }}
+          description="Generated assets you make public will appear here."
+          action={{ label: 'Start generating', href: '/pixel/studio' }}
         />
       ) : (
         <>
