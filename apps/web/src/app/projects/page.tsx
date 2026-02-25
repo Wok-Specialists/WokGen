@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import ProjectsClient from './_client';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export const metadata: Metadata = {
   title: 'Projects — WokGen',
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 export default async function ProjectsPage() {
   const session = await auth();
   if (!session?.user?.id) redirect('/login?callbackUrl=/projects');
-  return <ProjectsClient />;
+  return <ErrorBoundary context="Projects"><ProjectsClient /></ErrorBoundary>;
 }

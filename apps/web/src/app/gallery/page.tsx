@@ -18,4 +18,5 @@ export const metadata: Metadata = {
 };
 
 import GalleryClient from './_client';
-export default function GalleryPage() { return <GalleryClient />; }
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+export default function GalleryPage() { return <ErrorBoundary context="Gallery"><GalleryClient /></ErrorBoundary>; }

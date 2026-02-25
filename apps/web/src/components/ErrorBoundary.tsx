@@ -35,16 +35,22 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       if (this.props.fallback) return this.props.fallback;
       return (
-        <div className="flex flex-col items-center justify-center min-h-[300px] p-8 text-center">
+        <div className="flex flex-col items-center justify-center min-h-[300px] p-8 text-center bg-[#0d0d0d] rounded-xl border border-white/10">
           <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
             <AlertTriangle className="w-5 h-5 text-red-400" />
           </div>
-          <p className="text-sm font-medium text-white/70 mb-1">
-            {this.props.context ? `${this.props.context} crashed` : 'Something went wrong'}
+          <p className="text-sm font-medium text-white/80 mb-1">
+            {this.props.context ? `${this.props.context} encountered an error` : 'Something went wrong'}
           </p>
-          <p className="text-xs text-white/30 mb-4 max-w-xs">
-            {this.state.error?.message || 'An unexpected error occurred'}
+          <p className="text-xs text-white/40 mb-4 max-w-xs">
+            An unexpected error occurred. Try refreshing this section.
           </p>
+          {this.state.error?.message && (
+            <details className="mb-4 max-w-sm text-left">
+              <summary className="text-xs text-white/30 cursor-pointer select-none">Error details</summary>
+              <p className="mt-1 text-xs text-white/25 font-mono break-all">{this.state.error.message}</p>
+            </details>
+          )}
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
             className="flex items-center gap-2 px-4 py-2 text-xs bg-white/5 border border-white/10 rounded-lg text-white/60 hover:text-white/80 hover:bg-white/10 transition-all"
