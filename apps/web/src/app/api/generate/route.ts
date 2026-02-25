@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
+import { withErrorHandler, dbQuery } from '@/lib/api-handler';
 import {
   generate,
   resolveProviderConfig,
@@ -139,7 +140,7 @@ function getFallbackChain(primary: ProviderName): ProviderName[] {
     .map(c => c.provider);
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withErrorHandler(async (req) => {
   const isSelfHosted = process.env.SELF_HOSTED === 'true';
   // Generate a request ID for tracing
   const requestId = randomUUID().slice(0, 10);
@@ -1131,12 +1132,12 @@ export async function POST(req: NextRequest) {
       { status: statusCode >= 400 ? statusCode : 500 },
     );
   }
-}
+});
 
 // ---------------------------------------------------------------------------
 // GET /api/generate — list recent jobs (lightweight history endpoint)
 // ---------------------------------------------------------------------------
-export async function GET(req: NextRequest) {
+export const GET = withErrorHandler(async (req) => {
   const { searchParams } = req.nextUrl;
   const limit     = Math.min(Number(searchParams.get('limit')  ?? 20), 100);
   const cursor    = searchParams.get('cursor')    ?? undefined;
@@ -1248,7 +1249,7 @@ export async function GET(req: NextRequest) {
     nextCursor,
     hasMore,
   });
-}
+});
 
 // ---------------------------------------------------------------------------
 // Utilities

@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
 import { checkSsrf } from '@/lib/ssrf-check';
 import { z } from 'zod';
-import { validateBody } from '@/lib/validate';
+import { withErrorHandler, dbQuery } from '@/lib/api-handler';
 
 const BgRemoveSchema = z.object({
   imageUrl:    z.string().url('Must be a valid URL').optional(),
@@ -16,13 +16,7 @@ const BgRemoveSchema = z.object({
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/**
- * POST /api/tools/bg-remove
- * Body: { imageUrl?: string, imageBase64?: string }
- * Returns: { resultBase64: string, mimeType: 'image/png' }
- * Quota: free = 3/day (via RateLimit table), paid = unlimited
- */
-export async function POST(req: NextRequest) {
+export const POST = withErrorHandler(async (req) => {
   if (!process.env.HF_TOKEN) {
     return NextResponse.json(
       { error: 'Background removal is not configured. Set HF_TOKEN environment variable.' },

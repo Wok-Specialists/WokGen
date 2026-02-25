@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { isSupportedMode } from '@/lib/modes';
 import { z } from 'zod';
+import { withErrorHandler, dbQuery } from '@/lib/api-handler';
 
 // ---------------------------------------------------------------------------
 // GET /api/projects — list user's projects
@@ -16,7 +17,7 @@ const CreateProjectSchema = z.object({
   settings:    z.record(z.unknown()).optional(),
 });
 
-export async function GET(req: NextRequest) {
+export const GET = withErrorHandler(async (req) => {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
   const archived   = searchParams.get('archived') === 'true';
   const limit      = Math.min(Number(searchParams.get('limit') ?? '20'), 50);
 
-  const projects = await prisma.project.findMany({
+  const projects = await dbQuery(prisma.project.findMany({
     where: {
       userId:     session.user.id,
       isArchived: archived,
@@ -46,7 +47,7 @@ export async function GET(req: NextRequest) {
         },
       },
     },
-  });
+  }));
 
   const projectsWithAssets = projects.map(p => ({
     ...p,
@@ -55,9 +56,9 @@ export async function GET(req: NextRequest) {
   }));
 
   return NextResponse.json({ projects: projectsWithAssets });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = withErrorHandler(async (req) => {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
@@ -92,4 +93,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ project }, { status: 201 });
-}
+});

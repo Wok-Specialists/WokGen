@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { apiError } from './api-response';
 
-type RouteHandler = (req: NextRequest, ctx?: { params?: Record<string, string> }) => Promise<NextResponse>;
+type RouteHandler = (req: NextRequest, ctx?: { params?: Record<string, string> }) => Promise<NextResponse | Response>;
 
 /**
  * Wraps an API route handler with global error catching.

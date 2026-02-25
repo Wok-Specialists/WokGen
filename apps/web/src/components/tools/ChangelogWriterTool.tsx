@@ -59,10 +59,10 @@ function renderChangelog(cat: Categorized, version: string, date: string): strin
     return `### ${title}\n${items.map(i => `- ${i}`).join('\n')}`;
   };
 
-  if (cat.breaking.length) sections.push(fmt('⚠️ Breaking Changes', cat.breaking));
-  if (cat.features.length) sections.push(fmt('✨ Features', cat.features));
-  if (cat.fixes.length) sections.push(fmt('🐛 Bug Fixes', cat.fixes));
-  if (cat.improvements.length) sections.push(fmt('🔧 Improvements', cat.improvements));
+  if (cat.breaking.length) sections.push(fmt('Breaking Changes', cat.breaking));
+  if (cat.features.length) sections.push(fmt('Features', cat.features));
+  if (cat.fixes.length) sections.push(fmt('Bug Fixes', cat.fixes));
+  if (cat.improvements.length) sections.push(fmt('Improvements', cat.improvements));
 
   return `## [${version}] — ${date}\n\n${sections.join('\n\n')}`;
 }

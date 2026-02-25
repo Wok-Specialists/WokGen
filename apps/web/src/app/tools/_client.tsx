@@ -200,7 +200,7 @@ export default function ToolsPage() {
         {/* Starred */}
         {starredTools.length > 0 && (
           <section className="toolhub-section">
-            <h2 className="toolhub-section-title">⭐ Starred</h2>
+            <h2 className="toolhub-section-title">Starred</h2>
             <div className="toolhub-grid">
               {starredTools.map(tool => (
                 <ToolCard key={tool.id} tool={tool} {...cardProps} starred={true} />

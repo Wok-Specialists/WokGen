@@ -493,7 +493,7 @@ function VectorStudioInner() {
                 transition: 'all 0.15s',
               }}
             >
-              {isEnhancing ? '✨ Enhancing…' : '✨ Enhance'}
+              {isEnhancing ? 'Enhancing…' : 'Enhance'}
             </button>
           </div>
         </div>

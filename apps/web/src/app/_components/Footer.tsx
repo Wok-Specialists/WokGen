@@ -102,7 +102,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="site-footer__gh-stars"
           >
-            ⭐ Star on GitHub
+            Star on GitHub
           </a>
         </div>
       </div>

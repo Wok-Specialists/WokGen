@@ -1221,7 +1221,6 @@ function OutputPanel({
         <div className="px-3 pb-2 flex-shrink-0">
           <PostProcessToolbar
             imageUrl={displayUrl ?? activeUrl}
-            prompt={prompt}
             mode="pixel"
             onResult={(url, tool) => { console.log('Post-process result:', tool, url); }}
           />
@@ -1738,7 +1737,7 @@ function GenerateForm({
                 transition: 'all 0.15s',
               }}
             >
-              {isEnhancing ? '✨ Enhancing…' : '✨ Enhance'}
+              {isEnhancing ? 'Enhancing…' : 'Enhance'}
             </button>
           </div>
           <PromptIntelligenceBar

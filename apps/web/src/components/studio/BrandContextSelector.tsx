@@ -31,7 +31,7 @@ export function BrandContextSelector({ value, onChange }: BrandContextSelectorPr
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-        🎨 Brand
+        Brand
       </span>
       <select
         value={value ?? ''}

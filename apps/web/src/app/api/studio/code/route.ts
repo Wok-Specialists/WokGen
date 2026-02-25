@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { apiError } from '@/lib/api-response';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { withErrorHandler } from '@/lib/api-handler';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ IMPORTANT OUTPUT FORMAT:
 - End with \`\`\`
 - Nothing else — no explanation, no commentary, just the code block`;
 
-export async function POST(req: NextRequest) {
+export const POST = withErrorHandler(async (req) => {
   const session = await auth();
   if (!session?.user?.id) return apiError({ message: 'Unauthorized', code: 'UNAUTHORIZED', status: 401 });
 
@@ -68,4 +69,4 @@ export async function POST(req: NextRequest) {
   const code = codeMatch ? codeMatch[1].trim() : content.trim();
 
   return NextResponse.json({ code, raw: content });
-}
+});
