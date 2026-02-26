@@ -16,8 +16,13 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Install dependencies (with postinstall for Prisma generate)
-        run: npm ci --legacy-peer-deps
+      - run: npm ci --legacy-peer-deps --ignore-scripts
+      - name: Generate Prisma client
+        env:
+          PRISMA_GENERATE_SKIP_AUTOINSTALL: "1"
+        run: |
+          rm -rf apps/web/node_modules/.prisma
+          cd apps/web && npx prisma generate
       - name: TypeScript check
         run: cd apps/web && npx tsc --noEmit
 
