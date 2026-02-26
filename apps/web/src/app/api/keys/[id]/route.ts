@@ -16,10 +16,10 @@ interface Ctx { params: { id: string } }
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
   try {
     const session = await auth();
-    if (!session?.user?.id && !process.env.SELF_HOSTED) {
+    if (!session?.user?.id) {
       return API_ERRORS.UNAUTHORIZED();
     }
-    const userId = session?.user?.id ?? 'self-hosted';
+    const userId = session.user.id;
 
     const key = await dbQuery(prisma.apiKey.findUnique({ where: { id: params.id } }));
     if (!key || key.userId !== userId) {
@@ -37,10 +37,10 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
 export async function PATCH(req: NextRequest, { params }: Ctx) {
   try {
     const session = await auth();
-    if (!session?.user?.id && !process.env.SELF_HOSTED) {
+    if (!session?.user?.id) {
       return API_ERRORS.UNAUTHORIZED();
     }
-    const userId = session?.user?.id ?? 'self-hosted';
+    const userId = session.user.id;
 
     const body = await req.json().catch(() => ({}));
     const name = typeof body.name === 'string' ? body.name.trim() : null;

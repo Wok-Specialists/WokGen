@@ -89,17 +89,15 @@ async function callLLM(
 }
 
 export async function POST(req: NextRequest) {
-  // Auth (not required in self-hosted)
-  if (!process.env.SELF_HOSTED) {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    // Rate-limit: 5 simulations per minute
-    const limited = await checkRateLimit(`eral-simulate:${session.user.id}`, 5, 60);
-    if (!limited.allowed) {
-      return NextResponse.json({ error: 'Rate limited. Slow down.' }, { status: 429 });
-    }
+  // Auth required
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  // Rate-limit: 5 simulations per minute
+  const limited = await checkRateLimit(`eral-simulate:${session.user.id}`, 5, 60);
+  if (!limited.allowed) {
+    return NextResponse.json({ error: 'Rate limited. Slow down.' }, { status: 429 });
   }
 
   const body = await req.json().catch(() => ({}));

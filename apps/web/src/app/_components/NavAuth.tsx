@@ -36,7 +36,6 @@ function NavUsageMeter() {
 
 export function NavAuth() {
   const { data: session, status } = useSession();
-  const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === 'true';
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -103,8 +102,6 @@ export function NavAuth() {
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
-
-  if (isSelfHosted) return null;
 
   if (status === 'loading') {
     return <div className="nav-auth-skeleton" aria-hidden />;

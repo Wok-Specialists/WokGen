@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     const session = await auth();
     const isAdmin = session?.user?.email && process.env.ADMIN_EMAIL?.split(',').includes(session.user.email);
 
-    if (!isAdmin && secret !== process.env.METRICS_SECRET && !process.env.SELF_HOSTED) {
+    if (!isAdmin && secret !== process.env.METRICS_SECRET) {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
@@ -66,6 +66,23 @@ export async function GET(req: NextRequest) {
     output += metric('wokgen_active_users_24h',     'Users with a generation in last 24h',    'gauge',   activeUsers);
     output += metric('wokgen_users_total',          'Total registered users',                 'gauge',   totalUsers);
     output += metric('wokgen_scrape_timestamp',     'Unix timestamp of this scrape',          'gauge',   Math.floor(now.getTime() / 1000));
+
+    // BullMQ queue depth (only when Redis-backed queue is enabled)
+    if (process.env.BULL_MQ_ENABLED === 'true' && process.env.REDIS_URL) {
+      try {
+        const { Queue } = await import('bullmq');
+        const IORedis = (await import('ioredis')).default;
+        const conn = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true });
+        const q = new Queue('generation', { connection: conn });
+        const counts = await q.getJobCounts('waiting', 'active', 'delayed', 'failed');
+        await conn.quit();
+        const depth = (counts.waiting ?? 0) + (counts.active ?? 0) + (counts.delayed ?? 0);
+        output += metric('wokgen_job_queue_depth',    'Number of jobs waiting/active/delayed in BullMQ queue', 'gauge', depth);
+        output += metric('wokgen_job_queue_failed',   'Number of failed jobs in BullMQ queue',                 'gauge', counts.failed ?? 0);
+      } catch {
+        // Non-fatal — queue may not be reachable
+      }
+    }
 
     return new NextResponse(output, {
       headers: {

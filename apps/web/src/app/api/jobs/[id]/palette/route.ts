@@ -134,8 +134,8 @@ async function extractPalette(url: string, numColors = 8): Promise<PaletteColor[
 }
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const session = !process.env.SELF_HOSTED ? await auth() : null;
-  if (!process.env.SELF_HOSTED && !session?.user?.id) {
+  const session = await auth();
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -145,7 +145,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   });
 
   if (!job) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  if (!process.env.SELF_HOSTED && job.userId !== session!.user!.id) {
+  if (job.userId !== session.user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
   if (!job.resultUrl) {
@@ -167,8 +167,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 }
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const session = !process.env.SELF_HOSTED ? await auth() : null;
-  if (!process.env.SELF_HOSTED && !session?.user?.id) {
+  const session = await auth();
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -178,7 +178,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   });
 
   if (!job) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  if (!process.env.SELF_HOSTED && job.userId !== session!.user!.id) {
+  if (job.userId !== session.user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

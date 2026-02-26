@@ -1,49 +1,60 @@
-# WokGen Browser Extension
+# WokGen Companion Extension
 
-Bring WokGen AI tools to any page — right-click any image or selection to use WokGen tools, harvest assets, and chat with Eral 7c directly on the page.
+Browser extension for WokGen — AI generation, asset scraping, and site inspection.
+
+Built with [WXT](https://wxt.dev) (Manifest V3). Targets Chrome, Firefox, Safari (via Safari Web Extensions), and Edge.
 
 ## Features
 
-### v2.0
-- **Eral 7c Panel** — docked slide-out chat panel on any page; highlight text to pre-fill a question
-- **Asset Harvester** — scan any page for images/videos and save them directly from the popup
-- **Settings page** — toggle context menu items, manage your WokGen account
-- **3-tab popup** — Tools, Assets, Settings
+- **Side Panel**: Quick generation without leaving your current tab
+- **Context Menu**: Right-click images or text to send to WokGen
+- **Page Inspector**: Scan any page for assets, colors, and fonts
+- **Link Scraper**: Extract all links from a page
+- **Asset Downloader**: Bulk download images and SVGs
+- **Generation History**: View recent WokGen jobs
+- **WokAPI DevTools Panel**: Inspect WokGen API calls in DevTools
 
-### v1 (original)
-- Right-click images: Remove Background, Analyze with Eral 7c, Open in WokGen Tools
-- Right-click selections: Analyze with Eral 7c
-- Popup: Quick access to all WokGen tools
-- Page analyzer: Scan current page with Eral 7c
+## Development
 
-## Installation (Development)
-
-### Chrome / Edge
-1. Open Chrome → `chrome://extensions`
-2. Enable **Developer mode**
-3. Click **Load unpacked**
-4. Select the `extensions/wokgen-ext/` folder
-
-### Firefox
-1. Open Firefox → `about:debugging`
-2. Click **This Firefox**
-3. Click **Load Temporary Add-on**
-4. Select `extensions/wokgen-ext/manifest.json`
-
-## Context Menu Items
-| Item | Context | Action |
-|---|---|---|
-| Remove Background with WokGen | Image | Opens BG remover with image URL |
-| Analyze with Eral 7c | Image / Selection | Opens WokGen with content pre-loaded |
-| Open in WokGen Tools | Image | Opens WokGen tools page |
-| Open Eral 7c Panel | Page / Selection | Injects docked chat panel |
-| Open WokGen | Page | Opens wokgen.wokspec.org |
-
-## Building for Production
+```bash
+npm install
+npm run dev          # Chrome (dev mode with HMR)
+npm run dev:firefox  # Firefox
 ```
-npm install && npm run build
+
+## Building
+
+```bash
+npm run build          # Chrome / Edge
+npm run build:firefox  # Firefox
+npm run build:safari   # Safari (requires Xcode)
+npm run zip            # Package for Chrome Web Store
+npm run zip:firefox    # Package for Firefox Add-ons
+```
+
+## Authentication
+
+Get your API key from [WokGen Settings](https://wokgen.wokspec.org/account/api-keys) → Developer → API Keys.
+
+Enter it in the extension popup under **Settings**.
+
+## Project Structure
+
+```
+src/
+  lib/
+    config.ts      — API key storage & config helpers
+    api.ts         — WokGen API client (generate, poll jobs)
+    scraper.ts     — Page scraping (assets, links, palette, fonts)
+  entrypoints/
+    background.ts  — Service worker (context menus, side panel)
+    content.ts     — Content script (SCRAPE_PAGE message handler)
+    popup/         — Toolbar popup (React)
+    sidepanel/     — Side panel studio (React)
+    devtools/      — DevTools panel entry
 ```
 
 ## Publishing
+
 - Chrome Web Store: https://chrome.google.com/webstore/devconsole
 - Firefox Add-ons: https://addons.mozilla.org/developers

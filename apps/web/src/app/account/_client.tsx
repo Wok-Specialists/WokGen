@@ -60,6 +60,14 @@ function ProfileTab({ user }: { user: Props['user'] }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // Profile completion: avatar (1), display name (1), bio (1) = max 3
+  const completionItems = [
+    { label: 'Avatar', done: !!user.image },
+    { label: 'Display name', done: !!displayName.trim() },
+    { label: 'Bio', done: !!bio.trim() },
+  ];
+  const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
+
   const save = async () => {
     setSaving(true);
     await fetch('/api/user/profile', {
@@ -88,6 +96,26 @@ function ProfileTab({ user }: { user: Props['user'] }) {
           )}
         </div>
       </div>
+
+      {/* Profile completion indicator */}
+      {completionPct < 100 && (
+        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 600 }}>Profile completion</span>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--accent)' }}>{completionPct}%</span>
+          </div>
+          <div style={{ height: '4px', background: 'var(--bg-elevated, rgba(255,255,255,0.06))', borderRadius: '2px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${completionPct}%`, background: 'var(--accent)', borderRadius: '2px', transition: 'width 0.3s' }} />
+          </div>
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+            {completionItems.filter(i => !i.done).map(i => (
+              <span key={i.label} style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                + Add {i.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="acct-field-group">
         <label className="acct-label">Display Name</label>
@@ -335,6 +363,7 @@ function UsageTab() {
           {data.daily && data.daily.length > 0 && (
             <div className="acct-chart-section">
               <h3 className="acct-section-title">Generations — Last 7 Days</h3>
+              {/* TODO: Add per-studio breakdown (Pixel / Vector / Voice) once the usage API returns mode-level counts */}
               <div className="usage-chart">
                 {data.daily.slice(-7).map((d) => {
                   const max = Math.max(...(data.daily ?? []).slice(-7).map(x => x.total), 1);

@@ -4,6 +4,8 @@
 
 WokGen is a production Next.js 14 platform for AI-powered asset generation across multiple creative domains — images, vectors, UI mockups, 3D models, skyboxes, voice, and more. Built with a focus on developer experience, team workspaces, and production reliability.
 
+**WokGen is open-source.** Run locally for development — connect to the cloud API.
+
 **Live:** [wokgen.wokspec.org](https://wokgen.wokspec.org) · **Eral 7c** — site-wide AI companion
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org)

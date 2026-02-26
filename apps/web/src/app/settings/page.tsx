@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import NotificationSettingsClient from './_client';
+import { AppearanceSettings } from './_components/AppearanceSettings';
+import BillingSection from './_components/BillingSection';
 
 export const metadata: Metadata = {
   title: 'Settings | WokGen',
@@ -66,20 +68,28 @@ export default async function SettingsPage() {
           <NotificationSettingsClient />
         </section>
 
-        {/* API Access */}
+        {/* Appearance */}
+        <AppearanceSettings />
+
+        {/* API Access / Developer */}
         <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>API Access</h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Create API keys to use WokAPI programmatically. Keys authenticate requests to <code style={{ fontSize: '0.8125rem', background: 'rgba(255,255,255,0.06)', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>/api/v1/*</code> endpoints for asset generation, tool access, and more.</p>
-          <a href="/account/api-keys" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none' }}>
-            Manage API Keys <span style={{ opacity: 0.5 }}>→</span>
-          </a>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>Developer</h2>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Create API keys, configure webhooks, and access the SDK to use WokGen programmatically.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <a href="/account/api-keys" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none' }}>
+              API Keys <span style={{ opacity: 0.5 }}>→</span>
+            </a>
+            <a href="/account/webhooks" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none' }}>
+              Webhooks <span style={{ opacity: 0.5 }}>→</span>
+            </a>
+            <a href="/docs/api" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none' }}>
+              SDK Docs <span style={{ opacity: 0.5 }}>→</span>
+            </a>
+          </div>
         </section>
 
         {/* Billing */}
-        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>Billing</h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Billing is currently in beta. Upgrade options coming soon. WokGen is free for all users in the meantime.</p>
-        </section>
+        <BillingSection />
 
         {/* Danger zone */}
         <section style={{ border: '1px solid rgba(239,68,68,0.2)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(239,68,68,0.03)' }}>

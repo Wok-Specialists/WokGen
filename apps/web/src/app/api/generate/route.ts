@@ -64,8 +64,7 @@ const GenerateBodySchema = z.object({
 // ---------------------------------------------------------------------------
 // POST /api/generate
 //
-// Three modes:
-//   SELF_HOSTED=true  → BYOK, no auth, no quota
+// Two modes:
 //   Authenticated     → standard (free) or HD (credit-gated)
 //   Guest             → standard only, IP rate-limited (5 req/min)
 // ---------------------------------------------------------------------------
@@ -142,7 +141,6 @@ function getFallbackChain(primary: ProviderName): ProviderName[] {
 }
 
 export const POST = withErrorHandler(async (req) => {
-  const isSelfHosted = process.env.SELF_HOSTED === 'true';
   // Generate a request ID for tracing
   const requestId = randomUUID().slice(0, 10);
 
@@ -164,7 +162,7 @@ export const POST = withErrorHandler(async (req) => {
     req.headers.get('x-real-ip') ??
     'unknown';
 
-  if (!isSelfHosted) {
+  {
     const { auth } = await import('@/lib/auth');
     const session = await auth();
     authedUserId = session?.user?.id ?? null;
@@ -415,13 +413,11 @@ export const POST = withErrorHandler(async (req) => {
     );
   }
 
-  // In hosted mode: ignore any client-supplied provider keys
-  const resolvedByokKey  = isSelfHosted ? (typeof byokKey  === 'string' ? byokKey  : null) : null;
-  const resolvedByokHost = isSelfHosted ? (typeof byokHost === 'string' ? byokHost : null) : null;
-  // In hosted mode: use quality-aware provider matrix; self-hosted uses client-supplied provider
-  const resolvedProvider: ProviderName = isSelfHosted
-    ? (provider as ProviderName)
-    : resolveOptimalProvider(
+  // In hosted mode: always ignore client-supplied provider keys
+  const resolvedByokKey: null  = null;
+  const resolvedByokHost: null = null;
+  // Always use quality-aware provider matrix
+  const resolvedProvider: ProviderName = resolveOptimalProvider(
         isSupportedMode(mode) ? String(mode) : 'pixel',
         typeof tool === 'string' ? tool : 'generate',
         useHD,
@@ -832,9 +828,7 @@ export const POST = withErrorHandler(async (req) => {
     const fallbacks = getFallbackChain(resolvedProvider);
     const throttledChecks = await Promise.all(fallbacks.map(p => isProviderThrottled(p)));
     const availableFallbacks = fallbacks.filter((_, i) => !throttledChecks[i]);
-    const providerChain: ProviderName[] = isSelfHosted
-      ? [resolvedProvider]
-      : [resolvedProvider, ...availableFallbacks];
+    const providerChain: ProviderName[] = [resolvedProvider, ...availableFallbacks];
 
     let usedProvider: ProviderName = resolvedProvider;
     let result: GenerateResult | undefined;
@@ -1019,7 +1013,7 @@ export const POST = withErrorHandler(async (req) => {
     }
 
     // Update user generation stats (non-blocking)
-    if (!isSelfHosted && authedUserId) {
+    if (authedUserId) {
       // Fire registered webhooks for job.succeeded (non-blocking)
       prisma.webhook.findMany({
         where: { userId: authedUserId, active: true, events: { contains: 'job.succeeded' } },
@@ -1171,13 +1165,11 @@ export const GET = withErrorHandler(async (req) => {
 
   // Require authentication for all non-public requests
   let userId: string | undefined;
-  if (!process.env.SELF_HOSTED) {
-    try {
-      const { auth } = await import('@/lib/auth');
-      const session = await auth();
-      if (session?.user?.id) userId = session.user.id;
-    } catch { /* ignore */ }
-  }
+  try {
+    const { auth } = await import('@/lib/auth');
+    const session = await auth();
+    if (session?.user?.id) userId = session.user.id;
+  } catch { /* ignore */ }
 
   if (!isPublicGallery && !userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

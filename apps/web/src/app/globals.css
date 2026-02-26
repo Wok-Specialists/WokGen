@@ -8,69 +8,82 @@
    ============================================================ */
 
 :root {
-  /* Backgrounds — WokSpec charcoal */
+  /* ── Backgrounds ──────────────────────────────────────── */
   --bg:            #0a0a0a;
+  --bg-base:       #0a0a0a;
   --bg-surface:    #111111;
-  --bg-elevated:   #181818;
+  --bg-elevated:   #161616;
+  --bg-overlay:    #1c1c1c;
+  --bg-input:      #111111;
   --border:        rgba(255,255,255,0.08);
   --border-subtle: rgba(255,255,255,0.04);
-  --border-focus:  #6d28d9;
+  --border-strong: rgba(255,255,255,0.12);
+  --border-focus:  #6366f1;
 
-  /* Text */
-  --text:          #f1f0fb;
-  --text-muted:    rgba(255,255,255,0.4);
+  /* ── Text ─────────────────────────────────────────────── */
+  --text:          #ededed;
+  --text-primary:  #ededed;
+  --text-secondary: rgba(255,255,255,0.60);
+  --text-muted:    rgba(255,255,255,0.36);
   --text-faint:    rgba(255,255,255,0.18);
+  --text-disabled: rgba(255,255,255,0.20);
+  --text-inverse:  #0a0a0a;
 
-  /* WokGen purple accent */
-  --accent:        #a78bfa;
-  --accent-2:      #c4b5fd;
-  --accent-dim:    #7c3aed;
-  --accent-muted:  #5b21b6;
-  --accent-glow:   rgba(167, 139, 250, 0.18);
-  --grad-from:     #7c3aed;
-  --grad-to:       #a78bfa;
+  /* ── Accent — refined indigo (less purple, more Vercel) ── */
+  --accent:        #818cf8;
+  --accent-2:      #a5b4fc;
+  --accent-dim:    #6366f1;
+  --accent-muted:  #4f46e5;
+  --accent-hover:  #6366f1;
+  --accent-glow:   rgba(129, 140, 248, 0.15);
+  --accent-subtle: rgba(129, 140, 248, 0.08);
+  --grad-from:     #6366f1;
+  --grad-to:       #818cf8;
 
-  /* Semantic */
+  /* ── Semantic ─────────────────────────────────────────── */
   --success:       #34d399;
+  --success-bg:    rgba(52, 211, 153, 0.10);
   --success-glow:  rgba(52, 211, 153, 0.15);
-  --danger:        #ef4444;
-  --warning:       #f59e0b;
+  --danger:        #f87171;
+  --danger-bg:     rgba(248, 113, 113, 0.10);
+  --warning:       #fbbf24;
+  --warning-bg:    rgba(251, 191, 36, 0.10);
+  --info:          #60a5fa;
+  --info-bg:       rgba(96, 165, 250, 0.10);
 
-  /* Aliases — kept so existing component vars still resolve */
+  /* ── Surface aliases (backward compat) ───────────────── */
   --surface-base:    var(--bg);
-  --surface-raised:  rgba(255,255,255,0.05);
+  --surface-raised:  rgba(255,255,255,0.04);
   --surface-card:    rgba(255,255,255,0.03);
-  --surface-overlay: #181818;
-  --surface-hover:   rgba(255,255,255,0.06);
-  --surface-2:       #181818;
+  --surface-overlay: #1c1c1c;
+  --surface-hover:   rgba(255,255,255,0.05);
+  --surface-2:       #161616;
   --surface-border:  var(--border);
   --surface-muted:   #0a0a0a;
-  --text-primary:    #f1f0fb;
-  --text-secondary:  rgba(255,255,255,0.65);
-  --text-disabled:   rgba(255,255,255,0.2);
+  --bg-surface-2:    #161616;
 
-  /* Radius — sharp/minimal: containers 0, controls 3px, circles full */
+  /* ── Radius ───────────────────────────────────────────── */
   --radius-sm:   2px;
-  --radius-md:   3px;
-  --radius-lg:   4px;
-  --radius-xl:   4px;
-  --radius-2xl:  4px;
-  --radius:      3px;
+  --radius-md:   4px;
+  --radius-lg:   6px;
+  --radius-xl:   8px;
+  --radius-2xl:  12px;
+  --radius:      4px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.6);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.7);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.8);
-  --glow-accent: 0 0 24px rgba(167,139,250,0.2);
+  /* ── Shadows ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.60);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.70);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.80);
+  --glow-accent: 0 0 24px rgba(129,140,248,0.18);
 
-  /* Layout */
-  --nav-height:          50px;
-  --mode-switcher-height: 0px;   /* mode switcher removed — no sub-nav bar */
-  --sidebar-width: 64px;
-  --panel-width:  380px;
+  /* ── Layout ───────────────────────────────────────────── */
+  --nav-height:           50px;
+  --mode-switcher-height: 0px;
+  --sidebar-width:        56px;
+  --panel-width:          380px;
 
-  /* ── Typography scale ──────────────────────────────────────── */
+  /* ── Typography scale ─────────────────────────────────── */
   --font-xs:   0.6875rem; /* 11px */
   --font-sm:   0.75rem;   /* 12px */
   --font-base: 0.875rem;  /* 14px */
@@ -78,37 +91,62 @@
   --font-lg:   1.125rem;  /* 18px */
   --font-xl:   1.25rem;   /* 20px */
   --font-2xl:  1.5rem;    /* 24px */
+  --font-3xl:  1.875rem;  /* 30px */
+  --font-4xl:  2.25rem;   /* 36px */
 
-  /* ── Spacing scale ─────────────────────────────────────────── */
-  --space-1: 0.25rem;  /* 4px  */
-  --space-2: 0.5rem;   /* 8px  */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-5: 1.25rem;  /* 20px */
-  --space-6: 1.5rem;   /* 24px */
-  --space-7: 2rem;     /* 32px */
-  --space-8: 2.5rem;   /* 40px */
+  /* ── Monospace font stack ─────────────────────────────── */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 
-  /* shadcn/ui required variables */
-  --background: 222 47% 11%;
-  --foreground: 213 31% 91%;
-  --card: 222 47% 11%;
-  --card-foreground: 213 31% 91%;
-  --popover: 222 47% 11%;
-  --popover-foreground: 213 31% 91%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222 47% 11%;
-  --secondary: 217 19% 27%;
-  --secondary-foreground: 213 31% 91%;
-  --muted: 217 19% 27%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 217 19% 27%;
-  --accent-foreground: 213 31% 91%;
-  --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 19% 27%;
-  --input: 217 19% 27%;
-  --ring: 213 31% 91%;
+  /* ── Letter spacing ───────────────────────────────────── */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.02em;
+  --tracking-wider:   0.06em;
+  --tracking-widest:  0.10em;
+
+  /* ── Font weights ─────────────────────────────────────── */
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ── Spacing scale ────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 2.5rem;
+
+  /* ── shadcn/ui required variables ─────────────────────── */
+  --background: 0 0% 4%;
+  --foreground: 0 0% 93%;
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 93%;
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 93%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 93%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 10%;
+  --accent-foreground: 0 0% 93%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14%;
+  --input: 0 0% 10%;
+  --ring: 239 84% 67%;
+  --chart-1: 239 84% 67%;
+  --chart-2: 160 84% 39%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+
+  color-scheme: dark;
 }
 
 /* ---- Base ---- */
@@ -138,6 +176,13 @@
     font-family: var(--font-heading, 'Space Grotesk'), 'Space Grotesk', system-ui, sans-serif;
     line-height: 1.2;
   }
+
+  h1 { font-size: 2.5rem;   font-weight: 700; letter-spacing: -0.03em; }
+  h2 { font-size: 2rem;     font-weight: 700; letter-spacing: -0.02em; }
+  h3 { font-size: 1.5rem;   font-weight: 600; letter-spacing: -0.01em; }
+  h4 { font-size: 1.25rem;  font-weight: 600; }
+  h5 { font-size: 1rem;     font-weight: 600; }
+  h6 { font-size: 0.875rem; font-weight: 600; }
 
   :focus-visible {
     outline: 2px solid var(--accent);
@@ -253,12 +298,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #6d28d9, #7c3aed);
-  color: #fff;
-  box-shadow: 0 0 0 0 rgba(124,58,237,0);
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 0 0 0 var(--accent-glow, rgba(129,140,248,0));
 }
 .btn-primary:hover {
-  box-shadow: 0 0 20px rgba(124,58,237,0.45), 0 4px 12px rgba(0,0,0,0.5);
+  background: var(--accent-hover, var(--accent-dim));
+  box-shadow: 0 0 20px var(--accent-glow, rgba(129,140,248,0.45)), 0 4px 12px rgba(0,0,0,0.5);
   transform: translateY(-1px);
 }
 .btn-primary:disabled {
@@ -12920,7 +12966,7 @@ select:focus-visible {
 /* Buttons */
 .acct-btn-primary {
   align-self: flex-start;
-  background: #7c3aed;
+  background: var(--accent);
   border: none;
   border-radius: var(--radius);
   color: #fff;
@@ -12930,7 +12976,7 @@ select:focus-visible {
   cursor: pointer;
   transition: background 0.15s;
 }
-.acct-btn-primary:hover:not(:disabled) { background: #6d28d9; }
+.acct-btn-primary:hover:not(:disabled) { background: var(--accent-hover, var(--accent-dim)); }
 .acct-btn-primary:disabled { opacity: 0.6; cursor: default; }
 
 .acct-btn-danger {
@@ -19364,56 +19410,139 @@ select:focus-visible {
 /* ── End Eral Notepad ─────────────────────────────────────────────────────── */
 
 /* ================================================================
-   LIGHT MODE THEME
+   LIGHT MODE — Hardened, professional, not an inversion of dark
    ================================================================ */
 [data-theme="light"] {
-  --bg-base: #f8f8f8;
-  --bg-surface: #ffffff;
-  --bg-surface-2: #f3f3f3;
-  --bg-elevated: #ffffff;
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.14);
-  --text-primary: #0f0f0f;
-  --text-secondary: rgba(0, 0, 0, 0.65);
-  --text-muted: rgba(0, 0, 0, 0.38);
-  --text-inverse: #ffffff;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
+  /* ── Backgrounds ──────────────────────────────────────── */
+  --bg:            #fafafa;
+  --bg-base:       #fafafa;
+  --bg-surface:    #ffffff;
+  --bg-elevated:   #ffffff;
+  --bg-overlay:    #ffffff;
+  --bg-input:      #ffffff;
+  --bg-surface-2:  #f4f4f5;
+  --border:        rgba(0,0,0,0.08);
+  --border-subtle: rgba(0,0,0,0.04);
+  --border-strong: rgba(0,0,0,0.14);
+  --border-focus:  #6366f1;
+
+  /* ── Text ─────────────────────────────────────────────── */
+  --text:           #0a0a0a;
+  --text-primary:   #0a0a0a;
+  --text-secondary: rgba(0,0,0,0.60);
+  --text-muted:     rgba(0,0,0,0.38);
+  --text-faint:     rgba(0,0,0,0.22);
+  --text-disabled:  rgba(0,0,0,0.28);
+  --text-inverse:   #ffffff;
+
+  /* ── Accent ───────────────────────────────────────────── */
+  --accent:        #4f46e5;
+  --accent-2:      #6366f1;
+  --accent-dim:    #6366f1;
+  --accent-muted:  #818cf8;
+  --accent-hover:  #4338ca;
+  --accent-glow:   rgba(79, 70, 229, 0.12);
+  --accent-subtle: rgba(79, 70, 229, 0.07);
+  --grad-from:     #4f46e5;
+  --grad-to:       #6366f1;
+
+  /* ── Semantic ─────────────────────────────────────────── */
+  --success:       #059669;
+  --success-bg:    rgba(5, 150, 105, 0.08);
+  --success-glow:  rgba(5, 150, 105, 0.12);
+  --danger:        #dc2626;
+  --danger-bg:     rgba(220, 38, 38, 0.08);
+  --warning:       #d97706;
+  --warning-bg:    rgba(217, 119, 6, 0.08);
+  --info:          #2563eb;
+  --info-bg:       rgba(37, 99, 235, 0.08);
+
+  /* ── Surface aliases ──────────────────────────────────── */
+  --surface-base:    #fafafa;
+  --surface-raised:  rgba(0,0,0,0.02);
+  --surface-card:    #ffffff;
+  --surface-overlay: #ffffff;
+  --surface-hover:   rgba(0,0,0,0.03);
+  --surface-2:       #f4f4f5;
+  --surface-border:  rgba(0,0,0,0.08);
+  --surface-muted:   #f4f4f5;
+
+  /* ── Shadows ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+  --glow-accent: 0 0 24px rgba(79,70,229,0.12);
+
+  /* ── shadcn/ui ────────────────────────────────────────── */
+  --background: 0 0% 98%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 239 84% 57%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 10%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 10%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 239 84% 57%;
+  --chart-1: 239 84% 57%;
+  --chart-2: 160 84% 39%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+
   color-scheme: light;
 }
 
+/* ── Light mode component overrides ───────────────────────────── */
+
+[data-theme="light"] html,
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
 [data-theme="light"] .nav-root {
-  background: rgba(248, 248, 248, 0.92);
-  border-bottom-color: rgba(0,0,0,0.08);
+  background: rgba(250,250,250,0.94);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 [data-theme="light"] .card,
 [data-theme="light"] .toolhub-card {
   background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 [data-theme="light"] .toolhub-card:hover {
-  border-color: rgba(0, 0, 0, 0.16);
+  border-color: rgba(0,0,0,0.14);
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
 [data-theme="light"] .toolhub-sidebar {
-  background: rgba(0,0,0,0.02);
-  border-right-color: rgba(0,0,0,0.06);
+  background: #f4f4f5;
+  border-right-color: rgba(0,0,0,0.07);
 }
 
 [data-theme="light"] .toolhub-sidebar-item.--active {
-  background: rgba(124,58,237,0.08);
-  color: #7c3aed;
+  background: rgba(79,70,229,0.08);
+  color: #4f46e5;
 }
 
 [data-theme="light"] .toolhub-search {
-  background: #f0f0f0;
-  border-color: rgba(0,0,0,0.1);
-  color: #0f0f0f;
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.10);
+  color: #0a0a0a;
 }
 
 [data-theme="light"] input,
@@ -19421,25 +19550,55 @@ select:focus-visible {
 [data-theme="light"] select {
   background: #ffffff;
   border-color: rgba(0,0,0,0.12);
-  color: #0f0f0f;
+  color: #0a0a0a;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: rgba(0,0,0,0.35);
 }
 
 [data-theme="light"] .btn-primary {
-  background: #7c3aed;
+  background: #4f46e5;
   color: #ffffff;
+}
+
+[data-theme="light"] .btn-primary:hover {
+  background: #4338ca;
 }
 
 [data-theme="light"] .btn-secondary,
 [data-theme="light"] .btn-ghost {
   background: transparent;
   border-color: rgba(0,0,0,0.14);
-  color: #0f0f0f;
+  color: #0a0a0a;
+}
+
+[data-theme="light"] .btn-secondary:hover,
+[data-theme="light"] .btn-ghost:hover {
+  background: rgba(0,0,0,0.04);
 }
 
 [data-theme="light"] code,
 [data-theme="light"] pre {
-  background: #f0f0f0;
+  background: #f4f4f5;
   color: #1a1a1a;
+  border-color: rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .theme-toggle {
+  border-color: rgba(0,0,0,0.10);
+  color: rgba(0,0,0,0.55);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0,0,0,0.05);
+  color: #0a0a0a;
+}
+
+[data-theme="light"] ::selection {
+  background: rgba(79,70,229,0.15);
+  color: #0a0a0a;
 }
 
 /* ── Theme Toggle ──────────────────────────────────────────────── */
@@ -19635,4 +19794,21 @@ select:focus-visible {
   font-size: 0.72rem;
   color: var(--text-muted, #71717a);
   text-align: center;
+}
+
+/* ── B5: Force dark mode on marketing/public pages ──────────────────────── */
+/* These sections always render in dark mode regardless of user theme setting */
+[data-theme="light"] .homepage-root,
+[data-theme="light"] .homepage-root * {
+  --bg:             #0a0a0a;
+  --bg-base:        #0a0a0a;
+  --bg-surface:     #111111;
+  --bg-elevated:    #161616;
+  --bg-overlay:     #1c1c1c;
+  --text:           #ededed;
+  --text-primary:   #ededed;
+  --text-secondary: rgba(255,255,255,0.60);
+  --text-muted:     rgba(255,255,255,0.36);
+  --border:         rgba(255,255,255,0.08);
+  color-scheme: dark;
 }

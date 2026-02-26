@@ -33,11 +33,7 @@ function getClientIp(req: NextRequest): string {
 }
 
 export default auth((req) => {
-  const isSelfHosted = process.env.SELF_HOSTED === 'true';
   const { pathname } = req.nextUrl;
-
-  // Self-hosted mode: no auth enforcement at all
-  if (isSelfHosted) return NextResponse.next();
 
   // Maintenance mode — returns 503 for all non-health routes
   if (process.env.MAINTENANCE_MODE === 'true' && pathname !== '/api/health') {

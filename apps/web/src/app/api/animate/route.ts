@@ -60,28 +60,23 @@ interface AnimateRequest {
 // Handler
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  const isSelfHosted = process.env.SELF_HOSTED === 'true';
-  let authedUserId: string | null = null;
+  const { auth } = await import('@/lib/auth');
+  const session = await auth();
+  const authedUserId: string | null = session?.user?.id ?? null;
 
-  if (!isSelfHosted) {
-    const { auth } = await import('@/lib/auth');
-    const session = await auth();
-    authedUserId = session?.user?.id ?? null;
+  const rateLimitKey =
+    authedUserId ??
+    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
 
-    const rateLimitKey =
-      authedUserId ??
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
-      req.headers.get('x-real-ip') ??
-      'unknown';
-
-    // Animate is heavier: 3 req/min for guests, 10 for authed
-    const rl = await checkRateLimit(rateLimitKey, authedUserId ? 10 : 3);
-    if (!rl.allowed) {
-      return NextResponse.json(
-        { error: `Rate limit exceeded. Try again in ${rl.retryAfter}s.` },
-        { status: 429 },
-      );
-    }
+  // Animate is heavier: 3 req/min for guests, 10 for authed
+  const rl = await checkRateLimit(rateLimitKey, authedUserId ? 10 : 3);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: `Rate limit exceeded. Try again in ${rl.retryAfter}s.` },
+      { status: 429 },
+    );
   }
 
   // Parse body

@@ -2694,8 +2694,7 @@ function StudioInner() {
   // HD credit balance (hosted mode)
   const [hdBalance, setHdBalance] = useState<{ monthly: number; topUp: number } | null>(null);
 
-  // BYOK keys (only used in self-hosted mode)
-  const isSelfHosted = process.env.NEXT_PUBLIC_SELF_HOSTED === 'true';
+  // BYOK keys (kept for localStorage restore, not used in hosted mode)
   const [apiKeys, setApiKeys] = useState<Record<Provider, string>>({
     replicate:    '',
     fal:          '',
@@ -2736,12 +2735,11 @@ function StudioInner() {
 
   // ── Fetch HD credit balance (hosted mode only) ─────────────────────────────
   const refreshCredits = useCallback(() => {
-    if (isSelfHosted) return;
     fetch('/api/credits')
       .then((r) => r.ok ? r.json() : null)
       .then((d) => { if (d) setHdBalance({ monthly: d.monthlyRemaining ?? 0, topUp: d.topUpCredits ?? 0 }); })
       .catch(() => {});
-  }, [isSelfHosted]);
+  }, []);
 
   useEffect(() => { refreshCredits(); }, [refreshCredits]);
 
@@ -2752,12 +2750,11 @@ function StudioInner() {
 
   // ── Init isPublic from user's default preference ───────────────────────────
   useEffect(() => {
-    if (isSelfHosted) return;
     fetch('/api/user/settings')
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d?.publicGenerationsDefault) setIsPublic(true); })
       .catch(() => {});
-  }, [isSelfHosted]);
+  }, []);
 
   // ── Restore BYOK keys from localStorage ───────────────────────────────────
   useEffect(() => {
@@ -3313,27 +3310,7 @@ function StudioInner() {
             >
               History
             </button>
-            {/* Settings — only in self-hosted mode */}
-            {isSelfHosted && (
-              <button
-                type="button"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--text-disabled)',
-                  padding: '0.2rem 0.5rem',
-                  fontSize: '0.68rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.02em',
-                }}
-                onClick={() => setShowSettings(true)}
-                title="Provider settings"
-                aria-label="Open provider settings"
-              >
-                Config
-              </button>
-            )}
+            {/* Settings button removed — cloud-only mode */}
           </div>
         </div>
 
@@ -3718,9 +3695,8 @@ function StudioInner() {
           className="flex flex-col gap-2 p-4 flex-shrink-0"
           style={{ borderTop: '1px solid var(--surface-border)' }}
         >
-          {/* HD / Standard quality toggle (hosted mode only) */}
-          {!isSelfHosted && (
-            <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
+          {/* HD / Standard quality toggle */}
+          <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
               <span style={{ fontSize: '0.78rem', color: 'var(--text-muted, #666)' }}>
                 Quality
               </span>
@@ -3760,7 +3736,6 @@ function StudioInner() {
                 </button>
               </div>
             </div>
-          )}
 
           <button
             data-generate-btn
@@ -3799,8 +3774,8 @@ function StudioInner() {
             </div>
           )}
 
-          {/* HD credit balance widget (hosted mode, HD selected) */}
-          {!isSelfHosted && useHD && hdBalance !== null && (
+          {/* HD credit balance widget (HD selected) */}
+          {useHD && hdBalance !== null && (
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               fontSize: '0.72rem', color: 'var(--text-faint)', padding: '0.25rem 0',
@@ -3824,14 +3799,14 @@ function StudioInner() {
               </a>
             </div>
           )}
-          {!isSelfHosted && useHD && hdBalance === null && (
+          {useHD && hdBalance === null && (
             <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.25rem' }}>
               <a href="/billing" style={{ color: '#a78bfa', textDecoration: 'none' }}>
                 HD credits — sign in or upgrade →
               </a>
             </div>
           )}
-          {!isSelfHosted && !useHD && (
+          {!useHD && (
             <>
               {/* Batch count toggle */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', paddingTop: '0.25rem' }}>
@@ -3996,16 +3971,6 @@ function StudioInner() {
         )}
       </div>
 
-      {/* Settings modal — only in self-hosted mode */}
-      {isSelfHosted && showSettings && (
-        <SettingsModal
-          providers={providers}
-          apiKeys={apiKeys}
-          comfyuiHost={comfyuiHost}
-          onSave={handleSaveSettings}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
       {showShortcuts && (
         <div
           className="modal-overlay"

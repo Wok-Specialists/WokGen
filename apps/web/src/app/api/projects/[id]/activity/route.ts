@@ -18,7 +18,7 @@ export async function GET(
 ) {
   const session = await auth();
   const userId  = session?.user?.id;
-  if (!userId && !process.env.SELF_HOSTED) {
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -33,10 +33,10 @@ export async function GET(
     select: { userId: true },
   });
   if (!project) return NextResponse.json({ error: 'Project not found' }, { status: 404 });
-  if (!process.env.SELF_HOSTED && project.userId !== userId) {
+  if (project.userId !== userId) {
     // Allow if user is a project member
     const membership = await prisma.projectMember.findFirst({
-      where: { projectId, userId: userId! },
+      where: { projectId, userId: userId },
     });
     if (!membership) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
@@ -80,7 +80,7 @@ export async function POST(
 ) {
   const session = await auth();
   const userId  = session?.user?.id;
-  if (!userId && !process.env.SELF_HOSTED) {
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -24,8 +24,8 @@ const CreateKeySchema = z.object({
 export async function GET() {
   try {
     const session = await auth();
-    if (!session?.user?.id && !process.env.SELF_HOSTED) return API_ERRORS.UNAUTHORIZED();
-    const userId = session?.user?.id ?? 'self-hosted';
+    if (!session?.user?.id) return API_ERRORS.UNAUTHORIZED();
+    const userId = session.user.id;
 
     const keys = await dbQuery(prisma.apiKey.findMany({
       where:   { userId, isActive: true },
@@ -53,8 +53,8 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user?.id && !process.env.SELF_HOSTED) return API_ERRORS.UNAUTHORIZED();
-    const userId = session?.user?.id ?? 'self-hosted';
+    if (!session?.user?.id) return API_ERRORS.UNAUTHORIZED();
+    const userId = session.user.id;
 
     let rawBody: unknown;
     try { rawBody = await req.json(); } catch { return API_ERRORS.BAD_REQUEST('Invalid JSON body'); }
