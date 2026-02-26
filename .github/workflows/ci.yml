@@ -19,7 +19,7 @@ jobs:
       - run: npm ci --legacy-peer-deps --ignore-scripts
       - name: Generate Prisma client
         run: |
-          rm -rf apps/web/node_modules/.prisma apps/web/node_modules/@prisma/client
+          rm -rf apps/web/node_modules/.prisma
           cd apps/web && npx prisma generate
       - name: TypeScript check
         run: cd apps/web && npx tsc --noEmit
