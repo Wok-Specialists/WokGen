@@ -199,6 +199,14 @@ model Job {
   /// Error message when status = "failed"
   error String?
 
+  // ---- Retry tracking -------------------------------------------------------
+  /// Number of execution attempts (incremented on each retry)
+  attemptCount Int       @default(0)
+  /// Last error message captured during a failed attempt
+  lastError    String?
+  /// Earliest time this job may be retried (null = retry immediately)
+  nextRetryAt  DateTime?
+
   // ---- Metadata -------------------------------------------------------------
   /// Whether this job is visible in the public gallery
   isPublic Boolean @default(false)
@@ -238,6 +246,7 @@ model Job {
   comments     AssetComment[]
 
   @@index([userId])
+  @@index([userId, status])
   @@index([status])
   @@index([tool])
   @@index([mode, isPublic, createdAt])
