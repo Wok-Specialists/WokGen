@@ -54,8 +54,8 @@ const BASE_STYLE: CSSProperties = {
 
 const VARIANT_STYLES: Record<ButtonVariant, CSSProperties> = {
   primary: {
-    background:  'var(--accent, #41A6F6)',
-    borderColor: 'var(--accent, #41A6F6)',
+    background:  'var(--accent)',
+    borderColor: 'var(--accent)',
     color:       '#0d0d14',
   },
   secondary: {
@@ -86,7 +86,7 @@ const VARIANT_STYLES: Record<ButtonVariant, CSSProperties> = {
   link: {
     background:  'transparent',
     borderColor: 'transparent',
-    color:       'var(--accent, #41A6F6)',
+    color:       'var(--accent)',
     textDecoration: 'underline',
     textUnderlineOffset: '3px',
   },
@@ -226,7 +226,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ? '#EF7D57'
         : variant === 'success'
         ? '#38B764'
-        : 'var(--accent, #41A6F6)';
+        : 'var(--accent)';
 
     const spinnerSize = size === 'xs' ? 'xs' : size === 'sm' ? 'xs' : size === 'lg' ? 'sm' : 'xs';
 
