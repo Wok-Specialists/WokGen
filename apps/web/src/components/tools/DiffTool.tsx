@@ -140,22 +140,22 @@ export default function DiffTool() {
         }
         .diff-tool__stats { display: flex; gap: 10px; flex-wrap: wrap; }
         .diff-tool__stat { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
-        .diff-tool__stat--added   { background: rgba(52,211,153,0.12); color: #34d399; }
-        .diff-tool__stat--removed { background: rgba(248,113,113,0.12); color: #f87171; }
+        .diff-tool__stat--added   { background: var(--success-bg); color: var(--success); }
+        .diff-tool__stat--removed { background: var(--danger-bg); color: var(--danger); }
         .diff-tool__stat--unchanged { background: rgba(148,163,184,0.1); color: var(--text-muted); }
         .diff-tool__lines { overflow: auto; }
         .diff-tool__line {
           display: flex; font-size: 12px; font-family: 'Menlo','Consolas',monospace;
           line-height: 1.6; padding: 0 14px;
         }
-        .diff-tool__line--added   { background: rgba(52,211,153,0.08); }
+        .diff-tool__line--added   { background: var(--success-bg); }
         .diff-tool__line--removed { background: rgba(248,113,113,0.08); }
         .diff-tool__line-marker {
           width: 16px; flex-shrink: 0; font-weight: 700;
           color: var(--text-muted);
         }
-        .diff-tool__line--added   .diff-tool__line-marker { color: #34d399; }
-        .diff-tool__line--removed .diff-tool__line-marker { color: #f87171; }
+        .diff-tool__line--added   .diff-tool__line-marker { color: var(--success); }
+        .diff-tool__line--removed .diff-tool__line-marker { color: var(--danger); }
         .diff-tool__line-text { color: var(--text-secondary); white-space: pre-wrap; word-break: break-all; }
         .diff-tool__line--added   .diff-tool__line-text { color: #a7f3d0; }
         .diff-tool__line--removed .diff-tool__line-text { color: #fca5a5; }

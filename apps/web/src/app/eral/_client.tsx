@@ -961,7 +961,7 @@ export function EralPage({ userId }: { userId?: string }) {
               <p className="eral-v2-memory-panel__title">
                 Memory
                 {Object.values(memory).filter(Boolean).length > 0 && (
-                  <span style={{ marginLeft: 6, fontSize: '0.7rem', padding: '1px 6px', borderRadius: 10, background: 'var(--accent-subtle, rgba(129,140,248,0.15))', color: 'var(--accent)', fontWeight: 600 }}>
+                  <span style={{ marginLeft: 6, fontSize: '0.7rem', padding: '1px 6px', borderRadius: 10, background: 'var(--accent-subtle, var(--accent-glow))', color: 'var(--accent)', fontWeight: 600 }}>
                     {Object.values(memory).filter(Boolean).length}
                   </span>
                 )}
@@ -1557,7 +1557,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
               border: '2px solid var(--accent-glow)',
               cursor: callState === 'processing' ? 'default' : 'pointer',
               fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 20px rgba(129,140,248,0.3)',
+              boxShadow: '0 4px 20px var(--accent-glow)',
               transition: 'background 0.2s',
             }}
             title={callState === 'idle' ? 'Tap to speak' : 'Tap to stop'}
@@ -1816,7 +1816,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           align-items: center;
           gap: 6px;
           padding: 4px 10px;
-          background: rgba(129,140,248,0.08);
+          background: var(--accent-subtle);
           border: 1px solid var(--accent-glow);
           border-radius: 20px;
           color: var(--accent-secondary, var(--accent));
@@ -1825,7 +1825,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           cursor: pointer;
           transition: background 0.15s;
         }
-        .eral-model-pill:hover { background: rgba(129,140,248,0.15); }
+        .eral-model-pill:hover { background: var(--accent-glow); }
         .eral-model-dot {
           width: 6px; height: 6px;
           background: var(--accent-secondary, var(--accent));
@@ -1860,7 +1860,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-model-option:last-child { border-bottom: none; }
         .eral-model-option:hover { background: var(--surface-card); }
-        .eral-model-option-active { background: rgba(129,140,248,0.08) !important; }
+        .eral-model-option-active { background: var(--accent-subtle) !important; }
         .eral-model-option-label { font-size: 13px; font-weight: 500; color: var(--accent-secondary, var(--accent)); }
         .eral-model-option-desc  { font-size: 11px; color: var(--text-muted); }
 
@@ -1874,7 +1874,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           cursor: pointer;
           max-width: 160px;
         }
-        .eral-project-select:focus { outline: none; border-color: rgba(129,140,248,0.35); }
+        .eral-project-select:focus { outline: none; border-color: var(--accent-glow); }
 
         .eral-share-btn {
           padding: 4px 12px;
@@ -1898,7 +1898,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           transition: background 0.15s, border-color 0.15s;
         }
         .eral-call-btn:hover {
-          background: rgba(129,140,248,0.18);
+          background: var(--accent-glow);
           border-color: var(--accent-glow);
         }
         .eral-call-btn-active {
@@ -1984,8 +1984,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           line-height: 1.4;
         }
         .eral-suggestion:hover {
-          border-color: rgba(129,140,248,0.3);
-          background: rgba(129,140,248,0.06);
+          border-color: var(--accent-glow);
+          background: var(--accent-subtle);
           color: var(--text);
         }
         .eral-suggestion-icon { font-size: 14px; flex-shrink: 0; }
@@ -2012,7 +2012,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(129,140,248,0.15);
+          background: var(--accent-glow);
           border: 1px solid var(--accent-glow);
           flex-shrink: 0;
           margin-top: 2px;
@@ -2060,7 +2060,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-typing { display: flex; align-items: center; gap: 5px; padding: 4px 2px; }
         .eral-typing span {
           width: 7px; height: 7px; border-radius: 50%;
-          background: rgba(129,140,248,0.65);
+          background: var(--accent);
           animation: eral-bounce 1.2s ease infinite;
         }
         .eral-typing span:nth-child(2) { animation-delay: 0.2s; }
@@ -2129,7 +2129,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           outline: none;
           min-height: 180px;
         }
-        .eral-notepad:focus { border-color: rgba(129,140,248,0.35); }
+        .eral-notepad:focus { border-color: var(--accent-glow); }
         .eral-notepad::placeholder { color: var(--text-faint); }
         .eral-notepad-footer {
           display: flex;
@@ -2212,7 +2212,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-input-box:focus-within {
           border-color: var(--accent-glow);
-          box-shadow: 0 0 0 3px rgba(129,140,248,0.08);
+          box-shadow: 0 0 0 3px var(--accent-subtle);
         }
         .eral-textarea {
           flex: 1;
@@ -2296,7 +2296,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-cap-chip:hover:not(:disabled) {
           background: var(--accent-subtle);
-          border-color: rgba(129,140,248,0.3);
+          border-color: var(--accent-glow);
           color: var(--accent-2);
         }
         .eral-cap-chip:disabled {
@@ -2335,7 +2335,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-followup-chip {
           padding: 4px 10px;
-          background: rgba(129,140,248,0.06);
+          background: var(--accent-subtle);
           border: 1px solid var(--accent-glow);
           border-radius: 12px;
           color: var(--accent-secondary, var(--accent));
@@ -2345,7 +2345,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           white-space: nowrap;
         }
         .eral-followup-chip:hover {
-          background: rgba(129,140,248,0.14);
+          background: var(--accent-glow);
           border-color: var(--accent-glow);
         }
 
@@ -2408,8 +2408,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-command-chip {
           padding: 5px 12px;
-          background: rgba(129,140,248,0.07);
-          border: 1px solid rgba(129,140,248,0.15);
+          background: var(--accent-subtle);
+          border: 1px solid var(--accent-glow);
           border-radius: 14px;
           color: var(--text-muted);
           font-size: 12px;
@@ -2418,8 +2418,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           font-style: italic;
         }
         .eral-command-chip:hover {
-          background: rgba(129,140,248,0.14);
-          border-color: rgba(129,140,248,0.3);
+          background: var(--accent-glow);
+          border-color: var(--accent-glow);
           color: var(--accent-secondary, var(--accent));
         }
 

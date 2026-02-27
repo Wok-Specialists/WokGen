@@ -166,9 +166,9 @@ export default function ColorConverterTool() {
           border: 1px solid var(--surface-border); flex-shrink: 0;
         }
         .color-conv__error {
-          padding: 10px 14px; background: rgba(239,68,68,0.08);
-          border: 1px solid rgba(239,68,68,0.2); border-radius: 6px;
-          color: #f87171; font-size: 13px;
+          padding: 10px 14px; background: var(--danger-bg);
+          border: 1px solid var(--danger-border); border-radius: 6px;
+          color: var(--danger); font-size: 13px;
         }
         .color-conv__results {
           background: var(--bg-surface); border: 1px solid var(--surface-border);

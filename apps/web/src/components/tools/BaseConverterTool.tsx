@@ -127,7 +127,7 @@ export default function BaseConverterTool() {
           padding: 12px 16px; background: var(--bg-surface);
           border: 1px solid var(--surface-border); border-radius: 8px;
         }
-        .base-conv__result--active { border-color: rgba(129,140,248,0.4); }
+        .base-conv__result--active { border-color: var(--accent); }
         .base-conv__result-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .base-conv__result-label { font-size: 12px; font-weight: 600; color: var(--text); }
         .base-conv__result-prefix { font-size: 11px; color: var(--text-muted); font-family: 'Menlo','Consolas',monospace; }

@@ -135,9 +135,9 @@ export default function JwtDebuggerTool() {
         }
         .jwt-tool__textarea:focus { border-color: #818cf8; }
         .jwt-tool__error {
-          padding: 10px 14px; background: rgba(239,68,68,0.08);
-          border: 1px solid rgba(239,68,68,0.2); border-radius: 6px;
-          color: #f87171; font-size: 13px;
+          padding: 10px 14px; background: var(--danger-bg);
+          border: 1px solid var(--danger-border); border-radius: 6px;
+          color: var(--danger); font-size: 13px;
         }
         .jwt-tool__sections { display: flex; flex-direction: column; gap: 14px; }
         .jwt-tool__section {
@@ -154,13 +154,13 @@ export default function JwtDebuggerTool() {
           text-transform: uppercase; letter-spacing: 0.05em;
         }
         .jwt-tool__section-label--header  { background: rgba(96,165,250,0.12); color: #60a5fa; }
-        .jwt-tool__section-label--payload { background: rgba(52,211,153,0.12); color: #34d399; }
-        .jwt-tool__section-label--sig     { background: rgba(248,113,113,0.12); color: #f87171; }
+        .jwt-tool__section-label--payload { background: var(--success-bg); color: var(--success); }
+        .jwt-tool__section-label--sig     { background: var(--danger-bg); color: var(--danger); }
         .jwt-tool__exp {
           font-size: 11px; padding: 2px 7px; border-radius: 4px; margin-left: auto;
         }
-        .jwt-tool__exp--valid   { background: rgba(52,211,153,0.1); color: #34d399; }
-        .jwt-tool__exp--expired { background: rgba(239,68,68,0.1);  color: #f87171; }
+        .jwt-tool__exp--valid   { background: var(--success-bg); color: var(--success); }
+        .jwt-tool__exp--expired { background: var(--danger-bg);  color: var(--danger); }
         .jwt-tool__copy-btn {
           margin-left: auto; padding: 3px 10px; font-size: 11px; cursor: pointer;
           background: var(--surface-hover); color: var(--text-muted);
@@ -174,7 +174,7 @@ export default function JwtDebuggerTool() {
           line-height: 1.6; color: var(--text-secondary); margin: 0;
           overflow: auto; white-space: pre-wrap; word-break: break-all;
         }
-        .jwt-tool__code--sig { color: #f87171; }
+        .jwt-tool__code--sig { color: var(--danger); }
       `}</style>
     </div>
   );

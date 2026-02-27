@@ -37,7 +37,7 @@ function getColor(code: number) {
   if (code < 300) return { bg: 'var(--success-bg)', border: 'var(--success-glow)', text: 'var(--green)' };
   if (code < 400) return { bg: 'var(--warning-bg)', border: 'var(--warning-bg)', text: 'var(--warning)' };
   if (code < 500) return { bg: 'var(--danger-bg)', border: 'var(--danger-border)', text: 'var(--danger)' };
-  return { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: '#ef4444' };
+  return { bg: 'var(--danger-bg)', border: 'var(--danger-border)', text: 'var(--danger)' };
 }
 
 export default function HttpStatusTool() {

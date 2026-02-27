@@ -268,8 +268,8 @@ export default function StudioToolsPage() {
           transition: border-color 0.15s, background 0.15s;
         }
         .tool-card:hover {
-          border-color: rgba(129,140,248,0.4);
-          background: rgba(129,140,248,0.04);
+          border-color: var(--accent);
+          background: var(--accent-subtle);
         }
         .tool-card__top {
           display: flex;
@@ -284,7 +284,7 @@ export default function StudioToolsPage() {
           width: 30px;
           height: 30px;
           border-radius: 7px;
-          background: rgba(129,140,248,0.1);
+          background: var(--accent-subtle);
           color: var(--accent);
         }
         .tools-badge {

@@ -158,7 +158,7 @@ export default function MdToHtmlTool() {
           padding: 3px 10px; font-size: 12px; border-radius: 4px; cursor: pointer;
           background: none; border: 1px solid transparent; color: var(--text-muted);
         }
-        .md2h-tool__tab.active { background: rgba(129,140,248,0.15); border-color: #818cf8; color: #818cf8; }
+        .md2h-tool__tab.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
         .md2h-tool__textarea {
           flex: 1; padding: 14px; font-size: 13px; font-family: 'Menlo','Consolas',monospace;
           background: var(--bg-surface); color: var(--text); border: none; outline: none;
@@ -179,7 +179,7 @@ export default function MdToHtmlTool() {
         .md2h-tool__preview ul,.md2h-tool__preview ol { padding-left: 20px; margin: 0 0 8px; }
         .md2h-tool__preview li { margin: 2px 0; }
         .md2h-tool__preview code {
-          background: rgba(129,140,248,0.12); padding: 2px 5px; border-radius: 3px;
+          background: var(--accent-glow); padding: 2px 5px; border-radius: 3px;
           font-family: 'Menlo','Consolas',monospace; font-size: 12px;
         }
         .md2h-tool__preview pre {
@@ -191,7 +191,7 @@ export default function MdToHtmlTool() {
           border-left: 3px solid #818cf8; padding-left: 12px; color: var(--text-secondary);
           margin: 0 0 10px;
         }
-        .md2h-tool__preview a { color: #818cf8; text-decoration: underline; }
+        .md2h-tool__preview a { color: var(--accent); text-decoration: underline; }
         .md2h-tool__preview hr { border: none; border-top: 1px solid var(--surface-border); margin: 12px 0; }
         .md2h-tool__code {
           padding: 14px; font-size: 12px; font-family: 'Menlo','Consolas',monospace;

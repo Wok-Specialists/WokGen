@@ -161,17 +161,17 @@ export default function CronBuilderTool() {
           background: var(--bg); color: var(--text); border: 1px solid var(--surface-border);
           border-radius: 6px; outline: none; text-align: center;
         }
-        .cron-tool__input:focus { border-color: #818cf8; }
+        .cron-tool__input:focus { border-color: var(--accent); }
         .cron-tool__expr-row { display: flex; gap: 8px; }
         .cron-tool__expr-input {
           flex: 1; padding: 10px 12px; font-size: 14px; font-family: 'Menlo','Consolas',monospace;
           background: var(--bg); color: var(--text); border: 1px solid var(--surface-border);
           border-radius: 6px; outline: none;
         }
-        .cron-tool__expr-input:focus { border-color: #818cf8; }
+        .cron-tool__expr-input:focus { border-color: var(--accent); }
         .cron-tool__desc {
-          padding: 12px 16px; background: rgba(129,140,248,0.08);
-          border: 1px solid rgba(129,140,248,0.2); border-radius: 6px;
+          padding: 12px 16px; background: var(--accent-subtle);
+          border: 1px solid var(--accent-glow); border-radius: 6px;
           color: #a5b4fc; font-size: 14px;
         }
         .cron-tool__runs {

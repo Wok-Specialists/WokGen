@@ -169,7 +169,7 @@ export default function LinkScraperTool() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', maxHeight: '480px', overflowY: 'auto' }}>
               {filteredLinks.map((link, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '0.625rem', fontWeight: 700, padding: '0.1rem 0.35rem', borderRadius: '3px', background: link.type === 'internal' ? 'rgba(52,211,153,0.12)' : 'rgba(248,113,113,0.12)', color: link.type === 'internal' ? '#34d399' : '#f87171', flexShrink: 0 }}>
+                  <span style={{ fontSize: '0.625rem', fontWeight: 700, padding: '0.1rem 0.35rem', borderRadius: '3px', background: link.type === 'internal' ? 'var(--success-bg)' : 'var(--danger-bg)', color: link.type === 'internal' ? '#34d399' : '#f87171', flexShrink: 0 }}>
                     {link.type === 'internal' ? 'INT' : 'EXT'}
                   </span>
                   <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, textDecoration: 'none' }}>{link.url}</a>

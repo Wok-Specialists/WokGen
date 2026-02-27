@@ -150,8 +150,8 @@ function BackgroundRemoverToolInner() {
 
       {/* Error */}
       {status === 'error' && (
-        <div style={{ border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.08)', borderRadius: '10px', padding: '1rem' }}>
-          <p style={{ fontSize: '0.875rem', color: '#f87171', marginBottom: '0.625rem' }}>{error}</p>
+        <div style={{ border: '1px solid var(--danger-border)', background: 'var(--danger-bg)', borderRadius: '10px', padding: '1rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--danger)', marginBottom: '0.625rem' }}>{error}</p>
           <button
             onClick={handleRetry}
             style={{ fontSize: '0.75rem', color: '#fca5a5', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', padding: 0 }}
