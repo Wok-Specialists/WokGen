@@ -612,6 +612,9 @@ export function EralPage({ userId }: { userId?: string }) {
     return () => window.removeEventListener('keydown', handler);
   }, [createNewConv]);
 
+  // Abort any in-flight SSE stream on unmount
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
+
   const deleteConv = useCallback((id: string) => {
     setConversations((prev) => {
       const next = prev.filter((c) => c.id !== id);

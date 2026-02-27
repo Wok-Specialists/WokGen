@@ -8,11 +8,10 @@ const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/studio', label: 'Studio' },
   { href: '/tools', label: 'Tools' },
-  { href: '/gallery', label: 'Gallery' },
+  { href: '/community', label: 'Community' },
+  { href: '/eral', label: 'Eral' },
   { href: '/projects', label: 'Projects' },
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/eral', label: 'Eral' },
-  { href: '/support', label: 'Support' },
 ];
 
 export function MobileNav() {
