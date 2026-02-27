@@ -115,7 +115,7 @@ export default function BusinessDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#60a5fa' }} />
+              <span className="landing-badge-dot" style={{ background: "var(--blue)" }} />
               WokGen Business
             </div>
             <h1 className="docs-title">Business Documentation</h1>

@@ -113,7 +113,7 @@ export default function TextDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#10b981' }} />
+              <span className="landing-badge-dot" style={{ background: "var(--success)" }} />
               WokGen Text
             </div>
             <h1 className="docs-title">Text Documentation</h1>

@@ -94,7 +94,7 @@ export default function EralDocs() {
 
       <div className="docs-content-header">
         <div className="landing-badge">
-          <span className="landing-badge-dot" style={{ background: '#38bdf8' }} />
+          <span className="landing-badge-dot" style={{ background: "var(--info)" }} />
           <span>AI Director</span>
         </div>
         <h1 className="docs-title">WokGen Eral</h1>

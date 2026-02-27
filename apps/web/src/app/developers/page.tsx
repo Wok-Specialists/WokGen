@@ -31,10 +31,10 @@ export default function DevelopersPage() {
         <h2 style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '1.25rem' }}>Quick Start</h2>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '1.25rem 1.5rem', fontFamily: 'monospace', fontSize: '0.875rem', lineHeight: 1.8, overflowX: 'auto' }}>
           <div style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }}># Install WokSDK</div>
-          <div style={{ color: '#34d399' }}>npm install @wokspec/sdk</div>
+          <div style={{ color: 'var(--success)' }}>npm install @wokspec/sdk</div>
           <br />
           <div style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }}># Or use the REST API directly</div>
-          <div><span style={{ color: '#60a5fa' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
+          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt": "pixel art sword", "mode": "pixel"}'`}</span></div>
@@ -72,11 +72,11 @@ export default function DevelopersPage() {
         </p>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '1.25rem 1.5rem', fontFamily: 'monospace', fontSize: '0.875rem', lineHeight: 1.9, overflowX: 'auto' }}>
           <div style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{`// Copy wokgen.ts into your project (no npm install needed)`}</div>
-          <div><span style={{ color: '#60a5fa' }}>import</span> {`{ WokGenClient }`} <span style={{ color: '#60a5fa' }}>from</span> <span style={{ color: 'var(--accent)' }}>&apos;./wokgen&apos;</span>;</div>
+          <div><span style={{ color: 'var(--blue)' }}>import</span> {`{ WokGenClient }`} <span style={{ color: 'var(--blue)' }}>from</span> <span style={{ color: 'var(--accent)' }}>&apos;./wokgen&apos;</span>;</div>
           <br />
-          <div><span style={{ color: '#60a5fa' }}>const</span> client = <span style={{ color: '#60a5fa' }}>new</span> <span style={{ color: '#34d399' }}>WokGenClient</span>({`{ apiKey: 'wok_your_key_here' }`});</div>
+          <div><span style={{ color: 'var(--blue)' }}>const</span> client = <span style={{ color: 'var(--blue)' }}>new</span> <span style={{ color: 'var(--success)' }}>WokGenClient</span>({`{ apiKey: 'wok_your_key_here' }`});</div>
           <br />
-          <div><span style={{ color: '#60a5fa' }}>const</span> result = <span style={{ color: '#60a5fa' }}>await</span> client.<span style={{ color: '#34d399' }}>generate</span>({`{`}</div>
+          <div><span style={{ color: 'var(--blue)' }}>const</span> result = <span style={{ color: 'var(--blue)' }}>await</span> client.<span style={{ color: 'var(--success)' }}>generate</span>({`{`}</div>
           <div style={{ paddingLeft: '1.5rem' }}>prompt: <span style={{ color: 'var(--accent)' }}>&apos;pixel art spaceship, 32x32&apos;</span>,</div>
           <div style={{ paddingLeft: '1.5rem' }}>mode: <span style={{ color: 'var(--accent)' }}>&apos;pixel&apos;</span>,</div>
           <div style={{ paddingLeft: '1.5rem' }}>size: <span style={{ color: '#f59e0b' }}>512</span>,</div>
@@ -91,7 +91,7 @@ export default function DevelopersPage() {
         <h2 style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem' }}>Authentication</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.25rem', fontSize: '0.9375rem' }}>All API requests require an API key passed via the <code style={{ background: 'var(--surface-raised)', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>X-Api-Key</code> header.</p>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '1.25rem 1.5rem', fontFamily: 'monospace', fontSize: '0.875rem', lineHeight: 1.9, overflowX: 'auto' }}>
-          <div><span style={{ color: '#60a5fa' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
+          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;X-Api-Key: wok_your_key_here&quot;</span> \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
           <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt":"a pixel art spaceship in space","mode":"pixel","quality":"hd"}'`}</span></div>
@@ -117,10 +117,10 @@ export default function DevelopersPage() {
         </div>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '0.75rem', fontSize: '0.9375rem' }}>Every generation response includes rate limit headers:</p>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '1.25rem 1.5rem', fontFamily: 'monospace', fontSize: '0.875rem', lineHeight: 1.9, overflowX: 'auto' }}>
-          <div><span style={{ color: '#34d399' }}>X-Request-ID</span>: <span style={{ color: 'var(--accent)' }}>550e8400-e29b-41d4-a716-446655440000</span></div>
-          <div><span style={{ color: '#34d399' }}>X-RateLimit-Limit</span>: <span style={{ color: 'var(--accent)' }}>100</span></div>
-          <div><span style={{ color: '#34d399' }}>X-RateLimit-Remaining</span>: <span style={{ color: 'var(--accent)' }}>94</span></div>
-          <div><span style={{ color: '#34d399' }}>X-RateLimit-Reset</span>: <span style={{ color: 'var(--accent)' }}>1735689600</span> <span style={{ color: 'var(--text-muted)' }}>{`// Unix timestamp (UTC midnight)`}</span></div>
+          <div><span style={{ color: 'var(--success)' }}>X-Request-ID</span>: <span style={{ color: 'var(--accent)' }}>550e8400-e29b-41d4-a716-446655440000</span></div>
+          <div><span style={{ color: 'var(--success)' }}>X-RateLimit-Limit</span>: <span style={{ color: 'var(--accent)' }}>100</span></div>
+          <div><span style={{ color: 'var(--success)' }}>X-RateLimit-Remaining</span>: <span style={{ color: 'var(--accent)' }}>94</span></div>
+          <div><span style={{ color: 'var(--success)' }}>X-RateLimit-Reset</span>: <span style={{ color: 'var(--accent)' }}>1735689600</span> <span style={{ color: 'var(--text-muted)' }}>{`// Unix timestamp (UTC midnight)`}</span></div>
         </div>
       </section>
 

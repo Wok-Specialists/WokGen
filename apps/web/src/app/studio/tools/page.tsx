@@ -296,14 +296,14 @@ export default function StudioToolsPage() {
           letter-spacing: 0.05em;
         }
         .tools-badge--available {
-          background: rgba(52,211,153,0.1);
-          color: #34d399;
-          border: 1px solid rgba(52,211,153,0.2);
+          background: var(--success-bg);
+          color: var(--success);
+          border: 1px solid var(--success-glow);
         }
         .tools-badge--pro {
-          background: rgba(245,158,11,0.1);
-          color: #f59e0b;
-          border: 1px solid rgba(245,158,11,0.2);
+          background: var(--warning-bg);
+          color: var(--warning);
+          border: 1px solid var(--warning-bg);
         }
         .tool-card__name {
           font-size: 14px;

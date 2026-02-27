@@ -67,14 +67,14 @@ export default function ApiDocsPage() {
                   <div className="docs-api__op-body">
                     {op.description && <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>{op.description}</p>}
                     {op.security && op.security.length > 0 && (
-                      <div style={{ fontSize: 12, color: '#f59e0b', marginTop: 8 }}>Requires authentication</div>
+                      <div style={{ fontSize: 12, color: 'var(--warning)', marginTop: 8 }}>Requires authentication</div>
                     )}
                     <div style={{ marginTop: 12 }}>
                       <strong style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Responses</strong>
                       <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
                         {Object.entries(op.responses ?? {}).map(([code, res]) => (
                           <div key={code} style={{ display: 'flex', gap: 8, fontSize: 12 }}>
-                            <span style={{ fontFamily: 'monospace', color: code.startsWith('2') ? '#22c55e' : '#ef4444', fontWeight: 600, minWidth: 36 }}>{code}</span>
+                            <span style={{ fontFamily: 'monospace', color: code.startsWith('2') ? 'var(--success)' : 'var(--danger)', fontWeight: 600, minWidth: 36 }}>{code}</span>
                             <span style={{ color: 'var(--text-muted)' }}>{res.description}</span>
                           </div>
                         ))}

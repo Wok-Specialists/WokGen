@@ -110,7 +110,7 @@ export default function VoiceDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#f59e0b' }} />
+              <span className="landing-badge-dot" style={{ background: "var(--warning)" }} />
               WokGen Voice
             </div>
             <h1 className="docs-title">Voice Documentation</h1>

@@ -127,7 +127,7 @@ export default function VectorDocsPage() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#34d399' }} />
+              <span className="landing-badge-dot" style={{ background: "var(--success)" }} />
               WokGen Vector
             </div>
             <h1 className="docs-title">Vector Documentation</h1>

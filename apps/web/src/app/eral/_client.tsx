@@ -2252,17 +2252,17 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           font-size: 12px;
           background: var(--danger-bg);
           border: 1px solid var(--danger-border);
-          color: #ef4444;
+          color: var(--danger);
         }
-        .eral-stop-btn:hover { background: rgba(239,68,68,0.25) !important; }
+        .eral-stop-btn:hover { background: var(--danger-border) !important; }
 
         .eral-input-box--director {
-          border-color: rgba(234,179,8,0.3);
-          box-shadow: 0 0 0 3px rgba(234,179,8,0.05);
+          border-color: var(--warning-bg);
+          box-shadow: 0 0 0 3px var(--warning-bg);
         }
         .eral-input-box--director:focus-within {
-          border-color: rgba(234,179,8,0.5);
-          box-shadow: 0 0 0 3px rgba(234,179,8,0.1);
+          border-color: var(--warning);
+          box-shadow: 0 0 0 3px var(--warning-bg);
         }
 
         .eral-input-hint {
@@ -2358,8 +2358,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           align-items: center;
           gap: 7px;
           padding: 5px 10px 5px 9px;
-          background: rgba(34,211,238,0.06);
-          border: 1px solid rgba(34,211,238,0.18);
+          background: var(--teal-bg);
+          border: 1px solid var(--teal-glow);
           border-radius: 8px;
           font-size: 11.5px;
           color: var(--text-muted);
@@ -2369,7 +2369,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-tool-suggestion-links { flex: 1; display: flex; flex-wrap: wrap; gap: 4px 10px; }
         .eral-tool-suggestion-sep { margin: 0 4px; opacity: 0.4; }
         .eral-tool-suggestion-link {
-          color: #22d3ee;
+          color: var(--teal);
           text-decoration: none;
           font-weight: 500;
         }

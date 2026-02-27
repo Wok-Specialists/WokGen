@@ -67,7 +67,7 @@ export default function GettingStarted() {
       {/* Page header */}
       <div className="docs-content-header">
         <div className="landing-badge">
-          <span className="landing-badge-dot" style={{ background: '#7c5cfc' }} />
+          <span className="landing-badge-dot" style={{ background: "var(--accent)" }} />
           Getting Started
         </div>
         <h1 className="docs-title">Getting Started with WokGen</h1>

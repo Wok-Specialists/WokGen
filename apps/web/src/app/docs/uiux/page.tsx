@@ -119,7 +119,7 @@ export default function UIUXDocsPage() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#6366f1' }} />
+              <span className="landing-badge-dot" style={{ background: "var(--accent)" }} />
               WokGen UI/UX
             </div>
             <h1 className="docs-title">UI/UX Documentation</h1>
