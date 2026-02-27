@@ -21,8 +21,11 @@ export async function DELETE(req: NextRequest) {
   }
 
   try {
+    // Audit log before destructive delete
+    logger.info({ userId: session.user.id, email: session.user.email }, '[AUDIT] user account deletion initiated');
     // Cascade deletes handle jobs, subscriptions, gallery assets, projects, etc.
     await prisma.user.delete({ where: { id: session.user.id } });
+    logger.info({ userId: session.user.id }, '[AUDIT] user account deleted');
     return NextResponse.json({ ok: true });
   } catch (err) {
     logger.error({ err }, '[DELETE /api/user/delete]');
