@@ -258,7 +258,7 @@ export default function LibraryClient() {
             <div
               key={asset.id}
               className="group relative rounded overflow-hidden border hover:border-white/20 transition-all"
-              style={{ background: 'rgba(255,255,255,0.02)', borderColor: selected.has(asset.id) ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
+              style={{ background: 'var(--surface-card)', borderColor: selected.has(asset.id) ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
               onClick={() => toggleSelect(asset.id)}
             >
               {/* Checkbox overlay */}

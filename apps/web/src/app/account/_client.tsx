@@ -114,7 +114,7 @@ function ProfileTab({ user }: { user: Props['user'] }) {
 
       {/* Profile completion indicator */}
       {completionPct < 100 && (
-        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 600 }}>Profile completion</span>
             <span style={{ fontSize: '0.8125rem', color: 'var(--accent)' }}>{completionPct}%</span>

@@ -24,7 +24,7 @@ export default async function SettingsPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Profile */}
-        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
+        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Profile</h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '1.25rem' }}>
             {session.user.image ? (
@@ -43,7 +43,7 @@ export default async function SettingsPage() {
         </section>
 
         {/* Sign-in Methods */}
-        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
+        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>Sign-in Methods</h2>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>WokGen uses OAuth-only authentication — no passwords to manage or leak.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -51,7 +51,7 @@ export default async function SettingsPage() {
               { id: 'github', label: 'GitHub', icon: 'GH' },
               { id: 'google', label: 'Google', icon: 'G' },
             ] as const).map(provider => (
-              <div key={provider.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)' }}>
+              <div key={provider.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <span style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', fontWeight: 700 }}>{provider.icon}</span>
                   <span style={{ fontSize: '0.9375rem' }}>{provider.label}</span>
@@ -65,7 +65,7 @@ export default async function SettingsPage() {
         </section>
 
         {/* Notifications */}
-        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
+        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Notifications</h2>
           <NotificationSettingsClient />
         </section>
@@ -74,7 +74,7 @@ export default async function SettingsPage() {
         <AppearanceSettings />
 
         {/* API Access / Developer */}
-        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(255,255,255,0.02)' }}>
+        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>Developer</h2>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Create API keys, configure webhooks, and access the SDK to use WokGen programmatically.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

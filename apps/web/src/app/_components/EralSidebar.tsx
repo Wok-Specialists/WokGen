@@ -225,7 +225,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
     ? { id: 'esb-streaming', role: 'assistant', content: streamingContent, createdAt: Date.now() }
     : null;
 
-  const displayedMessages = messages.slice(-10);
+  const displayedMessages = messages.slice(-20);
 
   return (
     <>
