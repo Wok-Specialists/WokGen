@@ -171,7 +171,7 @@ export default function UnifiedStudioClient({ type }: Props) {
     fetch(`/api/projects/${projectId}/context`)
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setCtx(d as ProjectContext); })
-      .catch(() => {});
+      .catch(() => { /* context fetch failure is non-fatal */ });
   }, [projectId]);
 
   const navigate = (t: StudioType) => {

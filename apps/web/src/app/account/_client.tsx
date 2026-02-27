@@ -571,7 +571,11 @@ function ApiKeysTab() {
             <div key={k.id} className="account-v2-keys-table__row">
               <span className="account-v2-keys-table__name">{k.name}</span>
               <code className="account-v2-keys-table__prefix">{k.keyPrefix}…</code>
-              <span className="account-v2-keys-table__scopes">{k.scopes}</span>
+              <span className="account-v2-keys-table__scopes">
+                {k.scopes.split(',').map(s => s.trim()).filter(Boolean).map(s => (
+                  <code key={s} className="account-v2-scope-badge">{s}</code>
+                ))}
+              </span>
               <span className="account-v2-keys-table__date">{fmtDate(k.createdAt)}</span>
               <span className="account-v2-keys-table__date">{k.lastUsedAt ? fmtDate(k.lastUsedAt) : 'Never'}</span>
               <span className="account-v2-keys-table__count">{k.requestCount.toLocaleString()}</span>
