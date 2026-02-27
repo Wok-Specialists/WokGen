@@ -8177,7 +8177,7 @@ body {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-6px); }
 }
-@keyframes pulse-glow {
+@keyframes pulse-glow-shadow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(65,166,246,0); }
   50%       { box-shadow: 0 0 0 6px rgba(65,166,246,0.15); }
 }
@@ -15048,6 +15048,33 @@ select:focus-visible {
 }
 
 /* ── OSS Strip ───────────────────────────────────────────────────── */
+.homepage-extension {
+  padding: 5rem 1.5rem;
+  text-align: center;
+  background: var(--surface-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.homepage-extension-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.homepage-extension-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-glow);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+
 .homepage-oss {
   padding: 2rem 1.5rem;
   background: var(--bg-surface);

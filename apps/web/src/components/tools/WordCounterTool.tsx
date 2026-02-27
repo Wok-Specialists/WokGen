@@ -27,7 +27,7 @@ export default function WordCounterTool() {
           { label: 'Read time', value: `~${stats.readingTime} min` },
         ].map(s => (
           <div key={s.label} style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'var(--surface-card)', textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#a78bfa', marginBottom: '0.25rem' }}>{s.value}</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent)', marginBottom: '0.25rem' }}>{s.value}</div>
             <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{s.label}</div>
           </div>
         ))}

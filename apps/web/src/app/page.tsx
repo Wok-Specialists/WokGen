@@ -178,6 +178,24 @@ console.log(asset.url);`}</code></pre>
         </div>
       </section>
 
+      {/* ── Web Extension ─────────────────────────────────────────── */}
+      <section className="homepage-extension">
+        <div className="homepage-section-inner">
+          <div className="homepage-extension-inner">
+            <div className="homepage-extension-badge">In Development</div>
+            <h2 className="homepage-section-title" style={{ marginBottom: '0.75rem' }}>Browser Extension</h2>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '520px', margin: '0 auto 1.5rem' }}>
+              Generate assets directly from any browser context. Right-click → generate, inline editing, and direct upload to your WokGen workspace.
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href="https://github.com/WokSpec/WokGen" target="_blank" rel="noopener noreferrer" className="homepage-cta-ghost">
+                Follow on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Footer strip ──────────────────────────────────────────── */}
       <section className="homepage-oss">
         <div className="homepage-oss-inner">

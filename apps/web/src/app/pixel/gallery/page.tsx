@@ -1018,7 +1018,7 @@ export default function GalleryPage() {
                   padding: '7px 14px',
                   borderRadius: 6,
                   background: 'var(--accent)',
-                  color: '#0d0d14',
+                  color: 'var(--text-on-accent)',
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   textDecoration: 'none',

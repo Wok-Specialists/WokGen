@@ -1111,7 +1111,7 @@ function OutputPanel({
             transition={{ duration: 0.25, ease: 'easeOut' }}
             style={{
               background: 'transparent',
-              border: '1px solid rgba(167,139,250,.15)',
+              border: '1px solid var(--accent-subtle)',
               borderRadius: 4,
               padding: '0.75rem',
               maxWidth: '90%',
@@ -1731,7 +1731,7 @@ function GenerateForm({
                 padding: '2px 8px',
                 borderRadius: 4,
                 background: isEnhancing ? 'var(--surface-overlay)' : 'rgba(139,92,246,0.15)',
-                border: '1px solid rgba(139,92,246,0.4)',
+                border: '1px solid var(--accent-glow)',
                 color: isEnhancing ? 'var(--text-disabled)' : 'var(--accent)',
                 cursor: isEnhancing || !prompt.trim() ? 'not-allowed' : 'pointer',
                 opacity: !prompt.trim() ? 0.4 : 1,
@@ -3749,7 +3749,7 @@ function StudioInner() {
                     borderRadius: 4,
                     border: '1px solid',
                     borderColor: useHD ? '#f59e0b' : 'var(--surface-border, #2a2a2a)',
-                    background:  useHD ? 'rgba(245,158,11,.12)' : 'transparent',
+                    background:  useHD ? 'var(--warning-bg)' : 'transparent',
                     color:       useHD ? '#f59e0b' : 'var(--text-muted, #666)',
                     cursor: (!useHD && hdBalance !== null && hdBalance.monthly + hdBalance.topUp <= 0) ? 'not-allowed' : 'pointer',
                     fontWeight: useHD ? 600 : 400,

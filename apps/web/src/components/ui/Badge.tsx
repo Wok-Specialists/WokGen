@@ -53,14 +53,14 @@ const VARIANT_STYLES: Record<BadgeVariant, CSSProperties> = {
     color:      'var(--danger)',
   },
   muted: {
-    background: 'rgba(86,108,134,0.15)',
-    border:     '1px solid rgba(86,108,134,0.25)',
-    color:      '#566C86',
+    background: 'var(--surface-raised)',
+    border:     '1px solid var(--border)',
+    color:      'var(--text-muted)',
   },
   ghost: {
     background: 'transparent',
-    border:     '1px solid rgba(86,108,134,0.25)',
-    color:      '#94B0C2',
+    border:     '1px solid var(--border)',
+    color:      'var(--text-secondary)',
   },
 };
 

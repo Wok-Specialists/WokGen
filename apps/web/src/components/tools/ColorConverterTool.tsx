@@ -159,7 +159,7 @@ export default function ColorConverterTool() {
           background: var(--bg); color: var(--text); border: 1px solid var(--surface-border);
           border-radius: 6px; outline: none; width: 100%;
         }
-        .color-conv__input:focus { border-color: #818cf8; }
+        .color-conv__input:focus { border-color: var(--accent); }
         .color-conv__hint { font-size: 11px; color: var(--text-muted); }
         .color-conv__swatch {
           width: 64px; height: 64px; border-radius: 8px;
