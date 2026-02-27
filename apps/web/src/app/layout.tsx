@@ -155,7 +155,7 @@ function NavBar() {
 
       {/* Right side */}
       <div className="flex items-center gap-2 ml-auto">
-        <CmdKButton />
+        <span className="hidden sm:inline-flex"><CmdKButton /></span>
         <AppThemeToggle />
         <NavAuth />
         <MobileNav />

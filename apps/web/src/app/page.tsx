@@ -28,9 +28,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
 
       {/* ── Hero ── */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pt-28 pb-24">
-        <h1 className="text-5xl font-bold tracking-tight mb-4">WokGen Studio</h1>
-        <p className="text-[var(--text-muted)] text-lg max-w-md mb-8 leading-relaxed">
+      <section className="flex flex-col items-center justify-center text-center px-6 pt-16 sm:pt-28 pb-14 sm:pb-24">
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4">WokGen Studio</h1>
+        <p className="text-[var(--text-muted)] text-base sm:text-lg max-w-md mb-8 leading-relaxed">
           AI generation for pixel art, brand assets, vectors, UI, voice, and code.
         </p>
         <div className="flex gap-3 flex-wrap justify-center">

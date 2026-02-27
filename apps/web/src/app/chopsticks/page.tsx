@@ -113,23 +113,31 @@ export default function ChopsticksPage() {
 
         {/* Hero */}
         <div className="text-center space-y-4">
-          <h2 className="text-lg font-semibold">Setup</h2>          <h1 className="text-4xl font-bold tracking-tight">Chopsticks</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Chopsticks</h1>
           <p className="text-[var(--text-muted)] text-lg max-w-xl mx-auto">
             The official WokGen Discord bot. Generate assets, chat with Eral, browse the gallery,
             and automate your creative workflow — all without leaving Discord.
           </p>
-          <div className="flex gap-3 justify-center pt-2">
+          <div className="flex gap-3 justify-center pt-2 flex-wrap">
             <Link
               href="https://discord.com/api/oauth2/authorize?client_id=DISCORD_APPLICATION_ID&scope=applications.commands"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm"
             >
               Add to Discord
             </Link>
             <Link
+              href="https://github.com/WokSpec/WokGen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm"
+            >
+              Self Host
+            </Link>
+            <Link
               href="/studio"
-              className="inline-flex items-center gap-2 bg-[var(--surface-raised)] hover:bg-[var(--bg-elevated)] text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm"
+              className="inline-flex items-center gap-2 bg-[var(--surface-raised)] hover:bg-[var(--bg-elevated)] text-[var(--text)] font-semibold px-5 py-2.5 rounded-lg transition text-sm border border-[var(--border)]"
             >
               Open Studio
             </Link>
