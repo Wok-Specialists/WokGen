@@ -46,7 +46,7 @@ export default function RegexTesterPage() {
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>{result.count} match{result.count !== 1 ? 'es' : ''} found</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                   {result.matches.map((m, i) => (
-                    <code key={i} style={{ padding: '0.2rem 0.5rem', background: 'rgba(var(--accent-rgb, 129,140,248), 0.12)', border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.2)', borderRadius: '4px', fontSize: '0.8125rem', color: 'var(--accent)' }}>{m}</code>
+                    <code key={i} style={{ padding: '0.2rem 0.5rem', background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)', borderRadius: '4px', fontSize: '0.8125rem', color: 'var(--accent)' }}>{m}</code>
                   ))}
                 </div>
               </>

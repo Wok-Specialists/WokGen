@@ -142,7 +142,7 @@ export default function SkyboxPage() {
 
         {polling && (
           <div style={{ marginTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid rgba(var(--accent-rgb, 129,140,248), 0.3)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite' }} />
+            <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid var(--accent-glow)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite' }} />
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Rendering panorama... (~30–60 seconds)</span>
           </div>
         )}

@@ -232,7 +232,7 @@ export default function LibraryClient() {
         /* Designed empty state */
         <div style={{ textAlign: 'center', padding: '5rem 1.5rem', border: '1px dashed var(--border)', borderRadius: '12px' }}>
           <div style={{ width: '56px', height: '56px', margin: '0 auto 1.25rem', borderRadius: '14px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(var(--accent-rgb, 129,140,248), 0.7)" strokeWidth="1.5">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
               <rect x="3" y="3" width="18" height="18" rx="3" />
               <circle cx="9" cy="9" r="2" />
               <path d="m21 15-5-5L5 21" />

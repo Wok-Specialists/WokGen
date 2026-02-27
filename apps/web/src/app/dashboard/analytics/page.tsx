@@ -11,9 +11,9 @@ export const metadata: Metadata = { title: 'Analytics — WokGen' };
 // Map generation count to a heat colour (purple-scale like GitHub)
 function heatColour(count: number): string {
   if (count === 0) return 'var(--surface-raised)';
-  if (count === 1) return 'rgba(var(--accent-rgb, 129,140,248), 0.25)';
-  if (count <= 3) return 'rgba(var(--accent-rgb, 129,140,248), 0.5)';
-  if (count <= 5) return 'rgba(var(--accent-rgb, 129,140,248), 0.75)';
+  if (count === 1) return 'var(--accent-glow)';
+  if (count <= 3) return 'var(--accent)';
+  if (count <= 5) return 'var(--accent)';
   return 'rgba(167,139,250,1)';
 }
 
@@ -175,7 +175,7 @@ export default async function AnalyticsPage() {
                         height: '100%',
                         borderRadius: '3px',
                         width: `${pct}%`,
-                        backgroundColor: 'rgba(var(--accent-rgb, 129,140,248), 0.7)',
+                        backgroundColor: 'var(--accent)',
                       }}
                     />
                   </div>

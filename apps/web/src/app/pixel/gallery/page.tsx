@@ -357,8 +357,8 @@ function AssetModal({
               style={{
                 padding: '5px 10px',
                 borderRadius: 6,
-                background: 'var(--accent-muted, rgba(var(--accent-rgb, 129,140,248), 0.12))',
-                border: '1px solid var(--accent-border, rgba(var(--accent-rgb, 129,140,248), 0.3))',
+                background: 'var(--accent-muted, var(--accent-subtle))',
+                border: '1px solid var(--accent-border, var(--accent-glow))',
                 color: 'var(--accent)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',

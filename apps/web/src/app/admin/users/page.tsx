@@ -151,7 +151,7 @@ export default async function AdminUsersPage({
                           width: '28px',
                           height: '28px',
                           borderRadius: '50%',
-                          background: 'rgba(var(--accent-rgb, 129,140,248), 0.15)',
+                          background: 'var(--accent-glow)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -180,9 +180,9 @@ export default async function AdminUsersPage({
                         fontWeight: 600,
                         padding: '0.2rem 0.625rem',
                         borderRadius: '999px',
-                        background: 'rgba(var(--accent-rgb, 129,140,248), 0.12)',
+                        background: 'var(--accent-subtle)',
                         color: 'var(--accent)',
-                        border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.2)',
+                        border: '1px solid var(--accent-glow)',
                       }}
                     >
                       Admin

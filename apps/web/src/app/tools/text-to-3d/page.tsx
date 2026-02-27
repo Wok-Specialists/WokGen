@@ -124,8 +124,8 @@ export default function TextTo3DPage() {
         </button>
 
         {(polling || taskId) && !result && !error && (
-          <div style={{ marginTop: '1.5rem', padding: '1.25rem', border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.2)', borderRadius: '10px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid rgba(var(--accent-rgb, 129,140,248), 0.3)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite', flexShrink: 0 }} />
+          <div style={{ marginTop: '1.5rem', padding: '1.25rem', border: '1px solid var(--accent-glow)', borderRadius: '10px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--accent-glow)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite', flexShrink: 0 }} />
             <div>
               <div style={{ fontWeight: 600, fontSize: '0.9375rem' }}>{progressMessages[progressStep]}</div>
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Meshy AI is building your model. This takes 1–3 minutes.</div>

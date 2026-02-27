@@ -308,7 +308,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           color: var(--text-secondary);
         }
         .wok-studio-rail__item.--active {
-          background: var(--accent-subtle, rgba(var(--accent-rgb, 129,140,248), 0.06));
+          background: var(--accent-subtle, var(--accent-subtle));
           border-left-color: var(--accent);
           color: var(--accent);
         }

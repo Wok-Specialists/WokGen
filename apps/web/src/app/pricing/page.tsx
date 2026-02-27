@@ -132,7 +132,7 @@ export default function PricingPage() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent)' }}>FREE</span>
-                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.15)', color: 'var(--accent)', fontWeight: 600 }}>Forever</span>
+                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'var(--accent-glow)', color: 'var(--accent)', fontWeight: 600 }}>Forever</span>
               </div>
               <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>The full WokGen experience. Always free, no credit card required.</p>

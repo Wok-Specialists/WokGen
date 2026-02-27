@@ -10,7 +10,7 @@ export default function DevelopersPage() {
   return (
     <div style={{ maxWidth: '860px', margin: '0 auto', padding: '4rem 1.5rem' }}>
       <div style={{ marginBottom: '3rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.25rem 0.75rem', borderRadius: '999px', border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.3)', background: 'rgba(var(--accent-rgb, 129,140,248), 0.08)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent)', marginBottom: '1.5rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.25rem 0.75rem', borderRadius: '999px', border: '1px solid var(--accent-glow)', background: 'var(--accent-subtle)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent)', marginBottom: '1.5rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Developer Preview
         </div>
         <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: '1rem', lineHeight: 1.15 }}>
@@ -54,7 +54,7 @@ export default function DevelopersPage() {
             { method: 'GET', path: '/api/v1/me', desc: 'Get authenticated user info and usage stats' },
           ].map(e => (
             <div key={e.path} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '0.875rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px', background: e.method === 'GET' ? 'rgba(52,211,153,0.12)' : e.method === 'DELETE' ? 'rgba(248,113,113,0.12)' : 'rgba(var(--accent-rgb, 129,140,248), 0.12)', color: e.method === 'GET' ? '#34d399' : e.method === 'DELETE' ? '#f87171' : 'var(--accent)', flexShrink: 0 }}>{e.method}</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px', background: e.method === 'GET' ? 'rgba(52,211,153,0.12)' : e.method === 'DELETE' ? 'rgba(248,113,113,0.12)' : 'var(--accent-subtle)', color: e.method === 'GET' ? '#34d399' : e.method === 'DELETE' ? '#f87171' : 'var(--accent)', flexShrink: 0 }}>{e.method}</span>
               <code style={{ fontSize: '0.875rem', color: 'var(--text-primary)', flex: '0 0 auto', marginRight: '0.5rem' }}>{e.path}</code>
               <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{e.desc}</span>
             </div>
@@ -124,7 +124,7 @@ export default function DevelopersPage() {
         </div>
       </section>
 
-      <div style={{ marginTop: '3rem', padding: '1.5rem', border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.2)', borderRadius: '10px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)', textAlign: 'center' }}>
+      <div style={{ marginTop: '3rem', padding: '1.5rem', border: '1px solid var(--accent-glow)', borderRadius: '10px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)', textAlign: 'center' }}>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>WokAPI is in developer preview. Features and endpoints may change.</p>
         <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Manage your API keys at <Link href="/account/api-keys" style={{ color: 'var(--accent)' }}>dashboard API keys</Link> · Full platform management at <a href="https://dashboard.wokspec.org" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>dashboard.wokspec.org</a></p>
       </div>
