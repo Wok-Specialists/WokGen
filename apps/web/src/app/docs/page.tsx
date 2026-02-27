@@ -40,11 +40,11 @@ const SEARCH_INDEX = [
 
 const MODES = [
   { href: '/docs/pixel',    label: 'Pixel',    dot: 'var(--accent)', desc: 'Sprites, animations, tilesets' },
-  { href: '/docs/business', label: 'Business', dot: '#60a5fa', desc: 'Logos, brand kits, banners' },
-  { href: '/docs/vector',   label: 'Vector',   dot: '#34d399', desc: 'SVG icons, illustrations' },
-  { href: '/docs/uiux',     label: 'UI/UX',    dot: '#f472b6', desc: 'React components, design-to-code' },
-  { href: '/docs/voice',    label: 'Voice',    dot: '#f59e0b', desc: 'Text-to-speech, NPC dialogue' },
-  { href: '/docs/text',     label: 'Text',     dot: '#10b981', desc: 'Copywriting, blogs, emails' },
+  { href: '/docs/business', label: 'Business', dot: 'var(--blue, #60a5fa)', desc: 'Logos, brand kits, banners' },
+  { href: '/docs/vector',   label: 'Vector',   dot: 'var(--green, #34d399)', desc: 'SVG icons, illustrations' },
+  { href: '/docs/uiux',     label: 'UI/UX',    dot: 'var(--pink, #f472b6)', desc: 'React components, design-to-code' },
+  { href: '/docs/voice',    label: 'Voice',    dot: 'var(--yellow, #f59e0b)', desc: 'Text-to-speech, NPC dialogue' },
+  { href: '/docs/text',     label: 'Text',     dot: 'var(--teal, #10b981)', desc: 'Copywriting, blogs, emails' },
 ];
 
 const PLATFORM = [
