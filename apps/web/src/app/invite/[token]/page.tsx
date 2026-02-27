@@ -2,15 +2,16 @@ import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 
-export default async function InvitePage({ params }: { params: { token: string } }) {
+export default async function InvitePage({ params }: { params: Promise<{ token: string }> }) {
   const session = await auth();
-  
+  const { token } = await params;
+
   if (!session?.user?.id) {
-    redirect(`/api/auth/signin?callbackUrl=/invite/${params.token}`);
+    redirect(`/api/auth/signin?callbackUrl=/invite/${token}`);
   }
 
   const member = await prisma.projectMember.findFirst({
-    where: { inviteToken: params.token, inviteStatus: 'pending' },
+    where: { inviteToken: token, inviteStatus: 'pending' },
     include: { project: { select: { id: true, name: true } } },
   });
 

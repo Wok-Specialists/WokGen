@@ -6,19 +6,21 @@ import { prisma } from '@/lib/db';
 import ProjectDashboard from './_client';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-interface Props { params: { id: string } }
+interface Props { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props) {
-  const project = await prisma.project.findUnique({ where: { id: params.id }, select: { name: true } });
+  const { id } = await params;
+  const project = await prisma.project.findUnique({ where: { id }, select: { name: true } });
   return { title: project ? `${project.name} — WokGen Projects` : 'Project — WokGen' };
 }
 
 export default async function ProjectPage({ params }: Props) {
+  const { id } = await params;
   const session = await auth();
-  if (!session?.user?.id) redirect(`/login?callbackUrl=/projects/${params.id}`);
+  if (!session?.user?.id) redirect(`/login?callbackUrl=/projects/${id}`);
 
   const project = await prisma.project.findFirst({
-    where: { id: params.id, userId: session.user.id },
+    where: { id, userId: session.user.id },
     include: { brief: true },
   });
   if (!project) redirect('/');
@@ -26,7 +28,7 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <ErrorBoundary context="Project">
       <ProjectDashboard
-        projectId={params.id}
+        projectId={id}
         projectName={project.name}
         projectMode={project.mode}
         brief={project.brief ? {

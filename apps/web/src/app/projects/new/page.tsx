@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 export default async function NewProjectPage({
   searchParams,
 }: {
-  searchParams: { name?: string; brief?: string };
+  searchParams: Promise<{ name?: string; brief?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) redirect('/login?callbackUrl=/projects/new');
 
-  return <NewProjectClient name={searchParams.name ?? ''} brief={searchParams.brief ?? ''} />;
+  const { name, brief } = await searchParams;
+  return <NewProjectClient name={name ?? ''} brief={brief ?? ''} />;
 }

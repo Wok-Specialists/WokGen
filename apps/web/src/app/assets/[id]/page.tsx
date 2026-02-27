@@ -11,11 +11,12 @@ import type { Metadata } from 'next';
 // ---------------------------------------------------------------------------
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const asset = await getAsset(params.id);
+  const { id } = await params;
+  const asset = await getAsset(id);
   if (!asset) return { title: 'Asset not found — WokGen' };
 
   const title = asset.title || asset.prompt.slice(0, 60);
@@ -73,7 +74,8 @@ const RARITY_COLORS: Record<string, string> = {
 };
 
 export default async function AssetPage({ params }: Props) {
-  const asset = await getAsset(params.id);
+  const { id } = await params;
+  const asset = await getAsset(id);
   if (!asset) notFound();
 
   const rarityColor = RARITY_COLORS[asset.rarity ?? 'common'] ?? '#6b7280';

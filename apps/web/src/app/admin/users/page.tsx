@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Users — Admin | WokGen' };
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: { q?: string; page?: string };
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) redirect('/login');
@@ -25,8 +25,9 @@ export default async function AdminUsersPage({
     (process.env.ADMIN_EMAIL && currentUser?.email === process.env.ADMIN_EMAIL);
   if (!isAdmin) redirect('/');
 
-  const page = parseInt(searchParams.page || '1');
-  const q = searchParams.q || '';
+  const { q: rawQ, page: rawPage } = await searchParams;
+  const page = parseInt(rawPage || '1');
+  const q = rawQ || '';
   const perPage = 25;
 
   const where = q
