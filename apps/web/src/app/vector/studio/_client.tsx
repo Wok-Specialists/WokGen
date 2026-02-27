@@ -735,7 +735,7 @@ function VectorStudioInner() {
                     style={{
                       position: 'absolute', top: 8, right: 8, opacity: 0,
                       transition: 'opacity 0.15s', fontSize: '0.72rem', padding: '3px 8px',
-                      background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.2)',
+                      background: 'rgba(0,0,0,0.7)', border: '1px solid var(--border-strong, var(--border))',
                       borderRadius: 4, color: '#fff', cursor: bgRemoving ? 'wait' : 'pointer',
                     }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}

@@ -164,34 +164,34 @@ export default function DocumentEditorClient({
           align-items: center;
           gap: 6px;
           padding: 8px 20px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid var(--border);
           font-size: 0.72rem;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-faint);
           flex-shrink: 0;
         }
         .doc-editor__bc-link {
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
           text-decoration: none;
         }
         .doc-editor__bc-link:hover { color: var(--accent); }
         .doc-editor__bc-sep { opacity: 0.3; }
-        .doc-editor__bc-current { color: rgba(255,255,255,0.6); }
+        .doc-editor__bc-current { color: var(--text-secondary); }
         .doc-editor__save-state {
           margin-left: auto;
           font-size: 0.68rem;
-          color: rgba(255,255,255,0.2);
+          color: var(--text-faint);
         }
         .doc-editor__export-btn {
           background: none;
           border: 1px solid rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.3);
+          color: var(--text-faint);
           font-size: 0.68rem;
           padding: 3px 8px;
           border-radius: 2px;
           cursor: pointer;
           transition: color 0.1s, border-color 0.1s;
         }
-        .doc-editor__export-btn:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.2); }
+        .doc-editor__export-btn:hover { color: rgba(255,255,255,0.7); border-color: var(--text-faint); }
 
         .doc-editor__toolbar {
           display: flex;
@@ -219,7 +219,7 @@ export default function DocumentEditorClient({
           text-align: center;
         }
         .doc-editor__toolbar-btn:hover {
-          background: rgba(255,255,255,0.06);
+          background: var(--border);
           color: rgba(255,255,255,0.8);
         }
 

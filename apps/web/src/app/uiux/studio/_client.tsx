@@ -101,7 +101,7 @@ const STYLE_PRESETS: { id: StylePreset; label: string; colors: string[]; desc: s
   { id: 'corporate-clean',label: 'Corporate Clean', colors: ['#1e3a5f', '#f8fafc', '#3b82f6'], desc: 'Professional enterprise'     },
   { id: 'dev-terminal',   label: 'Dev Terminal',    colors: ['#0d1117', '#161b22', '#22c55e'], desc: 'Code editor inspired'        },
   { id: 'warm-brand',     label: 'Warm Brand',      colors: ['#fffbeb', '#fef3c7', '#f59e0b'], desc: 'Friendly community tone'     },
-  { id: 'glassmorphism',  label: 'Glassmorphism',   colors: ['#667eea', '#764ba2', 'rgba(255,255,255,0.1)'], desc: 'Frosted glass effect' },
+  { id: 'glassmorphism',  label: 'Glassmorphism',   colors: ['#667eea', '#764ba2', 'var(--border)'], desc: 'Frosted glass effect' },
   { id: 'brutalist',      label: 'Brutalist',       colors: ['#000000', '#ffffff', '#ff0000'], desc: 'Raw, bold, no-nonsense'      },
 ];
 

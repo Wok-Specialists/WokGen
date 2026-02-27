@@ -35,7 +35,7 @@ function ColorSwatch({ hex, onChange }: { hex: string; onChange: (h: string) => 
     <div ref={ref} className="color-swatch-wrap">
       <button type="button"
         className="color-swatch-btn"
-        style={{ background: hex, border: '2px solid rgba(255,255,255,0.15)', borderRadius: 6, width: 32, height: 32, cursor: 'pointer', flexShrink: 0 }}
+        style={{ background: hex, border: '2px solid var(--border)', borderRadius: 6, width: 32, height: 32, cursor: 'pointer', flexShrink: 0 }}
         onClick={() => setOpen(v => !v)}
         title="Pick color"
         aria-label={`Color picker: current color ${hex}`}

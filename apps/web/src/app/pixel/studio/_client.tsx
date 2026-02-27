@@ -1161,7 +1161,7 @@ function OutputPanel({
                 aria-hidden="true"
                 style={{
                   position: 'absolute', inset: '0.75rem',
-                  backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),rgba(255,255,255,0.08) calc(100%/var(--grid-cells))), repeating-linear-gradient(90deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),rgba(255,255,255,0.08) calc(100%/var(--grid-cells)))',
+                  backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),var(--surface-raised) calc(100%/var(--grid-cells))), repeating-linear-gradient(90deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),var(--surface-raised) calc(100%/var(--grid-cells)))',
                   // @ts-expect-error CSS custom prop
                   '--grid-cells': result?.width ?? 64,
                   pointerEvents: 'none',
@@ -3297,7 +3297,7 @@ function StudioInner() {
             <button
               type="button"
               style={{
-                background: showHistory ? 'rgba(255,255,255,0.06)' : 'none',
+                background: showHistory ? 'var(--surface-hover)' : 'none',
                 border: 'none',
                 cursor: 'pointer',
                 color: showHistory ? 'var(--text-secondary)' : 'var(--text-disabled)',
@@ -3788,7 +3788,7 @@ function StudioInner() {
                 Generate
                 <kbd
                   className="ml-auto opacity-60"
-                  style={{ fontSize: '0.65rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)' }}
+                  style={{ fontSize: '0.65rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)' }}
                 >
                   ⌘↵
                 </kbd>
