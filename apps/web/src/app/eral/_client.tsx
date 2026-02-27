@@ -424,9 +424,9 @@ function MessageBubble({
         {!isUser && !isStreaming && msg.isError && msg.retryText && onFollowUp && (
           <button type="button"
             onClick={() => onFollowUp(msg.retryText!)}
-            style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
-            onMouseOver={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.8)')}
-            onMouseOut={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+            style={{ marginTop: 6, fontSize: 12, color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
+            onMouseOver={e => (e.currentTarget.style.color = 'var(--text)')}
+            onMouseOut={e => (e.currentTarget.style.color = 'var(--text-faint)')}
           >
             ↺ Retry
           </button>
@@ -1505,7 +1505,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
               border: '1px solid rgba(129,140,248,0.2)',
             }}>
               {callTranscript.user && (
-                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: '0 0 8px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: '0 0 8px' }}>
                   <span style={{ color: 'var(--accent-secondary, var(--accent))', fontWeight: 600 }}>You: </span>
                   {callTranscript.user}
                 </p>
@@ -1657,7 +1657,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           border-radius: 3px;
           flex-shrink: 0;
         }
-        .eral-sidebar-toggle:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .eral-sidebar-toggle:hover { color: var(--text); background: var(--surface-hover); }
 
         .eral-new-chat-btn {
           margin: 10px 10px 6px;
@@ -1694,7 +1694,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           gap: 6px;
           transition: background 0.1s;
         }
-        .eral-conv-item:hover { background: rgba(255,255,255,0.04); }
+        .eral-conv-item:hover { background: var(--surface-card); }
         .eral-conv-item-active { background: rgba(129,140,248,0.1) !important; }
         .eral-conv-title {
           font-size: 12px;
@@ -1755,7 +1755,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           align-items: center;
           gap: 2px;
           padding: 5px 4px;
-          background: rgba(255,255,255,0.04);
+          background: var(--surface-card);
           border: 1px solid var(--border);
           border-radius: 6px;
           text-decoration: none;
@@ -1859,7 +1859,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           transition: background 0.1s;
         }
         .eral-model-option:last-child { border-bottom: none; }
-        .eral-model-option:hover { background: rgba(255,255,255,0.04); }
+        .eral-model-option:hover { background: var(--surface-card); }
         .eral-model-option-active { background: rgba(129,140,248,0.08) !important; }
         .eral-model-option-label { font-size: 13px; font-weight: 500; color: var(--accent-secondary, var(--accent)); }
         .eral-model-option-desc  { font-size: 11px; color: var(--text-muted); }
@@ -1867,7 +1867,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-project-select {
           font-size: 11px;
           background: transparent;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--border);
           border-radius: 4px;
           color: var(--text-muted);
           padding: 3px 6px;
@@ -1878,7 +1878,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
 
         .eral-share-btn {
           padding: 4px 12px;
-          background: rgba(255,255,255,0.04);
+          background: var(--surface-card);
           border: 1px solid var(--border);
           border-radius: 4px;
           color: var(--text-muted);
@@ -1973,8 +1973,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           align-items: flex-start;
           gap: 8px;
           padding: 10px 12px;
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--surface-card);
+          border: 1px solid var(--border);
           border-radius: 6px;
           color: var(--text-muted);
           font-size: 12px;
@@ -2018,7 +2018,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           margin-top: 2px;
         }
         .eral-avatar-user {
-          background: rgba(255,255,255,0.05);
+          background: var(--surface-hover);
           border-color: var(--border);
         }
 
@@ -2038,8 +2038,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           border-radius: 8px 2px 8px 8px;
         }
         .eral-bubble-assistant {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: var(--surface-card);
+          border: 1px solid var(--surface-hover);
           color: var(--text);
           border-radius: 2px 8px 8px 8px;
         }
@@ -2117,7 +2117,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-notepad {
           flex: 1;
-          background: rgba(255,255,255,0.03);
+          background: var(--surface-card);
           border: 1px solid var(--border);
           border-radius: 6px;
           color: var(--text);
@@ -2160,7 +2160,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-model-tag, .eral-time-tag {
           font-size: 10px;
           color: var(--text-faint);
-          background: rgba(255,255,255,0.04);
+          background: var(--surface-card);
           border-radius: 3px;
           padding: 1px 5px;
         }
@@ -2176,7 +2176,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           transition: opacity 0.15s;
         }
         .eral-bubble-wrap:hover .eral-copy-msg-btn { opacity: 1; }
-        .eral-copy-msg-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .eral-copy-msg-btn:hover { color: var(--text); background: var(--surface-hover); }
 
         /* Markdown prose — see globals.css .eral-message-content for code/heading/list styles */
         .eral-prose p        { margin: 0 0 8px; }
@@ -2185,7 +2185,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-prose em { color: var(--text-muted); font-style: italic; }
 
         code.eral-inline-code {
-          background: rgba(255,255,255,0.08);
+          background: var(--surface-raised);
           border-radius: 3px;
           padding: 1px 5px;
           font-size: 12px;
@@ -2285,10 +2285,10 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           align-items: center;
           gap: 5px;
           padding: 4px 10px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-card);
+          border: 1px solid var(--surface-raised);
           border-radius: 20px;
-          color: rgba(255,255,255,0.55);
+          color: var(--text-muted);
           font-size: 11px;
           cursor: pointer;
           transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -2317,7 +2317,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           height: 28px;
           margin: 3px 6px;
           border-radius: 4px;
-          background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+          background: linear-gradient(90deg, var(--surface-card) 25%, var(--surface-raised) 50%, var(--surface-card) 75%);
           background-size: 200% 100%;
           animation: eral-shimmer 1.4s ease infinite;
         }

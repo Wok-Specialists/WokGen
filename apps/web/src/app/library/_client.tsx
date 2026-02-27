@@ -147,7 +147,7 @@ export default function LibraryClient() {
   if (fetchError && assets.length === 0) {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
-        <div style={{ color: 'var(--danger, #ef4444)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span>{fetchError}</span>
           <button type="button" onClick={() => fetchAssets(searchQuery, modeFilter, sort)} style={{ background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)', borderRadius: 6, padding: '4px 12px', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8125rem' }}>Retry</button>
         </div>
@@ -230,7 +230,7 @@ export default function LibraryClient() {
 
       {assets.length === 0 && !loading ? (
         /* Designed empty state */
-        <div style={{ textAlign: 'center', padding: '5rem 1.5rem', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+        <div style={{ textAlign: 'center', padding: '5rem 1.5rem', border: '1px dashed var(--border)', borderRadius: '12px' }}>
           <div style={{ width: '56px', height: '56px', margin: '0 auto 1.25rem', borderRadius: '14px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(var(--accent-rgb, 129,140,248), 0.7)" strokeWidth="1.5">
               <rect x="3" y="3" width="18" height="18" rx="3" />
@@ -258,7 +258,7 @@ export default function LibraryClient() {
             <div
               key={asset.id}
               className="group relative rounded overflow-hidden border hover:border-white/20 transition-all"
-              style={{ background: 'var(--surface-card)', borderColor: selected.has(asset.id) ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
+              style={{ background: 'var(--surface-card)', borderColor: selected.has(asset.id) ? 'var(--accent)' : 'var(--border)' }}
               onClick={() => toggleSelect(asset.id)}
             >
               {/* Checkbox overlay */}
@@ -268,7 +268,7 @@ export default function LibraryClient() {
                   width: 20, height: 20, borderRadius: 4,
                   background: selected.has(asset.id) ? 'var(--accent)' : 'rgba(0,0,0,0.6)',
                   border: '1.5px solid',
-                  borderColor: selected.has(asset.id) ? 'var(--accent)' : 'rgba(255,255,255,0.4)',
+                  borderColor: selected.has(asset.id) ? 'var(--accent)' : 'var(--border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   opacity: selected.has(asset.id) ? 1 : 0,
                   transition: 'opacity 0.1s',
