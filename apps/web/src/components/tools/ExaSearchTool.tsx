@@ -118,7 +118,7 @@ export default function ExaSearchTool() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {results.map((r, i) => (
                 <div key={i} style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'var(--surface-card)' }}>
-                  <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: '0.9375rem', color: '#a78bfa', textDecoration: 'none', display: 'block', marginBottom: '0.375rem' }}>{r.title || r.url}</a>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: '0.9375rem', color: 'var(--purple)', textDecoration: 'none', display: 'block', marginBottom: '0.375rem' }}>{r.title || r.url}</a>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: 'var(--text-faint)', marginBottom: '0.375rem' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}

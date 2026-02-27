@@ -206,7 +206,7 @@ export default function LinkScraperTool() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
               {Object.entries(result.meta).map(([k, v]) => (
                 <div key={k} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#a78bfa', flexShrink: 0, minWidth: '140px' }}>{k}</span>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--purple)', flexShrink: 0, minWidth: '140px' }}>{k}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>{v}</span>
                 </div>
               ))}

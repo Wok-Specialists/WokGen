@@ -79,7 +79,7 @@ export default function DevelopersPage() {
           <div><span style={{ color: 'var(--blue)' }}>const</span> result = <span style={{ color: 'var(--blue)' }}>await</span> client.<span style={{ color: 'var(--success)' }}>generate</span>({`{`}</div>
           <div style={{ paddingLeft: '1.5rem' }}>prompt: <span style={{ color: 'var(--accent)' }}>&apos;pixel art spaceship, 32x32&apos;</span>,</div>
           <div style={{ paddingLeft: '1.5rem' }}>mode: <span style={{ color: 'var(--accent)' }}>&apos;pixel&apos;</span>,</div>
-          <div style={{ paddingLeft: '1.5rem' }}>size: <span style={{ color: '#f59e0b' }}>512</span>,</div>
+          <div style={{ paddingLeft: '1.5rem' }}>size: <span style={{ color: 'var(--warning)' }}>512</span>,</div>
           <div>{`})`};</div>
           <br />
           <div style={{ color: 'var(--text-muted)' }}>console.log(result.resultUrl); <span style={{ color: 'var(--text-faint, var(--text-faint))' }}>{`// https://cdn.wokgen.io/...`}</span></div>

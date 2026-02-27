@@ -79,7 +79,7 @@ export default function FaviconExtractorTool() {
                   onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
                 <div style={{ textAlign: 'center', width: '100%' }}>
-                  {fav.sizes && <p style={{ fontSize: 11, color: '#818cf8', marginBottom: 2 }}>{fav.sizes}</p>}
+                  {fav.sizes && <p style={{ fontSize: 11, color: 'var(--accent)', marginBottom: 2 }}>{fav.sizes}</p>}
                   <p style={{ fontSize: 10, color: 'var(--text-muted)', wordBreak: 'break-all' }}>{fav.rel}</p>
                 </div>
                 <a

@@ -154,7 +154,7 @@ function BackgroundRemoverToolInner() {
           <p style={{ fontSize: '0.875rem', color: 'var(--danger)', marginBottom: '0.625rem' }}>{error}</p>
           <button
             onClick={handleRetry}
-            style={{ fontSize: '0.75rem', color: '#fca5a5', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', padding: 0 }}
+            style={{ fontSize: '0.75rem', color: 'var(--danger)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', padding: 0 }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
             Try again
