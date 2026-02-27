@@ -173,7 +173,7 @@ export default function DocumentEditorClient({
           color: rgba(255,255,255,0.4);
           text-decoration: none;
         }
-        .doc-editor__bc-link:hover { color: #41a6f6; }
+        .doc-editor__bc-link:hover { color: var(--accent); }
         .doc-editor__bc-sep { opacity: 0.3; }
         .doc-editor__bc-current { color: rgba(255,255,255,0.6); }
         .doc-editor__save-state {
@@ -323,7 +323,7 @@ export default function DocumentEditorClient({
           margin: 1.5em 0;
         }
         .doc-editor__content .ProseMirror a {
-          color: #41a6f6; text-decoration: underline;
+          color: var(--accent); text-decoration: underline;
         }
         .doc-editor__content .ProseMirror img {
           max-width: 100%; height: auto; border-radius: 2px; margin: 0.5em 0;

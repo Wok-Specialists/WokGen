@@ -406,7 +406,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
       {actionConfirmation && (
         <div style={{
           position: 'fixed', bottom: 80, right: 24, zIndex: 200,
-          background: '#1e1b4b', border: '1px solid #818cf8',
+          background: 'var(--surface-1)', border: '1px solid var(--accent)',
           borderRadius: 8, padding: '8px 16px',
           color: '#a5b4fc', fontSize: 13,
           animation: 'esb-slide-in 0.3s ease',
@@ -427,7 +427,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           background: #1c1c2e;
           border: 1px solid rgba(129,140,248,0.35);
           border-radius: 20px;
-          color: #818cf8;
+          color: var(--accent);
           font-size: 13px;
           font-weight: 500;
           cursor: pointer;
@@ -493,7 +493,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         }
         .esb-tab--active {
           color: var(--text);
-          border-bottom-color: #818cf8;
+          border-bottom-color: var(--accent);
         }
         .esb-tab:hover:not(.esb-tab--active) { color: var(--text); }
 
@@ -526,7 +526,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           font-family: var(--font-heading, 'Space Grotesk', sans-serif);
           font-size: 14px;
           font-weight: 600;
-          color: #818cf8;
+          color: var(--accent);
         }
         .esb-ctx-badge {
           font-size: 10px;
@@ -534,7 +534,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           background: rgba(129,140,248,0.12);
           border: 1px solid rgba(129,140,248,0.2);
           border-radius: 10px;
-          color: #818cf8;
+          color: var(--accent);
           text-transform: capitalize;
         }
         .esb-header-actions {
@@ -544,7 +544,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         }
         .esb-open-full {
           font-size: 11px;
-          color: #818cf8;
+          color: var(--accent);
           text-decoration: none;
           padding: 2px 6px;
           border-radius: 3px;
@@ -593,11 +593,11 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           cursor: pointer;
           transition: background 0.1s, border-color 0.1s, color 0.1s;
         }
-        .esb-model-pill:hover { background: rgba(129,140,248,0.08); border-color: rgba(129,140,248,0.2); color: #818cf8; }
+        .esb-model-pill:hover { background: rgba(129,140,248,0.08); border-color: rgba(129,140,248,0.2); color: var(--accent); }
         .esb-model-pill-active {
           background: rgba(129,140,248,0.12) !important;
           border-color: rgba(129,140,248,0.3) !important;
-          color: #818cf8 !important;
+          color: var(--accent) !important;
         }
 
         .esb-project-bar {
@@ -661,7 +661,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         .esb-cursor {
           display: inline-block;
           width: 2px; height: 12px;
-          background: #818cf8;
+          background: var(--accent);
           margin-left: 2px;
           vertical-align: text-bottom;
           animation: esb-blink 0.8s step-end infinite;
@@ -724,7 +724,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           width: 28px; height: 28px;
           border-radius: 5px;
           border: none;
-          background: #818cf8;
+          background: var(--accent);
           color: #fff;
           font-size: 14px;
           cursor: pointer;
@@ -759,7 +759,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           background: rgba(129,140,248,0.07);
           border: 1px solid rgba(129,140,248,0.15);
           border-radius: 12px;
-          color: #818cf8;
+          color: var(--accent);
           font-size: 11px;
           cursor: pointer;
           transition: background 0.15s, border-color 0.15s;

@@ -52,7 +52,7 @@ function ColorSwatch({ hex, onChange }: { hex: string; onChange: (h: string) => 
 function PaletteEditor({
   colors, onChange,
 }: { colors: PaletteColor[]; onChange: (c: PaletteColor[]) => void }) {
-  const add = () => onChange([...colors, { hex: '#a78bfa', name: 'New color', role: 'accent' }]);
+  const add = () => onChange([...colors, { hex: 'var(--accent)', name: 'New color', role: 'accent' }]);
   const remove = (i: number) => onChange(colors.filter((_, ci) => ci !== i));
   const update = (i: number, field: keyof PaletteColor, value: string) => {
     const next = [...colors];

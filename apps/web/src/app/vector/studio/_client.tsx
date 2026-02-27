@@ -472,7 +472,7 @@ function VectorStudioInner() {
                 borderRadius: 4,
                 background: isEnhancing ? 'var(--surface-overlay)' : 'rgba(139,92,246,0.15)',
                 border: '1px solid rgba(139,92,246,0.4)',
-                color: isEnhancing ? 'var(--text-disabled)' : '#a78bfa',
+                color: isEnhancing ? 'var(--text-disabled)' : 'var(--accent)',
                 cursor: isEnhancing || !prompt.trim() ? 'not-allowed' : 'pointer',
                 opacity: !prompt.trim() ? 0.4 : 1,
                 transition: 'all 0.15s',

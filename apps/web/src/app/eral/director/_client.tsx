@@ -13,7 +13,7 @@ interface PlanItem {
 }
 
 const MODE_COLORS: Record<string, string> = {
-  pixel: '#a78bfa', business: '#60a5fa', vector: '#34d399',
+  pixel: 'var(--accent)', business: '#60a5fa', vector: '#34d399',
   emoji: '#fbbf24', uiux: '#f472b6', voice: '#fb923c', text: '#94a3b8',
 };
 
@@ -74,7 +74,7 @@ function PlanItemCard({
       {/* Mode badge */}
       <span
         className="director-item__mode"
-        style={{ '--mode-color': MODE_COLORS[item.mode] ?? '#a78bfa' } as React.CSSProperties}
+        style={{ '--mode-color': MODE_COLORS[item.mode] ?? 'var(--accent)' } as React.CSSProperties}
       >
         {item.mode}
       </span>

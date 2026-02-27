@@ -86,11 +86,11 @@ export default function AdminJobsPage() {
               For full queue inspection, connect directly to Redis or use Bull Board.
             </p>
             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.625rem' }}>
-              <Link href="/api/health" target="_blank" style={{ fontSize: '0.875rem', color: '#a78bfa', textDecoration: 'none' }}>
+              <Link href="/api/health" target="_blank" style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none' }}>
                 View Health Endpoint
               </Link>
               <span style={{ color: 'var(--border)' }}>·</span>
-              <Link href="/admin/metrics" style={{ fontSize: '0.875rem', color: '#a78bfa', textDecoration: 'none' }}>
+              <Link href="/admin/metrics" style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none' }}>
                 Platform Metrics
               </Link>
             </div>

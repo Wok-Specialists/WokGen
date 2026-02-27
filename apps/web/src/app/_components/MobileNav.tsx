@@ -65,7 +65,7 @@ export function MobileNav() {
         <div className="mobile-nav-drawer-header">
           <span className="mobile-nav-drawer-title">
             <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-            <span style={{ color: '#a78bfa' }}>Gen</span>
+            <span style={{ color: 'var(--accent)' }}>Gen</span>
           </span>
           <button type="button"
             className="mobile-nav-drawer-close"

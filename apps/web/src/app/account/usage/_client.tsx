@@ -33,7 +33,7 @@ const MODE_LABELS: Record<string, string> = {
 };
 
 const MODE_COLORS: Record<string, string> = {
-  pixel: '#a78bfa', business: '#60a5fa', vector: '#34d399',
+  pixel: 'var(--accent)', business: '#60a5fa', vector: '#34d399',
   emoji: '#fbbf24', uiux: '#f472b6', voice: '#fb923c', text: '#94a3b8',
 };
 
@@ -91,7 +91,7 @@ function MiniBarChart({ data }: { data: DayBucket[] }) {
 // ─── Quota meter ─────────────────────────────────────────────────────────────
 
 function QuotaMeter({
-  label, used, limit, color = '#a78bfa',
+  label, used, limit, color = 'var(--accent)',
 }: { label: string; used: number; limit: number; color?: string }) {
   const p = pct(used, limit);
   const unlimited = limit < 0;
@@ -128,7 +128,7 @@ function ModeBreakdown({ data, total }: { data: Record<string, number>; total: n
           <div className="mode-breakdown__track">
             <div
               className="mode-breakdown__fill"
-              style={{ width: `${total > 0 ? (count / total) * 100 : 0}%`, background: MODE_COLORS[mode] ?? '#a78bfa' }}
+              style={{ width: `${total > 0 ? (count / total) * 100 : 0}%`, background: MODE_COLORS[mode] ?? 'var(--accent)' }}
             />
           </div>
           <span className="mode-breakdown__count">{count}</span>
@@ -165,7 +165,7 @@ function RequestLog({ items, page, pages, onPage }: {
                 {item.status}
               </td>
               <td>
-                <span className="mode-pill" style={{ '--mode-color': MODE_COLORS[item.mode] ?? '#a78bfa' } as React.CSSProperties}>
+                <span className="mode-pill" style={{ '--mode-color': MODE_COLORS[item.mode] ?? 'var(--accent)' } as React.CSSProperties}>
                   {MODE_LABELS[item.mode] ?? item.mode}
                 </span>
               </td>
@@ -298,7 +298,7 @@ export default function UsageClient() {
             label={quota.dailyLimit < 0 ? 'Daily generations (unlimited)' : `Daily generations (${quota.dailyLimit}/day)`}
             used={quota.todayUsed}
             limit={quota.dailyLimit}
-            color="#a78bfa"
+            color="var(--accent)"
           />
           <QuotaMeter
             label={`HD credits this month`}

@@ -3420,7 +3420,7 @@ function StudioInner() {
                     type="button"
                     onClick={saveGenPreset}
                     disabled={!presetNameInput.trim()}
-                    style={{ fontSize: 11, padding: '3px 6px', background: 'var(--accent, #7c3aed)', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+                    style={{ fontSize: 11, padding: '3px 6px', background: 'var(--accent, var(--accent-muted))', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}
                   >Save</button>
                   <button
                     type="button"
@@ -3433,7 +3433,7 @@ function StudioInner() {
                   type="button"
                   onClick={() => setShowPresetNameInput(true)}
                   style={{ width: '100%', fontSize: 11, padding: '3px 0', marginTop: 4,
-                           background: 'var(--accent, #7c3aed)', color: '#fff', border: 'none',
+                           background: 'var(--accent, var(--accent-muted))', color: '#fff', border: 'none',
                            borderRadius: 4, cursor: 'pointer' }}
                 >
                   + Save current prompt

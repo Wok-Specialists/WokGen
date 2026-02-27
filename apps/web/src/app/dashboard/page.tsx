@@ -128,9 +128,9 @@ export default async function DashboardPage() {
             ),
             label: 'Analytics',
             desc: 'Generation history, usage stats, activity heatmap',
-            accent: '#a78bfa',
-            bg: 'rgba(167,139,250,0.12)',
-            border: 'rgba(167,139,250,0.25)',
+            accent: 'var(--accent)',
+            bg: 'rgba(var(--accent-rgb, 129,140,248), 0.12)',
+            border: 'rgba(var(--accent-rgb, 129,140,248), 0.25)',
           },
           {
             href: '/library',
@@ -242,7 +242,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Usage widget */}
-      <div style={{ marginTop: '1rem', padding: '1.25rem 1.5rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'rgba(167,139,250,0.04)' }}>
+      <div style={{ marginTop: '1rem', padding: '1.25rem 1.5rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.04)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
           <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Usage</span>
           <Link href="/account/usage" style={{ fontSize: '0.8125rem', color: 'var(--accent)', textDecoration: 'none' }}>View full report →</Link>

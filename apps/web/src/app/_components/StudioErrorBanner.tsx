@@ -37,7 +37,7 @@ export function StudioErrorBanner({ error, onDismiss, onRetry }: Props) {
           <button type="button"
             onClick={onRetry}
             style={{
-              fontSize: 12, color: '#818cf8', background: 'none', border: '1px solid #818cf8',
+              fontSize: 12, color: 'var(--accent)', background: 'none', border: '1px solid var(--accent)',
               borderRadius: 6, padding: '3px 10px', cursor: 'pointer',
             }}
           >

@@ -61,7 +61,7 @@ const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
 };
 
 const CONTENT_TYPE_COLORS: Record<ContentType, string> = {
-  narrative: '#a78bfa',
+  narrative: 'var(--accent)',
   technical: '#60a5fa',
   marketing: '#fb923c',
   dialogue:  '#34d399',
@@ -82,7 +82,7 @@ const PROVIDER_COLORS: Record<string, string> = {
 };
 
 const ACCENT = 'var(--accent)';
-const ACCENT_HEX = '#818cf8'; // fallback for alpha compositing
+const ACCENT_HEX = 'var(--accent)'; // fallback for alpha compositing
 const MAX_CHARS = 10000; // shown in UI; actual server limit depends on tier
 
 const EXAMPLES = [

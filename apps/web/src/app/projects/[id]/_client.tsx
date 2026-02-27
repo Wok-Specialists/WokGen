@@ -37,7 +37,7 @@ const REL_LABELS: Record<string, string> = {
 };
 
 const REL_COLORS: Record<string, string> = {
-  variation: '#a78bfa', animation_of: '#60a5fa', enemy_of: '#f87171',
+  variation: 'var(--accent)', animation_of: '#60a5fa', enemy_of: '#f87171',
   tileset_for: '#34d399', same_palette: '#fbbf24', brand_use: '#fb923c',
 };
 
@@ -237,8 +237,8 @@ function BriefPanel({ projectId, brief, mode, onSaved }: {
           <div className="brief-panel__field">
             <label>Primary color</label>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <input type="color" value={form.colorHex ?? '#a78bfa'} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} style={{ width: 36, height: 36, border: 'none', background: 'none', cursor: 'pointer' }} />
-              <input className="input" style={{ flex: 1 }} value={form.colorHex ?? ''} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} placeholder="#a78bfa" />
+              <input type="color" value={form.colorHex ?? 'var(--accent)'} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} style={{ width: 36, height: 36, border: 'none', background: 'none', cursor: 'pointer' }} />
+              <input className="input" style={{ flex: 1 }} value={form.colorHex ?? ''} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} placeholder="var(--accent)" />
             </div>
           </div>
           <div className="brief-panel__field">
@@ -852,7 +852,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                         const otherId = r.fromJobId === selectedId ? r.toJobId : r.fromJobId;
                         const other   = jobs.find(j => j.id === otherId);
                         return (
-                          <span key={r.id} className="rel-chip" style={{ '--rel-color': REL_COLORS[r.type] ?? '#a78bfa' } as React.CSSProperties}>
+                          <span key={r.id} className="rel-chip" style={{ '--rel-color': REL_COLORS[r.type] ?? 'var(--accent)' } as React.CSSProperties}>
                             <span className="rel-chip__type">{REL_LABELS[r.type]}</span>
                             {other && <span className="rel-chip__name">{other.prompt.slice(0, 30)}…</span>}
                           </span>
@@ -918,7 +918,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                       </div>
                       <span
                         className="project-rel-row__type"
-                        style={{ color: REL_COLORS[r.type] ?? '#a78bfa' }}
+                        style={{ color: REL_COLORS[r.type] ?? 'var(--accent)' }}
                       >
                         ──{REL_LABELS[r.type]}──▶
                       </span>

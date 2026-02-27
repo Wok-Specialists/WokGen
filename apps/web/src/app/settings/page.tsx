@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import type { Metadata } from 'next';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -28,7 +30,7 @@ export default async function SettingsPage() {
             {session.user.image ? (
               <Image src={session.user.image} alt={session.user.name || 'Avatar'} width={56} height={56} style={{ borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--border)' }} />
             ) : (
-              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(167,139,250,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.25rem', color: '#a78bfa' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(var(--accent-rgb, 129,140,248), 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.25rem', color: 'var(--accent)' }}>
                 {(session.user.name || session.user.email || 'U')[0].toUpperCase()}
               </div>
             )}

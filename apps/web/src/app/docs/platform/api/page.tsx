@@ -31,7 +31,7 @@ export default function ApiDocsPage() {
     get: '#22c55e',
     post: '#3b82f6',
     put: '#f59e0b',
-    patch: '#a78bfa',
+    patch: 'var(--accent)',
     delete: '#ef4444',
   };
 

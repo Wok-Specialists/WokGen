@@ -17,7 +17,7 @@ interface Props {
 const PLAN_COLORS: Record<string, string> = {
   free:  '#52525b',
   plus:  '#6d28d9',
-  pro:   '#a78bfa',
+  pro:   'var(--accent)',
   max:   '#f59e0b',
 };
 

@@ -121,18 +121,18 @@ export default function PricingPage() {
 
           {/* FREE */}
           <div style={{
-            border: '2px solid rgba(167,139,250,0.4)',
+            border: '2px solid rgba(var(--accent-rgb, 129,140,248), 0.4)',
             borderRadius: '14px',
             padding: '1.75rem',
-            background: 'rgba(167,139,250,0.05)',
+            background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)',
             display: 'flex',
             flexDirection: 'column',
             gap: '1.25rem',
           }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#a78bfa' }}>FREE</span>
-                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'rgba(167,139,250,0.15)', color: '#a78bfa', fontWeight: 600 }}>Forever</span>
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent)' }}>FREE</span>
+                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'rgba(var(--accent-rgb, 129,140,248), 0.15)', color: 'var(--accent)', fontWeight: 600 }}>Forever</span>
               </div>
               <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>The full WokGen experience. Always free, no credit card required.</p>
@@ -143,7 +143,7 @@ export default function PricingPage() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
               {FREE_FEATURES.map(f => (
                 <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                  <span style={{ color: '#a78bfa', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
                   {f}
                 </li>
               ))}

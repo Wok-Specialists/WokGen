@@ -66,7 +66,7 @@ const PROVIDER_COLORS: Record<string, string> = {
   together:     '#00A67D',
   comfyui:      '#E06C00',
   huggingface:  '#FF9D00',
-  pollinations: '#a78bfa',
+  pollinations: 'var(--accent)',
 };
 
 const PROVIDER_LABELS: Record<string, string> = {
@@ -357,9 +357,9 @@ function AssetModal({
               style={{
                 padding: '5px 10px',
                 borderRadius: 6,
-                background: 'var(--accent-muted, rgba(167,139,250,0.12))',
-                border: '1px solid var(--accent-border, rgba(167,139,250,0.3))',
-                color: '#a78bfa',
+                background: 'var(--accent-muted, rgba(var(--accent-rgb, 129,140,248), 0.12))',
+                border: '1px solid var(--accent-border, rgba(var(--accent-rgb, 129,140,248), 0.3))',
+                color: 'var(--accent)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 textDecoration: 'none',
@@ -773,7 +773,7 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
             {Array.from({ length: 36 }).map((_, i) => (
               <div key={i} style={{
                 width: 12, height: 12, borderRadius: 2,
-                background: [0, 5, 12, 17, 23, 30, 35].includes(i) ? '#a78bfa' : '#333',
+                background: [0, 5, 12, 17, 23, 30, 35].includes(i) ? 'var(--accent)' : '#333',
               }} />
             ))}
           </div>
@@ -784,7 +784,7 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
           {item.prompt}
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: '0.58rem', color: '#a78bfa', background: 'rgba(167,139,250,.15)', border: '1px solid rgba(167,139,250,.25)', borderRadius: 3, padding: '1px 5px' }}>
+          <span style={{ fontSize: '0.58rem', color: 'var(--accent)', background: 'rgba(167,139,250,.15)', border: '1px solid rgba(167,139,250,.25)', borderRadius: 3, padding: '1px 5px' }}>
             Try this →
           </span>
           <span style={{ fontSize: '0.58rem', color: 'var(--text-disabled)' }}>{item.size}px</span>
@@ -816,7 +816,7 @@ function EmptyState({ search }: { search: string }) {
         </p>
         <a href="/studio" style={{
           display: 'inline-block', padding: '0.45rem 1.1rem',
-          background: '#a78bfa', color: 'white', borderRadius: 6,
+          background: 'var(--accent)', color: 'white', borderRadius: 6,
           fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none',
         }}>
           Go to Pixel mode →

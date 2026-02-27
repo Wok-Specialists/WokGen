@@ -14,6 +14,7 @@ import { Breadcrumb } from './_components/Breadcrumb';
 import { Toaster } from 'sonner';
 import { PageLoadingBar } from '@/components/PageLoadingBar';
 import AppThemeToggle from '@/components/AppThemeToggle';
+import { StudiosDropdown } from './_components/StudiosDropdown';
 
 const EralCompanion = nextDynamic(
   () => import('@/components/EralCompanion').then((m) => ({ default: m.EralCompanion })),
@@ -112,12 +113,12 @@ function NavBar() {
       {/* Wordmark */}
       <Link href="/" className="nav-wordmark flex-shrink-0" aria-label="WokGen home">
         <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-        <span style={{ color: 'var(--accent, #a78bfa)' }}>Gen</span>
+        <span style={{ color: 'var(--accent, var(--accent))' }}>Gen</span>
       </Link>
 
       {/* Nav links — hidden on mobile (MobileNav handles mobile) */}
       <div className="nav-links-desktop">
-        <NavLink href="/studio">Studio</NavLink>
+        <StudiosDropdown />
         <NavLink href="/tools">Tools</NavLink>
         <NavLink href="/community">Community</NavLink>
         <NavLink href="/eral">Eral</NavLink>
@@ -131,9 +132,9 @@ function NavBar() {
             fontSize: '9px',
             fontWeight: 700,
             letterSpacing: '0.04em',
-            background: 'var(--accent-subtle, rgba(167,139,250,0.12))',
-            color: 'var(--accent, #a78bfa)',
-            border: '1px solid var(--accent-glow, rgba(167,139,250,0.25))',
+            background: 'var(--accent-subtle, rgba(var(--accent-rgb, 129,140,248), 0.12))',
+            color: 'var(--accent, var(--accent))',
+            border: '1px solid var(--accent-glow, rgba(var(--accent-rgb, 129,140,248), 0.25))',
             borderRadius: '4px',
             padding: '1px 5px',
             lineHeight: 1.4,

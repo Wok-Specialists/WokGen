@@ -382,7 +382,7 @@ const DESIGN_TOKENS: Record<StylePreset, TokenMap> = {
     colors: {
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       surface: 'rgba(255,255,255,0.1)', surfaceHover: 'rgba(255,255,255,0.15)', border: 'rgba(255,255,255,0.2)',
-      primary: 'rgba(255,255,255,0.9)', primaryHover: 'rgba(255,255,255,1)', accent: '#a78bfa',
+      primary: 'rgba(255,255,255,0.9)', primaryHover: 'rgba(255,255,255,1)', accent: 'var(--accent)',
       textPrimary: '#ffffff', textSecondary: 'rgba(255,255,255,0.8)', textMuted: 'rgba(255,255,255,0.5)',
       success: '#34d399', warning: '#fbbf24', error: '#f87171',
     },

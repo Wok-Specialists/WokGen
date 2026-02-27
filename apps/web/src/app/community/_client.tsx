@@ -60,7 +60,7 @@ const PROVIDER_COLORS: Record<string, string> = {
   together:     '#00A67D',
   comfyui:      '#E06C00',
   huggingface:  '#FF9D00',
-  pollinations: '#a78bfa',
+  pollinations: 'var(--accent)',
 };
 
 const PROVIDER_LABELS: Record<string, string> = {
@@ -81,7 +81,7 @@ const RARITY_COLORS: Record<string, string> = {
 };
 
 const MODE_COLORS: Record<string, string> = {
-  pixel:    '#a78bfa',
+  pixel:    'var(--accent)',
   business: '#38B764',
   uiux:     '#41A6F6',
   vector:   '#FF9D00',

@@ -7,7 +7,7 @@ interface Props {
   accent?: string;
 }
 
-export function WaitlistForm({ mode, accent = '#a78bfa' }: Props) {
+export function WaitlistForm({ mode, accent = 'var(--accent)' }: Props) {
   const [email,     setEmail]     = useState('');
   const [honeypot,  setHoneypot]  = useState('');
   const [status,    setStatus]    = useState<'idle' | 'loading' | 'done' | 'error'>('idle');

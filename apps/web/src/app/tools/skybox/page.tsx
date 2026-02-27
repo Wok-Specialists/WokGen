@@ -142,7 +142,7 @@ export default function SkyboxPage() {
 
         {polling && (
           <div style={{ marginTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid rgba(167,139,250,0.3)', borderTopColor: '#a78bfa', animation: 'spin 600ms linear infinite' }} />
+            <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid rgba(var(--accent-rgb, 129,140,248), 0.3)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite' }} />
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Rendering panorama... (~30–60 seconds)</span>
           </div>
         )}
@@ -152,7 +152,7 @@ export default function SkyboxPage() {
             <p style={{ color: '#f87171', fontSize: '0.875rem' }}>{error}</p>
             {error.includes('SKYBOX_API_KEY') && (
               <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                Get a free key at <a href="https://skybox.blockadelabs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#a78bfa' }}>skybox.blockadelabs.com</a>
+                Get a free key at <a href="https://skybox.blockadelabs.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>skybox.blockadelabs.com</a>
               </p>
             )}
           </div>

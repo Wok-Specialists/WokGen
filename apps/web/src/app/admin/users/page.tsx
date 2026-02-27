@@ -148,13 +148,13 @@ export default async function AdminUsersPage({
                           width: '28px',
                           height: '28px',
                           borderRadius: '50%',
-                          background: 'rgba(167,139,250,0.15)',
+                          background: 'rgba(var(--accent-rgb, 129,140,248), 0.15)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: '0.75rem',
                           fontWeight: 700,
-                          color: '#a78bfa',
+                          color: 'var(--accent)',
                         }}
                       >
                         {(user.name || user.email || 'U')[0].toUpperCase()}
@@ -177,9 +177,9 @@ export default async function AdminUsersPage({
                         fontWeight: 600,
                         padding: '0.2rem 0.625rem',
                         borderRadius: '999px',
-                        background: 'rgba(167,139,250,0.12)',
-                        color: '#a78bfa',
-                        border: '1px solid rgba(167,139,250,0.2)',
+                        background: 'rgba(var(--accent-rgb, 129,140,248), 0.12)',
+                        color: 'var(--accent)',
+                        border: '1px solid rgba(var(--accent-rgb, 129,140,248), 0.2)',
                       }}
                     >
                       Admin

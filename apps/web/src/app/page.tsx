@@ -16,37 +16,37 @@ const MODES = [
   {
     id: 'pixel',
     label: 'Pixel Art',
-    accent: '#a78bfa',
+    accent: 'var(--accent)',
     desc: 'Sprites, tilesets, animations, and game-ready asset packs.',
   },
   {
     id: 'business',
     label: 'Brand',
-    accent: '#60a5fa',
+    accent: 'var(--blue, #60a5fa)',
     desc: 'Logos, brand kits, social banners, and marketing visuals.',
   },
   {
     id: 'vector',
     label: 'Vector',
-    accent: '#34d399',
+    accent: 'var(--green, #34d399)',
     desc: 'SVG icon sets, illustrations, and UI component graphics.',
   },
   {
     id: 'uiux',
     label: 'UI / UX',
-    accent: '#f472b6',
+    accent: 'var(--pink, #f472b6)',
     desc: 'React components, Tailwind sections, and page templates.',
   },
   {
     id: 'voice',
     label: 'Voice',
-    accent: '#f59e0b',
+    accent: 'var(--yellow, #f59e0b)',
     desc: 'TTS narration, NPC dialogue, and audio assets.',
   },
   {
     id: 'code',
     label: 'Code',
-    accent: '#10b981',
+    accent: 'var(--green, #10b981)',
     desc: 'Components, SQL, documentation, and boilerplate.',
   },
 ];

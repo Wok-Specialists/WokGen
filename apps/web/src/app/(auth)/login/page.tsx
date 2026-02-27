@@ -17,7 +17,7 @@ function LoginForm() {
         <div className="login-brand">
           <h1 className="login-title">
             <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-            <span style={{ color: 'var(--accent, #a78bfa)' }}>Gen</span>
+            <span style={{ color: 'var(--accent, var(--accent))' }}>Gen</span>
           </h1>
           <p className="login-sub">by Wok Specialists</p>
         </div>
@@ -99,7 +99,7 @@ function LoginForm() {
           font-weight: 600;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: #a78bfa;
+          color: var(--accent);
           background: rgba(167,139,250,.1);
           border: 1px solid rgba(167,139,250,.25);
           border-radius: 2px;
@@ -175,7 +175,7 @@ function LoginForm() {
           display: block;
           text-align: center;
           font-size: 0.85rem;
-          color: #a78bfa;
+          color: var(--accent);
           text-decoration: none;
           padding: 0.6rem;
           border-radius: 4px;

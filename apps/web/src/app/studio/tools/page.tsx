@@ -285,7 +285,7 @@ export default function StudioToolsPage() {
           height: 30px;
           border-radius: 7px;
           background: rgba(129,140,248,0.1);
-          color: #818cf8;
+          color: var(--accent);
         }
         .tools-badge {
           font-size: 10px;
@@ -320,7 +320,7 @@ export default function StudioToolsPage() {
         }
         .tool-card__cta {
           font-size: 12px;
-          color: #818cf8;
+          color: var(--accent);
           font-weight: 500;
           text-decoration: none;
           margin-top: 4px;

@@ -150,7 +150,7 @@ export default function TranscribePage() {
                 <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Speaker Breakdown</div>
                 {result.utterances.slice(0, 8).map((u: any, i: number) => (
                   <div key={i} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.875rem' }}>
-                    <span style={{ color: '#a78bfa', fontWeight: 700, flexShrink: 0, width: '60px' }}>Speaker {u.speaker}</span>
+                    <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0, width: '60px' }}>Speaker {u.speaker}</span>
                     <span style={{ color: 'var(--text-secondary)' }}>{u.text}</span>
                   </div>
                 ))}

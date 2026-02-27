@@ -96,7 +96,7 @@ export default function PixelDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: '#a78bfa' }} />
+              <span className="landing-badge-dot" style={{ background: 'var(--accent)' }} />
               WokGen Pixel
             </div>
             <h1 className="docs-title">Pixel Documentation</h1>

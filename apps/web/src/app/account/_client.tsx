@@ -373,7 +373,7 @@ function UsageTab() {
               <div className="acct-quota-track">
                 <div
                   className="acct-quota-fill"
-                  style={{ width: `${dailyPct}%`, background: dailyPct >= 90 ? 'var(--danger, #ef4444)' : dailyPct >= 70 ? 'var(--warning, #f59e0b)' : 'var(--accent, #a78bfa)' }}
+                  style={{ width: `${dailyPct}%`, background: dailyPct >= 90 ? 'var(--danger, #ef4444)' : dailyPct >= 70 ? 'var(--warning, #f59e0b)' : 'var(--accent, var(--accent))' }}
                 />
               </div>
             </div>

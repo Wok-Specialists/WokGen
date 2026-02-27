@@ -54,7 +54,7 @@ const MODEL_OPTIONS = [
 ];
 
 const AGENT_COLORS = [
-  '#a78bfa', '#60a5fa', '#34d399', '#fbbf24', '#f87171', '#fb923c',
+  'var(--accent)', '#60a5fa', '#34d399', '#fbbf24', '#f87171', '#fb923c',
 ];
 
 function uid() {

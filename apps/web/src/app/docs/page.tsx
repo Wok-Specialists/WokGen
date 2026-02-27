@@ -39,7 +39,7 @@ const SEARCH_INDEX = [
 // ---------------------------------------------------------------------------
 
 const MODES = [
-  { href: '/docs/pixel',    label: 'Pixel',    dot: '#a78bfa', desc: 'Sprites, animations, tilesets' },
+  { href: '/docs/pixel',    label: 'Pixel',    dot: 'var(--accent)', desc: 'Sprites, animations, tilesets' },
   { href: '/docs/business', label: 'Business', dot: '#60a5fa', desc: 'Logos, brand kits, banners' },
   { href: '/docs/vector',   label: 'Vector',   dot: '#34d399', desc: 'SVG icons, illustrations' },
   { href: '/docs/uiux',     label: 'UI/UX',    dot: '#f472b6', desc: 'React components, design-to-code' },
