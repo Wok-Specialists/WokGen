@@ -41,7 +41,7 @@ function ColorSwatch({ hex, onChange }: { hex: string; onChange: (h: string) => 
         aria-label={`Color picker: current color ${hex}`}
       />
       {open && (
-        <div className="color-swatch-picker" style={{ position: 'absolute', zIndex: 200, top: 36, left: 0, background: '#1a1a2e', border: '1px solid #303050', borderRadius: 8, padding: 12, boxShadow: '0 8px 32px var(--overlay-50)' }}>
+        <div className="color-swatch-picker" style={{ position: 'absolute', zIndex: 200, top: 36, left: 0, background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: 8, padding: 12, boxShadow: '0 8px 32px var(--overlay-50)' }}>
           <HexColorPicker color={hex} onChange={onChange} />
         </div>
       )}

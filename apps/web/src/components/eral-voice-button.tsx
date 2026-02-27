@@ -488,7 +488,7 @@ function SpeakingBars() {
           style={{
             width: 3,
             height: 16,
-            background: 'white',
+            background: 'var(--text)',
             borderRadius: 2,
             transformOrigin: 'center',
             animation: `eral-bar 0.8s ease-in-out ${delay}s infinite`,

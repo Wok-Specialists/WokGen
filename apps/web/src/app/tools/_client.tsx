@@ -48,7 +48,7 @@ function ToolCard({ tool, starred, onStar, onVisit }: ToolCardProps) {
               height: 36,
               borderRadius: 6,
               background: 'var(--surface-card)',
-              color: '#fff',
+              color: 'var(--text)',
               fontFamily: 'monospace',
               fontSize: 12,
               border: '1px solid var(--border)',

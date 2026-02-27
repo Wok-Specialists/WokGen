@@ -34,10 +34,10 @@ export default function DevelopersPage() {
           <div style={{ color: 'var(--success)' }}>npm install @wokspec/sdk</div>
           <br />
           <div style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }}># Or use the REST API directly</div>
-          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt": "pixel art sword", "mode": "pixel"}'`}</span></div>
+          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: 'var(--warning)' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt": "pixel art sword", "mode": "pixel"}'`}</span></div>
         </div>
       </section>
 
@@ -91,10 +91,10 @@ export default function DevelopersPage() {
         <h2 style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem' }}>Authentication</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.25rem', fontSize: '0.9375rem' }}>All API requests require an API key passed via the <code style={{ background: 'var(--surface-raised)', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>X-Api-Key</code> header.</p>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '1.25rem 1.5rem', fontFamily: 'monospace', fontSize: '0.875rem', lineHeight: 1.9, overflowX: 'auto' }}>
-          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: '#f59e0b' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;X-Api-Key: wok_your_key_here&quot;</span> \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
-          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: '#f59e0b' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt":"a pixel art spaceship in space","mode":"pixel","quality":"hd"}'`}</span></div>
+          <div><span style={{ color: 'var(--blue)' }}>curl</span> <span style={{ color: 'var(--warning)' }}>-X POST</span> https://wokgen.wokspec.org/api/v1/generate \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;X-Api-Key: wok_your_key_here&quot;</span> \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-H</span> <span style={{ color: 'var(--accent)' }}>&quot;Content-Type: application/json&quot;</span> \</div>
+          <div style={{ paddingLeft: '1.5rem' }}><span style={{ color: 'var(--warning)' }}>-d</span> <span style={{ color: 'var(--accent)' }}>{`'{"prompt":"a pixel art spaceship in space","mode":"pixel","quality":"hd"}'`}</span></div>
         </div>
         <p style={{ marginTop: '0.75rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>Create and manage your API keys at <Link href="/account/api-keys" style={{ color: 'var(--accent)' }}>/account/api-keys</Link>.</p>
       </section>
