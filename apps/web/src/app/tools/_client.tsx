@@ -51,7 +51,7 @@ function ToolCard({ tool, starred, onStar, onVisit }: ToolCardProps) {
               color: '#fff',
               fontFamily: 'monospace',
               fontSize: 12,
-              border: '1px solid rgba(255,255,255,0.08)',
+              border: '1px solid var(--border)',
             }}
           >
             {String(tool.icon).trim().slice(0, 3)}
