@@ -15040,7 +15040,7 @@ select:focus-visible {
 
 /* ── OSS Strip ───────────────────────────────────────────────────── */
 .homepage-oss {
-  padding: 3rem 1.5rem;
+  padding: 2rem 1.5rem;
   background: var(--bg-surface);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -15052,7 +15052,7 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   text-align: center;
 }
 
@@ -15088,14 +15088,14 @@ select:focus-visible {
   transition: color 0.15s;
 }
 
-.homepage-oss-link:hover { color: #c4b5fd; }
+.homepage-oss-link:hover { color: var(--accent-hover, #c4b5fd); }
 
 .homepage-oss-pill {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: 100px;
 }
@@ -15114,8 +15114,8 @@ select:focus-visible {
   letter-spacing: 0.05em;
   color: var(--text-muted);
   padding: 0.2rem 0.6rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
 }
 

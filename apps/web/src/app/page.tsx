@@ -17,37 +17,37 @@ const MODES = [
     id: 'pixel',
     label: 'Pixel Art',
     accent: 'var(--accent)',
-    desc: 'Sprites, tilesets, animations, and game-ready asset packs.',
+    desc: 'Sprites, tilesets, and game-ready asset packs.',
   },
   {
     id: 'business',
     label: 'Brand',
-    accent: 'var(--blue, #60a5fa)',
-    desc: 'Logos, brand kits, social banners, and marketing visuals.',
+    accent: 'var(--blue)',
+    desc: 'Logos, brand kits, and social visuals.',
   },
   {
     id: 'vector',
     label: 'Vector',
-    accent: 'var(--green, #34d399)',
-    desc: 'SVG icon sets, illustrations, and UI component graphics.',
+    accent: 'var(--green)',
+    desc: 'SVG icon sets, illustrations, and graphics.',
   },
   {
     id: 'uiux',
     label: 'UI / UX',
-    accent: 'var(--pink, #f472b6)',
-    desc: 'React components, Tailwind sections, and page templates.',
+    accent: 'var(--pink)',
+    desc: 'React components, Tailwind sections, and templates.',
   },
   {
     id: 'voice',
     label: 'Voice',
-    accent: 'var(--yellow, #f59e0b)',
-    desc: 'TTS narration, NPC dialogue, and audio assets.',
+    accent: 'var(--yellow)',
+    desc: 'TTS narration and audio assets.',
   },
   {
     id: 'code',
-    label: 'Code',
-    accent: 'var(--green, #10b981)',
-    desc: 'Components, SQL, documentation, and boilerplate.',
+    label: 'Text / Code',
+    accent: 'var(--orange)',
+    desc: 'Components, docs, SQL, and boilerplate.',
   },
 ];
 
@@ -68,14 +68,14 @@ export default function HomePage() {
             WokGen Studio
           </h1>
           <p className="homepage-hero-sub">
-            AI generation for pixel art, brand assets, vectors, UI, voice, and code. Pick a mode and generate.
+            AI generation for pixel art, brand assets, vectors, UI, voice, and code.
           </p>
           <div className="homepage-hero-ctas">
             <Link href="/studio?type=pixel" className="homepage-cta-primary">
-              Open Studio →
+              Open Studio
             </Link>
-            <Link href="/community" className="homepage-cta-ghost">
-              Browse Gallery
+            <Link href="/tools" className="homepage-cta-ghost">
+              Browse Tools
             </Link>
           </div>
         </div>
@@ -105,29 +105,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Tools ─────────────────────────────────────────────────── */}
-      <section className="homepage-tools">
-        <div className="homepage-section-inner">
-          <div className="homepage-section-head">
-            <h2 className="homepage-section-title">Free tools</h2>
-            <p className="homepage-section-sub">Image processing, dev utilities, game dev, design, and audio — directly in the browser.</p>
-          </div>
-          <div className="homepage-tools-footer" style={{ marginTop: 0 }}>
-            <Link href="/tools" className="homepage-cta-ghost">Browse all tools →</Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── Eral ──────────────────────────────────────────────────── */}
       <section className="homepage-eral">
         <div className="homepage-section-inner">
           <div className="homepage-eral-grid">
             <div className="homepage-eral-left">
-              <h2 className="homepage-section-title">Eral — AI creative director</h2>
+              <h2 className="homepage-section-title">Eral</h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: '420px' }}>
                 Describe what you&apos;re building. Eral plans your asset pipeline, routes tasks to the right studio, and maintains context across your project.
               </p>
-              <Link href="/eral" className="homepage-cta-primary">Open Eral →</Link>
+              <Link href="/eral" className="homepage-cta-primary">Open Eral</Link>
             </div>
             <div className="homepage-eral-right">
               <div className="homepage-chat-preview">
@@ -158,13 +145,13 @@ export default function HomePage() {
         <div className="homepage-section-inner">
           <div className="homepage-wokapi-grid">
             <div className="homepage-wokapi-left">
-              <h2 className="homepage-section-title">API access</h2>
+              <h2 className="homepage-section-title">API</h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: '420px' }}>
                 Programmatic access to every studio mode. Integrate generation into your own tools, pipelines, and workflows.
               </p>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <a className="homepage-cta-primary" href="/developers">API docs</a>
-                <a className="homepage-cta-ghost" href="/account/api-keys">Get API key</a>
+                <a className="homepage-cta-primary" href="/developers">Docs</a>
+                <a className="homepage-cta-ghost" href="/account/api-keys">API keys</a>
               </div>
             </div>
             <div className="homepage-wokapi-right">
@@ -194,12 +181,13 @@ console.log(asset.url);`}</code></pre>
       {/* ── Footer strip ──────────────────────────────────────────── */}
       <section className="homepage-oss">
         <div className="homepage-oss-inner">
-          <p className="homepage-oss-headline">Open source · MIT License · Self-hostable</p>
           <div className="homepage-oss-row">
             <div className="homepage-oss-links">
               <a href="https://github.com/WokSpec/WokGen" target="_blank" rel="noopener noreferrer" className="homepage-oss-link">
                 GitHub
               </a>
+              <a href="/changelog" className="homepage-oss-link">Changelog</a>
+              <a href="/docs" className="homepage-oss-link">Docs</a>
             </div>
             <div className="homepage-oss-providers">
               <span className="homepage-provider-badge">FLUX</span>

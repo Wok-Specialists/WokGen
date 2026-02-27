@@ -120,11 +120,11 @@ function NavBar() {
       <div className="nav-links-desktop">
         <StudiosDropdown />
         <NavLink href="/tools">Tools</NavLink>
-        <NavLink href="/community">Community</NavLink>
         <NavLink href="/eral">Eral</NavLink>
+        <NavLink href="/community">Community</NavLink>
         <span
           className="nav-link"
-          style={{ cursor: 'default', opacity: 0.45, display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+          style={{ cursor: 'default', opacity: 0.5, display: 'inline-flex', alignItems: 'center', gap: '5px' }}
           title="Browser extension — in development"
         >
           Extension
@@ -132,14 +132,14 @@ function NavBar() {
             fontSize: '9px',
             fontWeight: 700,
             letterSpacing: '0.04em',
-            background: 'var(--accent-subtle, rgba(var(--accent-rgb, 129,140,248), 0.12))',
+            background: 'var(--accent-subtle, rgba(129,140,248,0.12))',
             color: 'var(--accent)',
-            border: '1px solid var(--accent-glow, rgba(var(--accent-rgb, 129,140,248), 0.25))',
+            border: '1px solid var(--accent-glow, rgba(129,140,248,0.25))',
             borderRadius: '4px',
             padding: '1px 5px',
             lineHeight: 1.4,
           }}>
-            SOON
+            DEV
           </span>
         </span>
       </div>
@@ -186,7 +186,7 @@ export default function RootLayout({
             theme="dark"
             position="bottom-right"
             toastOptions={{
-              style: { background: '#0d0d14', border: '1px solid #252538', color: '#f4f4f4', fontFamily: 'var(--font-sans)' },
+              style: { background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text)', fontFamily: 'var(--font-sans)' },
             }}
           />
         </Providers>
