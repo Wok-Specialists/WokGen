@@ -132,7 +132,7 @@ function ModeBadge({ mode }: { mode: string }) {
   return (
     <span
       className="community-mode-badge"
-      style={{ '--bc': color, '--bc-bg': `${color}18`, '--bc-border': `${color}40` } as React.CSSProperties}
+      style={{ '--bc': color } as React.CSSProperties}
     >
       {label}
     </span>
