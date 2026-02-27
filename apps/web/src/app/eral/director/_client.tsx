@@ -18,8 +18,8 @@ const MODE_COLORS: Record<string, string> = {
 };
 
 const MODE_STUDIOS: Record<string, string> = {
-  pixel: '/studio', business: '/business/studio', vector: '/studio',
-  emoji: '/emoji/studio', uiux: '/uiux/studio', voice: '/voice/studio', text: '/text/studio',
+  pixel: '/studio?type=pixel', business: '/studio?type=business', vector: '/studio?type=vector',
+  emoji: '/studio?type=pixel', uiux: '/studio?type=uiux', voice: '/studio?type=voice', text: '/text/studio',
 };
 
 const PROJECT_TYPES = [
