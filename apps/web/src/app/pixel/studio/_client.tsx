@@ -637,7 +637,7 @@ function HistoryPanel({
       style={{
         background: 'var(--surface-raised)',
         borderLeft: '1px solid var(--surface-border)',
-        boxShadow: '-8px 0 24px rgba(0,0,0,0.4)',
+        boxShadow: 'var(--shadow-lg)',
       }}
     >
       <div

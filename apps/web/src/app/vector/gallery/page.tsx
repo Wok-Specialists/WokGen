@@ -193,7 +193,7 @@ function AssetModal({
         position: 'fixed',
         inset: 0,
         zIndex: 60,
-        background: 'rgba(0,0,0,0.82)',
+        background: 'var(--overlay-80)',
         backdropFilter: 'blur(6px)',
         display: 'flex',
         alignItems: 'center',

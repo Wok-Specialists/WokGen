@@ -142,7 +142,7 @@ export default function BaseConverterTool() {
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s;
         }
-        .base-conv__copy-btn:hover { background: rgba(255,255,255,0.1); }
+        .base-conv__copy-btn:hover { background: var(--surface-hover); }
         .base-conv__examples { display: flex; flex-direction: column; gap: 8px; }
         .base-conv__examples-title { font-size: 12px; color: var(--text-muted); margin: 0; }
         .base-conv__example-grid { display: flex; flex-wrap: wrap; gap: 8px; }

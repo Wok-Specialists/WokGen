@@ -199,7 +199,7 @@ export default function MdToHtmlTool() {
           overflow-y: auto; min-height: 420px; margin: 0;
         }
         .btn.btn-sm { padding: 4px 10px; font-size: 11px; cursor: pointer; background: var(--surface-raised); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; white-space: nowrap; }
-        .btn.btn-sm:hover { background: rgba(255,255,255,0.1); }
+        .btn.btn-sm:hover { background: var(--surface-hover); }
       `}</style>
     </div>
   );

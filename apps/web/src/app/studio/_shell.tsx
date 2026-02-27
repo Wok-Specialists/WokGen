@@ -301,7 +301,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           border-left: 2px solid transparent;
           cursor: pointer;
           transition: background 0.1s, border-color 0.1s, color 0.1s;
-          color: rgba(255,255,255,0.25);
+          color: var(--text-faint);
         }
         .wok-studio-rail__item:hover {
           background: var(--surface-card);
@@ -351,7 +351,7 @@ export default function UnifiedStudioClient({ type }: Props) {
 
         .wok-studio-ctx-link {
           font-size: 0.65rem;
-          color: rgba(255,255,255,0.25);
+          color: var(--text-faint);
           text-decoration: none;
           margin-left: auto;
           transition: color 0.1s;
@@ -367,7 +367,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           font-size: 0.62rem;
           font-weight: 600;
           letter-spacing: 0.03em;
-          color: rgba(255,255,255,0.45);
+          color: var(--text-muted);
           padding: 1px 5px;
           background: var(--surface-raised);
           border-radius: 2px;
@@ -376,7 +376,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .wok-studio-ctx-tag--faint { color: rgba(255,255,255,0.25); background: var(--surface-card); }
+        .wok-studio-ctx-tag--faint { color: var(--text-faint); background: var(--surface-card); }
         .wok-studio-ctx-swatch {
           width: 10px;
           height: 10px;
@@ -399,7 +399,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           cursor: pointer;
           padding: 3px 6px;
           border-radius: 3px;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-faint);
           font-size: 0.68rem;
           font-weight: 500;
           transition: background 0.1s, color 0.1s;
@@ -421,7 +421,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           z-index: 50;
           min-width: 180px;
           background: var(--bg-surface-2, var(--bg-surface));
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--border);
           border-radius: 3px;
           padding: 4px;
           box-shadow: 0 8px 24px var(--overlay-50);
@@ -471,7 +471,7 @@ export default function UnifiedStudioClient({ type }: Props) {
         .wok-studio-loading__spinner {
           width: 20px;
           height: 20px;
-          border: 2px solid rgba(255,255,255,0.1);
+          border: 2px solid var(--border);
           border-top-color: var(--accent);
           border-radius: 9999px;
           animation: spin 0.7s linear infinite;

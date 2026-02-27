@@ -193,7 +193,7 @@ export default function ColorConverterTool() {
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s; flex-shrink: 0;
         }
-        .color-conv__copy-btn:hover { background: rgba(255,255,255,0.1); }
+        .color-conv__copy-btn:hover { background: var(--surface-hover); }
       `}</style>
     </div>
   );

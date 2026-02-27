@@ -167,7 +167,7 @@ export default function JwtDebuggerTool() {
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s;
         }
-        .jwt-tool__copy-btn:hover { background: rgba(255,255,255,0.1); }
+        .jwt-tool__copy-btn:hover { background: var(--surface-hover); }
         .jwt-tool__sig-note { font-size: 11px; color: var(--text-muted); }
         .jwt-tool__code {
           padding: 14px; font-size: 12px; font-family: 'Menlo','Consolas',monospace;

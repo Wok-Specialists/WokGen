@@ -609,7 +609,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           width: 100%;
           font-size: 11px;
           background: transparent;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--border);
           border-radius: 4px;
           color: var(--text-muted, #888);
           padding: 3px 6px;
@@ -673,7 +673,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         .esb-prose p:last-child { margin-bottom: 0; }
         .esb-prose strong { font-weight: 600; }
         pre.esb-code {
-          background: rgba(0,0,0,0.4);
+          background: var(--overlay-40);
           border: 1px solid var(--surface-raised);
           border-radius: 4px;
           padding: 8px 10px;

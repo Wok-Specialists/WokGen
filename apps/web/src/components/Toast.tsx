@@ -103,7 +103,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 fontSize: '0.8125rem',
                 fontWeight: 500,
                 maxWidth: '22rem',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
+                boxShadow: 'var(--shadow-md)',
                 pointerEvents: 'all',
                 animation: 'toast-in 0.2s ease-out',
               }}

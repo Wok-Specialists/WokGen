@@ -98,7 +98,7 @@ export default function WebsitePaletteTool() {
                   gap: 6,
                 }}
               >
-                <div style={{ width: 40, height: 40, borderRadius: 6, background: hex, border: '1px solid rgba(255,255,255,0.1)' }} />
+                <div style={{ width: 40, height: 40, borderRadius: 6, background: hex, border: '1px solid var(--border)' }} />
                 <span style={{ fontSize: 11, fontFamily: 'monospace', color: copied === hex ? '#34d399' : 'var(--text-secondary)' }}>
                   {copied === hex ? 'Copied' : hex}
                 </span>
