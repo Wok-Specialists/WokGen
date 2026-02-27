@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import UnifiedStudioClient from './_shell';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'WokGen Studio',
   description: 'AI creative studio for game developers and indie builders.',

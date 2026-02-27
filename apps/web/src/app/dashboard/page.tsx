@@ -6,6 +6,8 @@ import type { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 import { DAILY_STD_LIMIT } from '@/lib/quota';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Dashboard | WokGen',
 };
