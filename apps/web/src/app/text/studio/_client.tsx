@@ -151,19 +151,57 @@ export default function TextStudio() {
     setElapsedMs(0);
     startTimer();
 
-    // TODO: Replace with SSE streaming so content streams token-by-token into the result area.
-    // The /api/text/generate endpoint should emit `data: {...}` events with partial content.
+    // Use SSE streaming for real-time token-by-token output
     try {
       const res = await fetch('/api/text/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: trimmed, contentType, tone, length }),
+        body: JSON.stringify({ prompt: trimmed, contentType, tone, length, stream: true }),
       });
 
-      const data = await res.json() as TextResult & { error?: string; code?: string; retryable?: boolean };
-      if (!res.ok) throw parseApiError({ status: res.status, ...data }, data.error);
+      if (!res.ok) {
+        const data = await res.json() as { error?: string; code?: string; retryable?: boolean };
+        throw parseApiError({ status: res.status, ...data }, data.error);
+      }
 
-      setResult(data);
+      // ReadableStream SSE reader
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+      let wordCount = 0;
+      let charCount = 0;
+      let model = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const text = decoder.decode(value, { stream: true });
+          for (const line of text.split('\n')) {
+            if (!line.startsWith('data: ')) continue;
+            try {
+              const parsed = JSON.parse(line.slice(6)) as { token?: string; done?: boolean; wordCount?: number; charCount?: number; model?: string; error?: string };
+              if (parsed.error) throw new Error(parsed.error);
+              if (parsed.token) {
+                accumulated += parsed.token;
+                // Stream into result as it arrives
+                setResult(prev => ({ ...(prev ?? { wordCount: 0, charCount: 0, model: '', creditsUsed: 0 }), content: accumulated }));
+              }
+              if (parsed.done) {
+                wordCount = parsed.wordCount ?? 0;
+                charCount = parsed.charCount ?? 0;
+                model = parsed.model ?? '';
+              }
+            } catch (parseErr) {
+              if (parseErr instanceof Error && parseErr.message !== 'Unexpected end of JSON input') {
+                throw parseErr;
+              }
+            }
+          }
+        }
+      }
+
+      setResult({ content: accumulated, wordCount, charCount, model, creditsUsed: 0 });
       setStatus('done');
     } catch (err) {
       if (err && typeof err === 'object' && 'code' in err && 'retryable' in err) {

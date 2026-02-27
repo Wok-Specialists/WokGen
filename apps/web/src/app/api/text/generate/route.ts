@@ -82,6 +82,51 @@ async function callLLM(
   return data.choices?.[0]?.message?.content?.trim() ?? '';
 }
 
+async function streamLLM(
+  url: string,
+  apiKey: string,
+  model: string,
+  messages: ChatMessage[],
+  maxTokens: number,
+  controller: ReadableStreamDefaultController<Uint8Array>,
+): Promise<string> {
+  const encoder = new TextEncoder();
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model, messages, max_tokens: maxTokens, temperature: 0.8, stream: true }),
+  });
+
+  if (!res.ok || !res.body) {
+    throw new Error(`LLM stream error ${res.status}`);
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let accumulated = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value, { stream: true });
+    // Parse SSE data lines
+    for (const line of chunk.split('\n')) {
+      if (!line.startsWith('data: ')) continue;
+      const raw = line.slice(6).trim();
+      if (raw === '[DONE]') continue;
+      try {
+        const parsed = JSON.parse(raw) as { choices: Array<{ delta: { content?: string } }> };
+        const token = parsed.choices?.[0]?.delta?.content ?? '';
+        if (token) {
+          accumulated += token;
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ token })}\n\n`));
+        }
+      } catch { /* ignore malformed chunks */ }
+    }
+  }
+  return accumulated;
+}
+
 export async function POST(req: NextRequest) {
   // ── Auth & rate limit ────────────────────────────────────────────────────
   let authedUserId: string | null = null;
@@ -117,6 +162,7 @@ export async function POST(req: NextRequest) {
     length?: Length;
     language?: string;
     userId?: string;
+    stream?: boolean;
   };
   try {
     body = await req.json();
@@ -128,6 +174,7 @@ export async function POST(req: NextRequest) {
   const contentType = (body.contentType ?? 'headline') as ContentType;
   const tone        = (body.tone ?? 'professional') as Tone;
   const length      = (body.length ?? 'short') as Length;
+  const wantStream  = body.stream === true;
 
   if (!prompt) {
     return NextResponse.json({ error: 'prompt is required' }, { status: 400 });
@@ -146,7 +193,7 @@ export async function POST(req: NextRequest) {
   const togetherKey = process.env.TOGETHER_API_KEY;
 
   if (!groqKey && !togetherKey) {
-    // Pollinations fallback when no LLM provider configured
+    // Pollinations fallback — no streaming support
     try {
       const pollinationsContent = await pollinationsChat(systemPrompt, prompt, { maxLen: maxTokens * 4 });
       const wordCount = pollinationsContent.trim().split(/\s+/).filter(Boolean).length;
@@ -157,6 +204,37 @@ export async function POST(req: NextRequest) {
         { status: 503 },
       );
     }
+  }
+
+  // ── SSE streaming mode ───────────────────────────────────────────────────
+  if (wantStream && (groqKey || togetherKey)) {
+    const encoder = new TextEncoder();
+    const activeKey  = groqKey ?? togetherKey!;
+    const activeUrl  = groqKey ? GROQ_URL    : TOGETHER_URL;
+    const activeModel= groqKey ? GROQ_MODEL  : TOGETHER_MODEL;
+
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          const content = await streamLLM(activeUrl, activeKey, activeModel, messages, maxTokens, controller);
+          const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true, wordCount, charCount: content.length, model: activeModel })}\n\n`));
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : 'Stream failed';
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
   }
 
   let content = '';
