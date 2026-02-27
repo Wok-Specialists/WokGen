@@ -359,7 +359,7 @@ export function EralVoiceButton() {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              color: 'rgba(199,210,254,0.5)',
+              color: 'var(--accent-subtle)',
               padding: 2,
               display: 'flex',
               alignItems: 'center',
@@ -376,11 +376,11 @@ export function EralVoiceButton() {
       {label && (
         <div
           style={{
-            background: 'rgba(17,17,34,0.85)',
+            background: 'var(--bg)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 999,
             padding: '3px 10px',
-            color: 'rgba(255,255,255,0.8)',
+            color: 'var(--text)',
             fontSize: 11,
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
@@ -398,13 +398,13 @@ export function EralVoiceButton() {
             <span style={{
               position: 'absolute', inset: -8,
               borderRadius: '50%',
-              border: '2px solid rgba(220,38,38,0.4)',
+              border: '2px solid var(--danger-glow, rgba(220,38,38,0.4))',
               animation: 'eral-pulse 1.5s ease-out infinite',
             }} />
             <span style={{
               position: 'absolute', inset: -16,
               borderRadius: '50%',
-              border: '2px solid rgba(220,38,38,0.2)',
+              border: '2px solid var(--danger-bg)',
               animation: 'eral-pulse 1.5s ease-out 0.5s infinite',
             }} />
           </>
@@ -432,19 +432,19 @@ export function EralVoiceButton() {
             transition: 'background 0.2s, box-shadow 0.2s, transform 0.1s',
             boxShadow: state === 'idle'
               ? '0 2px 12px rgba(0,0,0,0.4)'
-              : '0 2px 20px rgba(129,140,248,0.3)',
+              : '0 2px 20px var(--accent-glow)',
             outline: 'none',
           }}
           onMouseEnter={(e) => {
             if (state === 'idle') {
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 2px 20px rgba(129,140,248,0.4)';
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 2px 24px var(--accent-glow)';
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
             }
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.boxShadow = state === 'idle'
               ? '0 2px 12px rgba(0,0,0,0.4)'
-              : '0 2px 20px rgba(129,140,248,0.3)';
+              : '0 2px 20px var(--accent-glow)';
             (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
           }}
         >
