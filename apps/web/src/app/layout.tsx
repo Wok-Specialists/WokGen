@@ -110,22 +110,30 @@ export const viewport: Viewport = {
 // ---------------------------------------------------------------------------
 function NavBar() {
   return (
-    <nav className="nav-bar" aria-label="Main navigation">
+    <nav
+      className="sticky top-0 z-50 flex items-center h-[50px] px-5 border-b border-[var(--border)] backdrop-blur-xl gap-1 flex-shrink-0"
+      style={{ background: 'rgba(10,10,10,0.92)', fontFamily: 'var(--font-heading)' }}
+      aria-label="Main navigation"
+    >
       {/* Wordmark */}
-      <Link href="/" className="nav-wordmark flex-shrink-0" aria-label="WokGen home">
+      <Link
+        href="/"
+        className="flex-shrink-0 flex items-center text-sm font-bold tracking-tight mr-3"
+        style={{ textDecoration: 'none' }}
+        aria-label="WokGen home"
+      >
         <span style={{ color: 'var(--text-muted)' }}>Wok</span>
         <span style={{ color: 'var(--accent)' }}>Gen</span>
       </Link>
 
-      {/* Nav links — hidden on mobile (MobileNav handles mobile) */}
-      <div className="nav-links-desktop">
+      {/* Nav links — hidden on mobile */}
+      <div className="hidden md:flex items-center gap-0.5">
         <StudiosDropdown />
         <NavLink href="/tools">Tools</NavLink>
         <NavLink href="/eral">Eral</NavLink>
         <NavLink href="/community">Community</NavLink>
         <span
-          className="nav-link"
-          style={{ cursor: 'default', opacity: 0.5, display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+          className="text-[0.8rem] font-medium px-2.5 py-1.5 rounded text-[var(--text-muted)] opacity-50 cursor-default inline-flex items-center gap-1.5"
           title="Browser extension — in development"
         >
           Extension

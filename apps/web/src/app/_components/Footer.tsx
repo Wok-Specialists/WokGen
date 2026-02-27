@@ -4,107 +4,100 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const PRODUCT_LINKS = [
-  { label: 'Studio',      href: '/studio?type=pixel' },
-  { label: 'Tools',        href: '/tools'        },
-  { label: 'Community',    href: '/community'    },
-  { label: 'Eral',         href: '/eral'         },
-  { label: 'Open Source',  href: '/open-source', ext: false },
+  { label: 'Studio',      href: '/studio?type=pixel', ext: false },
+  { label: 'Tools',       href: '/tools',             ext: false },
+  { label: 'Community',   href: '/community',         ext: false },
+  { label: 'Eral',        href: '/eral',              ext: false },
+  { label: 'Open Source', href: '/open-source',       ext: false },
 ];
 
 const RESOURCES_LINKS = [
-  { label: 'Docs',       href: '/docs',                                  ext: false },
-  { label: 'Changelog',  href: '/changelog',                             ext: false },
-  { label: 'GitHub',     href: 'https://github.com/WokSpec/WokGen',      ext: true  },
-  { label: 'Status',     href: '/status',                                ext: false },
+  { label: 'Docs',      href: '/docs',                             ext: false },
+  { label: 'Changelog', href: '/changelog',                        ext: false },
+  { label: 'GitHub',    href: 'https://github.com/WokSpec/WokGen', ext: true  },
+  { label: 'Status',    href: '/status',                           ext: false },
 ];
 
 const SUPPORT_LINKS = [
-  { label: 'Donate',     href: '/support',                                      ext: false },
-  { label: 'Discord',    href: 'https://discord.gg/wokgen',                     ext: true  },
-  { label: 'Twitter / X', href: 'https://twitter.com/WokSpec',                  ext: true  },
+  { label: 'Donate',      href: '/support',                    ext: false },
+  { label: 'Discord',     href: 'https://discord.gg/wokgen',   ext: true  },
+  { label: 'Twitter / X', href: 'https://twitter.com/WokSpec', ext: true  },
 ];
 
 const MODEL_CHIPS = ['FLUX', 'Stable Diffusion', 'Llama 3.3', 'Kokoro'];
 
+const linkCls = 'text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors';
+
+function FooterLink({ href, label, ext }: { href: string; label: string; ext?: boolean }) {
+  return ext ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={linkCls}>{label}</a>
+  ) : (
+    <Link href={href} className={linkCls}>{label}</Link>
+  );
+}
+
 export function Footer() {
   const pathname = usePathname();
-  if (pathname.endsWith('/studio')) return null;
+  if (pathname?.startsWith('/studio')) return null;
 
   return (
-    <footer className="site-footer">
-      <div className="site-footer__inner">
-        <div className="site-footer__cols site-footer__cols--3">
+    <footer className="border-t border-[var(--border)] bg-[var(--bg)]">
+      <div className="max-w-6xl mx-auto px-6 py-12">
 
-          {/* Product */}
+        {/* Column links */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-10">
           <div>
-            <p className="site-footer__col-title">Product</p>
-            <ul className="site-footer__col-links">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-faint)] mb-3">Product</p>
+            <ul className="space-y-2">
               {PRODUCT_LINKS.map(l => (
-                <li key={l.label}>
-                  {l.ext
-                    ? <a href={l.href} target="_blank" rel="noopener noreferrer" className="site-footer__link">{l.label}</a>
-                    : <Link href={l.href} className="site-footer__link">{l.label}</Link>}
-                </li>
+                <li key={l.label}><FooterLink href={l.href} label={l.label} ext={l.ext} /></li>
               ))}
             </ul>
           </div>
-
-          {/* Resources */}
           <div>
-            <p className="site-footer__col-title">Resources</p>
-            <ul className="site-footer__col-links">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-faint)] mb-3">Resources</p>
+            <ul className="space-y-2">
               {RESOURCES_LINKS.map(l => (
-                <li key={l.label}>
-                  {l.ext
-                    ? <a href={l.href} target="_blank" rel="noopener noreferrer" className="site-footer__link">{l.label}</a>
-                    : <Link href={l.href} className="site-footer__link">{l.label}</Link>}
-                </li>
+                <li key={l.label}><FooterLink href={l.href} label={l.label} ext={l.ext} /></li>
               ))}
             </ul>
           </div>
-
-          {/* Support */}
           <div>
-            <p className="site-footer__col-title">Support</p>
-            <ul className="site-footer__col-links">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-faint)] mb-3">Support</p>
+            <ul className="space-y-2">
               {SUPPORT_LINKS.map(l => (
-                <li key={l.label}>
-                  {l.ext
-                    ? <a href={l.href} target="_blank" rel="noopener noreferrer" className="site-footer__link">{l.label}</a>
-                    : <Link href={l.href} className="site-footer__link">{l.label}</Link>}
-                </li>
+                <li key={l.label}><FooterLink href={l.href} label={l.label} ext={l.ext} /></li>
               ))}
             </ul>
           </div>
-
         </div>
 
-        <div className="site-footer__bottom">
-          {/* Left */}
-          <p className="site-footer__copy">
+        {/* Bottom bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[var(--border)]">
+          <p className="text-xs text-[var(--text-faint)]">
             © {new Date().getFullYear()} WokGen
           </p>
-
-          {/* Center — powered by open source + model chips */}
-          <div className="site-footer__powered">
-            <span className="site-footer__powered-label">Powered by open source</span>
-            <div className="site-footer__model-chips">
-              {MODEL_CHIPS.map(m => (
-                <span key={m} className="site-footer__model-chip">{m}</span>
-              ))}
-            </div>
+          <div className="flex items-center gap-2 flex-wrap justify-center">
+            <span className="text-xs text-[var(--text-faint)] mr-1">Powered by open source</span>
+            {MODEL_CHIPS.map(m => (
+              <span
+                key={m}
+                className="text-xs text-[var(--text-faint)] bg-[var(--surface-raised)] px-2 py-0.5 rounded border border-[var(--border)]"
+              >
+                {m}
+              </span>
+            ))}
           </div>
-
-          {/* Right — GitHub stars */}
           <a
             href="https://github.com/WokSpec/WokGen"
             target="_blank"
             rel="noopener noreferrer"
-            className="site-footer__gh-stars"
+            className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
           >
             Star on GitHub
           </a>
         </div>
+
       </div>
     </footer>
   );

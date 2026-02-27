@@ -110,7 +110,7 @@ export function NavAuth() {
   if (!session) {
     return (
       <button type="button"
-        className="btn-primary btn-sm"
+        className="inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:opacity-90 font-semibold text-[0.78rem] px-3 py-1.5 rounded-md transition text-white cursor-pointer border-none"
         onClick={() => signIn(undefined, { callbackUrl: '/studio' })}
       >
         Sign in
