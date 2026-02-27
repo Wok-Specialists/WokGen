@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
-  { href: '/studio', label: 'Studio' },
+  { href: '/studio?type=pixel', label: 'Studio' },
   { href: '/tools', label: 'Tools' },
   { href: '/community', label: 'Community' },
   { href: '/eral', label: 'Eral' },
@@ -84,7 +84,7 @@ export function MobileNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`mobile-nav-item${pathname === item.href || pathname?.startsWith(item.href + '/') ? ' mobile-nav-item--active' : ''}`}
+              className={`mobile-nav-item${pathname === item.href || pathname?.startsWith(item.href.split('?')[0] + '/') || pathname === item.href.split('?')[0] ? ' mobile-nav-item--active' : ''}`}
               onClick={() => setOpen(false)}
             >
               {item.label}
@@ -94,12 +94,12 @@ export function MobileNav() {
 
         <div className="mobile-nav-drawer-footer">
           <a
-            href="https://wokspec.org"
+            href="https://github.com/WokSpec/WokGen"
             className="mobile-nav-footer-link"
             target="_blank"
             rel="noopener noreferrer"
           >
-            ← wokspec.org
+            GitHub
           </a>
         </div>
       </div>
