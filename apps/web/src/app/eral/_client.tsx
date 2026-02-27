@@ -944,8 +944,9 @@ export function EralPage({ userId }: { userId?: string }) {
                 <div className="eral-notepad-footer">
                   <span className="eral-notepad-count">{notepadText.length} chars</span>
                   <button
+                    type="button"
                     className="eral-notepad-clear"
-                    onClick={() => { if (window.confirm('Clear notepad?')) setNotepadText(''); }}
+                    onClick={() => setNotepadText('')}
                     disabled={!notepadText}
                   >Clear</button>
                 </div>

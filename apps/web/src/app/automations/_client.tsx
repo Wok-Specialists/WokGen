@@ -142,10 +142,14 @@ function AutomationRow({
   onToggle,
   onDelete,
 }: { auto: Automation; onToggle: () => void; onDelete: () => void }) {
-  const [deleting, setDeleting] = useState(false);
-  const [testing, setTesting] = useState(false);
+  const [deleting,      setDeleting]      = useState(false);
+  const [testing,       setTesting]       = useState(false);
+  const [testMsg,       setTestMsg]       = useState<{ ok: boolean; text: string } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleDelete = async () => {
+    if (!confirmDelete) { setConfirmDelete(true); return; }
+    setConfirmDelete(false);
     setDeleting(true);
     await fetch(`/api/automations/${auto.id}`, { method: 'DELETE' });
     onDelete();
@@ -153,12 +157,15 @@ function AutomationRow({
 
   const handleTest = async () => {
     setTesting(true);
+    setTestMsg(null);
     try {
       const r = await fetch(`/api/automations/${auto.id}/test`, { method: 'POST' });
       const d = (await r.json()) as { ok: boolean; status?: number; error?: string };
-      alert(d.ok ? `Test delivered — HTTP ${d.status}` : `Test failed: ${d.error ?? 'unknown'}`);
+      setTestMsg({ ok: d.ok, text: d.ok ? `Test delivered — HTTP ${d.status}` : `Test failed: ${d.error ?? 'unknown'}` });
+      setTimeout(() => setTestMsg(null), 5000);
     } catch {
-      alert('Test request failed');
+      setTestMsg({ ok: false, text: 'Test request failed' });
+      setTimeout(() => setTestMsg(null), 5000);
     } finally {
       setTesting(false);
     }
@@ -182,9 +189,13 @@ function AutomationRow({
         {auto.lastRunError && (
           <p className="automation-row__error">{auto.lastRunError}</p>
         )}
+        {testMsg && (
+          <p style={{ fontSize: '0.75rem', color: testMsg.ok ? 'var(--success, #10b981)' : 'var(--danger, #ef4444)', marginTop: '0.25rem' }}>{testMsg.text}</p>
+        )}
       </div>
       <div className="automation-row__actions">
         <button
+          type="button"
           role="switch"
           aria-checked={auto.enabled}
           className={`notify-toggle ${auto.enabled ? 'notify-toggle--on' : ''}`}
@@ -194,9 +205,10 @@ function AutomationRow({
           <span className="notify-toggle__thumb" />
         </button>
         {auto.targetType === 'webhook' && (
-          <button 
-            className="btn btn--ghost btn--sm" 
-            onClick={handleTest} 
+          <button
+            type="button"
+            className="btn btn--ghost btn--sm"
+            onClick={handleTest}
             disabled={testing}
             title="Send test event to webhook"
             style={{ color: 'var(--text-muted)' }}
@@ -206,6 +218,7 @@ function AutomationRow({
         )}
         {auto.targetType !== 'webhook' && (
           <button
+            type="button"
             className="btn btn--ghost btn--sm"
             onClick={handleTest}
             disabled={testing}
@@ -215,9 +228,12 @@ function AutomationRow({
             {testing ? '…' : 'Test run'}
           </button>
         )}
-        <button className="btn btn--ghost btn--sm" onClick={handleDelete} disabled={deleting}>
-          {deleting ? '…' : 'Delete'}
+        <button type="button" className="btn btn--ghost btn--sm" onClick={handleDelete} disabled={deleting} title={confirmDelete ? 'Click again to confirm' : 'Delete automation'} style={{ color: confirmDelete ? 'var(--danger)' : undefined, fontWeight: confirmDelete ? 700 : undefined }}>
+          {deleting ? '…' : confirmDelete ? 'Confirm?' : 'Delete'}
         </button>
+        {confirmDelete && (
+          <button type="button" onClick={() => setConfirmDelete(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', padding: '0 4px' }}>Cancel</button>
+        )}
       </div>
     </div>
   );

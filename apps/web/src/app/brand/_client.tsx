@@ -175,11 +175,13 @@ function KitForm({ initial, onSaved, onCancel }: KitFormProps) {
 
 // ─── Kit card ────────────────────────────────────────────────────────────────
 
-function KitCard({ kit, onEdit, onDelete }: {
-  kit: BrandKit; onEdit: () => void; onDelete: () => void;
+function KitCard({ kit, onEdit, onDelete, pendingDeleteId }: {
+  kit: BrandKit; onEdit: () => void; onDelete: () => void; pendingDeleteId: string | null;
 }) {
   let palette: PaletteColor[] = [];
   try { palette = JSON.parse(kit.paletteJson) || []; } catch {}
+
+  const isPending = pendingDeleteId === kit.id;
 
   return (
     <div className="brand-kit-card">
@@ -200,8 +202,10 @@ function KitCard({ kit, onEdit, onDelete }: {
         )}
       </div>
       <div className="brand-kit-card__actions">
-        <button className="btn btn--ghost btn--sm" onClick={onEdit}>Edit</button>
-        <button className="btn btn--ghost btn--sm btn--danger" onClick={onDelete}>Delete</button>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={onEdit}>Edit</button>
+        <button type="button" className={`btn btn--ghost btn--sm btn--danger`} onClick={onDelete} title={isPending ? 'Click again to confirm' : 'Delete brand kit'} style={{ fontWeight: isPending ? 700 : undefined }}>
+          {isPending ? 'Confirm?' : 'Delete'}
+        </button>
       </div>
     </div>
   );
@@ -210,10 +214,11 @@ function KitCard({ kit, onEdit, onDelete }: {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function BrandClient() {
-  const [kits, setKits]           = useState<BrandKit[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [showForm, setShowForm]   = useState(false);
-  const [editKit, setEditKit]     = useState<BrandKit | null>(null);
+  const [kits, setKits]               = useState<BrandKit[]>([]);
+  const [loading, setLoading]         = useState(true);
+  const [showForm, setShowForm]       = useState(false);
+  const [editKit, setEditKit]         = useState<BrandKit | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const res = await fetch('/api/brand');
@@ -234,7 +239,8 @@ export default function BrandClient() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this brand kit?')) return;
+    if (confirmDeleteId !== id) { setConfirmDeleteId(id); return; }
+    setConfirmDeleteId(null);
     await fetch(`/api/brand/${id}`, { method: 'DELETE' });
     setKits(prev => prev.filter(k => k.id !== id));
   };
@@ -276,8 +282,9 @@ export default function BrandClient() {
             <KitCard
               key={kit.id}
               kit={kit}
-              onEdit={() => setEditKit(kit)}
+              onEdit={() => { setConfirmDeleteId(null); setEditKit(kit); }}
               onDelete={() => handleDelete(kit.id)}
+              pendingDeleteId={confirmDeleteId}
             />
           ))}
         </div>
