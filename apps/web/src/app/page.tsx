@@ -68,10 +68,10 @@ export default function HomePage() {
             WokGen Studio
           </h1>
           <p className="homepage-hero-sub">
-            AI generation for pixel art, brand assets, vectors, UI, voice, and code. Pick a mode and start building.
+            AI generation for pixel art, brand assets, vectors, UI, voice, and code. Pick a mode and generate.
           </p>
           <div className="homepage-hero-ctas">
-            <Link href="/studio" className="homepage-cta-primary">
+            <Link href="/studio?type=pixel" className="homepage-cta-primary">
               Open Studio →
             </Link>
             <Link href="/community" className="homepage-cta-ghost">
