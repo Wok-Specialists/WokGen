@@ -661,7 +661,7 @@ function BusinessStudioInner() {
                     My Prompts ▾
                   </button>
                   {showFavMenu && (
-                    <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 50, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 6, minWidth: 220, maxHeight: 180, overflowY: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                    <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 50, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 6, minWidth: 220, maxHeight: 180, overflowY: 'auto', boxShadow: '0 4px 12px var(--overlay-30)' }}>
                       {favPrompts.map(f => (
                         <button type="button"
                           key={f.id}
@@ -1238,7 +1238,7 @@ function BusinessStudioInner() {
                       transition: 'opacity 0.15s',
                       fontSize: '0.72rem',
                       padding: '3px 8px',
-                      background: 'rgba(0,0,0,0.7)',
+                      background: 'var(--overlay-70)',
                       border: '1px solid var(--border-strong, var(--border))',
                       borderRadius: 4,
                       color: '#fff',

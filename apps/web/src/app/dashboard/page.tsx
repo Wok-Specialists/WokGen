@@ -140,8 +140,8 @@ export default async function DashboardPage() {
             label: 'Asset Library',
             desc: 'All your generated images, vectors, and files',
             accent: 'var(--green, #34d399)',
-            bg: 'rgba(52,211,153,0.12)',
-            border: 'rgba(52,211,153,0.25)',
+            bg: 'var(--success-bg)',
+            border: 'var(--success-glow)',
           },
           {
             href: '/projects',
@@ -151,8 +151,8 @@ export default async function DashboardPage() {
             label: 'Projects',
             desc: 'Organize work into named workspaces with brand context',
             accent: 'var(--blue, #60a5fa)',
-            bg: 'rgba(96,165,250,0.12)',
-            border: 'rgba(96,165,250,0.25)',
+            bg: 'var(--info-bg)',
+            border: 'var(--info-bg)',
           },
           {
             href: '/account/api-keys',
@@ -162,8 +162,8 @@ export default async function DashboardPage() {
             label: 'API Keys',
             desc: 'Manage WokAPI keys for programmatic access',
             accent: 'var(--yellow, #f59e0b)',
-            bg: 'rgba(245,158,11,0.12)',
-            border: 'rgba(245,158,11,0.25)',
+            bg: 'var(--warning-bg)',
+            border: 'var(--warning-bg)',
           },
           {
             href: '/settings',
@@ -184,8 +184,8 @@ export default async function DashboardPage() {
             label: 'WokAPI',
             desc: 'Developer docs, endpoint reference, @wokspec/sdk',
             accent: 'var(--pink, #f472b6)',
-            bg: 'rgba(244,114,182,0.12)',
-            border: 'rgba(244,114,182,0.25)',
+            bg: 'var(--surface-raised)',
+            border: 'var(--border)',
           },
         ].map(item => (
           <Link

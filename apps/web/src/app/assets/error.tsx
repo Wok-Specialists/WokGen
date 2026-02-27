@@ -12,7 +12,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
         <button type="button" onClick={reset} style={{ padding: '0.5rem 1.25rem', background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)', borderRadius: '6px', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.875rem' }}>
           Try again
         </button>
-        <a href="/library" style={{ padding: '0.5rem 1.25rem', background: 'var(--surface-raised, rgba(255,255,255,0.04))', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text-muted)', fontSize: '0.875rem', textDecoration: 'none' }}>
+        <a href="/library" style={{ padding: '0.5rem 1.25rem', background: 'var(--surface-raised, var(--surface-card))', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text-muted)', fontSize: '0.875rem', textDecoration: 'none' }}>
           Library
         </a>
       </div>

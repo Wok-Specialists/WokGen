@@ -183,7 +183,7 @@ export default function DocumentEditorClient({
         }
         .doc-editor__export-btn {
           background: none;
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 1px solid var(--surface-raised);
           color: var(--text-faint);
           font-size: 0.68rem;
           padding: 3px 8px;
@@ -191,14 +191,14 @@ export default function DocumentEditorClient({
           cursor: pointer;
           transition: color 0.1s, border-color 0.1s;
         }
-        .doc-editor__export-btn:hover { color: rgba(255,255,255,0.7); border-color: var(--text-faint); }
+        .doc-editor__export-btn:hover { color: var(--text-secondary); border-color: var(--text-faint); }
 
         .doc-editor__toolbar {
           display: flex;
           align-items: center;
           gap: 2px;
           padding: 6px 12px;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 1px solid var(--surface-hover);
           flex-shrink: 0;
           background: #09090f;
           flex-wrap: wrap;
@@ -220,7 +220,7 @@ export default function DocumentEditorClient({
         }
         .doc-editor__toolbar-btn:hover {
           background: var(--border);
-          color: rgba(255,255,255,0.8);
+          color: var(--text);
         }
 
         .doc-editor__body {
@@ -263,7 +263,7 @@ export default function DocumentEditorClient({
           letter-spacing: -0.02em;
           width: 100%;
         }
-        .doc-editor__title::placeholder { color: rgba(255,255,255,0.15); }
+        .doc-editor__title::placeholder { color: var(--border); }
 
         /* Tiptap content styles */
         .doc-editor__content .ProseMirror {
@@ -274,7 +274,7 @@ export default function DocumentEditorClient({
         }
         .doc-editor__content .ProseMirror p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
-          color: rgba(255,255,255,0.15);
+          color: var(--border);
           pointer-events: none;
           float: left;
           height: 0;
@@ -296,13 +296,13 @@ export default function DocumentEditorClient({
         .doc-editor__content .ProseMirror code {
           font-family: ui-monospace, monospace;
           font-size: 0.85em;
-          background: rgba(255,255,255,0.07);
+          background: var(--surface-raised);
           padding: 0.1em 0.35em;
           border-radius: 2px;
         }
         .doc-editor__content .ProseMirror pre {
-          background: rgba(0,0,0,0.3);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--overlay-30);
+          border: 1px solid var(--surface-raised);
           border-radius: 3px;
           padding: 1em;
           overflow-x: auto;
@@ -312,10 +312,10 @@ export default function DocumentEditorClient({
           background: none; padding: 0; font-size: 0.85rem;
         }
         .doc-editor__content .ProseMirror blockquote {
-          border-left: 3px solid rgba(255,255,255,0.15);
+          border-left: 3px solid var(--border);
           padding-left: 1em;
           margin: 0.75em 0;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-muted);
         }
         .doc-editor__content .ProseMirror hr {
           border: none;

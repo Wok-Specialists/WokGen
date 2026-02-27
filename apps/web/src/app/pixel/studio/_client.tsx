@@ -461,7 +461,7 @@ function SettingsModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+      style={{ background: 'var(--overlay-70)', backdropFilter: 'blur(4px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
@@ -1145,7 +1145,7 @@ function OutputPanel({
                 style={{
                   position: 'absolute', top: 4, right: 4, opacity: 0,
                   transition: 'opacity 0.15s', fontSize: '0.68rem', padding: '2px 6px',
-                  background: 'rgba(0,0,0,0.75)', border: '1px solid rgba(255,255,255,0.15)',
+                  background: 'rgba(0,0,0,0.75)', border: '1px solid var(--border)',
                   borderRadius: 3, color: '#fff', cursor: bgRemoving ? 'wait' : 'pointer',
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
@@ -1667,7 +1667,7 @@ function GenerateForm({
                     My Prompts ▾
                   </button>
                   {showFavMenu && (
-                    <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 50, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 6, minWidth: 220, maxHeight: 180, overflowY: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                    <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 50, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 6, minWidth: 220, maxHeight: 180, overflowY: 'auto', boxShadow: '0 4px 12px var(--overlay-30)' }}>
                       {favPrompts.map(f => (
                         <button type="button"
                           key={f.id}

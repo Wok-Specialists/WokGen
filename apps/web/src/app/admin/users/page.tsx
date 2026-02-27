@@ -80,7 +80,7 @@ export default async function AdminUsersPage({
             defaultValue={q}
             placeholder="Search name or email..."
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: 'var(--surface-hover)',
               border: '1px solid var(--border)',
               borderRadius: '8px',
               padding: '0.5rem 0.875rem',
@@ -108,7 +108,7 @@ export default async function AdminUsersPage({
             <tr
               style={{
                 borderBottom: '1px solid var(--border)',
-                background: 'rgba(255,255,255,0.02)',
+                background: 'var(--surface-card)',
               }}
             >
               {['User', 'Email', 'Joined', 'Role'].map((h) => (
@@ -132,7 +132,7 @@ export default async function AdminUsersPage({
             {users.map((user) => (
               <tr
                 key={user.id}
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                style={{ borderBottom: '1px solid var(--surface-card)' }}
               >
                 <td style={{ padding: '0.875rem 1rem' }}>
                   <div

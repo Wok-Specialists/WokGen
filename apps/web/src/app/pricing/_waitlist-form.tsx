@@ -47,7 +47,7 @@ export default function ProWaitlistForm() {
             padding: '0.5rem 0.75rem',
             borderRadius: '7px',
             border: '1px solid rgba(96,165,250,0.35)',
-            background: 'rgba(255,255,255,0.04)',
+            background: 'var(--surface-card)',
             color: 'var(--text-primary)',
             fontSize: '0.875rem',
             outline: 'none',

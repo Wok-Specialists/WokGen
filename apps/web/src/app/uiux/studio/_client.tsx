@@ -1003,7 +1003,7 @@ function UIUXPreview({
         <button type="button" className="btn-ghost btn-xs" onClick={() => setIframeKey((k) => k + 1)} title="Reload preview">↺</button>
       </div>
       <div style={{ flex: 1, overflow: 'auto', background: vpWidth ? '#1a1a1a' : '#fff', display: 'flex', justifyContent: 'center', padding: vpWidth ? '12px 0' : 0 }}>
-        <div style={{ width: vpWidth ?? '100%', height: vpWidth ? undefined : '100%', minHeight: vpWidth ? 600 : undefined, boxShadow: vpWidth ? '0 4px 24px rgba(0,0,0,0.5)' : 'none', borderRadius: vpWidth ? 8 : 0, overflow: 'hidden', flex: vpWidth ? undefined : 1 }}>
+        <div style={{ width: vpWidth ?? '100%', height: vpWidth ? undefined : '100%', minHeight: vpWidth ? 600 : undefined, boxShadow: vpWidth ? '0 4px 24px var(--overlay-50)' : 'none', borderRadius: vpWidth ? 8 : 0, overflow: 'hidden', flex: vpWidth ? undefined : 1 }}>
           <iframe key={iframeKey} srcDoc={code} title="Component preview" className="uiux-iframe" sandbox="allow-scripts allow-same-origin" style={{ border: 'none', width: '100%', height: vpWidth ? 600 : '100%', display: 'block', minHeight: vpWidth ? 600 : undefined }} />
         </div>
       </div>

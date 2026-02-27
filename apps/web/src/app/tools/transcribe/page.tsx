@@ -82,7 +82,7 @@ export default function TranscribePage() {
           value={audioUrl}
           onChange={e => setAudioUrl(e.target.value)}
           placeholder="https://example.com/audio.mp3"
-          style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none', marginBottom: '1rem' }}
+          style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none', marginBottom: '1rem' }}
         />
         <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
           {[
@@ -106,7 +106,7 @@ export default function TranscribePage() {
         {result && (
           <div style={{ marginTop: '1.5rem' }}>
             {audioUrl && (
-              <div style={{ marginBottom: '1rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.05)', padding: '0.75rem' }}>
+              <div style={{ marginBottom: '1rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface-hover)', padding: '0.75rem' }}>
                 {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                 <audio controls style={{ width: '100%' }} src={audioUrl}>
                   Your browser does not support audio.
@@ -128,7 +128,7 @@ export default function TranscribePage() {
                 <button type="button" onClick={() => exportTranscript('json')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>JSON</button>
               </div>
             </div>
-            <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', maxHeight: '300px', overflowY: 'auto', fontSize: '0.9375rem', lineHeight: 1.7 }}>
+            <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)', maxHeight: '300px', overflowY: 'auto', fontSize: '0.9375rem', lineHeight: 1.7 }}>
               {result.words?.length > 0 ? (
                 <>
                   {result.words.map((word: any, i: number) => (
@@ -149,7 +149,7 @@ export default function TranscribePage() {
               <div style={{ marginTop: '1rem' }}>
                 <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Speaker Breakdown</div>
                 {result.utterances.slice(0, 8).map((u: any, i: number) => (
-                  <div key={i} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.875rem' }}>
+                  <div key={i} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--surface-card)', fontSize: '0.875rem' }}>
                     <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0, width: '60px' }}>Speaker {u.speaker}</span>
                     <span style={{ color: 'var(--text-secondary)' }}>{u.text}</span>
                   </div>

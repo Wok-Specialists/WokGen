@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Analytics — WokGen' };
 
 // Map generation count to a heat colour (purple-scale like GitHub)
 function heatColour(count: number): string {
-  if (count === 0) return 'rgba(255,255,255,0.06)';
+  if (count === 0) return 'var(--surface-raised)';
   if (count === 1) return 'rgba(var(--accent-rgb, 129,140,248), 0.25)';
   if (count <= 3) return 'rgba(var(--accent-rgb, 129,140,248), 0.5)';
   if (count <= 5) return 'rgba(var(--accent-rgb, 129,140,248), 0.75)';
@@ -169,7 +169,7 @@ export default async function AnalyticsPage() {
               return (
                 <div key={t.tool} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <div style={{ width: '80px', fontSize: '0.8rem', opacity: 0.7, flexShrink: 0 }}>{t.tool}</div>
-                  <div style={{ flex: 1, height: '6px', borderRadius: '3px', backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                  <div style={{ flex: 1, height: '6px', borderRadius: '3px', backgroundColor: 'var(--surface-raised)' }}>
                     <div
                       style={{
                         height: '100%',
@@ -216,7 +216,7 @@ export default async function AnalyticsPage() {
                       width: 48,
                       height: 48,
                       borderRadius: '4px',
-                      backgroundColor: 'rgba(255,255,255,0.06)',
+                      backgroundColor: 'var(--surface-raised)',
                       flexShrink: 0,
                     }}
                   />

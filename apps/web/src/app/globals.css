@@ -89,6 +89,13 @@
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.80);
   --glow-accent: 0 0 24px var(--accent-glow);
 
+  /* ── Overlays ─────────────────────────────────────────── */
+  --overlay-30: rgba(0,0,0,0.30);
+  --overlay-50: rgba(0,0,0,0.50);
+  --overlay-60: rgba(0,0,0,0.60);
+  --overlay-70: rgba(0,0,0,0.70);
+  --overlay-80: rgba(0,0,0,0.80);
+
   /* ── Layout ───────────────────────────────────────────── */
   --nav-height:           50px;
   --mode-switcher-height: 0px;
@@ -19504,6 +19511,13 @@ select:focus-visible {
   --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
   --glow-accent: 0 0 24px rgba(79,70,229,0.12);
+
+  /* ── Overlays ─────────────────────────────────────────── */
+  --overlay-30: rgba(0,0,0,0.30);
+  --overlay-50: rgba(0,0,0,0.50);
+  --overlay-60: rgba(0,0,0,0.60);
+  --overlay-70: rgba(0,0,0,0.70);
+  --overlay-80: rgba(0,0,0,0.80);
 
   /* ── shadcn/ui ────────────────────────────────────────── */
   --background: 0 0% 98%;

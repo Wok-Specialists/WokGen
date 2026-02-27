@@ -151,7 +151,7 @@ export default function ProjectsClient() {
               style={{ background: 'var(--bg-surface)', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}
             >
               {/* Asset thumbnail preview strip */}
-              <div className="grid grid-cols-4 gap-1 overflow-hidden" style={{ background: 'rgba(0,0,0,0.3)' }}>
+              <div className="grid grid-cols-4 gap-1 overflow-hidden" style={{ background: 'var(--overlay-30)' }}>
                 {[0, 1, 2, 3].map(i => {
                   const asset = p.recentAssets?.[i];
                   return (

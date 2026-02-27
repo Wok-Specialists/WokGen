@@ -328,7 +328,7 @@ function AssetModal({
           maxHeight: '90dvh',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+          boxShadow: '0 24px 80px var(--overlay-70)',
           animation: 'scale-in 0.18s ease-out both',
         }}
         onClick={(e) => e.stopPropagation()}

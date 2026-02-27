@@ -266,7 +266,7 @@ export default function LibraryClient() {
                 style={{
                   position: 'absolute', top: 8, left: 8, zIndex: 10,
                   width: 20, height: 20, borderRadius: 4,
-                  background: selected.has(asset.id) ? 'var(--accent)' : 'rgba(0,0,0,0.6)',
+                  background: selected.has(asset.id) ? 'var(--accent)' : 'var(--overlay-60)',
                   border: '1.5px solid',
                   borderColor: selected.has(asset.id) ? 'var(--accent)' : 'var(--border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -279,7 +279,7 @@ export default function LibraryClient() {
                   <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 )}
               </div>
-              <div style={{ aspectRatio: '1', overflow: 'hidden', background: 'rgba(0,0,0,0.3)', position: 'relative' }}>
+              <div style={{ aspectRatio: '1', overflow: 'hidden', background: 'var(--overlay-30)', position: 'relative' }}>
                 {(asset.thumbUrl ?? asset.imageUrl) && (
                   <Image
                     src={asset.thumbUrl ?? asset.imageUrl}

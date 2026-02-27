@@ -145,7 +145,7 @@ function LoginForm() {
           transition: background 0.15s, border-color 0.15s;
         }
         .login-btn:hover {
-          background: rgba(255,255,255,0.06);
+          background: var(--surface-raised);
           border-color: #3a3a3a;
         }
         .login-btn--google {

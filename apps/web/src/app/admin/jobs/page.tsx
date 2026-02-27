@@ -67,7 +67,7 @@ export default function AdminJobsPage() {
                       { label: 'Completed', value: s.completed, color: '#10b981' },
                       { label: 'Failed',    value: s.failed,    color: '#ef4444' },
                     ].map(stat => (
-                      <div key={stat.label} style={{ padding: '0.75rem', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)' }}>
+                      <div key={stat.label} style={{ padding: '0.75rem', border: '1px solid var(--surface-raised)', borderRadius: '8px', background: 'var(--surface-card)' }}>
                         <div style={{ fontSize: '1.25rem', fontWeight: 700, color: stat.color }}>{stat.value}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>{stat.label}</div>
                       </div>

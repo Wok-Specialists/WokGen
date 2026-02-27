@@ -431,13 +431,13 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           font-size: 13px;
           font-weight: 500;
           cursor: pointer;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(129,140,248,0.1);
+          box-shadow: 0 4px 20px var(--overlay-50), 0 0 12px rgba(129,140,248,0.1);
           transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
         }
         .esb-toggle-btn:hover {
           background: #22223a;
           border-color: rgba(129,140,248,0.6);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.6), 0 0 20px rgba(129,140,248,0.2);
+          box-shadow: 0 4px 24px var(--overlay-60), 0 0 20px rgba(129,140,248,0.2);
         }
         .esb-toggle-label { font-family: var(--font-heading, 'Space Grotesk', sans-serif); }
 
@@ -454,7 +454,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           background: #111118;
           border: 1px solid rgba(129,140,248,0.2);
           border-radius: 10px;
-          box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(129,140,248,0.08);
+          box-shadow: 0 8px 40px var(--overlay-70), 0 0 24px rgba(129,140,248,0.08);
           overflow: hidden;
           animation: esb-slide-in 0.2s ease;
         }
@@ -476,7 +476,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         /* Tabs */
         .esb-tabs {
           display: flex;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid var(--surface-raised);
           background: var(--bg-surface);
         }
         .esb-tab {
@@ -512,7 +512,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           align-items: center;
           justify-content: space-between;
           padding: 10px 12px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid var(--surface-raised);
           background: rgba(129,140,248,0.05);
           flex-shrink: 0;
         }
@@ -561,7 +561,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           border-radius: 3px;
           transition: color 0.1s, background 0.1s;
         }
-        .esb-clear-btn:hover { color: var(--text-muted, #888); background: rgba(255,255,255,0.04); }
+        .esb-clear-btn:hover { color: var(--text-muted, #888); background: var(--surface-card); }
         .esb-close-btn {
           font-size: 18px;
           line-height: 1;
@@ -580,13 +580,13 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           display: flex;
           gap: 6px;
           padding: 8px 12px;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          border-bottom: 1px solid var(--surface-card);
           flex-shrink: 0;
         }
         .esb-model-pill {
           padding: 3px 10px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-card);
+          border: 1px solid var(--surface-raised);
           border-radius: 12px;
           color: var(--text-muted, #888);
           font-size: 11px;
@@ -602,7 +602,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
         .esb-project-bar {
           padding: 4px 12px 6px;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          border-bottom: 1px solid var(--surface-card);
           flex-shrink: 0;
         }
         .esb-project-select {
@@ -652,8 +652,8 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         }
         .esb-msg-assistant {
           align-self: flex-start;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: var(--surface-card);
+          border: 1px solid var(--surface-raised);
           color: var(--text, #ebebeb);
           border-radius: 2px 6px 6px 6px;
         }
@@ -674,7 +674,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         .esb-prose strong { font-weight: 600; }
         pre.esb-code {
           background: rgba(0,0,0,0.4);
-          border: 1px solid rgba(255,255,255,0.07);
+          border: 1px solid var(--surface-raised);
           border-radius: 4px;
           padding: 8px 10px;
           overflow-x: auto;
@@ -683,7 +683,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         }
         pre.esb-code code { color: #c9d1d9; font-family: monospace; }
         code.esb-inline-code {
-          background: rgba(255,255,255,0.08);
+          background: var(--surface-raised);
           border-radius: 3px;
           padding: 1px 4px;
           font-size: 11px;
@@ -693,7 +693,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
         /* Input */
         .esb-input-wrap {
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid var(--surface-raised);
           padding: 8px 10px;
           display: flex;
           gap: 8px;
@@ -703,8 +703,8 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         }
         .esb-textarea {
           flex: 1;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-card);
+          border: 1px solid var(--surface-raised);
           border-radius: 5px;
           color: var(--text, #ebebeb);
           font-size: 12.5px;
@@ -716,7 +716,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           transition: border-color 0.15s;
         }
         .esb-textarea:focus { border-color: rgba(129,140,248,0.35); }
-        .esb-textarea::placeholder { color: rgba(255,255,255,0.2); }
+        .esb-textarea::placeholder { color: var(--text-faint); }
         .esb-textarea:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .esb-input-actions { display: flex; flex-direction: column; justify-content: flex-end; }

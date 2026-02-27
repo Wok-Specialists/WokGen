@@ -116,7 +116,7 @@ export default function SkyboxPage() {
               onChange={e => setPrompt(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && generate()}
               placeholder="e.g. ancient forest temple at dusk, neon cyberpunk city skyline"
-              style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
+              style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
             />
           </div>
         </div>
@@ -161,8 +161,8 @@ export default function SkyboxPage() {
         {result?.fileUrl && (
           <div className="rounded overflow-hidden border border-white/10" style={{ marginTop: '1.5rem' }}>
             <div ref={viewerRef} style={{ width: '100%', height: 400 }} />
-            <div style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)' }}>
-              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>Click and drag to look around</p>
+            <div style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--overlay-30)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Click and drag to look around</p>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <a href={result.fileUrl} download="skybox-panorama.jpg"
                    className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70"

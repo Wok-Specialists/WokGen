@@ -264,7 +264,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           width: 52px;
           flex-shrink: 0;
           background: var(--bg-surface);
-          border-right: 1px solid rgba(255,255,255,0.06);
+          border-right: 1px solid var(--surface-raised);
           padding: 12px 0;
           gap: 2px;
           overflow: hidden;
@@ -274,10 +274,10 @@ export default function UnifiedStudioClient({ type }: Props) {
           font-size: 0.6rem;
           font-weight: 800;
           letter-spacing: 0.08em;
-          color: rgba(255,255,255,0.15);
+          color: var(--border);
           text-align: center;
           padding: 4px 0 12px;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 1px solid var(--surface-hover);
           margin-bottom: 6px;
         }
 
@@ -304,8 +304,8 @@ export default function UnifiedStudioClient({ type }: Props) {
           color: rgba(255,255,255,0.25);
         }
         .wok-studio-rail__item:hover {
-          background: rgba(255,255,255,0.03);
-          color: rgba(255,255,255,0.6);
+          background: var(--surface-card);
+          color: var(--text-secondary);
         }
         .wok-studio-rail__item.--active {
           background: var(--accent-subtle, rgba(var(--accent-rgb, 129,140,248), 0.06));
@@ -345,7 +345,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           height: 32px;
           padding: 0 12px;
           background: var(--bg-surface);
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 1px solid var(--surface-hover);
           flex-shrink: 0;
         }
 
@@ -369,20 +369,20 @@ export default function UnifiedStudioClient({ type }: Props) {
           letter-spacing: 0.03em;
           color: rgba(255,255,255,0.45);
           padding: 1px 5px;
-          background: rgba(255,255,255,0.06);
+          background: var(--surface-raised);
           border-radius: 2px;
           white-space: nowrap;
           max-width: 100px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .wok-studio-ctx-tag--faint { color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.03); }
+        .wok-studio-ctx-tag--faint { color: rgba(255,255,255,0.25); background: var(--surface-card); }
         .wok-studio-ctx-swatch {
           width: 10px;
           height: 10px;
           border-radius: 50%;
           flex-shrink: 0;
-          border: 1px solid rgba(255,255,255,0.15);
+          border: 1px solid var(--border);
         }
 
         /* Project picker */
@@ -406,8 +406,8 @@ export default function UnifiedStudioClient({ type }: Props) {
         }
         .wok-proj-trigger:hover,
         .wok-proj-trigger.--open {
-          background: rgba(255,255,255,0.05);
-          color: rgba(255,255,255,0.7);
+          background: var(--surface-hover);
+          color: var(--text-secondary);
         }
 
         .wok-proj-trigger__icon { display: flex; align-items: center; }
@@ -424,7 +424,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 3px;
           padding: 4px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+          box-shadow: 0 8px 24px var(--overlay-50);
         }
 
         .wok-proj-option {
@@ -438,17 +438,17 @@ export default function UnifiedStudioClient({ type }: Props) {
           border-radius: 2px;
           cursor: pointer;
           font-size: 0.72rem;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-muted);
           text-align: left;
           transition: background 0.1s, color 0.1s;
         }
-        .wok-proj-option:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.85); }
+        .wok-proj-option:hover { background: var(--surface-hover); color: rgba(255,255,255,0.85); }
         .wok-proj-option.--active { color: var(--accent); }
 
         .wok-proj-option__dot {
           width: 5px; height: 5px;
           border-radius: 9999px;
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid var(--text-faint);
           flex-shrink: 0;
         }
         .wok-proj-option__dot.--filled { background: var(--accent); border-color: var(--accent); }
@@ -456,7 +456,7 @@ export default function UnifiedStudioClient({ type }: Props) {
         .wok-proj-loading {
           padding: 8px;
           font-size: 0.68rem;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-faint);
           text-align: center;
         }
 
@@ -505,7 +505,7 @@ export default function UnifiedStudioClient({ type }: Props) {
             height: 48px;
             padding: 0;
             border-right: none;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid var(--surface-raised);
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: none;

@@ -168,7 +168,7 @@ export default function PricingPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#60a5fa' }}>PRO</span>
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1, color: 'rgba(255,255,255,0.5)' }}>TBD<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1, color: 'var(--text-muted)' }}>TBD<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Power-user features with unlimited generation and private workspace.</p>
             </div>
             <ProWaitlistForm />

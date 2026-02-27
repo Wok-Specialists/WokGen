@@ -214,7 +214,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
               textAlign: 'left',
               transition: 'background 0.1s',
             }}
-            onMouseEnter={e => { if (activeWorkspaceId !== null) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
+            onMouseEnter={e => { if (activeWorkspaceId !== null) (e.currentTarget as HTMLElement).style.background = 'var(--surface-card)'; }}
             onMouseLeave={e => { if (activeWorkspaceId !== null) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
           >
             <span style={{ fontSize: 10, opacity: 0.5 }}>∞</span>
@@ -276,7 +276,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                         padding: '0 0.75rem',
                         background: activeWorkspaceId === ws.id ? 'var(--accent-dim, rgba(109,40,217,0.15))' : 'transparent',
                       }}
-                      onMouseEnter={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
+                      onMouseEnter={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'var(--surface-card)'; }}
                       onMouseLeave={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                     >
                       <button type="button"
