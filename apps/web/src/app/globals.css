@@ -37,6 +37,7 @@
   --accent-hover:  #6366f1;
   --accent-glow:   rgba(129, 140, 248, 0.15);
   --accent-subtle: rgba(129, 140, 248, 0.08);
+  --text-on-accent: #0d0d0d;
   --grad-from:     #6366f1;
   --grad-to:       #818cf8;
 
@@ -19451,6 +19452,7 @@ select:focus-visible {
   --accent-hover:  #4338ca;
   --accent-glow:   rgba(79, 70, 229, 0.12);
   --accent-subtle: rgba(79, 70, 229, 0.07);
+  --text-on-accent: #ffffff;
   --grad-from:     #4f46e5;
   --grad-to:       #6366f1;
 

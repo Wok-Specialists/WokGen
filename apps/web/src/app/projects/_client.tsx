@@ -139,7 +139,7 @@ export default function ProjectsClient() {
       ) : (
         <>
           {deleteError && (
-            <div style={{ color: 'var(--danger, #ef4444)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 6, padding: '0.625rem 1rem', marginBottom: '1rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 6, padding: '0.625rem 1rem', marginBottom: '1rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>{deleteError}</span>
               <button type="button" onClick={() => setDeleteError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', opacity: 0.6, fontSize: '1rem', lineHeight: 1, padding: '0 4px' }}>✕</button>
             </div>
@@ -148,7 +148,7 @@ export default function ProjectsClient() {
           {filtered.map(p => (
             <div
               key={p.id}
-              style={{ background: 'var(--bg-surface, #1a1a2e)', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}
+              style={{ background: 'var(--bg-surface)', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}
             >
               {/* Asset thumbnail preview strip */}
               <div className="grid grid-cols-4 gap-1 overflow-hidden" style={{ background: 'rgba(0,0,0,0.3)' }}>
@@ -175,30 +175,30 @@ export default function ProjectsClient() {
               {/* Card body */}
               <div style={{ padding: '0.875rem 1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                  <span style={{ fontWeight: 600, color: '#e2e8f0' }}>{p.name}</span>
-                  <span style={{ fontSize: 12, color: '#6b7280' }}>{p._count.jobs} asset{p._count.jobs !== 1 ? 's' : ''}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text)' }}>{p.name}</span>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{p._count.jobs} asset{p._count.jobs !== 1 ? 's' : ''}</span>
                 </div>
-                {p.description && <p style={{ margin: '0 0 0.5rem', fontSize: 13, color: '#6b7280' }}>{p.description}</p>}
-                <p style={{ margin: '0 0 0.75rem', fontSize: 11, color: '#4b5563' }}>{p.mode} · updated {new Date(p.updatedAt).toLocaleDateString()}</p>
+                {p.description && <p style={{ margin: '0 0 0.5rem', fontSize: 13, color: 'var(--text-secondary)' }}>{p.description}</p>}
+                <p style={{ margin: '0 0 0.75rem', fontSize: 11, color: 'var(--text-faint)' }}>{p.mode} · updated {new Date(p.updatedAt).toLocaleDateString()}</p>
 
                 {/* Quick action buttons */}
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   <Link
                     href={`/projects/${p.id}`}
-                    style={{ fontSize: 12, background: 'var(--accent)', color: '#fff', padding: '5px 12px', borderRadius: 6, textDecoration: 'none' }}
+                    style={{ fontSize: 12, background: 'var(--accent)', color: 'var(--text-on-accent, #fff)', padding: '5px 12px', borderRadius: 6, textDecoration: 'none' }}
                   >
                     Open
                   </Link>
                   <Link
                     href={`/library?projectId=${p.id}`}
-                    style={{ fontSize: 12, background: 'rgba(255,255,255,0.08)', color: '#cbd5e1', padding: '5px 12px', borderRadius: 6, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)' }}
+                    style={{ fontSize: 12, background: 'var(--surface-raised)', color: 'var(--text-secondary)', padding: '5px 12px', borderRadius: 6, textDecoration: 'none', border: '1px solid var(--border)' }}
                   >
                     Assets
                   </Link>
                   <button
                     type="button"
                     onClick={() => deleteProject(p.id, p.name)}
-                    style={{ marginLeft: 'auto', fontSize: 12, background: confirmDelete?.id === p.id ? 'rgba(239,68,68,0.15)' : 'transparent', color: 'var(--danger, #ef4444)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: confirmDelete?.id === p.id ? 700 : 400 }}
+                    style={{ marginLeft: 'auto', fontSize: 12, background: confirmDelete?.id === p.id ? 'var(--danger-bg)' : 'transparent', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: confirmDelete?.id === p.id ? 700 : 400 }}
                     title={confirmDelete?.id === p.id ? 'Click again to confirm' : 'Delete project'}
                   >
                     {confirmDelete?.id === p.id ? 'Confirm?' : 'Delete'}
