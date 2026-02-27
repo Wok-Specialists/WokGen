@@ -178,6 +178,7 @@ export default function NotificationSettingsClient() {
               <div className="notify-channel-options">
                 {(['email', 'webhook', 'both', 'none'] as const).map(ch => (
                   <button
+                    type="button"
                     key={ch}
                     className={`notify-channel-btn ${settings.notifyAdminChannel === ch ? 'notify-channel-btn--active' : ''}`}
                     onClick={() => update('notifyAdminChannel', ch)}
@@ -212,7 +213,7 @@ export default function NotificationSettingsClient() {
       {error && <p className="notify-error">{error}</p>}
 
       <div className="notify-page__footer">
-        <button className="btn btn--primary" onClick={save} disabled={saving}>
+        <button type="button" className="btn btn--primary" onClick={save} disabled={saving}>
           {saving ? 'Saving…' : 'Save settings'}
         </button>
         {saved && <span className="notify-saved">✓ Saved</span>}

@@ -60,6 +60,15 @@ function ProfileTab({ user }: { user: Props['user'] }) {
   const [bio, setBio] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
+
+  // Load bio from API on mount
+  useEffect(() => {
+    fetch('/api/user/profile')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d?.bio) setBio(d.bio); })
+      .catch(() => null);
+  }, []);
 
   // Profile completion: avatar (1), display name (1), bio (1) = max 3
   const completionItems = [
@@ -71,14 +80,18 @@ function ProfileTab({ user }: { user: Props['user'] }) {
 
   const save = async () => {
     setSaving(true);
-    await fetch('/api/user/profile', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: displayName, bio }),
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    setSaveError('');
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: displayName, bio }),
+      });
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setSaveError(d.error ?? 'Save failed'); return; }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch { setSaveError('Network error'); }
+    finally { setSaving(false); }
   };
 
   return (
@@ -150,13 +163,15 @@ function ProfileTab({ user }: { user: Props['user'] }) {
         </div>
       </div>
 
-      <button className="acct-btn-primary" onClick={save} disabled={saving}>
+      <button type="button" className="acct-btn-primary" onClick={save} disabled={saving}>
         {saving ? 'Saving…' : saved ? '✓ Saved' : 'Save Profile'}
       </button>
+      {saveError && <p style={{ color: 'var(--danger, #f87171)', fontSize: '0.8125rem', marginTop: '0.5rem' }}>{saveError}</p>}
 
       <div className="acct-divider" />
 
       <button
+        type="button"
         className="acct-btn-danger"
         onClick={() => signOut({ callbackUrl: '/' })}
       >

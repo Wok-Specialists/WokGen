@@ -35,6 +35,7 @@ export function AppearanceSettings() {
           {(['dark', 'light', 'system'] as Theme[]).map(t => (
             <button
               key={t}
+              type="button"
               onClick={() => applyTheme(t)}
               style={{
                 padding: '6px 14px',
