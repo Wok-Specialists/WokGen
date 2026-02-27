@@ -13,7 +13,7 @@ import { cerebrasChat } from '@/lib/providers/cerebras';
 // ---------------------------------------------------------------------------
 // POST /api/eral/chat
 //
-// Eral 7c — WokGen's AI companion. Routes to Groq / Together based on
+// Eral — WokGen's AI companion. Routes to Groq / Together based on
 // model variant. Supports streaming SSE and conversation persistence.
 // ---------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ const ERAL_RL_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 // ─── System prompt ──────────────────────────────────────────────────────────
 
-const ERAL_SYSTEM_PROMPT = `You are Eral 7c, WokGen Studio's AI creative companion. You help with creative direction, copywriting, strategy, and code.
+const ERAL_SYSTEM_PROMPT = `You are Eral, WokGen Studio's AI creative companion. You help with creative direction, copywriting, strategy, and code.
 
 WokSpec is a creative technology company. WokGen is their multi-engine AI asset generation platform at wokgen.wokspec.org, offering:
 - WokGen Pixel: Sprites, tilesets, animations for game developers

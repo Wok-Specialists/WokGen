@@ -29,7 +29,7 @@ interface SidebarMessage {
 }
 
 const MINI_MODEL_OPTIONS: { value: ModelVariant; label: string }[] = [
-  { value: 'eral-7c',   label: 'Eral 7c'   },
+  { value: 'eral-7c',   label: 'Eral'   },
   { value: 'speed',     label: 'Speed'     },
   { value: 'code',      label: 'Code'      },
   { value: 'creative',  label: 'Creative'  },
@@ -234,7 +234,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
         <button type="button"
           className="esb-toggle-btn"
           onClick={() => setOpen(true)}
-          aria-label="Open Eral 7c"
+          aria-label="Open Eral"
           title="Open Eral"
         >
           <span className="esb-toggle-label">Eral</span>
@@ -243,12 +243,12 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
       {/* ── Expanded drawer ───────────────────────────────────────── */}
       {open && (
-        <div className="esb-drawer" role="complementary" aria-label="Eral 7c">
+        <div className="esb-drawer" role="complementary" aria-label="Eral">
           {/* Header */}
           <div className="esb-header">
             <div className="esb-header-left">
               <span className="esb-header-icon">AI</span>
-              <span className="esb-header-name">Eral 7c</span>
+              <span className="esb-header-name">Eral</span>
               {mode && (
                 <span className="esb-ctx-badge">{mode}</span>
               )}
@@ -327,7 +327,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           <div className="esb-messages">
             {displayedMessages.length === 0 && !streamingMsg && (
               <div className="esb-empty">
-                <p>Hi! I&apos;m Eral 7c — your AI companion for WokGen Studio.</p>
+                <p>Hi! I&apos;m Eral — your AI companion for WokGen Studio.</p>
                 {mode && (
                   <p style={{ marginTop: 6, fontSize: 11, color: 'var(--text-faint)' }}>
                     Context: {mode} mode{tool ? ` · ${tool}` : ''}
@@ -358,7 +358,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
             <textarea
               ref={inputRef}
               className="esb-textarea"
-              placeholder="Ask Eral 7c…"
+              placeholder="Ask Eral…"
               rows={2}
               value={input}
               onChange={(e) => setInput(e.target.value)}

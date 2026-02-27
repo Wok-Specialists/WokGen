@@ -46,7 +46,7 @@ const COMMANDS: Command[] = [
   },
   {
     syntax:      '/eral [message]',
-    description: 'Chat with Eral 7c, the WokGen AI companion. Ask anything — prompts, code, creative direction.',
+    description: 'Chat with Eral, the WokGen AI companion. Ask anything — prompts, code, creative direction.',
     example:     '/eral What\'s the best prompt style for dark fantasy sprites?',
     permission:  'everyone',
     args: [

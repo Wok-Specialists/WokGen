@@ -60,7 +60,7 @@ const MODELS = [
     license:     'Llama 3.3 Community',
     licenseType: 'community' as const,
     provider:    'Groq / Together AI',
-    description: 'State-of-the-art open large language model from Meta. Powers Eral 7c.',
+    description: 'State-of-the-art open large language model from Meta. Powers Eral.',
     hfUrl:       'https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct',
     free:        true,
     category:    'Language Model',

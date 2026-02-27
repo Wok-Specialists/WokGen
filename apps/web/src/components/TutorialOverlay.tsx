@@ -244,7 +244,7 @@ export const TOOLS_TUTORIAL: Tutorial = {
 
 export const ERAL_TUTORIAL: Tutorial = {
   id: 'eral-v1',
-  label: 'Eral 7c Tour',
+  label: 'Eral Tour',
   steps: [
     {
       target: '.eral-input, [data-tutorial="eral-input"]',

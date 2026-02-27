@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'WokAPI — Developer Platform | WokGen',
-  description: 'WokAPI gives developers programmatic access to WokGen AI tools. Generate assets, use tools, and chat with Eral 7c via REST API.',
+  description: 'WokAPI gives developers programmatic access to WokGen AI tools. Generate assets, use tools, and chat with Eral via REST API.',
 };
 
 export default function DevelopersPage() {
@@ -18,7 +18,7 @@ export default function DevelopersPage() {
           <span style={{ color: 'var(--accent)' }}>WokAPI</span>
         </h1>
         <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '560px', marginBottom: '2rem' }}>
-          Programmatic access to WokGen&apos;s full AI asset generation surface. Generate images, remove backgrounds, chat with Eral 7c, and more — all via a clean REST API.
+          Programmatic access to WokGen&apos;s full AI asset generation surface. Generate images, remove backgrounds, chat with Eral, and more — all via a clean REST API.
         </p>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link href="/account/api-keys" className="btn btn-primary" style={{ padding: '0.625rem 1.25rem' }}>Get API Key</Link>
@@ -49,7 +49,7 @@ export default function DevelopersPage() {
             { method: 'POST', path: '/api/v1/generate', desc: 'Generate AI assets (images, vectors, UI components)' },
             { method: 'GET', path: '/api/v1/assets', desc: 'List your generated assets' },
             { method: 'DELETE', path: '/api/v1/assets/:id', desc: 'Delete an asset' },
-            { method: 'POST', path: '/api/v1/eral/chat', desc: 'Chat with Eral 7c AI' },
+            { method: 'POST', path: '/api/v1/eral/chat', desc: 'Chat with Eral AI' },
             { method: 'POST', path: '/api/v1/tools/bg-remove', desc: 'Remove background from an image URL' },
             { method: 'GET', path: '/api/v1/me', desc: 'Get authenticated user info and usage stats' },
           ].map(e => (

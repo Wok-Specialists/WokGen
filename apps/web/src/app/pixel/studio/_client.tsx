@@ -3284,8 +3284,8 @@ function StudioInner() {
             <button
               type="button"
               className="pixel-studio-eral-btn"
-              title="Toggle Eral 7c"
-              aria-label="Toggle Eral 7c"
+              title="Toggle Eral"
+              aria-label="Toggle Eral"
               onClick={() => {
                 const btn = document.querySelector<HTMLButtonElement>('.esb-toggle-btn');
                 btn?.click();

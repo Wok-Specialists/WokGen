@@ -49,7 +49,7 @@ const PRESET_PERSONAS: Persona[][] = [
 ];
 
 const MODEL_OPTIONS = [
-  { id: 'eral-7c',       label: 'Eral 7C (Groq — fast)' },
+  { id: 'eral-7c',       label: 'Eral (Groq — fast)' },
   { id: 'eral-creative', label: 'Eral Creative (Mixtral)' },
   { id: 'eral-mini',     label: 'Eral Mini (fastest)' },
 ];

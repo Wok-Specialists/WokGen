@@ -129,7 +129,7 @@ export default function TextDocs() {
           <H2 id="overview">1. Overview</H2>
 
           <P>
-            <strong>WokGen Text</strong> is an AI copywriting engine powered by Eral 7c (Llama 3.3 70B).
+            <strong>WokGen Text</strong> is an AI copywriting engine powered by Eral (Llama 3.3 70B).
             It covers ten distinct content types — from punchy marketing headlines to long-form essays —
             with tone controls and length presets that let you dial in exactly the copy you need.
           </P>
@@ -422,12 +422,12 @@ export default function TextDocs() {
           <H2 id="ai-models">9. AI Models</H2>
 
           <P>
-            WokGen Text is powered by <strong>Eral 7c</strong>, the platform&apos;s primary language
+            WokGen Text is powered by <strong>Eral</strong>, the platform&apos;s primary language
             model backed by <strong>Llama 3.3 70B</strong>.
           </P>
 
           <UL>
-            <LI><strong>Model</strong>: Llama 3.3 70B via the Eral 7c inference layer</LI>
+            <LI><strong>Model</strong>: Llama 3.3 70B via the Eral inference layer</LI>
             <LI><strong>Response time</strong>: typically 1–4 seconds for Micro/Short; 5–12 seconds for Long outputs</LI>
             <LI><strong>Consistency</strong>: no model degradation over time — the same prompt returns consistent quality regardless of time of day or load</LI>
             <LI><strong>Context window</strong>: 128 000 tokens — long enough to include extensive background context in your prompt</LI>

@@ -100,7 +100,7 @@ interface EralMemory {
 // ---------------------------------------------------------------------------
 
 const MODEL_OPTIONS: { value: ModelVariant; label: string; desc: string }[] = [
-  { value: 'eral-7c',       label: 'Eral 7c',   desc: 'Best overall · 70B · all 7 capabilities' },
+  { value: 'eral-7c',       label: 'Eral',   desc: 'Best overall · 70B · all 7 capabilities' },
   { value: 'eral-speed',    label: 'Speed',      desc: 'Fast · Cerebras · quick answers & chat' },
   { value: 'eral-code',     label: 'Code',       desc: 'DeepSeek · code, debugging, scaffolding' },
   { value: 'eral-creative', label: 'Creative',   desc: 'Mixtral · copywriting, creative writing' },
@@ -378,7 +378,7 @@ function MessageBubble({
       )}
       <div className="eral-bubble-wrap">
         {!isUser && (
-          <span className="eral-msg-label">Eral 7c</span>
+          <span className="eral-msg-label">Eral</span>
         )}
         <div className={`eral-bubble ${isUser ? 'eral-bubble-user' : 'eral-bubble-assistant'}`}>
           {isUser ? (
@@ -1176,7 +1176,7 @@ export function EralPage({ userId }: { userId?: string }) {
             <div className="eral-empty">
               <div className="eral-empty-logo">
                 <span className="eral-empty-icon"><span style={{fontSize:'22px',fontWeight:700,color:'var(--accent-secondary, var(--accent))',letterSpacing:'-1px',opacity:0.7}}>7c</span></span>
-                <h1 className="eral-empty-title">Eral 7c</h1>
+                <h1 className="eral-empty-title">Eral</h1>
                 <p className="eral-empty-sub">AI companion for creative work · by WokSpec</p>
               </div>
 
@@ -1249,7 +1249,7 @@ export function EralPage({ userId }: { userId?: string }) {
                     <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-secondary, var(--accent))', letterSpacing: '-0.5px' }}>7c</span>
                   </div>
                   <div className="eral-bubble-wrap">
-                    <span className="eral-msg-label">Eral 7c</span>
+                    <span className="eral-msg-label">Eral</span>
                     <div className="eral-bubble eral-bubble-assistant">
                       <div className="eral-typing" aria-label="Eral is thinking">
                         <span /><span /><span />
@@ -1495,7 +1495,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
                callState === 'processing' ? 'Thinking…'      : 'Speaking…'}
             </p>
             <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>
-              Eral 7c · Voice Mode
+              Eral · Voice Mode
             </p>
           </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * EralCompanion — site-wide floating Eral 7c companion panel.
+ * EralCompanion — site-wide floating Eral companion panel.
  *
  * A persistent 44px button fixed bottom-right (above the voice button).
  * Clicking opens a 360x600 slide-over panel with a focused Eral chat view.
@@ -172,7 +172,7 @@ function EralCompanionInner() {
         setMessages(prev => [...prev, { role: 'assistant', content: 'Something went wrong. Try again.', id: `err-${Date.now()}` }]);
       }
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Could not reach Eral 7c.', id: `err-${Date.now()}` }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Could not reach Eral.', id: `err-${Date.now()}` }]);
     } finally {
       setLoading(false);
     }
@@ -188,7 +188,7 @@ function EralCompanionInner() {
   return (
     <>
       {/* Slide-over panel */}
-      <div style={S.panel(open)} role="dialog" aria-modal aria-label="Eral 7c companion" aria-hidden={!open}>
+      <div style={S.panel(open)} role="dialog" aria-modal aria-label="Eral companion" aria-hidden={!open}>
         {/* Header */}
         <div style={S.header}>
           <div style={{
@@ -198,7 +198,7 @@ function EralCompanionInner() {
             fontSize: 12, fontWeight: 700, color: 'var(--text)', flexShrink: 0,
           }}>E</div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', lineHeight: 1 }}>Eral 7c</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', lineHeight: 1 }}>Eral</div>
             <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 1 }}>AI creative director</div>
           </div>
           <a
@@ -222,8 +222,8 @@ function EralCompanionInner() {
         <div style={S.msgList}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', fontSize: 12 }}>
-              <div style={{ fontSize: 22, marginBottom: 8 }}>Eral 7c</div>
-              <div style={{ fontWeight: 600, marginBottom: 4 }}>Eral 7c</div>
+              <div style={{ fontSize: 22, marginBottom: 8 }}>Eral</div>
+              <div style={{ fontWeight: 600, marginBottom: 4 }}>Eral</div>
               <div>Your AI creative director.</div>
               <div>Ask about your project, get help generating assets, or brainstorm ideas.</div>
             </div>
@@ -248,7 +248,7 @@ function EralCompanionInner() {
           <textarea
             style={S.input}
             rows={2}
-            placeholder="Ask Eral 7c anything…"
+            placeholder="Ask Eral anything…"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={onKey}
@@ -272,7 +272,7 @@ function EralCompanionInner() {
         style={S.btn}
         onClick={handleOpen}
         aria-label={open ? 'Close Eral companion' : 'Open Eral companion'}
-        title="Eral 7c — AI creative director (⌘⇧E)"
+        title="Eral — AI creative director (⌘⇧E)"
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">

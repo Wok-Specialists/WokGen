@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Getting Started — WokGen Docs',
   description:
     'New to WokGen? This guide walks you through your first generation in under 5 minutes, ' +
-    'explains all six studio modes, introduces Eral 7c, shows you how to access ' +
+    'explains all six studio modes, introduces Eral, shows you how to access ' +
     '35+ free browser tools, and covers accounts, community, and the API.',
 };
 
@@ -276,7 +276,7 @@ export default function GettingStarted() {
         <LI>Unlimited Standard-quality generations across all studios</LI>
         <LI>Gallery storage for all your generations (no expiry)</LI>
         <LI>Up to 3 workspaces to organise projects</LI>
-        <LI>Access to Eral 7c</LI>
+        <LI>Access to Eral</LI>
         <LI>Project history and seed reproducibility</LI>
         <LI>API access with personal API key</LI>
       </UL>

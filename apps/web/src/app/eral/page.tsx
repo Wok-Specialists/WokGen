@@ -7,7 +7,7 @@ import { EralPage } from './_client';
 export const metadata: Metadata = {
   title: 'WokGen Eral — AI Companion by WokSpec',
   description:
-    'Ask anything. Create prompts. Get design help. Eral 7c is your AI companion for creative work.',
+    'Ask anything. Create prompts. Get design help. Eral is your AI companion for creative work.',
 };
 
 export default async function Eral() {

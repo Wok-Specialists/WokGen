@@ -237,7 +237,7 @@ export function EralNotepad({ onSendToEral, onGenerateFromNote, contextTag }: Er
                   <button
                     className="eral-notepad__action-btn"
                     onClick={() => onSendToEral(activeNote.content, activeNote.title)}
-                    title="Send this note to Eral 7c as context"
+                    title="Send this note to Eral as context"
                   >
                     Send to Eral
                   </button>

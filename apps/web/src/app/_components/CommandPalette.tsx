@@ -27,7 +27,7 @@ const NAV_COMMANDS = [
   { id: 'nav-gallery',  label: 'Community Gallery',    href: '/gallery',              group: 'Platform' },
   { id: 'nav-projects', label: 'Projects',             href: '/projects',             group: 'Platform' },
   { id: 'nav-brand',    label: 'Brand Kits',           href: '/brand',                group: 'Platform' },
-  { id: 'nav-eral',     label: 'Eral 7c',              href: '/eral',                 group: 'Platform' },
+  { id: 'nav-eral',     label: 'Eral',              href: '/eral',                 group: 'Platform' },
   { id: 'nav-simulate', label: 'Agent Simulate',       href: '/eral/simulate',    group: 'Platform' },
   { id: 'nav-automate', label: 'Automations',          href: '/automations',      group: 'Platform' },
   { id: 'nav-docs',     label: 'Documentation',        href: '/docs',             group: 'Platform' },

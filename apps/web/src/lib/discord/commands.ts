@@ -189,7 +189,7 @@ export async function handleEral(interaction: DiscordInteraction): Promise<Disco
 
   try {
     const { text } = await groqChat(
-      'You are Eral 7c, the AI companion for WokGen by WokSpec. Be concise, helpful, and direct. Keep responses under 1800 characters.',
+      'You are Eral, the AI companion for WokGen by WokSpec. Be concise, helpful, and direct. Keep responses under 1800 characters.',
       message,
       { maxTokens: 512, temperature: 0.7 },
     );

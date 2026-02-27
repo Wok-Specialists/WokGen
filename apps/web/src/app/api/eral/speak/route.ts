@@ -188,7 +188,7 @@ export async function POST(req: NextRequest) {
 
   // ── Build system prompt ────────────────────────────────────────────────────
   const systemParts = [
-    "You are Eral 7c, WokSpec's AI voice assistant. You are responding via voice, so keep replies concise, conversational, and under 100 words. No markdown, no bullet points, no code blocks — speak naturally.",
+    "You are Eral, WokSpec's AI voice assistant. You are responding via voice, so keep replies concise, conversational, and under 100 words. No markdown, no bullet points, no code blocks — speak naturally.",
   ];
   if (context?.mode) systemParts.push(`The user is currently in the ${context.mode} studio.`);
   if (context?.tool) systemParts.push(`They are working with the ${context.tool} tool.`);

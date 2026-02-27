@@ -98,7 +98,7 @@ const EXAMPLES = [
   },
   {
     label: 'News Script',
-    text: "Breaking: WokSpec announces Eral 7c — an AI companion that doesn't just answer questions, it controls your entire creative workflow.",
+    text: "Breaking: WokSpec announces Eral — an AI companion that doesn't just answer questions, it controls your entire creative workflow.",
     style: 'news' as VoiceStyle,
   },
   {
