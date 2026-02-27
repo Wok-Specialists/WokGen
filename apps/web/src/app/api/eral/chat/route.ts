@@ -265,12 +265,13 @@ async function getOrCreateConversation(
 }
 
 async function fetchHistory(conversationId: string): Promise<OpenAIMessage[]> {
+  // Fetch last 20 messages (desc), then reverse to get chronological order
   const messages = await prisma.eralMessage.findMany({
     where: { conversationId },
-    orderBy: { createdAt: 'asc' },
-    take: 10, // last 10 messages
+    orderBy: { createdAt: 'desc' },
+    take: 20,
   });
-  return messages.map((m) => ({
+  return messages.reverse().map((m) => ({
     role: m.role as 'user' | 'assistant' | 'system',
     content: m.content,
   }));

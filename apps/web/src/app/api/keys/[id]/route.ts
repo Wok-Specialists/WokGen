@@ -27,6 +27,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     }
 
     await dbQuery(prisma.apiKey.update({ where: { id: params.id }, data: { isActive: false } }));
+    log.info({ userId, keyId: params.id, keyName: key.name }, '[audit] api_key.revoked');
     return NextResponse.json({ ok: true });
   } catch (err) {
     log.error({ err }, 'DELETE /api/keys/[id] failed');

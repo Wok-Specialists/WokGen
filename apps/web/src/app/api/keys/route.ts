@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
       },
     }));
 
+    log.info({ userId, keyId: key.id, keyName: key.name, scopes: key.scopes, expiresIn }, '[audit] api_key.created');
     return NextResponse.json({
       key: {
         id:        key.id,
