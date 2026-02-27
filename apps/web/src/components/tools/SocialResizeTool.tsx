@@ -38,7 +38,8 @@ function resizeToCanvas(img: HTMLImageElement, w: number, h: number, fit: Fit): 
   ctx.fillRect(0, 0, w, h);
 
   const iw = img.naturalWidth, ih = img.naturalHeight;
-  let sw = iw, sh = ih, sx = 0, sy = 0, dx = 0, dy = 0, dw = w, dh = h;
+  const sw = iw, sh = ih, sx = 0, sy = 0;
+  let dx = 0, dy = 0, dw = w, dh = h;
 
   if (fit === 'cover') {
     const scale = Math.max(w / iw, h / ih);

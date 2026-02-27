@@ -603,7 +603,7 @@ export default function CommunityClient() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data: GalleryResponse = await res.json();
-        let incoming = data.assets;
+        const incoming = data.assets;
         if (sort === 'random') {
           // Fisher-Yates shuffle
           for (let i = incoming.length - 1; i > 0; i--) {

@@ -134,9 +134,6 @@ function EralCompanionInner() {
 
   useEffect(() => { scrollToEnd(); }, [messages]);
 
-  // Don't show on Eral page itself (all hooks called above)
-  if (pathname?.startsWith('/eral')) return null;
-
   const handleOpen = () => {
     setOpen(o => !o);
     if (!open) setUnread(0);
@@ -184,6 +181,9 @@ function EralCompanionInner() {
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   };
+
+  // Don't show on Eral page itself (all hooks called above)
+  if (pathname?.startsWith('/eral')) return null;
 
   return (
     <>
