@@ -24,13 +24,14 @@ const EXPIRY_OPTIONS = [
 ];
 
 export default function ApiKeysClient() {
-  const [keys,      setKeys]      = useState<ApiKey[]>([]);
-  const [loading,   setLoading]   = useState(true);
-  const [creating,  setCreating]  = useState(false);
-  const [showForm,  setShowForm]  = useState(false);
-  const [rawKey,    setRawKey]    = useState<string | null>(null);
-  const [copied,    setCopied]    = useState(false);
-  const [error,     setError]     = useState('');
+  const [keys,          setKeys]          = useState<ApiKey[]>([]);
+  const [loading,       setLoading]       = useState(true);
+  const [creating,      setCreating]      = useState(false);
+  const [showForm,      setShowForm]      = useState(false);
+  const [rawKey,        setRawKey]        = useState<string | null>(null);
+  const [copied,        setCopied]        = useState(false);
+  const [error,         setError]         = useState('');
+  const [confirmRevoke, setConfirmRevoke] = useState<string | null>(null);
 
   const [formName,   setFormName]   = useState('');
   const [formScopes, setFormScopes] = useState<string[]>(['generate', 'read']);
@@ -67,7 +68,8 @@ export default function ApiKeysClient() {
   };
 
   const handleRevoke = async (id: string) => {
-    if (!confirm('Revoke this key? All requests using it will stop working immediately.')) return;
+    if (confirmRevoke !== id) { setConfirmRevoke(id); return; }
+    setConfirmRevoke(null);
     await fetch(`/api/keys/${id}`, { method: 'DELETE' });
     load();
   };
@@ -213,9 +215,12 @@ export default function ApiKeysClient() {
                   <td>{k.lastUsedAt ? relativeTime(k.lastUsedAt) : 'Never'}</td>
                   <td>{k.expiresAt ? formatDate(k.expiresAt) : 'Never'}</td>
                   <td>
-                    <button className="apikeys-revoke" onClick={() => handleRevoke(k.id)}>
-                      Revoke
+                    <button type="button" className="apikeys-revoke" onClick={() => handleRevoke(k.id)} title={confirmRevoke === k.id ? 'Click again to confirm' : 'Revoke key'} style={{ fontWeight: confirmRevoke === k.id ? 700 : undefined }}>
+                      {confirmRevoke === k.id ? 'Confirm?' : 'Revoke'}
                     </button>
+                    {confirmRevoke === k.id && (
+                      <button type="button" onClick={() => setConfirmRevoke(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', marginLeft: '4px' }}>✕</button>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -121,7 +121,7 @@ function NavBar() {
       {/* Wordmark — text only, no icon */}
       <Link href="/" className="nav-wordmark mr-4 flex-shrink-0" aria-label="WokGen home">
         <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-        <span style={{ color: '#a78bfa' }}>Gen</span>
+        <span style={{ color: 'var(--accent, #a78bfa)' }}>Gen</span>
       </Link>
 
       {/* Nav links — hidden on mobile (MobileNav handles mobile) */}

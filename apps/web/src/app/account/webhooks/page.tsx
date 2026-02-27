@@ -103,10 +103,10 @@ function AddWebhookForm({ onAdded, onCancel }: { onAdded: () => void; onCancel: 
       </div>
 
       <div className="devplatform-webhook-form__actions">
-        <button className="devplatform-btn-primary" onClick={handleSubmit} disabled={saving}>
+        <button type="button" className="devplatform-btn-primary" onClick={handleSubmit} disabled={saving}>
           {saving ? 'Creating…' : 'Create Webhook'}
         </button>
-        <button className="devplatform-btn-ghost" onClick={onCancel} disabled={saving}>Cancel</button>
+        <button type="button" className="devplatform-btn-ghost" onClick={onCancel} disabled={saving}>Cancel</button>
       </div>
     </div>
   );
@@ -115,9 +115,10 @@ function AddWebhookForm({ onAdded, onCancel }: { onAdded: () => void; onCancel: 
 // ─── Webhook Card ─────────────────────────────────────────────────────────────
 
 function WebhookCard({ wh, onRefresh }: { wh: Webhook; onRefresh: () => void }) {
-  const [testing,  setTesting]  = useState(false);
-  const [testMsg,  setTestMsg]  = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const [testing,       setTesting]       = useState(false);
+  const [testMsg,       setTestMsg]       = useState<string | null>(null);
+  const [deleting,      setDeleting]      = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleTest = async () => {
     setTesting(true);
@@ -129,7 +130,8 @@ function WebhookCard({ wh, onRefresh }: { wh: Webhook; onRefresh: () => void }) 
   };
 
   const handleDelete = async () => {
-    if (!confirm('Delete this webhook?')) return;
+    if (!confirmDelete) { setConfirmDelete(true); return; }
+    setConfirmDelete(false);
     setDeleting(true);
     await fetch(`/api/webhooks/${wh.id}`, { method: 'DELETE' });
     onRefresh();
@@ -146,12 +148,15 @@ function WebhookCard({ wh, onRefresh }: { wh: Webhook; onRefresh: () => void }) 
           </span>
         </div>
         <div className="webhook-card__actions">
-          <button className="devplatform-btn-ghost devplatform-btn-ghost--sm" onClick={handleTest} disabled={testing}>
+          <button type="button" className="devplatform-btn-ghost devplatform-btn-ghost--sm" onClick={handleTest} disabled={testing}>
             {testing ? 'Testing…' : 'Test'}
           </button>
-          <button className="devplatform-btn-danger--sm" onClick={handleDelete} disabled={deleting}>
-            {deleting ? '…' : 'Delete'}
+          <button type="button" className="devplatform-btn-danger--sm" onClick={handleDelete} disabled={deleting} title={confirmDelete ? 'Click again to confirm' : 'Delete webhook'} style={{ fontWeight: confirmDelete ? 700 : undefined }}>
+            {deleting ? '…' : confirmDelete ? 'Confirm?' : 'Delete'}
           </button>
+          {confirmDelete && (
+            <button type="button" onClick={() => setConfirmDelete(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', padding: '0 4px' }}>Cancel</button>
+          )}
         </div>
       </div>
 
@@ -211,7 +216,7 @@ export default function WebhooksPage() {
             Receive HTTP callbacks when events occur in your account.
           </p>
         </div>
-        <button className="devplatform-btn-primary" onClick={() => setShowForm(true)}>
+        <button type="button" className="devplatform-btn-primary" onClick={() => setShowForm(true)}>
           + Add Webhook
         </button>
       </div>

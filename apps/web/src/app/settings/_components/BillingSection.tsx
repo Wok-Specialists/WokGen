@@ -30,9 +30,10 @@ export default function BillingSection() {
         Manage your subscription, invoices, and payment methods via the Stripe billing portal.
       </p>
       {error && (
-        <p style={{ fontSize: '0.8125rem', color: '#f87171', marginBottom: '0.75rem' }}>{error}</p>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--danger, #f87171)', marginBottom: '0.75rem' }}>{error}</p>
       )}
       <button
+        type="button"
         onClick={openPortal}
         disabled={loading}
         style={{
