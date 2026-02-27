@@ -954,7 +954,14 @@ export function EralPage({ userId }: { userId?: string }) {
 
             {/* Memory Panel */}
             <div className="eral-v2-memory-panel">
-              <p className="eral-v2-memory-panel__title">Memory</p>
+              <p className="eral-v2-memory-panel__title">
+                Memory
+                {Object.values(memory).filter(Boolean).length > 0 && (
+                  <span style={{ marginLeft: 6, fontSize: '0.7rem', padding: '1px 6px', borderRadius: 10, background: 'var(--accent-subtle, rgba(129,140,248,0.15))', color: 'var(--accent)', fontWeight: 600 }}>
+                    {Object.values(memory).filter(Boolean).length}
+                  </span>
+                )}
+              </p>
               {memory.style && (
                 <div className="eral-v2-memory-item">
                   <span className="eral-v2-memory-item__label">Style</span>
