@@ -3,7 +3,7 @@
 
 
 
-import { useState, useRef, Suspense } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
@@ -140,6 +140,18 @@ function VoiceStudioInner() {
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  // Track blob URLs for cleanup to prevent memory leaks
+  const blobUrlRef = useRef<string | null>(null);
+
+  // Revoke previous blob URL when a new audio URL is set or on unmount
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
+    };
+  }, []);
 
   const charsLeft = MAX_CHARS - text.length;
   const isOverLimit = charsLeft < 0;
@@ -172,7 +184,10 @@ function VoiceStudioInner() {
           return;
         }
         const blob = await res.blob();
+        // Revoke previous blob URL before creating new one
+        if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
         const url = URL.createObjectURL(blob);
+        blobUrlRef.current = url;
         setAudioUrl(url);
         setAudioFormat('mp3');
         setProvider(res.headers.get('X-Provider') ?? 'elevenlabs');
@@ -218,6 +233,11 @@ function VoiceStudioInner() {
   }
 
   function handleClear() {
+    // Revoke blob URL to free memory
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
     setText('');
     setAudioUrl(null);
     setAudioFormat('mp3');
@@ -231,6 +251,11 @@ function VoiceStudioInner() {
   function loadExample(ex: typeof EXAMPLES[number]) {
     setText(ex.text);
     setStyle(ex.style);
+    // Revoke blob URL on example load
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
     setAudioUrl(null);
     setError(null);
     setStudioError(null);
@@ -627,8 +652,11 @@ function VoiceStudioInner() {
           {/* Generate + Clear */}
           <div style={{ display: 'flex', gap: 8 }}>
             <button
+              type="button"
+              data-generate-btn
               onClick={handleGenerate}
               disabled={!text.trim() || generating || isOverLimit}
+              aria-label="Generate voice"
               style={{
                 flex: 1,
                 padding: '12px 0',

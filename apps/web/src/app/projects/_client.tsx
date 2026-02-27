@@ -37,6 +37,7 @@ export default function ProjectsClient() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<string>('updated');
 
@@ -65,16 +66,17 @@ export default function ProjectsClient() {
 
   const deleteProject = useCallback(async (id: string, name: string) => {
     if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    setDeleteError(null);
     try {
       const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
       if (!res.ok) {
         const d = await res.json().catch(() => null);
-        alert(d?.error ?? 'Failed to delete project');
+        setDeleteError(d?.error ?? 'Failed to delete project');
         return;
       }
       setProjects(prev => prev.filter(p => p.id !== id));
     } catch {
-      alert('Network error');
+      setDeleteError('Network error — could not delete project');
     }
   }, []);
 
@@ -130,6 +132,13 @@ export default function ProjectsClient() {
           action={!searchQuery ? { label: 'Create project', href: '/projects/new' } : undefined}
         />
       ) : (
+        <>
+          {deleteError && (
+            <div style={{ color: 'var(--danger, #ef4444)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 6, padding: '0.625rem 1rem', marginBottom: '1rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>{deleteError}</span>
+              <button type="button" onClick={() => setDeleteError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', opacity: 0.6, fontSize: '1rem', lineHeight: 1, padding: '0 4px' }}>✕</button>
+            </div>
+          )}
         <div style={{ display: 'grid', gap: '1rem' }}>
           {filtered.map(p => (
             <div
@@ -182,6 +191,7 @@ export default function ProjectsClient() {
                     Assets
                   </Link>
                   <button
+                    type="button"
                     onClick={() => deleteProject(p.id, p.name)}
                     style={{ marginLeft: 'auto', fontSize: 12, background: 'transparent', color: 'var(--danger, #ef4444)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer' }}
                     title="Delete project"
@@ -193,6 +203,7 @@ export default function ProjectsClient() {
             </div>
           ))}
         </div>
+        </>
       )}
     </div>
   );

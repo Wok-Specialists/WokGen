@@ -29,7 +29,7 @@ interface TextResult {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const ACCENT = '#10b981';
+const ACCENT = 'var(--success, #10b981)';
 
 const TEXT_STAGES = [
   { delay: 0,     message: 'Connecting to Eral...' },
@@ -113,7 +113,10 @@ export default function TextStudio() {
   const [savedMsg, setSavedMsg]       = useState(false);
   const [showRawMarkdown, setShowRawMarkdown] = useState(false);
 
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
+  const abortRef  = useRef<AbortController | null>(null);
+
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
 
   const startTimer = () => {
     const start = Date.now();
@@ -151,12 +154,17 @@ export default function TextStudio() {
     setElapsedMs(0);
     startTimer();
 
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    const { signal } = abortRef.current;
+
     // Use SSE streaming for real-time token-by-token output
     try {
       const res = await fetch('/api/text/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: trimmed, contentType, tone, length, stream: true }),
+        signal,
       });
 
       if (!res.ok) {
@@ -204,6 +212,7 @@ export default function TextStudio() {
       setResult({ content: accumulated, wordCount, charCount, model, creditsUsed: 0 });
       setStatus('done');
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       if (err && typeof err === 'object' && 'code' in err && 'retryable' in err) {
         setStudioError(err as StudioError);
       } else {
@@ -366,8 +375,11 @@ export default function TextStudio() {
 
           {/* Generate button */}
           <button
+            type="button"
+            data-generate-btn
             onClick={handleGenerate}
             disabled={!prompt.trim() || status === 'generating'}
+            aria-label="Generate text"
             style={{
               width: '100%', padding: '12px 0', borderRadius: 8, border: 'none',
               background: !prompt.trim() || status === 'generating' ? 'var(--surface-border)' : ACCENT,

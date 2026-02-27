@@ -794,11 +794,11 @@ export default function UIUXStudio() {
                     <button onClick={handleCancel} style={{ padding: '6px', borderRadius: 6, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.75rem', cursor: 'pointer', width: '100%' }}>Cancel</button>
                   </div>
                 ) : libraryMode ? (
-                  <button onClick={handleGenerateLibrary} disabled={selectedLibraryTypes.length < 2} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: selectedLibraryTypes.length < 2 ? 'not-allowed' : 'pointer', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', opacity: selectedLibraryTypes.length < 2 ? 0.5 : 1 }}>
+                  <button type="button" onClick={handleGenerateLibrary} disabled={selectedLibraryTypes.length < 2} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: selectedLibraryTypes.length < 2 ? 'not-allowed' : 'pointer', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', opacity: selectedLibraryTypes.length < 2 ? 0.5 : 1 }}>
                     ✦ Generate Library ({selectedLibraryTypes.length})
                   </button>
                 ) : (
-                  <button onClick={handleGenerate} disabled={isLoading} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <button type="button" onClick={handleGenerate} disabled={isLoading} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                     <span>Generate {FRAMEWORKS.find((f) => f.id === framework)?.label ?? 'Code'}</span>
                     <span style={{ fontSize: '0.6rem', opacity: 0.7 }}>⌘↵</span>
                   </button>
@@ -884,7 +884,7 @@ export default function UIUXStudio() {
                     {/* Actions */}
                     {currentResult && (
                       <div style={{ display: 'flex', gap: 3, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <button onClick={handleCopyCode} style={{ padding: '3px 7px', borderRadius: 4, background: copied ? 'rgba(34,197,94,0.1)' : 'var(--surface-raised)', color: copied ? '#22c55e' : 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer', border: copied ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--surface-border)' }}>
+                        <button type="button" onClick={handleCopyCode} style={{ padding: '3px 7px', borderRadius: 4, background: copied ? 'rgba(34,197,94,0.1)' : 'var(--surface-raised)', color: copied ? '#22c55e' : 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer', border: copied ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--surface-border)' }}>
                           {copied ? 'Copied!' : 'Copy'}
                         </button>
                         <button onClick={stableHandleDownload} style={{ padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer' }}>↓ Download</button>
@@ -895,7 +895,7 @@ export default function UIUXStudio() {
                               <input type="checkbox" checked={galleryIsPublic} onChange={(e) => setGalleryIsPublic(e.target.checked)} style={{ accentColor: '#a855f7', width: 10, height: 10 }} />
                               <span style={{ fontSize: '0.62rem', color: 'var(--text-disabled)' }}>public</span>
                             </label>
-                            <button onClick={handleSaveToGallery} disabled={isSavingToGallery || gallerySaved} style={{ padding: '3px 7px', borderRadius: 4, fontSize: '0.7rem', cursor: isSavingToGallery || gallerySaved ? 'not-allowed' : 'pointer', border: `1px solid ${gallerySaved ? 'rgba(34,197,94,0.4)' : 'var(--surface-border)'}`, background: gallerySaved ? 'rgba(34,197,94,0.08)' : 'var(--surface-raised)', color: gallerySaved ? '#22c55e' : 'var(--text-secondary)' }}>
+                            <button type="button" onClick={handleSaveToGallery} disabled={isSavingToGallery || gallerySaved} style={{ padding: '3px 7px', borderRadius: 4, fontSize: '0.7rem', cursor: isSavingToGallery || gallerySaved ? 'not-allowed' : 'pointer', border: `1px solid ${gallerySaved ? 'rgba(34,197,94,0.4)' : 'var(--surface-border)'}`, background: gallerySaved ? 'rgba(34,197,94,0.08)' : 'var(--surface-raised)', color: gallerySaved ? '#22c55e' : 'var(--text-secondary)' }}>
                               {gallerySaved ? 'Saved' : isSavingToGallery ? '…' : 'Save'}
                             </button>
                           </>
@@ -933,7 +933,7 @@ export default function UIUXStudio() {
                     <div style={{ padding: '7px 10px', borderTop: '1px solid var(--surface-border)', background: 'var(--surface-raised)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 7 }}>
                       <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', flexShrink: 0 }}>✦ Refine</span>
                       <input type="text" value={refinementPrompt} onChange={(e) => setRefinementPrompt(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRefine(); }} placeholder="Describe what to change — e.g. 'make the CTA button larger', 'add a dark mode toggle'" style={{ flex: 1, padding: '5px 9px', borderRadius: 5, border: '1px solid var(--surface-border)', background: 'var(--surface-overlay)', color: 'var(--text-primary)', fontSize: '0.75rem', outline: 'none', fontFamily: 'inherit' }} />
-                      <button onClick={handleRefine} disabled={!refinementPrompt.trim()} style={{ padding: '5px 11px', borderRadius: 5, border: 'none', cursor: refinementPrompt.trim() ? 'pointer' : 'not-allowed', background: refinementPrompt.trim() ? 'linear-gradient(135deg,#a855f7,#ec4899)' : 'var(--surface-overlay)', color: refinementPrompt.trim() ? '#fff' : 'var(--text-disabled)', fontSize: '0.72rem', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      <button type="button" onClick={handleRefine} disabled={!refinementPrompt.trim()} style={{ padding: '5px 11px', borderRadius: 5, border: 'none', cursor: refinementPrompt.trim() ? 'pointer' : 'not-allowed', background: refinementPrompt.trim() ? 'linear-gradient(135deg,#a855f7,#ec4899)' : 'var(--surface-overlay)', color: refinementPrompt.trim() ? '#fff' : 'var(--text-disabled)', fontSize: '0.72rem', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
                         Refine →
                       </button>
                       {versionHistory.length > 0 && <span style={{ fontSize: '0.6rem', color: 'var(--text-disabled)', flexShrink: 0 }}>v{currentVersion + 1}/{versionHistory.length}</span>}
@@ -1205,7 +1205,7 @@ function LibraryRefineBar({
   return (
     <div style={{ display: 'flex', gap: 5, padding: '5px 9px', borderTop: '1px solid var(--surface-border)', background: 'var(--surface-overlay)' }}>
       <input type="text" value={refPrompt} onChange={(e) => setRefPrompt(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRefine(); }} placeholder="Refine this component…" disabled={isLoading} style={{ flex: 1, padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '0.7rem', outline: 'none', fontFamily: 'inherit' }} />
-      <button onClick={handleRefine} disabled={isLoading || !refPrompt.trim()} style={{ padding: '3px 9px', borderRadius: 4, border: 'none', background: refPrompt.trim() ? 'linear-gradient(135deg,#a855f7,#ec4899)' : 'var(--surface-border)', color: refPrompt.trim() ? '#fff' : 'var(--text-disabled)', fontSize: '0.68rem', cursor: refPrompt.trim() ? 'pointer' : 'not-allowed' }}>
+      <button type="button" onClick={handleRefine} disabled={isLoading || !refPrompt.trim()} style={{ padding: '3px 9px', borderRadius: 4, border: 'none', background: refPrompt.trim() ? 'linear-gradient(135deg,#a855f7,#ec4899)' : 'var(--surface-border)', color: refPrompt.trim() ? '#fff' : 'var(--text-disabled)', fontSize: '0.68rem', cursor: refPrompt.trim() ? 'pointer' : 'not-allowed' }}>
         {isLoading ? '…' : '→'}
       </button>
     </div>
@@ -1241,7 +1241,7 @@ function UIUXPageBuilder({
       <div style={{ padding: '9px 14px', borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-raised)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
         <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)' }}>⊞ Page Builder — {order.length} component{order.length !== 1 ? 's' : ''}</span>
         <div style={{ flex: 1 }} />
-        <button onClick={onAssemble} style={{ padding: '5px 13px', borderRadius: 6, border: 'none', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}>⬡ Assemble Page →</button>
+        <button type="button" onClick={onAssemble} style={{ padding: '5px 13px', borderRadius: 6, border: 'none', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}>⬡ Assemble Page →</button>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 7 }}>

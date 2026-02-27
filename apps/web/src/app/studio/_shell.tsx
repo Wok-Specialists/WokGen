@@ -108,7 +108,9 @@ function ProjectPicker({ projectId, onSelect }: {
         <span className="wok-proj-trigger__label">
           {active ? active.name : 'No project'}
         </span>
-        <span className="wok-proj-trigger__caret">v</span>
+        <span className="wok-proj-trigger__caret">
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 3L4 5.5L6.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </span>
       </button>
       {open && (
         <div className="wok-proj-dropdown">
@@ -410,7 +412,7 @@ export default function UnifiedStudioClient({ type }: Props) {
 
         .wok-proj-trigger__icon { display: flex; align-items: center; }
         .wok-proj-trigger__label { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .wok-proj-trigger__caret { font-size: 0.55rem; opacity: 0.5; }
+        .wok-proj-trigger__caret { display: flex; align-items: center; opacity: 0.5; }
 
         .wok-proj-dropdown {
           position: absolute;

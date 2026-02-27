@@ -34,6 +34,7 @@ function Toggle({
         {description && <span className="notify-toggle-row__desc">{description}</span>}
       </div>
       <button
+        type="button"
         role="switch"
         aria-checked={value}
         className={`notify-toggle ${value ? 'notify-toggle--on' : ''}`}

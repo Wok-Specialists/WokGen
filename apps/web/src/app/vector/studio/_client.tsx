@@ -175,6 +175,7 @@ function VectorStudioInner() {
   const [toast, setToast]             = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const toastSuccess = (msg: string) => { setToast({ msg, type: 'success' }); setTimeout(() => setToast(null), 3500); };
   const toastError   = (msg: string) => { setToast({ msg, type: 'error' });   setTimeout(() => setToast(null), 4000); };
@@ -207,6 +208,8 @@ function VectorStudioInner() {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   };
   useEffect(() => () => stopTimer(), []);
+  // Abort in-flight generate on unmount
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
 
   // ── Dimensions ───────────────────────────────────────────────────────────
   const getSize = () => activeTool === 'icon' ? iconSize : illustSize;
@@ -214,6 +217,10 @@ function VectorStudioInner() {
   // ── Generate ──────────────────────────────────────────────────────────────
   const handleGenerate = useCallback(async () => {
     if (!prompt.trim() || jobStatus === 'running') return;
+    // Cancel any in-flight request
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    const { signal } = abortRef.current;
     setJobStatus('running');
     setError(null);
     setResults([]);
@@ -250,6 +257,7 @@ function VectorStudioInner() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...body, variantIndex }),
+            signal,
           });
           const data = await res.json() as { ok?: boolean; error?: string; job?: { id?: string }; resultUrl?: string; durationMs?: number; guestDownloadGated?: boolean };
           if (!res.ok || !data.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
@@ -287,6 +295,7 @@ function VectorStudioInner() {
         }, ...prev].slice(0, 10));
       }
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       setError(err instanceof Error ? err.message : String(err));
       setJobStatus('failed');
     } finally {
@@ -601,9 +610,12 @@ function VectorStudioInner() {
         {/* Generate button */}
         <div className="studio-control-section">
           <button
+            type="button"
+            data-generate-btn
             className="btn-primary btn-generate"
             onClick={handleGenerate}
             disabled={jobStatus === 'running' || !prompt.trim()}
+            aria-label="Generate"
             style={jobStatus !== 'running' ? { background: ACCENT, borderColor: ACCENT } : undefined}
           >
             {jobStatus === 'running'
@@ -625,7 +637,7 @@ function VectorStudioInner() {
           <div className="studio-error-card">
             <p className="studio-error-title">Generation failed</p>
             <p className="studio-error-msg">{error}</p>
-            <button className="btn-ghost btn-sm" onClick={handleGenerate}>Retry</button>
+            <button type="button" className="btn-ghost btn-sm" onClick={handleGenerate}>Retry</button>
           </div>
         )}
 

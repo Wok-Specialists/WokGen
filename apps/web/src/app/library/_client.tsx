@@ -36,28 +36,38 @@ export default function LibraryClient() {
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const fetchAssets = useCallback(async (search: string, mode: string, sortBy: string, append = false, afterCursor?: string) => {
     if (!append) setLoading(true);
+    setFetchError(null);
     const params = new URLSearchParams({ mine: 'true', limit: '48' });
     if (search.trim()) params.set('search', search.trim());
     if (mode !== 'all') params.set('mode', mode);
     if (sortBy === 'oldest') params.set('sort', 'oldest');
     if (afterCursor) params.set('cursor', afterCursor);
-    const res = await fetch(`/api/gallery?${params}`);
-    if (res.ok) {
-      const d = await res.json();
-      let fetched: LibraryAsset[] = d.assets ?? [];
-      if (sortBy === 'mode') {
-        fetched = [...fetched].sort((a, b) => a.mode.localeCompare(b.mode));
-      }
-      if (append) {
-        setAssets(prev => [...prev, ...fetched]);
+    try {
+      const res = await fetch(`/api/gallery?${params}`);
+      if (res.ok) {
+        const d = await res.json();
+        let fetched: LibraryAsset[] = d.assets ?? [];
+        if (sortBy === 'mode') {
+          fetched = [...fetched].sort((a, b) => a.mode.localeCompare(b.mode));
+        }
+        if (append) {
+          setAssets(prev => [...prev, ...fetched]);
+        } else {
+          setAssets(fetched);
+        }
+        setCursor(d.nextCursor ?? null);
+        setHasMore(d.hasMore ?? false);
+        setTotal(prev => append ? prev + fetched.length : fetched.length);
       } else {
-        setAssets(fetched);
+        const d = await res.json().catch(() => null);
+        setFetchError(d?.error ?? 'Failed to load assets');
       }
-      setCursor(d.nextCursor ?? null);
-      setHasMore(d.hasMore ?? false);
-      setTotal(prev => append ? prev + fetched.length : fetched.length);
+    } catch {
+      setFetchError('Network error — could not load assets');
     }
     setLoading(false);
   }, []);
@@ -80,38 +90,65 @@ export default function LibraryClient() {
 
   const clearSelection = useCallback(() => setSelected(new Set()), []);
 
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   const bulkDelete = useCallback(async () => {
     if (!selected.size) return;
     if (!confirm(`Delete ${selected.size} asset${selected.size > 1 ? 's' : ''}? This cannot be undone.`)) return;
     setDeleting(true);
+    setDeleteError(null);
     const ids = Array.from(selected);
-    await Promise.allSettled(
+    const results = await Promise.allSettled(
       ids.map(id => fetch(`/api/gallery?id=${id}`, { method: 'DELETE' }))
     );
-    setAssets(prev => prev.filter(a => !selected.has(a.id)));
-    setTotal(prev => prev - selected.size);
+    const failed = results.filter(r => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.ok)).length;
+    const succeeded = results.length - failed;
+    setAssets(prev => {
+      const deletedIds = new Set(ids.filter((_, i) => results[i].status === 'fulfilled' && (results[i] as PromiseFulfilledResult<Response>).value.ok));
+      return prev.filter(a => !deletedIds.has(a.id));
+    });
+    setTotal(prev => Math.max(0, prev - succeeded));
     setSelected(new Set());
+    if (failed > 0) setDeleteError(`${failed} asset${failed > 1 ? 's' : ''} could not be deleted.`);
     setDeleting(false);
   }, [selected]);
 
-  const bulkDownload = useCallback(() => {
+  const bulkDownload = useCallback(async () => {
     const selectedAssets = assets.filter(a => selected.has(a.id));
     for (const asset of selectedAssets) {
-      const a = document.createElement('a');
-      a.href = asset.imageUrl;
-      a.download = `wokgen-${asset.id}.png`;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      try {
+        // Fetch as blob to force download for cross-origin CDN URLs
+        const res = await fetch(asset.imageUrl);
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `wokgen-${asset.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch {
+        // Skip failed downloads silently
+      }
     }
   }, [assets, selected]);
 
-  if (loading && assets.length === 0) {
+  if (loading && assets.length === 0 && !fetchError) {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
         <SkeletonGalleryGrid count={12} />
+      </div>
+    );
+  }
+
+  if (fetchError && assets.length === 0) {
+    return (
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+        <div style={{ color: 'var(--danger, #ef4444)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span>{fetchError}</span>
+          <button type="button" onClick={() => fetchAssets(searchQuery, modeFilter, sort)} style={{ background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)', borderRadius: 6, padding: '4px 12px', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8125rem' }}>Retry</button>
+        </div>
       </div>
     );
   }
@@ -140,18 +177,19 @@ export default function LibraryClient() {
           display: 'flex', alignItems: 'center', gap: '0.75rem',
           padding: '0.625rem 1rem', marginBottom: '1rem',
           background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)',
-          borderRadius: '8px', fontSize: '0.875rem',
+          borderRadius: '8px', fontSize: '0.875rem', flexWrap: 'wrap',
         }}>
           <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{selected.size} selected</span>
-          <button onClick={selectAll} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8125rem', padding: '2px 6px' }}>Select all</button>
+          <button type="button" onClick={selectAll} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8125rem', padding: '2px 6px' }}>Select all</button>
           <div style={{ flex: 1 }} />
-          <button onClick={bulkDownload} style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--text)', cursor: 'pointer', fontSize: '0.8125rem' }}>
+          {deleteError && <span style={{ color: 'var(--danger)', fontSize: '0.75rem' }}>{deleteError}</span>}
+          <button type="button" onClick={bulkDownload} style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--text)', cursor: 'pointer', fontSize: '0.8125rem' }}>
             Download {selected.size}
           </button>
-          <button onClick={bulkDelete} disabled={deleting} style={{ background: 'var(--danger-bg)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8125rem', opacity: deleting ? 0.6 : 1 }}>
+          <button type="button" onClick={bulkDelete} disabled={deleting} style={{ background: 'var(--danger-bg)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8125rem', opacity: deleting ? 0.6 : 1 }}>
             {deleting ? 'Deleting…' : `Delete ${selected.size}`}
           </button>
-          <button onClick={clearSelection} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.125rem', padding: '0 4px', lineHeight: 1 }}>✕</button>
+          <button type="button" onClick={clearSelection} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.125rem', padding: '0 4px', lineHeight: 1 }}>✕</button>
         </div>
       )}
 

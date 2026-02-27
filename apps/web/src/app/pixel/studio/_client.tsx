@@ -816,7 +816,7 @@ function OutputPanel({
                 key={i}
                 style={{
                   width: 10, height: 10, borderRadius: 2,
-                  background: [0, 7, 14, 21, 42, 49, 56, 63, 9, 18, 27, 36, 45, 54].includes(i) ? '#a78bfa' : '#333',
+                  background: [0, 7, 14, 21, 42, 49, 56, 63, 9, 18, 27, 36, 45, 54].includes(i) ? 'var(--accent)' : 'var(--surface-border, #333)',
                 }}
               />
             ))}
@@ -1195,7 +1195,7 @@ function OutputPanel({
               <span style={{
                 fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
                 padding: '2px 6px', borderRadius: 3,
-                background: 'rgba(52,211,153,.15)', color: '#34d399', border: '1px solid rgba(52,211,153,.3)',
+                background: 'rgba(52,211,153,.15)', color: 'var(--success, #34d399)', border: '1px solid rgba(52,211,153,.3)',
               }}>GIF</span>
             )}
             {result.width && result.height && (
@@ -1609,7 +1609,7 @@ function GenerateForm({
   });
   // Prompt length color — yellow at 160, red at 190+
   const promptLen = prompt.length;
-  const promptLenColor = promptLen >= 190 ? '#ef4444' : promptLen >= 160 ? '#eab308' : 'var(--text-disabled)';
+  const promptLenColor = promptLen >= 190 ? 'var(--danger, #ef4444)' : promptLen >= 160 ? 'var(--warning, #eab308)' : 'var(--text-disabled)';
 
   // Auto-resize textarea
   useEffect(() => {
@@ -1695,7 +1695,7 @@ function GenerateForm({
                   History ▾
                 </button>
                 {showPromptHistory && (
-                  <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: '#1a1a2e', border: '1px solid #303050', borderRadius: 6, minWidth: 280, maxHeight: 220, overflowY: 'auto', padding: 4, marginTop: 4 }}>
+                  <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: 'var(--surface-overlay, #1a1a2e)', border: '1px solid var(--surface-border, #303050)', borderRadius: 6, minWidth: 280, maxHeight: 220, overflowY: 'auto', padding: 4, marginTop: 4 }}>
                     {promptHistory.map((p, i) => (
                       <button
                         key={i}
@@ -1733,7 +1733,7 @@ function GenerateForm({
                 borderRadius: 4,
                 background: isEnhancing ? 'var(--surface-overlay)' : 'rgba(139,92,246,0.15)',
                 border: '1px solid rgba(139,92,246,0.4)',
-                color: isEnhancing ? 'var(--text-disabled)' : '#a78bfa',
+                color: isEnhancing ? 'var(--text-disabled)' : 'var(--accent)',
                 cursor: isEnhancing || !prompt.trim() ? 'not-allowed' : 'pointer',
                 opacity: !prompt.trim() ? 0.4 : 1,
                 transition: 'all 0.15s',
@@ -2308,7 +2308,7 @@ function GenerateForm({
           })}
         </div>
         {size < PRESET_CONFIG[stylePreset].size && (
-          <p className="form-hint mt-2" style={{ color: '#eab308' }}>
+          <p className="form-hint mt-2" style={{ color: 'var(--warning, #eab308)' }}>
             Below recommended size — detail loss likely
           </p>
         )}
@@ -2486,9 +2486,9 @@ function GenerateForm({
                     padding: '3px 8px',
                     fontSize: 11,
                     borderRadius: 4,
-                    border: '1px solid #303050',
-                    background: lockSeed ? '#5b21b640' : 'transparent',
-                    color: lockSeed ? '#a78bfa' : 'var(--text-muted)',
+                    border: '1px solid var(--surface-border, #303050)',
+                    background: lockSeed ? 'var(--accent-subtle)' : 'transparent',
+                    color: lockSeed ? 'var(--accent)' : 'var(--text-muted)',
                     cursor: 'pointer',
                     fontWeight: lockSeed ? 600 : 400,
                   }}
@@ -3706,9 +3706,9 @@ function StudioInner() {
                     padding: '2px 10px',
                     borderRadius: 4,
                     border: '1px solid',
-                    borderColor: !useHD ? '#10b981' : 'var(--surface-border, #2a2a2a)',
+                    borderColor: !useHD ? 'var(--success, #10b981)' : 'var(--surface-border, #2a2a2a)',
                     background:  !useHD ? 'rgba(16,185,129,.12)' : 'transparent',
-                    color:       !useHD ? '#10b981' : 'var(--text-muted, #666)',
+                    color:       !useHD ? 'var(--success, #10b981)' : 'var(--text-muted, #666)',
                     cursor: 'pointer',
                     fontWeight: !useHD ? 600 : 400,
                   }}
@@ -3738,6 +3738,7 @@ function StudioInner() {
             </div>
 
           <button
+            type="button"
             data-generate-btn
             className="btn btn-primary w-full"
             style={{
@@ -3747,6 +3748,7 @@ function StudioInner() {
             }}
             onClick={handleGenerate}
             disabled={!prompt.trim() || jobStatus === 'pending'}
+            aria-label="Generate"
           >
             {jobStatus === 'pending' ? (
               <span className="flex items-center gap-2">
@@ -3781,9 +3783,9 @@ function StudioInner() {
               fontSize: '0.72rem', color: 'var(--text-faint)', padding: '0.25rem 0',
             }}>
               <span>
-                <span style={{ color: hdBalance.monthly + hdBalance.topUp > 0 ? 'var(--text-muted)' : '#ef4444' }}>
+                <span style={{ color: hdBalance.monthly + hdBalance.topUp > 0 ? 'var(--text-muted)' : 'var(--danger, #ef4444)' }}>
                   HD:{' '}
-                  <strong style={{ color: hdBalance.monthly + hdBalance.topUp > 0 ? '#c4b5fd' : '#ef4444' }}>
+                  <strong style={{ color: hdBalance.monthly + hdBalance.topUp > 0 ? 'var(--accent-light, #c4b5fd)' : 'var(--danger, #ef4444)' }}>
                     {hdBalance.monthly + hdBalance.topUp}
                   </strong>
                   {' '}credit{hdBalance.monthly + hdBalance.topUp !== 1 ? 's' : ''} left
@@ -3794,14 +3796,14 @@ function StudioInner() {
                   </span>
                 )}
               </span>
-              <a href="/billing" style={{ color: '#a78bfa', textDecoration: 'none', fontSize: '0.7rem' }}>
+              <a href="/billing" style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: '0.7rem' }}>
                 {hdBalance.monthly + hdBalance.topUp === 0 ? 'Add credits →' : 'Manage →'}
               </a>
             </div>
           )}
           {useHD && hdBalance === null && (
             <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.25rem' }}>
-              <a href="/billing" style={{ color: '#a78bfa', textDecoration: 'none' }}>
+              <a href="/billing" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
                 HD credits — sign in or upgrade →
               </a>
             </div>
@@ -3859,7 +3861,7 @@ function StudioInner() {
                 </button>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', color: 'var(--text-faint)', paddingTop: '0.125rem' }}>
-                <span style={{ color: '#10b981', marginRight: '0.25rem' }}>∞</span>
+                <span style={{ color: 'var(--success, #10b981)', marginRight: '0.25rem' }}>∞</span>
                 Standard generation is always free
               </div>
             </>
@@ -3993,7 +3995,7 @@ function StudioInner() {
                 ['?', 'Toggle this shortcut sheet'],
               ] as [string, string][]).map(([key, desc]) => (
                 <div key={key} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, fontSize: 13 }}>
-                  <kbd style={{ fontFamily: 'monospace', background: '#252538', border: '1px solid #303050', borderRadius: 4, padding: '2px 8px', color: 'var(--accent)', flexShrink: 0 }}>{key}</kbd>
+                  <kbd style={{ fontFamily: 'monospace', background: 'var(--bg-surface, #252538)', border: '1px solid var(--surface-border, #303050)', borderRadius: 4, padding: '2px 8px', color: 'var(--accent)', flexShrink: 0 }}>{key}</kbd>
                   <span style={{ color: 'var(--text-muted)', textAlign: 'right' }}>{desc}</span>
                 </div>
               ))}

@@ -192,6 +192,7 @@ function BusinessStudioInner() {
 
   // Timer ref
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // ── Free integrations state ───────────────────────────────────────────────
   const [showQrPanel, setShowQrPanel]         = useState(false);
@@ -273,6 +274,7 @@ function BusinessStudioInner() {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   };
   useEffect(() => () => stopTimer(), []);
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
 
   // ── Determine width/height for current tool ───────────────────────────────
   const getToolDimensions = () => {
@@ -292,6 +294,10 @@ function BusinessStudioInner() {
   const handleGenerate = useCallback(async (promptOverride?: unknown) => {
     const effectivePrompt = typeof promptOverride === 'string' ? promptOverride : prompt;
     if (!effectivePrompt.trim() || jobStatus === 'running') return;
+    // Cancel in-flight requests
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    const { signal } = abortRef.current;
     setJobStatus('running');
     setStudioError(null);
     setResult(null);
@@ -340,6 +346,7 @@ function BusinessStudioInner() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ ...body, extra: { ...body.extra, brandKitIndex: idx } }),
+              signal,
             });
             const data = await res.json();
             if (!res.ok || !data.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
@@ -363,6 +370,7 @@ function BusinessStudioInner() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
+          signal,
         });
         const data = await res.json();
         if (!res.ok || !data.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
@@ -381,6 +389,7 @@ function BusinessStudioInner() {
         }, ...prev].slice(0, 30));
       }
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       setStudioError(parseApiError({ status: 0 }, err instanceof Error ? err.message : String(err)));
       setJobStatus('failed');
     } finally {
@@ -1117,9 +1126,12 @@ function BusinessStudioInner() {
         {/* Generate button */}
         <div className="studio-control-section">
           <button
+            type="button"
+            data-generate-btn
             className="btn btn-primary btn-generate"
             onClick={() => handleGenerate()}
             disabled={jobStatus === 'running' || !prompt.trim()}
+            aria-label="Generate"
           >
             {jobStatus === 'running'
               ? `Generating… ${(elapsedMs / 1000).toFixed(1)}s`
