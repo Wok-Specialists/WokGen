@@ -173,7 +173,7 @@ export default function HomePage() {
                   <span className="homepage-code-dot" />
                   <span className="homepage-code-dot" />
                   <span className="homepage-code-dot" />
-                  <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>@wokspec/sdk</span>
+                  <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: 'var(--text-faint)' }}>@wokspec/sdk</span>
                 </div>
                 <pre className="homepage-code-body"><code>{`import WokGen from '@wokspec/sdk';
 
