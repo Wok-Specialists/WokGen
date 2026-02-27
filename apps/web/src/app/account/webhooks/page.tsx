@@ -211,7 +211,7 @@ export default function WebhooksPage() {
         <div>
           <h1 className="devplatform-page__title">
             Webhooks
-            <span style={{ fontSize: '0.625rem', padding: '0.2rem 0.5rem', borderRadius: '999px', fontWeight: 600, marginLeft: '0.5rem', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', verticalAlign: 'middle', letterSpacing: '0.04em' }}>Beta</span>
+            <span style={{ fontSize: '0.625rem', padding: '0.2rem 0.5rem', borderRadius: '999px', fontWeight: 600, marginLeft: '0.5rem', background: 'var(--info-bg)', color: 'var(--blue)', verticalAlign: 'middle', letterSpacing: '0.04em' }}>Beta</span>
           </h1>
           <p className="devplatform-page__subtitle">
             Receive HTTP callbacks when events occur in your account.

@@ -199,7 +199,7 @@ export default function ApiKeysClient() {
                     {(() => {
                       const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
                       return new Date(k.createdAt) < ninetyDaysAgo ? (
-                        <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 4, background: '#f59e0b18', color: '#f59e0b', border: '1px solid #f59e0b40', marginLeft: 6 }}>
+                        <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 4, background: 'var(--warning-bg)', color: 'var(--warning)', border: '1px solid var(--warning-bg)', marginLeft: 6 }}>
                           Rotate — 90+ days old
                         </span>
                       ) : null;

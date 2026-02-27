@@ -30,7 +30,7 @@ export default async function SettingsPage() {
             {session.user.image ? (
               <Image src={session.user.image} alt={session.user.name || 'Avatar'} width={56} height={56} style={{ borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--border)' }} />
             ) : (
-              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(var(--accent-rgb, 129,140,248), 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.25rem', color: 'var(--accent)' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--accent-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.25rem', color: 'var(--accent)' }}>
                 {(session.user.name || session.user.email || 'U')[0].toUpperCase()}
               </div>
             )}
@@ -53,7 +53,7 @@ export default async function SettingsPage() {
             ] as const).map(provider => (
               <div key={provider.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', fontWeight: 700 }}>{provider.icon}</span>
+                  <span style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'var(--surface-hover)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', fontWeight: 700 }}>{provider.icon}</span>
                   <span style={{ fontSize: '0.9375rem' }}>{provider.label}</span>
                 </div>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '0.2rem 0.625rem', border: '1px solid var(--border)', borderRadius: '999px' }}>
@@ -94,13 +94,13 @@ export default async function SettingsPage() {
         <BillingSection />
 
         {/* Danger zone */}
-        <section style={{ border: '1px solid rgba(239,68,68,0.2)', borderRadius: '12px', padding: '1.5rem', background: 'rgba(239,68,68,0.03)' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem', color: '#f87171' }}>Danger Zone</h2>
+        <section style={{ border: '1px solid var(--danger-border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--danger-bg)' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem', color: 'var(--danger)' }}>Danger Zone</h2>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>Permanently delete your account and all data. This cannot be undone.</p>
           <form action="/api/account/delete" method="POST">
             <button
               type="submit"
-              style={{ padding: '0.5rem 1rem', background: 'transparent', border: '1px solid rgba(239,68,68,0.4)', borderRadius: '8px', color: '#f87171', fontSize: '0.875rem', cursor: 'pointer', fontFamily: 'inherit' }}
+              style={{ padding: '0.5rem 1rem', background: 'transparent', border: '1px solid var(--danger)', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.875rem', cursor: 'pointer', fontFamily: 'inherit' }}
             
             >
               Delete Account
