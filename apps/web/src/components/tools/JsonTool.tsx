@@ -213,7 +213,7 @@ export default function JsonTool() {
             )}
           </div>
           {output ? (
-            <div style={{ display: 'flex', fontFamily: 'monospace', fontSize: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden', maxHeight: '384px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)' }}>
+            <div style={{ display: 'flex', fontFamily: 'monospace', fontSize: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden', maxHeight: '384px', overflowY: 'auto', background: 'var(--overlay-30)' }}>
               <div style={{ background: 'var(--surface-card)', color: 'var(--text-faint)', padding: '0.75rem 0.5rem', textAlign: 'right', userSelect: 'none', minWidth: '3rem', lineHeight: '1.25rem' }}>
                 {output.split('\n').map((_, i) => (
                   <div key={i}>{i + 1}</div>

@@ -3788,7 +3788,7 @@ function StudioInner() {
                 Generate
                 <kbd
                   className="ml-auto opacity-60"
-                  style={{ fontSize: '0.65rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)' }}
+                  style={{ fontSize: '0.65rem', background: 'var(--overlay-30)', border: '1px solid var(--border)' }}
                 >
                   ⌘↵
                 </kbd>

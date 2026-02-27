@@ -150,7 +150,7 @@ export default function VectorizeTool() {
               <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '1rem', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '180px' }}
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
-              <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0.875rem', background: 'rgba(0,0,0,0.2)', overflow: 'hidden' }}>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0.875rem', background: 'var(--overlay-30)', overflow: 'hidden' }}>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>SVG Code</p>
                 <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.7rem', color: 'var(--text-muted)', overflow: 'auto', maxHeight: '160px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{svg.slice(0, 600)}{svg.length > 600 ? '…' : ''}</pre>
               </div>
