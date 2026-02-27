@@ -15,6 +15,10 @@
   --bg-elevated:   #161616;
   --bg-overlay:    #1c1c1c;
   --bg-input:      #111111;
+  --bg-primary:    #0a0a0a;
+  --bg-secondary:  #111111;
+  --bg-tertiary:   #161616;
+  --accent-primary: #818cf8;
   --border:        rgba(255,255,255,0.08);
   --border-subtle: rgba(255,255,255,0.04);
   --border-strong: rgba(255,255,255,0.12);
@@ -118,7 +122,9 @@
   --font-4xl:  2.25rem;   /* 36px */
 
   /* ── Monospace font stack ─────────────────────────────── */
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans:    'DM Sans', system-ui, sans-serif;
 
   /* ── Letter spacing ───────────────────────────────────── */
   --tracking-tight:  -0.02em;
@@ -19478,6 +19484,9 @@ select:focus-visible {
   --bg-elevated:   #ffffff;
   --bg-overlay:    #ffffff;
   --bg-input:      #ffffff;
+  --bg-primary:    #fafafa;
+  --bg-secondary:  #ffffff;
+  --bg-tertiary:   #f4f4f5;
   --bg-surface-2:  #f4f4f5;
   --border:        rgba(0,0,0,0.08);
   --border-subtle: rgba(0,0,0,0.04);
@@ -19499,6 +19508,7 @@ select:focus-visible {
   --accent-dim:    #6366f1;
   --accent-muted:  #818cf8;
   --accent-hover:  #4338ca;
+  --accent-primary: #4f46e5;
   --accent-glow:   rgba(79, 70, 229, 0.12);
   --accent-subtle: rgba(79, 70, 229, 0.07);
   --text-on-accent: #ffffff;
