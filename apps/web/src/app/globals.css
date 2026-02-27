@@ -5696,15 +5696,15 @@ body {
 
 .admin-badge--free   { background: rgba(120,120,120,.15); color: var(--text-muted); }
 .admin-badge--plus   { background: var(--accent-glow); color: var(--accent); }
-.admin-badge--pro    { background: rgba(139,92,246,.18);  color: #c4b5fd; }
-.admin-badge--max    { background: rgba(109,40,217,.25);  color: #ddd6fe; }
+.admin-badge--pro    { background: var(--accent-subtle); color: var(--accent); }
+.admin-badge--max    { background: rgba(109,40,217,.25); color: var(--accent); }
 
 .admin-error {
-  background: rgba(239,68,68,.1);
-  border: 1px solid rgba(239,68,68,.3);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
   border-radius: var(--radius);
   padding: 1rem;
-  color: #fca5a5;
+  color: var(--danger);
   font-size: 0.85rem;
   margin-bottom: 1.5rem;
 }
@@ -5740,8 +5740,8 @@ body {
   flex-shrink: 0;
 }
 
-.admin-system-card__dot--ok   { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,.5); }
-.admin-system-card__dot--warn { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.4); }
+.admin-system-card__dot--ok   { background: var(--success); box-shadow: 0 0 6px color-mix(in srgb, var(--success) 50%, transparent); }
+.admin-system-card__dot--warn { background: var(--warning); box-shadow: 0 0 6px color-mix(in srgb, var(--warning) 40%, transparent); }
 .admin-system-card__dot--off  { background: var(--text-faint); }
 
 .admin-system-card__label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
@@ -5770,13 +5770,13 @@ body {
 .billing-toast--success {
   background: var(--accent-glow);
   border: 1px solid var(--accent-glow);
-  color: #c4b5fd;
+  color: var(--accent);
 }
 
 .billing-toast--error {
-  background: rgba(239,68,68,.1);
-  border: 1px solid rgba(239,68,68,.3);
-  color: #fca5a5;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger);
 }
 
 .billing-toast__dismiss {
@@ -5796,13 +5796,13 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(245,158,11,.07);
-  border: 1px solid rgba(245,158,11,.25);
+  background: var(--warning-bg);
+  border: 1px solid color-mix(in srgb, var(--warning) 25%, transparent);
   border-radius: var(--radius);
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
   font-size: 0.83rem;
-  color: #fcd34d;
+  color: var(--warning);
 }
 
 .billing-header { margin-bottom: 2.5rem; }
