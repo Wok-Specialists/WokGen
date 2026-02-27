@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
 import { checkRateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 export const maxDuration = 30;
 
 // ---------------------------------------------------------------------------

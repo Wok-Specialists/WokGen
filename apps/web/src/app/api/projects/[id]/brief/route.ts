@@ -4,6 +4,8 @@ import { auth } from '@/lib/auth';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET   /api/projects/[id]/brief   — get project brief
 // PUT   /api/projects/[id]/brief   — create or replace project brief

@@ -5,6 +5,8 @@ import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 import { DAILY_STD_LIMIT } from '@/lib/quota';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/usage
  *

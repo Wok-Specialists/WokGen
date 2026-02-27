@@ -5,6 +5,8 @@ import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 import { getWorkspaceLimit, getUserPlanId } from '@/lib/plan-limits';
 
+export const dynamic = 'force-dynamic';
+
 const VALID_MODES = new Set(['pixel', 'business', 'vector', 'emoji', 'uiux']);
 
 // GET /api/workspaces?mode=pixel

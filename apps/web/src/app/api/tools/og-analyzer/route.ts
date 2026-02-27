@@ -4,6 +4,8 @@ import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limiter';
 import { checkRateLimit as checkRateLimitPersist } from '@/lib/rate-limit';
 import { auth } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const session = await auth();
   const rl = checkRateLimit(getRateLimitKey(req, 'og-analyzer'), 20, 60_000);

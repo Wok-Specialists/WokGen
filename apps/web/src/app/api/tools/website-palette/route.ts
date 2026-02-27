@@ -3,6 +3,8 @@ import { checkSsrf } from '@/lib/ssrf-check';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limiter';
 import { auth } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 function normalizeHex(raw: string): string | null {
   const hex = raw.replace('#', '');
   if (hex.length === 3) {

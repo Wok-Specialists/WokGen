@@ -4,6 +4,8 @@ import { prisma, dbQuery } from '@/lib/db';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // Verify ownership helper
 async function verifyOwnership(id: string, userId: string) {
   const workspace = await dbQuery(prisma.project.findUnique({ where: { id } }));

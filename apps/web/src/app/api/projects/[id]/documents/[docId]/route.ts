@@ -5,6 +5,8 @@ import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET    /api/projects/[id]/documents/[docId]
 // PATCH  /api/projects/[id]/documents/[docId]

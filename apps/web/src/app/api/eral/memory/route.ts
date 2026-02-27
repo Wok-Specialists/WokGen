@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 interface MemFact { key: string; value: string; savedAt: string }
 
 // GET /api/eral/memory — return user's Eral memory facts

@@ -4,6 +4,8 @@ import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limiter';
 import { checkRateLimit as checkRateLimitPersist } from '@/lib/rate-limit';
 import { auth } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 interface FaviconEntry {
   url: string;
   rel: string;

@@ -5,6 +5,8 @@ import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const MAX_NOTES = 500;
 
 const CreateSchema = z.object({

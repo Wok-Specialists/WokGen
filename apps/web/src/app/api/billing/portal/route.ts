@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST() {
   if (!stripe) {
     return NextResponse.json({ error: 'Billing not configured' }, { status: 503 });

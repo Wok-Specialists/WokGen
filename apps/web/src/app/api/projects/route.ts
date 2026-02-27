@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { withErrorHandler, dbQuery } from '@/lib/api-handler';
 import { checkRateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET /api/projects — list user's projects
 // POST /api/projects — create a new project

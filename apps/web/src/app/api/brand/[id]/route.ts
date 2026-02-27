@@ -5,6 +5,8 @@ import { cache } from '@/lib/cache';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET    /api/brand/[id]   — get one kit
 // PATCH  /api/brand/[id]   — update

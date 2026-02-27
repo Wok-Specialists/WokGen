@@ -4,6 +4,8 @@ import { auth } from '@/lib/auth';
 import { cache } from '@/lib/cache';
 import { log as logger } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET /api/gallery
 //

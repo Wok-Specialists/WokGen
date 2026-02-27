@@ -7,6 +7,8 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET  /api/brand   — list user's brand kits
 // POST /api/brand   — create a brand kit

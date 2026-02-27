@@ -4,6 +4,8 @@ import { auth } from '@/lib/auth';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET    /api/projects/[id]/relationships   — list edges
 // POST   /api/projects/[id]/relationships   — create edge

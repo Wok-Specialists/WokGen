@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db';
 import { log as logger } from '@/lib/logger';
 import { checkRateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 // DELETE /api/user/delete — permanently delete the authenticated user's account
 export async function DELETE(req: NextRequest) {
   void req; // unused but required by Next.js handler signature

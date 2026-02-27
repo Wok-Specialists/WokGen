@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const RateSchema = z.object({
   rating: z.union([z.literal(1), z.literal(-1), z.literal(0)]),
 });

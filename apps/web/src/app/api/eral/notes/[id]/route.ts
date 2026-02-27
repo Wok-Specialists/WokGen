@@ -5,6 +5,8 @@ import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const UpdateSchema = z.object({
   title:   z.string().min(1).max(200).optional(),
   content: z.string().max(50_000).optional(),

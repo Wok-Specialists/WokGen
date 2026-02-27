@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { randomBytes } from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET    /api/projects/[id]/members   — list members
 // POST   /api/projects/[id]/members   — add/invite a member

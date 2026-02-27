@@ -4,6 +4,8 @@ import { prisma, dbQuery } from '@/lib/db';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // POST /api/workspaces/[id]/invite
 // Body: { email: string, role?: 'member' | 'admin' }
 // Auth: project owner only

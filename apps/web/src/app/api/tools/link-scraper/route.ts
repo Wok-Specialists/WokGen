@@ -4,6 +4,8 @@ import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limiter';
 import { checkRateLimit as checkRateLimitPersist } from '@/lib/rate-limit';
 import { auth } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 /** Scrape via Firecrawl when API key is configured. Returns enriched result with markdown. */
 async function scrapeWithFirecrawl(url: string) {
   const apiKey = process.env.FIRECRAWL_API_KEY;

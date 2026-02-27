@@ -4,6 +4,8 @@ import { prisma, dbQuery } from '@/lib/db';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET /api/notifications  — last 10 unread notifications for the current user
 // PATCH /api/notifications — mark all as read

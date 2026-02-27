@@ -4,6 +4,8 @@ import { prisma, dbQuery } from '@/lib/db';
 import { API_ERRORS } from '@/lib/api-response';
 import { log } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/usage/analytics
  *

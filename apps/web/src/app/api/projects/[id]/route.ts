@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // GET    /api/projects/[id] — get project + recent jobs
 // PATCH  /api/projects/[id] — rename or archive (mode is immutable)
