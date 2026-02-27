@@ -1,5 +1,6 @@
 import { createHmac } from 'crypto';
 import { randomUUID } from 'crypto';
+import { log } from '@/lib/logger';
 
 export interface WebhookPayload {
   type: string;
@@ -48,7 +49,8 @@ export async function deliverWebhook(options: WebhookDeliveryOptions): Promise<W
       signal: controller.signal,
     });
     return { ok: res.ok, status: res.status, deliveryId };
-  } catch {
+  } catch (err) {
+    log.warn({ err, url, deliveryId }, 'webhook delivery failed');
     return { ok: false, status: 0, deliveryId };
   } finally {
     clearTimeout(timeout);

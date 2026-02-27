@@ -28,7 +28,7 @@ interface GalleryResponse {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const ACCENT = '#10b981';
+const ACCENT = 'var(--success)';
 
 const CONTENT_FILTERS = [
   { id: '',             label: 'All'          },
