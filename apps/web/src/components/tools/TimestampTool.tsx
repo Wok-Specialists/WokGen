@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 function Row({ label, value, onCopy }: { label: string; value: string; onCopy?: (v: string, k: string) => void }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.625rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.625rem 0', borderBottom: '1px solid var(--surface-card)' }}>
       <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <code style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>{value}</code>
@@ -34,15 +34,15 @@ export default function TimestampTool() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <div>
           <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.375rem' }}>Unix timestamp (seconds)</label>
-          <input value={ts} onChange={e => setTs(e.target.value)} style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.5rem 0.875rem', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.9375rem', outline: 'none' }} />
+          <input value={ts} onChange={e => setTs(e.target.value)} style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.5rem 0.875rem', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.9375rem', outline: 'none' }} />
         </div>
         <div>
           <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.375rem' }}>Date + time</label>
-          <input type="datetime-local" value={dateStr} onChange={e => setDateStr(e.target.value)} style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.5rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }} />
+          <input type="datetime-local" value={dateStr} onChange={e => setDateStr(e.target.value)} style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.5rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }} />
         </div>
       </div>
-      <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0 1rem', background: 'rgba(255,255,255,0.02)' }}>
-        <div style={{ padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>From timestamp</div>
+      <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0 1rem', background: 'var(--surface-card)' }}>
+        <div style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--surface-raised)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>From timestamp</div>
         {fromTs && !isNaN(fromTs.getTime()) ? (
           <>
             <Row label="ISO 8601" value={fromTs.toISOString()} onCopy={copy} />
@@ -54,7 +54,7 @@ export default function TimestampTool() {
         ) : <p style={{ padding: '0.75rem 0', color: 'var(--text-muted)', fontSize: '0.875rem' }}>Enter a valid timestamp above</p>}
         {fromDate && !isNaN(fromDate.getTime()) && (
           <>
-            <div style={{ padding: '0.75rem 0', borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '0.25rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>From date input</div>
+            <div style={{ padding: '0.75rem 0', borderTop: '1px solid var(--surface-raised)', marginTop: '0.25rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>From date input</div>
             <Row label="Unix (seconds)" value={String(Math.floor(fromDate.getTime() / 1000))} onCopy={copy} />
             <Row label="Unix (ms)" value={String(fromDate.getTime())} onCopy={copy} />
             <Row label="ISO 8601" value={fromDate.toISOString()} onCopy={copy} />

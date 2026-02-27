@@ -198,7 +198,7 @@ export default function MdToHtmlTool() {
           color: var(--text); white-space: pre-wrap; word-break: break-all;
           overflow-y: auto; min-height: 420px; margin: 0;
         }
-        .btn.btn-sm { padding: 4px 10px; font-size: 11px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; white-space: nowrap; }
+        .btn.btn-sm { padding: 4px 10px; font-size: 11px; cursor: pointer; background: var(--surface-raised); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; white-space: nowrap; }
         .btn.btn-sm:hover { background: rgba(255,255,255,0.1); }
       `}</style>
     </div>

@@ -214,12 +214,12 @@ export default function JsonTool() {
           </div>
           {output ? (
             <div style={{ display: 'flex', fontFamily: 'monospace', fontSize: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden', maxHeight: '384px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)' }}>
-              <div style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.2)', padding: '0.75rem 0.5rem', textAlign: 'right', userSelect: 'none', minWidth: '3rem', lineHeight: '1.25rem' }}>
+              <div style={{ background: 'var(--surface-card)', color: 'var(--text-faint)', padding: '0.75rem 0.5rem', textAlign: 'right', userSelect: 'none', minWidth: '3rem', lineHeight: '1.25rem' }}>
                 {output.split('\n').map((_, i) => (
                   <div key={i}>{i + 1}</div>
                 ))}
               </div>
-              <pre style={{ flex: 1, padding: '0.75rem', margin: 0, color: 'rgba(255,255,255,0.8)', lineHeight: '1.25rem', overflowX: 'auto', whiteSpace: 'pre' }}>{output}</pre>
+              <pre style={{ flex: 1, padding: '0.75rem', margin: 0, color: 'var(--text)', lineHeight: '1.25rem', overflowX: 'auto', whiteSpace: 'pre' }}>{output}</pre>
             </div>
           ) : (
             <textarea

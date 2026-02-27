@@ -152,7 +152,7 @@ export function ColorPalette({ imageUrl }: Props) {
                 background: hex,
                 border: copiedIdx === i
                   ? '2px solid var(--accent, #a78bfa)'
-                  : '1px solid rgba(255,255,255,0.15)',
+                  : '1px solid var(--border)',
                 cursor: 'pointer',
                 flexShrink: 0,
                 transition: 'transform 0.1s',

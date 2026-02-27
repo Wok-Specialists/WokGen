@@ -69,7 +69,7 @@ export default function ExaSearchTool() {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && search()}
             placeholder="e.g. latest advancements in diffusion models 2024"
-            style={{ flex: 1, minWidth: '200px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
+            style={{ flex: 1, minWidth: '200px', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
           />
           <div style={{ display: 'flex', gap: '0.375rem' }}>
             {(['neural', 'keyword', 'auto'] as const).map(t => (
@@ -94,14 +94,14 @@ export default function ExaSearchTool() {
 
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
           <select value={dateFilter} onChange={e => setDateFilter(e.target.value as any)}
-            style={{ fontSize: '0.8125rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.625rem', color: 'rgba(255,255,255,0.6)', cursor: 'pointer' }}>
+            style={{ fontSize: '0.8125rem', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.625rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
             <option value="any">Any time</option>
             <option value="week">Past week</option>
             <option value="month">Past month</option>
             <option value="year">Past year</option>
           </select>
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value as any)}
-            style={{ fontSize: '0.8125rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.625rem', color: 'rgba(255,255,255,0.6)', cursor: 'pointer' }}>
+            style={{ fontSize: '0.8125rem', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.625rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
             <option value="all">All types</option>
             <option value="news">News</option>
             <option value="research">Research</option>
@@ -117,10 +117,10 @@ export default function ExaSearchTool() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {results.map((r, i) => (
-                <div key={i} style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'rgba(255,255,255,0.02)' }}>
+                <div key={i} style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '10px', background: 'var(--surface-card)' }}>
                   <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: '0.9375rem', color: '#a78bfa', textDecoration: 'none', display: 'block', marginBottom: '0.375rem' }}>{r.title || r.url}</a>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.375rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: 'var(--text-faint)', marginBottom: '0.375rem' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`https://www.google.com/s2/favicons?domain=${getHostname(r.url)}&sz=16`}
@@ -137,16 +137,16 @@ export default function ExaSearchTool() {
                   <div style={{ display: 'flex', gap: '0.75rem' }}>
                     <button
                       onClick={() => navigator.clipboard.writeText(`${r.title || ''}\n${r.url}`)}
-                      style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                      onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
+                      style={{ fontSize: '0.75rem', color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint)')}
                     >
                       Copy link
                     </button>
                     <a href={r.url} target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}
-                      onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.6)')}
-                      onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.3)')}
+                      style={{ fontSize: '0.75rem', color: 'var(--text-faint)', textDecoration: 'none' }}
+                      onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-secondary)')}
+                      onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-faint)')}
                     >
                       Open
                     </a>

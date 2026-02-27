@@ -138,7 +138,7 @@ export default function BaseConverterTool() {
         }
         .base-conv__copy-btn {
           flex-shrink: 0; padding: 4px 12px; font-size: 11px; cursor: pointer;
-          background: rgba(255,255,255,0.05); color: var(--text-muted);
+          background: var(--surface-hover); color: var(--text-muted);
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s;
         }
@@ -148,11 +148,11 @@ export default function BaseConverterTool() {
         .base-conv__example-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .base-conv__example-btn {
           padding: 6px 12px; font-size: 12px; cursor: pointer;
-          background: rgba(255,255,255,0.04); color: var(--text-secondary);
+          background: var(--surface-card); color: var(--text-secondary);
           border: 1px solid var(--surface-border); border-radius: 6px;
           transition: background 0.12s;
         }
-        .base-conv__example-btn:hover { background: rgba(255,255,255,0.08); }
+        .base-conv__example-btn:hover { background: var(--surface-raised); }
       `}</style>
     </div>
   );

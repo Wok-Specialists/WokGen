@@ -58,7 +58,7 @@ export default function OgAnalyzerTool() {
             {loading ? <><span style={{marginRight:8}}>⏳</span>Fetching...</> : 'Analyze'}
           </button>
         </div>
-        {error && <div style={{ marginTop: 8, padding: '8px 12px', borderRadius: 6, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', color: '#f87171', fontSize: 13 }}>{error.includes('Network') ? 'Network error — check your connection and try again.' : error}</div>}
+        {error && <div style={{ marginTop: 8, padding: '8px 12px', borderRadius: 6, background: 'var(--danger-bg)', border: '1px solid var(--danger-border)', color: 'var(--danger)', fontSize: 13 }}>{error.includes('Network') ? 'Network error — check your connection and try again.' : error}</div>}
       </div>
 
       {data && (
@@ -83,7 +83,7 @@ export default function OgAnalyzerTool() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {ogEntries.map(([key, value]) => (
                 <div key={key} className="card" style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 12px' }}>
-                  <code style={{ fontSize: 11, color: '#818cf8', minWidth: 180, flexShrink: 0 }}>{key}</code>
+                  <code style={{ fontSize: 11, color: 'var(--accent)', minWidth: 180, flexShrink: 0 }}>{key}</code>
                   <span style={{ fontSize: 12, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>{value}</span>
                 </div>
               ))}

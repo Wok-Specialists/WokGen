@@ -88,7 +88,7 @@ export default function LinkCheckerTool() {
         </div>
         {running && (
           <div style={{ marginTop: 10, height: 4, background: 'var(--surface-border)', borderRadius: 2 }}>
-            <div style={{ height: '100%', width: `${progress}%`, background: '#818cf8', borderRadius: 2, transition: 'width 0.2s' }} />
+            <div style={{ height: '100%', width: `${progress}%`, background: 'var(--accent)', borderRadius: 2, transition: 'width 0.2s' }} />
           </div>
         )}
       </div>

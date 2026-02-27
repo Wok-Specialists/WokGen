@@ -213,7 +213,7 @@ export default function PrivacyPolicyTool() {
         .pp-tool__output-title { font-size: 13px; font-weight: 600; color: var(--text); }
         .pp-tool__output-btns { display: flex; gap: 8px; }
         .pp-tool__preview { padding: 16px; font-size: 12px; white-space: pre-wrap; word-break: break-word; color: var(--text); max-height: 480px; overflow-y: auto; margin: 0; }
-        .btn.btn-sm { padding: 5px 12px; font-size: 12px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
+        .btn.btn-sm { padding: 5px 12px; font-size: 12px; cursor: pointer; background: var(--surface-raised); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
         .btn.btn-sm:hover { background: rgba(255,255,255,0.1); }
       `}</style>
     </div>

@@ -95,7 +95,7 @@ export default function VectorizeTool() {
               onChange={e => setImageUrl(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && vectorize()}
               placeholder="https://example.com/logo.png"
-              style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
+              style={{ flex: 1, background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
             />
             <button onClick={vectorize} disabled={!canVectorize} className="btn btn-primary" style={{ padding: '0.625rem 1.25rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {loading ? (
@@ -109,7 +109,7 @@ export default function VectorizeTool() {
         ) : (
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             <button onClick={() => fileInputRef.current?.click()}
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 1rem', color: 'var(--text-secondary)', fontSize: '0.875rem', cursor: 'pointer' }}>
+              style={{ background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 1rem', color: 'var(--text-secondary)', fontSize: '0.875rem', cursor: 'pointer' }}>
               {uploadedFile ? uploadedFile.name : 'Choose image...'}
             </button>
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={onFileChange} />
@@ -128,7 +128,7 @@ export default function VectorizeTool() {
           <div style={{ marginTop: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={previewSrc} alt="Preview" onError={() => setPreviewSrc('')}
-              style={{ width: '72px', height: '72px', objectFit: 'contain', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.04)' }} />
+              style={{ width: '72px', height: '72px', objectFit: 'contain', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }} />
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
               {uploadedFile ? `${uploadedFile.name} · ${Math.round(uploadedFile.size / 1024)}KB` : 'Preview'}
             </span>
@@ -152,7 +152,7 @@ export default function VectorizeTool() {
               />
               <div style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0.875rem', background: 'rgba(0,0,0,0.2)', overflow: 'hidden' }}>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>SVG Code</p>
-                <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', overflow: 'auto', maxHeight: '160px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{svg.slice(0, 600)}{svg.length > 600 ? '…' : ''}</pre>
+                <pre style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.7rem', color: 'var(--text-muted)', overflow: 'auto', maxHeight: '160px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{svg.slice(0, 600)}{svg.length > 600 ? '…' : ''}</pre>
               </div>
             </div>
           </div>

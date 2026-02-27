@@ -50,7 +50,7 @@ export default function ToolShell({
               color: '#fff',
               fontFamily: 'monospace',
               fontSize: 12,
-              border: '1px solid rgba(255,255,255,0.08)',
+              border: '1px solid var(--surface-raised)',
             }}
           >
             {String(icon).trim().slice(0, 3)}

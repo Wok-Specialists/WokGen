@@ -118,7 +118,7 @@ export default function LinkScraperTool() {
       {result && (
         <div className="tool-section">
           {result.title && (
-            <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: 'var(--surface-card)', borderRadius: '8px', border: '1px solid var(--border)' }}>
               <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>{result.title}</div>
               {result.description && <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{result.description}</div>}
             </div>
@@ -168,7 +168,7 @@ export default function LinkScraperTool() {
           {activeTab === 'links' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', maxHeight: '480px', overflowY: 'auto' }}>
               {filteredLinks.map((link, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <span style={{ fontSize: '0.625rem', fontWeight: 700, padding: '0.1rem 0.35rem', borderRadius: '3px', background: link.type === 'internal' ? 'rgba(52,211,153,0.12)' : 'rgba(248,113,113,0.12)', color: link.type === 'internal' ? '#34d399' : '#f87171', flexShrink: 0 }}>
                     {link.type === 'internal' ? 'INT' : 'EXT'}
                   </span>
@@ -185,7 +185,7 @@ export default function LinkScraperTool() {
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{filteredImages.length} image{filteredImages.length !== 1 ? 's' : ''} found</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.5rem' }}>
                 {filteredImages.map((img, i) => (
-                  <div key={i} style={{ border: '1px solid var(--border)', borderRadius: '6px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}>
+                  <div key={i} style={{ border: '1px solid var(--border)', borderRadius: '6px', overflow: 'hidden', background: 'var(--surface-card)' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={img.url} alt={img.alt || ''} style={{ width: '100%', height: '90px', objectFit: 'cover', display: 'block' }} loading="lazy" />
                     <button
@@ -205,7 +205,7 @@ export default function LinkScraperTool() {
           {activeTab === 'meta' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
               {Object.entries(result.meta).map(([k, v]) => (
-                <div key={k} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+                <div key={k} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0.75rem', borderRadius: '6px', background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#a78bfa', flexShrink: 0, minWidth: '140px' }}>{k}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>{v}</span>
                 </div>

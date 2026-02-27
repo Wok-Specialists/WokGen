@@ -24,8 +24,8 @@ export default function CssGeneratorTool() {
   // ── Glass ─────────────────────────────────────────────────────────────────
   const [glBlur, setGlBlur] = useState(10);
   const [glSat, setGlSat] = useState(180);
-  const [glBg, setGlBg] = useState('rgba(255,255,255,0.15)');
-  const [glBorder, setGlBorder] = useState('rgba(255,255,255,0.2)');
+  const [glBg, setGlBg] = useState('var(--border)');
+  const [glBorder, setGlBorder] = useState('var(--text-faint)');
 
   // ── Border ────────────────────────────────────────────────────────────────
   const [brTl, setBrTl] = useState(8);
@@ -173,11 +173,11 @@ export default function CssGeneratorTool() {
             </div>
             <div className="gen-row">
               <label className="gen-label">Background</label>
-              <input className="tool-input" value={glBg} onChange={e => setGlBg(e.target.value)} placeholder="rgba(255,255,255,0.15)" />
+              <input className="tool-input" value={glBg} onChange={e => setGlBg(e.target.value)} placeholder="var(--border)" />
             </div>
             <div className="gen-row">
               <label className="gen-label">Border color</label>
-              <input className="tool-input" value={glBorder} onChange={e => setGlBorder(e.target.value)} placeholder="rgba(255,255,255,0.2)" />
+              <input className="tool-input" value={glBorder} onChange={e => setGlBorder(e.target.value)} placeholder="var(--text-faint)" />
             </div>
           </div>
         )}

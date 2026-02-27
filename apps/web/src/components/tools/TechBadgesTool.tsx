@@ -137,7 +137,7 @@ export default function TechBadgesTool() {
           border-radius: 5px; padding: 3px; cursor: pointer;
           transition: border-color 0.12s, background 0.12s;
         }
-        .badge-tool__item:hover { background: rgba(255,255,255,0.05); }
+        .badge-tool__item:hover { background: var(--surface-hover); }
         .badge-tool__item--selected { border-color: #818cf8; background: rgba(129,140,248,0.08); }
         .badge-tool__img { display: block; height: 20px; }
         .badge-tool__output { display: flex; flex-direction: column; gap: 10px; }

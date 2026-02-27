@@ -59,7 +59,7 @@ export function Spinner({
         width:        dim,
         height:       dim,
         borderRadius: '50%',
-        border:       `${border}px solid rgba(255,255,255,0.12)`,
+        border:       `${border}px solid var(--border)`,
         borderTopColor: color,
         animation:    'spin 0.7s linear infinite',
         flexShrink:   0,

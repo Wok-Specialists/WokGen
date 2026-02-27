@@ -147,7 +147,7 @@ export default function JwtDebuggerTool() {
         .jwt-tool__section-header {
           display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
           padding: 8px 14px; border-bottom: 1px solid var(--surface-border);
-          background: rgba(255,255,255,0.02);
+          background: var(--surface-card);
         }
         .jwt-tool__section-label {
           font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
@@ -163,7 +163,7 @@ export default function JwtDebuggerTool() {
         .jwt-tool__exp--expired { background: rgba(239,68,68,0.1);  color: #f87171; }
         .jwt-tool__copy-btn {
           margin-left: auto; padding: 3px 10px; font-size: 11px; cursor: pointer;
-          background: rgba(255,255,255,0.05); color: var(--text-muted);
+          background: var(--surface-hover); color: var(--text-muted);
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s;
         }

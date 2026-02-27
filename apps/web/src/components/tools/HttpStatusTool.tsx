@@ -33,10 +33,10 @@ const STATUS_CODES = [
 ];
 
 function getColor(code: number) {
-  if (code < 200) return { bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.2)', text: '#60a5fa' };
-  if (code < 300) return { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.2)', text: '#34d399' };
-  if (code < 400) return { bg: 'rgba(251,191,36,0.1)', border: 'rgba(251,191,36,0.2)', text: '#fbbf24' };
-  if (code < 500) return { bg: 'rgba(248,113,113,0.1)', border: 'rgba(248,113,113,0.2)', text: '#f87171' };
+  if (code < 200) return { bg: 'var(--info-bg)', border: 'var(--info-bg)', text: 'var(--blue)' };
+  if (code < 300) return { bg: 'var(--success-bg)', border: 'var(--success-glow)', text: 'var(--green)' };
+  if (code < 400) return { bg: 'var(--warning-bg)', border: 'var(--warning-bg)', text: 'var(--warning)' };
+  if (code < 500) return { bg: 'var(--danger-bg)', border: 'var(--danger-border)', text: 'var(--danger)' };
   return { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.2)', text: '#ef4444' };
 }
 
@@ -48,7 +48,7 @@ export default function HttpStatusTool() {
 
   return (
     <div className="tool-section">
-      <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by code or name..." style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none', marginBottom: '1rem' }} />
+      <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by code or name..." style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none', marginBottom: '1rem' }} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {filtered.map(s => {
           const c = getColor(s.code);

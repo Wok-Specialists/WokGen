@@ -125,7 +125,7 @@ export default function SqlFormatterTool() {
         .sql-tool__output-header {
           display: flex; align-items: center; justify-content: space-between;
           padding: 8px 14px; border-bottom: 1px solid var(--surface-border);
-          background: rgba(255,255,255,0.02);
+          background: var(--surface-card);
         }
         .sql-tool__output {
           padding: 14px; font-size: 13px; font-family: 'Menlo','Consolas',monospace;

@@ -110,7 +110,7 @@ export default function TilemapTool() {
     });
 
     // grid
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeStyle = 'var(--surface-raised)';
     ctx.lineWidth = 0.5;
     for (let c = 0; c <= GRID_COLS; c++) {
       ctx.beginPath(); ctx.moveTo(c * tileSize, 0); ctx.lineTo(c * tileSize, canvas.height); ctx.stroke();

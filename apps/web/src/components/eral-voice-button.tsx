@@ -377,7 +377,7 @@ export function EralVoiceButton() {
         <div
           style={{
             background: 'var(--bg)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid var(--surface-raised)',
             borderRadius: 999,
             padding: '3px 10px',
             color: 'var(--text)',

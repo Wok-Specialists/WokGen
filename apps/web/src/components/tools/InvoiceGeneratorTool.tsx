@@ -220,7 +220,7 @@ export default function InvoiceGeneratorTool() {
         .inv-table__subtotal { font-weight: 500; white-space: nowrap; }
         .inv-table__del { background: none; border: none; color: #f87171; cursor: pointer; font-size: 14px; padding: 2px 6px; }
         .inv-tool__add-row { margin: 4px 0; }
-        .btn.btn-sm { padding: 5px 12px; font-size: 12px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
+        .btn.btn-sm { padding: 5px 12px; font-size: 12px; cursor: pointer; background: var(--surface-raised); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
         .inv-totals { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
         .inv-totals__row { display: flex; gap: 24px; justify-content: flex-end; min-width: 280px; font-size: 13px; }
         .inv-totals__row span:first-child { color: #555; flex: 1; }

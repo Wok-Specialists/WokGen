@@ -190,7 +190,7 @@ export default function JsonToTypesTool() {
           overflow-y: auto; min-height: 420px; margin: 0;
         }
         .jt-tool__error { padding: 8px 12px; font-size: 12px; color: #f87171; background: rgba(248,113,113,0.08); border-top: 1px solid var(--surface-border); }
-        .btn.btn-sm { padding: 4px 10px; font-size: 11px; cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
+        .btn.btn-sm { padding: 4px 10px; font-size: 11px; cursor: pointer; background: var(--surface-raised); border: 1px solid var(--surface-border); color: var(--text); border-radius: 4px; }
         .btn.btn-sm:hover { background: rgba(255,255,255,0.1); }
       `}</style>
     </div>

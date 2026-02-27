@@ -50,7 +50,7 @@ const S = {
     opacity: open ? 1 : 0,
     pointerEvents: (open ? 'all' : 'none') as 'all' | 'none',
     transition: 'transform 0.18s ease, opacity 0.18s ease',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+    boxShadow: '0 20px 60px var(--overlay-60)',
   }),
   header: {
     display: 'flex',

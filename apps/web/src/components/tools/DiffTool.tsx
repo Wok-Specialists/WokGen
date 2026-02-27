@@ -136,7 +136,7 @@ export default function DiffTool() {
         .diff-tool__result-header {
           display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
           padding: 10px 14px; border-bottom: 1px solid var(--surface-border);
-          background: rgba(255,255,255,0.02);
+          background: var(--surface-card);
         }
         .diff-tool__stats { display: flex; gap: 10px; flex-wrap: wrap; }
         .diff-tool__stat { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }

@@ -150,7 +150,7 @@ export default function PasswordGeneratorTool() {
         }
         .pwd-tool__copy-btn {
           padding: 4px 12px; font-size: 11px; cursor: pointer;
-          background: rgba(255,255,255,0.05); color: var(--text-muted);
+          background: var(--surface-hover); color: var(--text-muted);
           border: 1px solid var(--surface-border); border-radius: 4px;
           transition: background 0.12s; flex-shrink: 0;
         }
