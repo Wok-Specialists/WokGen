@@ -33,6 +33,7 @@ export default function LibraryClient() {
   const [total, setTotal] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
 
@@ -88,13 +89,14 @@ export default function LibraryClient() {
     setSelected(new Set(assets.map(a => a.id)));
   }, [assets]);
 
-  const clearSelection = useCallback(() => setSelected(new Set()), []);
+  const clearSelection = useCallback(() => { setSelected(new Set()); setConfirmBulkDelete(false); }, []);
 
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const bulkDelete = useCallback(async () => {
     if (!selected.size) return;
-    if (!confirm(`Delete ${selected.size} asset${selected.size > 1 ? 's' : ''}? This cannot be undone.`)) return;
+    if (!confirmBulkDelete) { setConfirmBulkDelete(true); return; }
+    setConfirmBulkDelete(false);
     setDeleting(true);
     setDeleteError(null);
     const ids = Array.from(selected);
@@ -111,7 +113,7 @@ export default function LibraryClient() {
     setSelected(new Set());
     if (failed > 0) setDeleteError(`${failed} asset${failed > 1 ? 's' : ''} could not be deleted.`);
     setDeleting(false);
-  }, [selected]);
+  }, [selected, confirmBulkDelete]);
 
   const bulkDownload = useCallback(async () => {
     const selectedAssets = assets.filter(a => selected.has(a.id));
@@ -186,8 +188,8 @@ export default function LibraryClient() {
           <button type="button" onClick={bulkDownload} style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--text)', cursor: 'pointer', fontSize: '0.8125rem' }}>
             Download {selected.size}
           </button>
-          <button type="button" onClick={bulkDelete} disabled={deleting} style={{ background: 'var(--danger-bg)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8125rem', opacity: deleting ? 0.6 : 1 }}>
-            {deleting ? 'Deleting…' : `Delete ${selected.size}`}
+          <button type="button" onClick={bulkDelete} disabled={deleting} style={{ background: confirmBulkDelete ? 'rgba(239,68,68,0.15)' : 'var(--danger-bg)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '6px', padding: '0.375rem 0.875rem', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8125rem', opacity: deleting ? 0.6 : 1, fontWeight: confirmBulkDelete ? 700 : 400 }}>
+            {deleting ? 'Deleting…' : confirmBulkDelete ? `Confirm delete ${selected.size}?` : `Delete ${selected.size}`}
           </button>
           <button type="button" onClick={clearSelection} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.125rem', padding: '0 4px', lineHeight: 1 }}>✕</button>
         </div>

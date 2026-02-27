@@ -443,14 +443,15 @@ interface ApiKey {
 }
 
 function ApiKeysTab() {
-  const [keys,     setKeys]     = useState<ApiKey[]>([]);
-  const [loading,  setLoading]  = useState(true);
-  const [creating, setCreating] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [rawKey,   setRawKey]   = useState<string | null>(null);
-  const [copied,   setCopied]   = useState(false);
-  const [error,    setError]    = useState('');
-  const [formName, setFormName] = useState('');
+  const [keys,          setKeys]          = useState<ApiKey[]>([]);
+  const [loading,       setLoading]       = useState(true);
+  const [creating,      setCreating]      = useState(false);
+  const [showForm,      setShowForm]      = useState(false);
+  const [rawKey,        setRawKey]        = useState<string | null>(null);
+  const [copied,        setCopied]        = useState(false);
+  const [error,         setError]         = useState('');
+  const [formName,      setFormName]      = useState('');
+  const [confirmRevoke, setConfirmRevoke] = useState<string | null>(null);
   const [formScopes, setFormScopes] = useState<string[]>(['generate', 'read']);
   const [formExpiry, setFormExpiry] = useState('never');
 
@@ -496,7 +497,8 @@ function ApiKeysTab() {
   };
 
   const handleRevoke = async (id: string) => {
-    if (!confirm('Revoke this key?')) return;
+    if (confirmRevoke !== id) { setConfirmRevoke(id); return; }
+    setConfirmRevoke(null);
     await fetch(`/api/keys/${id}`, { method: 'DELETE' });
     load();
   };
@@ -579,7 +581,16 @@ function ApiKeysTab() {
               <span className="account-v2-keys-table__date">{fmtDate(k.createdAt)}</span>
               <span className="account-v2-keys-table__date">{k.lastUsedAt ? fmtDate(k.lastUsedAt) : 'Never'}</span>
               <span className="account-v2-keys-table__count">{k.requestCount.toLocaleString()}</span>
-              <button className="account-v2-keys-table__revoke" onClick={() => handleRevoke(k.id)}>Revoke</button>
+              <button
+                type="button"
+                className="account-v2-keys-table__revoke"
+                onClick={() => handleRevoke(k.id)}
+                title={confirmRevoke === k.id ? 'Click again to confirm' : 'Revoke key'}
+                style={{ fontWeight: confirmRevoke === k.id ? 700 : undefined }}
+              >{confirmRevoke === k.id ? 'Confirm?' : 'Revoke'}</button>
+              {confirmRevoke === k.id && (
+                <button type="button" onClick={() => setConfirmRevoke(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', padding: '0 4px' }}>Cancel</button>
+              )}
             </div>
           ))}
         </div>

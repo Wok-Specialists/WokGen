@@ -38,6 +38,7 @@ export default function ProjectsClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<string>('updated');
 
@@ -65,7 +66,11 @@ export default function ProjectsClient() {
   useEffect(() => { load(); }, [load]);
 
   const deleteProject = useCallback(async (id: string, name: string) => {
-    if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    if (!confirmDelete || confirmDelete.id !== id) {
+      setConfirmDelete({ id, name });
+      return;
+    }
+    setConfirmDelete(null);
     setDeleteError(null);
     try {
       const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
@@ -78,7 +83,7 @@ export default function ProjectsClient() {
     } catch {
       setDeleteError('Network error — could not delete project');
     }
-  }, []);
+  }, [confirmDelete]);
 
   const filtered = projects
     .filter(p => !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -193,11 +198,14 @@ export default function ProjectsClient() {
                   <button
                     type="button"
                     onClick={() => deleteProject(p.id, p.name)}
-                    style={{ marginLeft: 'auto', fontSize: 12, background: 'transparent', color: 'var(--danger, #ef4444)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer' }}
-                    title="Delete project"
+                    style={{ marginLeft: 'auto', fontSize: 12, background: confirmDelete?.id === p.id ? 'rgba(239,68,68,0.15)' : 'transparent', color: 'var(--danger, #ef4444)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: confirmDelete?.id === p.id ? 700 : 400 }}
+                    title={confirmDelete?.id === p.id ? 'Click again to confirm' : 'Delete project'}
                   >
-                    Delete
+                    {confirmDelete?.id === p.id ? 'Confirm?' : 'Delete'}
                   </button>
+                  {confirmDelete?.id === p.id && (
+                    <button type="button" onClick={() => setConfirmDelete(null)} style={{ fontSize: 12, background: 'transparent', color: 'var(--text-muted)', border: 'none', padding: '5px 6px', cursor: 'pointer' }}>Cancel</button>
+                  )}
                 </div>
               </div>
             </div>

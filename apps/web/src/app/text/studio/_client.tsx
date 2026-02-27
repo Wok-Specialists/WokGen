@@ -29,7 +29,7 @@ interface TextResult {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const ACCENT = 'var(--success, #10b981)';
+const ACCENT = '#10b981';
 
 const TEXT_STAGES = [
   { delay: 0,     message: 'Connecting to Eral...' },
