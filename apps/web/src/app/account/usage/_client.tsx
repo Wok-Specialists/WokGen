@@ -33,8 +33,8 @@ const MODE_LABELS: Record<string, string> = {
 };
 
 const MODE_COLORS: Record<string, string> = {
-  pixel: 'var(--accent)', business: '#60a5fa', vector: '#34d399',
-  emoji: '#fbbf24', uiux: '#f472b6', voice: '#fb923c', text: '#94a3b8',
+  pixel: 'var(--accent)', business: 'var(--blue, #60a5fa)', vector: 'var(--green, #34d399)',
+  emoji: 'var(--yellow, #fbbf24)', uiux: 'var(--pink, #f472b6)', voice: 'var(--orange, #fb923c)', text: 'var(--text-secondary)',
 };
 
 const STATUS_STYLE: Record<string, string> = {
@@ -107,7 +107,7 @@ function QuotaMeter({
         <div className="quota-meter__track">
           <div
             className="quota-meter__fill"
-            style={{ width: `${p}%`, background: p >= 90 ? '#f87171' : p >= 70 ? '#fbbf24' : color }}
+            style={{ width: `${p}%`, background: p >= 90 ? 'var(--danger)' : p >= 70 ? 'var(--warning)' : color }}
           />
         </div>
       )}
@@ -304,7 +304,7 @@ export default function UsageClient() {
             label={`HD credits this month`}
             used={quota.hdUsed}
             limit={quota.hdAlloc}
-            color="#60a5fa"
+            color="var(--blue, #60a5fa)"
           />
         </div>
       </div>
