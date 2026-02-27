@@ -108,7 +108,7 @@ export default function DocumentEditorClient({
           {saveState === 'saved'  && <span>Saved</span>}
           {saveState === 'unsaved' && <span>Unsaved changes</span>}
         </div>
-        <button className="doc-editor__export-btn" onClick={handleExportMd} title="Export as Markdown">
+        <button type="button" className="doc-editor__export-btn" onClick={handleExportMd} title="Export as Markdown">
           ↓ .md
         </button>
       </div>
@@ -116,7 +116,7 @@ export default function DocumentEditorClient({
       {/* Toolbar */}
       <div className="doc-editor__toolbar">
         {TOOLBAR_ACTIONS.map(({ label, title: t, cmd }) => (
-          <button
+          <button type="button"
             key={label}
             className="doc-editor__toolbar-btn"
             title={t}
@@ -130,7 +130,7 @@ export default function DocumentEditorClient({
       {/* Document area */}
       <div className="doc-editor__body">
         <div className="doc-editor__meta">
-          <button
+          <button type="button"
             className="doc-editor__emoji"
             title="Click to change emoji"
             onClick={() => {

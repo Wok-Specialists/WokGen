@@ -141,12 +141,12 @@ export default function BusinessGallery() {
       <div className="gallery-filters">
         {/* Tab */}
         <div className="gallery-tabs">
-          <button
+          <button type="button"
             className={`gallery-tab${galleryTab === 'community' ? ' active' : ''}`}
             onClick={() => setGalleryTab('community')}
           >Community</button>
           {session && (
-            <button
+            <button type="button"
               className={`gallery-tab${galleryTab === 'mine' ? ' active' : ''}`}
               onClick={() => setGalleryTab('mine')}
             >Mine</button>
@@ -156,7 +156,7 @@ export default function BusinessGallery() {
         {/* Tool pills */}
         <div className="gallery-pill-row">
           {TOOL_FILTERS.map(f => (
-            <button
+            <button type="button"
               key={f.id}
               className={`gallery-pill${toolFilter === f.id ? ' active' : ''}`}
               onClick={() => setToolFilter(f.id)}
@@ -188,7 +188,7 @@ export default function BusinessGallery() {
           <span className="gallery-warn-icon">!</span>
           <p>Failed to load gallery</p>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Check your connection and try again</p>
-          <button className="btn-ghost btn-sm" onClick={() => fetchAssets(null, true)}>Retry</button>
+          <button type="button" className="btn-ghost btn-sm" onClick={() => fetchAssets(null, true)}>Retry</button>
         </div>
       ) : assets.length === 0 ? (
         <div className="gallery-empty">
@@ -200,7 +200,7 @@ export default function BusinessGallery() {
       ) : (
         <div className="gallery-grid gallery-grid--natural">
           {assets.map(asset => (
-            <button
+            <button type="button"
               key={asset.id}
               className="gallery-card gallery-card--natural"
               onClick={() => setSelected(asset)}
@@ -248,7 +248,7 @@ export default function BusinessGallery() {
       {selected && (
         <div className="gallery-lightbox" onClick={() => setSelected(null)}>
           <div className="gallery-lightbox-inner" onClick={e => e.stopPropagation()}>
-            <button className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
+            <button type="button" className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={selected.imageUrl}

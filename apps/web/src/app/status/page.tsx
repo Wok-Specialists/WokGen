@@ -136,7 +136,7 @@ export default function StatusPage() {
             Real-time status of all generation providers.
           </p>
         </div>
-        <button className="devplatform-btn-ghost" onClick={load} disabled={loading}>
+        <button type="button" className="devplatform-btn-ghost" onClick={load} disabled={loading}>
           {loading ? 'Refreshing…' : '↺ Refresh'}
         </button>
       </div>

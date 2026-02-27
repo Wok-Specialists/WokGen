@@ -101,7 +101,7 @@ function PersonaRow({
         maxLength={60}
       />
       {canRemove && (
-        <button className="simulate-persona-row__remove btn btn--ghost btn--sm" onClick={onRemove} aria-label="Remove persona">
+        <button type="button" className="simulate-persona-row__remove btn btn--ghost btn--sm" onClick={onRemove} aria-label="Remove persona">
           ✕
         </button>
       )}
@@ -284,7 +284,7 @@ export default function SimulateClient() {
             <label className="simulate-config__label">Quick presets</label>
             <div className="simulate-config__presets">
               {PRESET_PERSONAS.map((preset, i) => (
-                <button
+                <button type="button"
                   key={i}
                   className="btn btn--ghost btn--sm simulate-config__preset-btn"
                   onClick={() => loadPreset(preset)}
@@ -311,7 +311,7 @@ export default function SimulateClient() {
               ))}
             </div>
             {personas.length < 6 && (
-              <button className="btn btn--ghost btn--sm simulate-config__add-persona" onClick={addPersona}>
+              <button type="button" className="btn btn--ghost btn--sm simulate-config__add-persona" onClick={addPersona}>
                 + Add persona
               </button>
             )}
@@ -334,7 +334,7 @@ export default function SimulateClient() {
             <label className="simulate-config__label">Tone</label>
             <div className="simulate-config__tone-grid">
               {TONE_OPTIONS.map(t => (
-                <button
+                <button type="button"
                   key={t.id}
                   className={`simulate-tone-btn ${tone === t.id ? 'simulate-tone-btn--active' : ''}`}
                   onClick={() => setTone(t.id)}
@@ -373,22 +373,22 @@ export default function SimulateClient() {
 
           <div className="simulate-config__actions">
             {running ? (
-              <button className="btn btn--ghost" onClick={stopSimulation}>Stop</button>
+              <button type="button" className="btn btn--ghost" onClick={stopSimulation}>Stop</button>
             ) : (
-              <button className="btn btn--primary" onClick={run} disabled={!topic.trim()}>
+              <button type="button" className="btn btn--primary" onClick={run} disabled={!topic.trim()}>
                 Start simulation
               </button>
             )}
             {transcript.length > 0 && !running && (
               <>
-                <button className="btn btn--ghost btn--sm" onClick={copyTranscript}>Copy</button>
-                <button className="btn btn--ghost btn--sm" onClick={downloadTxt}>.txt</button>
-                <button className="btn btn--ghost btn--sm" onClick={downloadMd}>.md</button>
-                <button className="btn btn--ghost btn--sm" onClick={voiceThis}>Voice this</button>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={copyTranscript}>Copy</button>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={downloadTxt}>.txt</button>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={downloadMd}>.md</button>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={voiceThis}>Voice this</button>
               </>
             )}
             {done && !running && (
-              <button className="btn btn--ghost btn--sm" onClick={addOneTurn}>Add turn</button>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={addOneTurn}>Add turn</button>
             )}
           </div>
         </div>

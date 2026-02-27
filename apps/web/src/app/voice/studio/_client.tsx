@@ -330,7 +330,7 @@ function VoiceStudioInner() {
               }}
             >
               {VOICE_STYLES.map(v => (
-                <button
+                <button type="button"
                   key={v.id}
                   onClick={() => setStyle(v.id)}
                   title={v.desc}
@@ -362,7 +362,7 @@ function VoiceStudioInner() {
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {CHARACTER_PRESETS.map(p => (
-                  <button
+                  <button type="button"
                     key={p.label}
                     onClick={() => setStyle(p.style)}
                     title={p.desc}
@@ -408,7 +408,7 @@ function VoiceStudioInner() {
                     </span>
                   )}
                 </span>
-                <button
+                <button type="button"
                   onClick={handleVoicePreview}
                   title={previewPlaying ? 'Stop preview' : 'Preview voice'}
                   style={{
@@ -534,7 +534,7 @@ function VoiceStudioInner() {
                 ElevenLabs multilingual v2 · costs 1 credit
               </div>
             </div>
-            <button
+            <button type="button"
               onClick={() => setHd(h => !h)}
               aria-label="Toggle HD"
               style={{
@@ -630,7 +630,7 @@ function VoiceStudioInner() {
                   Auto-insert pauses at punctuation
                 </div>
               </div>
-              <button
+              <button type="button"
                 onClick={() => setNaturalPauses(p => !p)}
                 aria-label="Toggle natural pauses"
                 style={{
@@ -699,7 +699,7 @@ function VoiceStudioInner() {
               )}
             </button>
             {(text || audioUrl) && (
-              <button
+              <button type="button"
                 onClick={handleClear}
                 style={{
                   padding: '12px 14px',
@@ -731,7 +731,7 @@ function VoiceStudioInner() {
             <div className="studio-error-card">
               <p className="studio-error-card__title">Generation failed</p>
               <p className="studio-error-card__msg">{error}</p>
-              <button
+              <button type="button"
                 onClick={handleGenerate}
                 style={{
                   padding: '8px 20px', borderRadius: 6, border: 'none',
@@ -803,7 +803,7 @@ function VoiceStudioInner() {
                     )}
                   </p>
                 </div>
-                <button
+                <button type="button"
                   onClick={handleDownload}
                   style={{
                     padding: '7px 14px',
@@ -883,7 +883,7 @@ function VoiceStudioInner() {
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {EXAMPLES.map(ex => (
-                <button
+                <button type="button"
                   key={ex.label}
                   onClick={() => loadExample(ex)}
                   style={{

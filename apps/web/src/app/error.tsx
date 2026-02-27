@@ -70,7 +70,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
         </div>
 
         <div className="err-actions">
-          <button onClick={reset} className="err-btn err-btn--retry">↺ Try again</button>
+          <button type="button" onClick={reset} className="err-btn err-btn--retry">↺ Try again</button>
           <a href="/" className="err-btn err-btn--home">← Home</a>
         </div>
 

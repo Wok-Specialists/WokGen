@@ -187,7 +187,7 @@ export default function ToolsPage() {
       <aside className="toolhub-sidebar">
         <div className="toolhub-sidebar-title">Categories</div>
         {SIDEBAR_CATEGORIES.map(({ tag, label }) => (
-          <button
+          <button type="button"
             key={tag ?? 'all'}
             className={`toolhub-sidebar-item${activeTag === tag ? ' --active' : ''}`}
             onClick={() => handleCategoryChange(tag)}
@@ -262,7 +262,7 @@ export default function ToolsPage() {
             {filtered.length === 0 ? (
               <div className="toolhub-empty">
                 <p>No tools match &ldquo;{search}&rdquo;</p>
-                <button className="btn-ghost" onClick={() => { handleSearchChange(''); handleCategoryChange(null); }}>
+                <button type="button" className="btn-ghost" onClick={() => { handleSearchChange(''); handleCategoryChange(null); }}>
                   Clear filters
                 </button>
               </div>
@@ -288,7 +288,7 @@ export default function ToolsPage() {
               Request it on GitHub
             </a>
             {' · '}
-            <button
+            <button type="button"
               className="toolhub-footer-link"
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               onClick={startTut}

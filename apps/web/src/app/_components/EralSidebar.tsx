@@ -231,7 +231,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
     <>
       {/* ── Collapsed pill button ─────────────────────────────────── */}
       {!open && (
-        <button
+        <button type="button"
           className="esb-toggle-btn"
           onClick={() => setOpen(true)}
           aria-label="Open Eral 7c"
@@ -257,14 +257,14 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
               <Link href="/eral" className="esb-open-full" title="Open full Eral page">
                 Open full ↗
               </Link>
-              <button
+              <button type="button"
                 className="esb-clear-btn"
                 onClick={() => { setMessages([]); setStreamingContent(''); }}
                 title="Start a new chat"
               >
                 New chat
               </button>
-              <button
+              <button type="button"
                 className="esb-close-btn"
                 onClick={() => setOpen(false)}
                 aria-label="Close Eral"
@@ -275,11 +275,11 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           </div>
           {/* Tabs */}
           <div className="esb-tabs">
-            <button
+            <button type="button"
               className={`esb-tab${activeTab === 'chat' ? ' esb-tab--active' : ''}`}
               onClick={() => setActiveTab('chat')}
             >Chat</button>
-            <button
+            <button type="button"
               className={`esb-tab${activeTab === 'notes' ? ' esb-tab--active' : ''}`}
               onClick={() => setActiveTab('notes')}
             >Notes</button>
@@ -288,7 +288,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
           {/* Model mini-selector */}
           <div className="esb-model-bar">
             {MINI_MODEL_OPTIONS.map((opt) => (
-              <button
+              <button type="button"
                 key={opt.value}
                 className={`esb-model-pill ${model === opt.value ? 'esb-model-pill-active' : ''}`}
                 onClick={() => setModel(opt.value)}
@@ -335,7 +335,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
                 )}
                 <div className="esb-quick-commands">
                   {QUICK_COMMANDS.map((cmd) => (
-                    <button
+                    <button type="button"
                       key={cmd.path}
                       className="esb-quick-cmd"
                       onClick={() => router.push(cmd.path)}
@@ -367,14 +367,14 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
             />
             <div className="esb-input-actions">
               {loading ? (
-                <button
+                <button type="button"
                   className="esb-stop-btn"
                   onClick={() => abortRef.current?.abort()}
                 >
                   ■ Stop
                 </button>
               ) : (
-                <button
+                <button type="button"
                   className="esb-send-btn"
                   onClick={() => sendMessage(input)}
                   disabled={!input.trim()}

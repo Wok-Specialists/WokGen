@@ -16,7 +16,7 @@ export function CopyButton({ address }: { address: string }) {
   }
 
   return (
-    <button
+    <button type="button"
       onClick={handleCopy}
       className="btn-ghost btn-sm support-wallet-copy-btn"
       aria-label="Copy wallet address"

@@ -31,7 +31,7 @@ export default function PixelStudioError({
       <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', maxWidth: '400px' }}>
         {error.message || 'Something went wrong loading the studio. Please try again.'}
       </p>
-      <button
+      <button type="button"
         onClick={reset}
         style={{
           background: 'var(--accent)',

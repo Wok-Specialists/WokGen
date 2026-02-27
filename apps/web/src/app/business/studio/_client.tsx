@@ -603,7 +603,7 @@ function BusinessStudioInner() {
         {/* Brand Wizard re-open button */}
         {wizardData && (
           <div className="studio-control-section" style={{ paddingBottom: '0.5rem' }}>
-            <button
+            <button type="button"
               className="btn-secondary"
               style={{ width: '100%', fontSize: '0.78rem' }}
               onClick={() => setShowWizard(true)}
@@ -616,7 +616,7 @@ function BusinessStudioInner() {
         {/* Tool tabs */}
         <div className="studio-tool-tabs">
           {TOOLS.map(t => (
-            <button
+            <button type="button"
               key={t.id}
               className={`studio-tool-tab${activeTool === t.id ? ' active' : ''}`}
               onClick={() => switchTool(t.id)}
@@ -643,7 +643,7 @@ function BusinessStudioInner() {
             <label className="studio-label" style={{ marginBottom: 0 }}>Concept / Description</label>
             <div className="flex items-center gap-2">
               {/* Save as Favorite */}
-              <button
+              <button type="button"
                 title={favSaved ? 'Saved!' : 'Save prompt as favorite'}
                 onClick={savePromptAsFavorite}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: favSaved ? '#f59e0b' : 'var(--text-disabled)', transition: 'color 0.15s' }}
@@ -653,7 +653,7 @@ function BusinessStudioInner() {
               {/* My Prompts dropdown */}
               {favPrompts.length > 0 && (
                 <div data-fav-menu style={{ position: 'relative' }}>
-                  <button
+                  <button type="button"
                     title="My saved prompts"
                     onClick={() => setShowFavMenu(v => !v)}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.65rem', color: 'var(--text-disabled)', padding: '0 2px' }}
@@ -663,7 +663,7 @@ function BusinessStudioInner() {
                   {showFavMenu && (
                     <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 50, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 6, minWidth: 220, maxHeight: 180, overflowY: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
                       {favPrompts.map(f => (
-                        <button
+                        <button type="button"
                           key={f.id}
                           onClick={() => { setPrompt(f.prompt); setShowFavMenu(false); }}
                           style={{ display: 'block', width: '100%', textAlign: 'left', padding: '6px 10px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border)' }}
@@ -704,7 +704,7 @@ function BusinessStudioInner() {
           <label className="studio-label">Style</label>
           <div className="studio-preset-grid studio-preset-grid--sm">
             {STYLES.map(s => (
-              <button
+              <button type="button"
                 key={s.id}
                 className={`studio-preset-btn${style === s.id ? ' active' : ''}`}
                 onClick={() => setStyle(s.id)}
@@ -720,7 +720,7 @@ function BusinessStudioInner() {
           <label className="studio-label">Mood</label>
           <div className="studio-preset-grid studio-preset-grid--sm">
             {MOODS.map(m => (
-              <button
+              <button type="button"
                 key={m.id}
                 className={`studio-preset-btn${mood === m.id ? ' active' : ''}`}
                 onClick={() => setMood(m.id)}
@@ -753,7 +753,7 @@ function BusinessStudioInner() {
                 { id: 'dark',        label: '⬛ Dark'         },
                 { id: 'transparent', label: 'Transparent' },
               ] as { id: typeof logoBg; label: string }[]).map(opt => (
-                <button
+                <button type="button"
                   key={opt.id}
                   className={`studio-preset-btn${logoBg === opt.id ? ' active' : ''}`}
                   onClick={() => setLogoBg(opt.id)}
@@ -785,7 +785,7 @@ function BusinessStudioInner() {
             <label className="studio-label">Platform</label>
             <div className="biz-platform-grid">
               {PLATFORMS.map(p => (
-                <button
+                <button type="button"
                   key={p.id}
                   className={`biz-platform-btn${platform === p.id ? ' active' : ''}`}
                   onClick={() => setPlatform(p.id)}
@@ -805,7 +805,7 @@ function BusinessStudioInner() {
             <label className="studio-label">Format</label>
             <div className="studio-preset-grid">
               {SLIDE_FORMATS.map(f => (
-                <button
+                <button type="button"
                   key={f.id}
                   className={`studio-preset-btn${slideFormat.id === f.id ? ' active' : ''}`}
                   onClick={() => setSlideFormat(f)}
@@ -824,7 +824,7 @@ function BusinessStudioInner() {
               HD Quality
               <span className="studio-label-opt"> (uses 1 credit)</span>
             </label>
-            <button
+            <button type="button"
               className={`toggle-track${useHD ? ' on' : ''}`}
               onClick={() => setUseHD(v => !v)}
               disabled={!session}
@@ -845,7 +845,7 @@ function BusinessStudioInner() {
           <div className="studio-control-section">
             <div className="studio-row studio-row--spaced">
               <label className="studio-label" style={{ margin: 0 }}>Share to Gallery</label>
-              <button className={`toggle-track${isPublic ? ' on' : ''}`} onClick={() => setIsPublic(v => !v)}>
+              <button type="button" className={`toggle-track${isPublic ? ' on' : ''}`} onClick={() => setIsPublic(v => !v)}>
                 <span className="toggle-thumb" />
               </button>
             </div>
@@ -878,7 +878,7 @@ function BusinessStudioInner() {
                 <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                   Describe the sound…
                 </label>
-                <button
+                <button type="button"
                   className="btn-secondary"
                   style={{ fontSize: '0.7rem', padding: '2px 8px', height: 'auto' }}
                   onClick={async () => {
@@ -933,7 +933,7 @@ function BusinessStudioInner() {
                 <label className="text-xs mb-1 block" style={{ color: 'var(--text-secondary)' }}>Prompt influence</label>
                 <div className="flex gap-1">
                   {([['Low', 0.3], ['Balanced', 0.6], ['Exact', 0.9]] as [string, number][]).map(([label, val]) => (
-                    <button
+                    <button type="button"
                       key={label}
                       onClick={() => setSfxInfluence(val)}
                       className="flex-1"
@@ -957,7 +957,7 @@ function BusinessStudioInner() {
               </div>
 
               {/* Generate audio button */}
-              <button
+              <button type="button"
                 className="btn-primary w-full"
                 style={{ height: 38, fontSize: '0.85rem', fontWeight: 600 }}
                 disabled={sfxLoading || !sfxPrompt.trim()}
@@ -1072,7 +1072,7 @@ function BusinessStudioInner() {
               <p className="text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
                 Generate taglines, elevator pitch, and social bio from your brand context.
               </p>
-              <button
+              <button type="button"
                 className="btn-primary w-full"
                 style={{ height: 36, fontSize: '0.85rem', fontWeight: 600 }}
                 disabled={copyLoading || !prompt.trim()}
@@ -1090,7 +1090,7 @@ function BusinessStudioInner() {
                     {brandCopy.taglines.map((t, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '3px 0', borderBottom: '1px solid var(--surface-border)' }}>
                         <span style={{ color: 'var(--text-primary)', flex: 1 }}>{t}</span>
-                        <button
+                        <button type="button"
                           style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
                           onClick={() => { navigator.clipboard.writeText(t); toastSuccess('Copied'); }}
                         >Copy</button>
@@ -1101,7 +1101,7 @@ function BusinessStudioInner() {
                     <div>
                       <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Elevator Pitch</p>
                       <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.pitch}</p>
-                      <button
+                      <button type="button"
                         style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
                         onClick={() => { navigator.clipboard.writeText(brandCopy.pitch); toastSuccess('Copied'); }}
                       >Copy</button>
@@ -1111,7 +1111,7 @@ function BusinessStudioInner() {
                     <div>
                       <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Social Bio</p>
                       <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.bio}</p>
-                      <button
+                      <button type="button"
                         style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
                         onClick={() => { navigator.clipboard.writeText(brandCopy.bio); toastSuccess('Copied'); }}
                       >Copy</button>
@@ -1172,7 +1172,7 @@ function BusinessStudioInner() {
                   </div>
                   <div className="biz-brandkit-footer">
                     <span className="biz-brandkit-label">{labels[i]}</span>
-                    <button
+                    <button type="button"
                       className="btn-ghost btn-xs"
                       onClick={() => r.resultUrl && handleDownload(r.resultUrl, (i + 1).toString())}
                     >
@@ -1185,7 +1185,7 @@ function BusinessStudioInner() {
           </div>
           {/* Export brand kit as JSON */}
           <div style={{ padding: '8px 0 4px', display: 'flex', justifyContent: 'flex-end' }}>
-            <button
+            <button type="button"
               className="btn-ghost btn-sm"
               onClick={handleExportBrandKitJson}
             >
@@ -1214,7 +1214,7 @@ function BusinessStudioInner() {
                 {studioError && (
                   <p className="studio-error-card__msg">{studioError.message}</p>
                 )}
-                <button className="btn-secondary" onClick={() => handleGenerate()}>↻ Retry</button>
+                <button type="button" className="btn-secondary" onClick={() => handleGenerate()}>↻ Retry</button>
               </div>
             )}
             {displayResult?.resultUrl && jobStatus !== 'running' && (
@@ -1227,7 +1227,7 @@ function BusinessStudioInner() {
                     className="studio-output-img biz-output-img"
                   />
                   {/* Remove BG button on hover */}
-                  <button
+                  <button type="button"
                     onClick={() => displayResult.resultUrl && handleBgRemove(displayUrl ?? displayResult.resultUrl)}
                     disabled={bgRemoving}
                     style={{
@@ -1279,14 +1279,14 @@ function BusinessStudioInner() {
                       Sign in to download →
                     </a>
                   ) : (
-                    <button
+                    <button type="button"
                       className="btn-ghost btn-sm"
                       onClick={() => handleDownload(displayUrl ?? displayResult.resultUrl!)}
                     >
                       ↓ Download
                     </button>
                   )}
-                  <button
+                  <button type="button"
                     className="btn-ghost btn-sm"
                     onClick={() => { const u = displayUrl ?? displayResult.resultUrl; if (u) { navigator.clipboard.writeText(u); toastSuccess('URL copied'); } }}
                   >
@@ -1304,9 +1304,8 @@ function BusinessStudioInner() {
             <p className="biz-studio-format-selector__label">Export Format</p>
             <div className="biz-studio-format-options-grid">
               {OUTPUT_FORMATS.map(f => (
-                <button
+                <button type="button"
                   key={f.id}
-                  type="button"
                   className={[
                     'biz-studio-format-option',
                     selectedFormat === f.id ? 'biz-studio-format-option--active' : '',
@@ -1339,7 +1338,7 @@ function BusinessStudioInner() {
             </p>
             <div className="studio-idle-chips">
               {(['logo', 'social', 'slide', 'web-hero'] as BusinessTool[]).map(t => (
-                <button
+                <button type="button"
                   key={t}
                   className="studio-chip"
                   onClick={() => { switchTool(t); setPrompt(EXAMPLE_PROMPTS[t]); }}
@@ -1363,7 +1362,7 @@ function BusinessStudioInner() {
             <p className="studio-history-empty">Generated assets appear here</p>
           )}
           {history.map((item, idx) => (
-            <button
+            <button type="button"
               key={item.id}
               className={`studio-history-item${selectedHistory === idx ? ' active' : ''}`}
               onClick={() => { setResult({ jobId: item.id, resultUrl: item.resultUrl }); setSelHistory(idx); }}

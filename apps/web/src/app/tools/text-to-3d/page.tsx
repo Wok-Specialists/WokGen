@@ -119,7 +119,7 @@ export default function TextTo3DPage() {
             </select>
           </div>
         </div>
-        <button onClick={generate} disabled={loading || !prompt.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
+        <button type="button" onClick={generate} disabled={loading || !prompt.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
           {loading ? 'Submitting...' : 'Generate 3D Model'}
         </button>
 

@@ -244,7 +244,7 @@ function AssetModal({
     >
       {/* Prev */}
       {hasPrev && (
-        <button
+        <button type="button"
           onClick={onPrev}
           style={{
             position: 'absolute',
@@ -281,7 +281,7 @@ function AssetModal({
 
       {/* Next */}
       {hasNext && (
-        <button
+        <button type="button"
           onClick={onNext}
           style={{
             position: 'absolute',
@@ -369,7 +369,7 @@ function AssetModal({
             >
               ✦ Make similar
             </Link>
-            <button
+            <button type="button"
               onClick={download}
               style={{
                 padding: '5px 10px',
@@ -392,7 +392,7 @@ function AssetModal({
             >
               ↓ Download
             </button>
-            <button
+            <button type="button"
               onClick={onClose}
               style={{
                 width: 32,
@@ -507,7 +507,7 @@ function AssetModal({
                 >
                   Prompt
                 </span>
-                <button
+                <button type="button"
                   onClick={copyPrompt}
                   style={{
                     fontSize: '0.65rem',
@@ -618,7 +618,7 @@ function GalleryCard({
   const rarityColor = asset.rarity ? (RARITY_COLORS[asset.rarity] ?? null) : null;
 
   return (
-    <button
+    <button type="button"
       onClick={onClick}
       className={`gallery-card animate-fade-in${selected ? ' gallery-card--selected' : ''}`}
       style={{
@@ -1070,7 +1070,7 @@ export default function GalleryPage() {
             {/* Tool filter */}
             <div style={{ display: 'flex', gap: 4 }}>
               {TOOL_FILTERS.map((f) => (
-                <button
+                <button type="button"
                   key={f.id}
                   onClick={() => setToolFilter(f.id)}
                   style={{
@@ -1094,7 +1094,7 @@ export default function GalleryPage() {
             {/* Rarity filter */}
             <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
               {RARITY_FILTERS.map((f) => (
-                <button
+                <button type="button"
                   key={f.id}
                   onClick={() => setRarityFilter(f.id)}
                   style={{
@@ -1176,10 +1176,10 @@ export default function GalleryPage() {
         {selectedIds.size > 0 && (
           <div className="gallery-bulk-bar">
             <span className="gallery-bulk-bar__count">{selectedIds.size} selected</span>
-            <button className="btn btn--sm" onClick={downloadSelected}>
+            <button type="button" className="btn btn--sm" onClick={downloadSelected}>
               ↓ Download selected
             </button>
-            <button
+            <button type="button"
               className="btn btn--ghost btn--sm"
               onClick={() => setSelectedIds(new Set())}
             >

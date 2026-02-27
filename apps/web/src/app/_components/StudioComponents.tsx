@@ -100,15 +100,15 @@ export function StudioResultPanel({
               Download
             </a>
             {onSaveToProject && (
-              <button className="btn btn--ghost btn--sm" onClick={handleSave}>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={handleSave}>
                 {saved ? 'Saved' : 'Save to project'}
               </button>
             )}
-            <button className="btn btn--ghost btn--sm" onClick={copyShareLink}>
+            <button type="button" className="btn btn--ghost btn--sm" onClick={copyShareLink}>
               {copied ? 'Copied!' : 'Copy link'}
             </button>
             {onRegenerate && (
-              <button className="btn btn--ghost btn--sm" onClick={onRegenerate}>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={onRegenerate}>
                 Regenerate
               </button>
             )}
@@ -213,7 +213,7 @@ export function StudioEmpty({ mode, onTryExample }: StudioEmptyProps) {
       </div>
       <p className="studio-empty-text">Enter a prompt and generate</p>
       {example && onTryExample && (
-        <button
+        <button type="button"
           className="studio-empty-example"
           onClick={() => onTryExample(example.prompt)}
         >

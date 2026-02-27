@@ -261,7 +261,7 @@ function CodeBlock({ lang, code }: { lang: string; code: string }) {
     <div className="api-code-block">
       <div className="api-code-block__header">
         <span className="api-code-block__lang">{lang}</span>
-        <button className="api-code-block__copy" onClick={copy}>{copied ? '✓ copied' : 'copy'}</button>
+        <button type="button" className="api-code-block__copy" onClick={copy}>{copied ? '✓ copied' : 'copy'}</button>
       </div>
       <pre className="api-code-block__pre"><code>{code}</code></pre>
     </div>
@@ -328,8 +328,8 @@ function EndpointDetail({ ep }: { ep: Endpoint }) {
       <section className="api-endpoint-section">
         <h3 className="api-endpoint-section-title">Examples</h3>
         <div className="api-code-tabs">
-          <button className={`api-code-tab${tab === 'curl' ? ' api-code-tab--active' : ''}`} onClick={() => setTab('curl')}>cURL</button>
-          <button className={`api-code-tab${tab === 'js'   ? ' api-code-tab--active' : ''}`} onClick={() => setTab('js')}>JavaScript</button>
+          <button type="button" className={`api-code-tab${tab === 'curl' ? ' api-code-tab--active' : ''}`} onClick={() => setTab('curl')}>cURL</button>
+          <button type="button" className={`api-code-tab${tab === 'js'   ? ' api-code-tab--active' : ''}`} onClick={() => setTab('js')}>JavaScript</button>
         </div>
         {tab === 'curl' && <CodeBlock lang="bash" code={ep.curlExample} />}
         {tab === 'js'   && <CodeBlock lang="typescript" code={ep.jsExample} />}
@@ -374,7 +374,7 @@ export default function ApiDocsPage() {
                 const ep = ENDPOINTS.find(e => e.id === id);
                 if (!ep) return null;
                 return (
-                  <button
+                  <button type="button"
                     key={id}
                     className={`api-ref-sidebar-item${activeId === id ? ' api-ref-sidebar-item--active' : ''}`}
                     onClick={() => setActiveId(id)}

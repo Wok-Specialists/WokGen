@@ -91,7 +91,7 @@ function ProjectPicker({ projectId, onSelect }: {
 
   return (
     <div ref={ref} className="wok-proj-picker">
-      <button
+      <button type="button"
         className={`wok-proj-trigger${open ? ' --open' : ''}`}
         onClick={handleOpen}
         title={active ? `Project: ${active.name}` : 'No project selected'}
@@ -114,7 +114,7 @@ function ProjectPicker({ projectId, onSelect }: {
       </button>
       {open && (
         <div className="wok-proj-dropdown">
-          <button
+          <button type="button"
             className={`wok-proj-option${!projectId ? ' --active' : ''}`}
             onClick={() => { onSelect(null); setOpen(false); }}
           >
@@ -130,7 +130,7 @@ function ProjectPicker({ projectId, onSelect }: {
               </a>
             </div>
           ) : projects.map(p => (
-            <button
+            <button type="button"
               key={p.id}
               className={`wok-proj-option${p.id === projectId ? ' --active' : ''}`}
               onClick={() => { onSelect(p.id); setOpen(false); }}
@@ -192,7 +192,7 @@ export default function UnifiedStudioClient({ type }: Props) {
         <div className="wok-studio-rail__wordmark" title="WokGen Studio">WG</div>
         <div className="wok-studio-rail__items">
           {STUDIO_TYPES.map(({ id, abbr, label, description }) => (
-            <button
+            <button type="button"
               key={id}
               className={`wok-studio-rail__item${type === id ? ' --active' : ''}`}
               onClick={() => navigate(id)}

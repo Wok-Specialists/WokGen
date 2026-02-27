@@ -155,7 +155,7 @@ export default function ProfileClient({ user, plan, hdCredits, stats, recentJobs
             Permanently delete your account and all generation history. This cannot be undone.
           </p>
           {!deleteConfirm ? (
-            <button
+            <button type="button"
               className="btn-outline btn-sm btn-outline--danger"
               onClick={() => setDeleteConfirm(true)}
             >
@@ -167,14 +167,14 @@ export default function ProfileClient({ user, plan, hdCredits, stats, recentJobs
                 Are you absolutely sure? This will delete all your data permanently.
               </p>
               <div className="profile-danger-actions">
-                <button
+                <button type="button"
                   className="btn-danger btn-sm"
                   onClick={handleDelete}
                   disabled={deleting}
                 >
                   {deleting ? 'Deleting…' : 'Yes, delete everything'}
                 </button>
-                <button
+                <button type="button"
                   className="btn-ghost btn-sm"
                   onClick={() => setDeleteConfirm(false)}
                   disabled={deleting}

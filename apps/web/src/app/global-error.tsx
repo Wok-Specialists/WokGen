@@ -301,7 +301,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             </div>
 
             <div className="actions">
-              <button className="btn btn-danger" onClick={reset}>
+              <button type="button" className="btn btn-danger" onClick={reset}>
                 ↺ Try again
               </button>
               <a className="btn btn-secondary" href="/">

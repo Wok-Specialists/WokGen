@@ -75,7 +75,7 @@ export default function RecraftPage() {
             </select>
           </div>
         </div>
-        <button onClick={generate} disabled={loading || !prompt.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
+        <button type="button" onClick={generate} disabled={loading || !prompt.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
           {loading ? 'Generating...' : 'Generate with Recraft'}
         </button>
         {error && <p style={{ marginTop: '0.875rem', color: '#f87171', fontSize: '0.875rem' }}>{error}</p>}

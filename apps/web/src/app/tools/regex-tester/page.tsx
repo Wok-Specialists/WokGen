@@ -36,7 +36,7 @@ export default function RegexTesterPage() {
         </div>
         <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.375rem' }}>Test string</label>
         <textarea value={input} onChange={e => setInput(e.target.value)} rows={4} style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.75rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none', resize: 'vertical', fontFamily: 'monospace' }} />
-        <button onClick={test} className="btn btn-primary" style={{ marginTop: '0.875rem', padding: '0.5rem 1.25rem' }}>Test Pattern</button>
+        <button type="button" onClick={test} className="btn btn-primary" style={{ marginTop: '0.875rem', padding: '0.5rem 1.25rem' }}>Test Pattern</button>
         {result && (
           <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)' }}>
             {result.error ? (

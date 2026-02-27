@@ -59,7 +59,7 @@ function AssetCard({
 }) {
   const hasLink = linkedIds.has(job.id);
   return (
-    <button
+    <button type="button"
       className={[
         'project-asset-card',
         isSelected    && 'project-asset-card--selected',
@@ -130,7 +130,7 @@ function RelationshipPanel({
     <div className="rel-panel">
       <div className="rel-panel__header">
         <h3 className="rel-panel__title">Link asset</h3>
-        <button className="btn btn--ghost btn--sm" onClick={onClose} aria-label="Close">&times;</button>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={onClose} aria-label="Close">&times;</button>
       </div>
       <div className="rel-panel__from">
         <span className="rel-panel__label">From:</span>
@@ -155,7 +155,7 @@ function RelationshipPanel({
       </div>
       {error && <p className="rel-panel__error">{error}</p>}
       <div className="rel-panel__actions">
-        <button className="btn btn--primary btn--sm" onClick={create} disabled={saving}>
+        <button type="button" className="btn btn--primary btn--sm" onClick={create} disabled={saving}>
           {saving ? 'Saving…' : 'Create link'}
         </button>
       </div>
@@ -248,7 +248,7 @@ function BriefPanel({ projectId, brief, mode, onSaved }: {
         </>
       )}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <button className="btn btn--primary btn--sm" onClick={() => save(form)} disabled={saving}>
+        <button type="button" className="btn btn--primary btn--sm" onClick={() => save(form)} disabled={saving}>
           {saving ? 'Saving…' : 'Save brief'}
         </button>
         {saved && !saving && (
@@ -289,7 +289,7 @@ function AssetLightbox({ job, onClose }: { job: Job; onClose: () => void }) {
     <div className="lightbox" onClick={e => { if (e.target === dialogRef.current?.parentElement) onClose(); }}>
       <div className="lightbox__backdrop" onClick={onClose} />
       <div className="lightbox__dialog" ref={dialogRef}>
-        <button className="lightbox__close" onClick={onClose} aria-label="Close">&times;</button>
+        <button type="button" className="lightbox__close" onClick={onClose} aria-label="Close">&times;</button>
         <div className="lightbox__image-wrap">
           {job.resultUrl ? (
             <div className="lightbox__image" style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -307,10 +307,10 @@ function AssetLightbox({ job, onClose }: { job: Job; onClose: () => void }) {
             <span className="lightbox__tag lightbox__tag--mode">{job.mode}</span>
           </div>
           <div className="lightbox__actions">
-            <button className="btn btn--ghost btn--sm" onClick={download} disabled={!job.resultUrl}>
+            <button type="button" className="btn btn--ghost btn--sm" onClick={download} disabled={!job.resultUrl}>
               ↓ Download
             </button>
-            <button className="btn btn--ghost btn--sm" onClick={copyLink}>
+            <button type="button" className="btn btn--ghost btn--sm" onClick={copyLink}>
               Copy link
             </button>
           </div>
@@ -386,7 +386,7 @@ function DocumentsPanel({
         <h2 style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
           Documents
         </h2>
-        <button
+        <button type="button"
           className="btn btn--primary btn--sm"
           onClick={() => createDoc()}
           disabled={creating}
@@ -409,7 +409,7 @@ function DocumentsPanel({
               { key: 'spec',    label: 'Tech Spec'     },
               { key: 'release', label: 'Release Notes' },
             ].map(t => (
-              <button
+              <button type="button"
                 key={t.key}
                 className="btn btn--ghost btn--sm"
                 onClick={() => createDoc(t.key)}
@@ -507,7 +507,7 @@ function ActivityFeed({ projectId }: { projectId: string }) {
         ))}
       </ul>
       {hasMore && cursor && (
-        <button className="btn btn--ghost btn--sm activity-feed__more" onClick={() => load(cursor)}>
+        <button type="button" className="btn btn--ghost btn--sm activity-feed__more" onClick={() => load(cursor)}>
           Load more
         </button>
       )}
@@ -562,7 +562,7 @@ function CommentsPanel({ jobId }: { jobId: string }) {
             <div className="comments-panel__header">
               <span className="comments-panel__author">{c.author.name ?? c.author.email ?? 'You'}</span>
               <span className="comments-panel__time">{timeAgo(c.createdAt)}</span>
-              <button className="comments-panel__del" onClick={() => del(c.id)} title="Delete">&times;</button>
+              <button type="button" className="comments-panel__del" onClick={() => del(c.id)} title="Delete">&times;</button>
             </div>
             <p className="comments-panel__body">{c.body}</p>
           </li>
@@ -578,7 +578,7 @@ function CommentsPanel({ jobId }: { jobId: string }) {
           maxLength={2000}
         />
         {error && <p className="comments-panel__error">{error}</p>}
-        <button className="btn btn--primary btn--sm" onClick={post} disabled={posting || !body.trim()}>
+        <button type="button" className="btn btn--primary btn--sm" onClick={post} disabled={posting || !body.trim()}>
           {posting ? 'Posting…' : 'Post note'}
         </button>
       </div>
@@ -724,14 +724,14 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
           <span className="project-dashboard__mode-badge">{projectMode}</span>
         </div>
         <div className="project-dashboard__header-actions">
-          <button
+          <button type="button"
             className="btn btn--ghost btn--sm"
             onClick={handleExport}
             disabled={exporting || jobs.length === 0}
           >
             {exporting ? 'Exporting…' : '↓ Export ZIP'}
           </button>
-          <button
+          <button type="button"
             className="btn btn--ghost btn--sm"
             onClick={handleExportPdf}
             disabled={jobs.length === 0}
@@ -739,7 +739,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
           >
             ↓ Brand PDF
           </button>
-          <button
+          <button type="button"
             className="btn btn--ghost btn--sm"
             onClick={() => setView('settings')}
           >
@@ -756,31 +756,31 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
 
       {/* View toggle */}
       <div className="project-dashboard__tabs">
-        <button
+        <button type="button"
           className={`project-tab ${view === 'grid' ? 'project-tab--active' : ''}`}
           onClick={() => setView('grid')}
         >
           Assets ({jobs.length})
         </button>
-        <button
+        <button type="button"
           className={`project-tab ${view === 'relationships' ? 'project-tab--active' : ''}`}
           onClick={() => setView('relationships')}
         >
           Relationships ({relationships.length})
         </button>
-        <button
+        <button type="button"
           className={`project-tab ${view === 'activity' ? 'project-tab--active' : ''}`}
           onClick={() => setView('activity')}
         >
           Activity
         </button>
-        <button
+        <button type="button"
           className={`project-tab ${view === 'documents' ? 'project-tab--active' : ''}`}
           onClick={() => setView('documents')}
         >
           Documents
         </button>
-        <button
+        <button type="button"
           className={`project-tab ${view === 'settings' ? 'project-tab--active' : ''}`}
           onClick={() => setView('settings')}
         >
@@ -831,19 +831,19 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                 <div className="project-selected-panel">
                   <div className="project-selected-panel__header">
                     <h3>Selected asset</h3>
-                    <button
+                    <button type="button"
                       className="btn btn--ghost btn--sm"
                       onClick={() => selectedJob && handleOpenLightbox(selectedJob)}
                     >
                       View
                     </button>
-                    <button
+                    <button type="button"
                       className="btn btn--ghost btn--sm"
                       onClick={() => { setShowRelPanel(v => !v); }}
                     >
                       Link
                     </button>
-                    <button className="btn btn--ghost btn--sm" onClick={() => setSelectedId(null)}>&times;</button>
+                    <button type="button" className="btn btn--ghost btn--sm" onClick={() => setSelectedId(null)}>&times;</button>
                   </div>
                   {selectedRels.length > 0 && (
                     <div className="project-selected-rels">
@@ -873,7 +873,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
 
                   {/* Style DNA */}
                   <div className="style-dna-panel">
-                    <button
+                    <button type="button"
                       className="btn btn--ghost btn--sm"
                       onClick={() => handleExtractPalette(selectedId)}
                       disabled={extractingPalette || !selectedJob?.resultUrl}

@@ -67,7 +67,7 @@ export default function MetricsDashboard() {
           )}
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <button className="admin-action-btn" onClick={load}>Refresh</button>
+          <button type="button" className="admin-action-btn" onClick={load}>Refresh</button>
           <Link href="/admin" className="admin-header__back">← Admin</Link>
         </div>
       </div>

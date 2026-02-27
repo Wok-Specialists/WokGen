@@ -33,9 +33,8 @@ export function AppearanceSettings() {
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           {(['dark', 'light', 'system'] as Theme[]).map(t => (
-            <button
+            <button type="button"
               key={t}
-              type="button"
               onClick={() => applyTheme(t)}
               style={{
                 padding: '6px 14px',

@@ -180,7 +180,7 @@ export default function OnboardingModal({ onComplete }: Props) {
               <div key={s} className={`onboard-dot ${s <= step ? 'onboard-dot--active' : ''}`} />
             ))}
           </div>
-          <button className="onboard-skip" onClick={handleSkip}>Skip</button>
+          <button type="button" className="onboard-skip" onClick={handleSkip}>Skip</button>
         </div>
 
         {/* Step content — aria-live so screen readers announce step changes */}
@@ -193,7 +193,7 @@ export default function OnboardingModal({ onComplete }: Props) {
           <>
             <div className="onboard-usecases">
               {USE_CASES.map(u => (
-                <button
+                <button type="button"
                   key={u.id}
                   className={`onboard-usecase ${useCase === u.id ? 'onboard-usecase--selected' : ''}`}
                   onClick={() => handleUseCaseSelect(u.id)}
@@ -203,7 +203,7 @@ export default function OnboardingModal({ onComplete }: Props) {
                 </button>
               ))}
             </div>
-            <button
+            <button type="button"
               className="btn-primary onboard-cta"
               onClick={goToStep2}
               disabled={!useCase}
@@ -228,12 +228,12 @@ export default function OnboardingModal({ onComplete }: Props) {
                 <div className="onboard-result-img" style={{ position: 'relative', width: '100%', aspectRatio: '1' }}>
                   <Image src={genResult} alt="Generated result" fill className="object-cover" unoptimized sizes="400px" />
                 </div>
-                <button className="btn-primary onboard-cta" onClick={goToStep3}>
+                <button type="button" className="btn-primary onboard-cta" onClick={goToStep3}>
                   Next
                 </button>
               </div>
             ) : (
-              <button className="btn-primary onboard-cta" onClick={handleGenerate} disabled={generating}>
+              <button type="button" className="btn-primary onboard-cta" onClick={handleGenerate} disabled={generating}>
                 {generating ? 'Generating…' : 'Generate'}
               </button>
             )}
@@ -266,7 +266,7 @@ export default function OnboardingModal({ onComplete }: Props) {
                 maxLength={200}
               />
             </label>
-            <button
+            <button type="button"
               className="btn-primary onboard-cta"
               onClick={handleCreateProject}
               disabled={!projName.trim() || creating}
@@ -294,15 +294,15 @@ export default function OnboardingModal({ onComplete }: Props) {
               </ul>
             </div>
             <div className="onboard-final-actions">
-              <button className="btn-primary" onClick={() => { handleComplete(); router.push('/eral'); }}>
+              <button type="button" className="btn-primary" onClick={() => { handleComplete(); router.push('/eral'); }}>
                 Open Eral
               </button>
               {createdProjectId && (
-                <button className="btn-ghost" onClick={() => { handleComplete(); router.push(`/projects/${createdProjectId}`); }}>
+                <button type="button" className="btn-ghost" onClick={() => { handleComplete(); router.push(`/projects/${createdProjectId}`); }}>
                   Open Project
                 </button>
               )}
-              <button className="btn-ghost" onClick={handleComplete}>
+              <button type="button" className="btn-ghost" onClick={handleComplete}>
                 Go to studio
               </button>
             </div>

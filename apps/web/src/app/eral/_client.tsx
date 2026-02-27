@@ -232,7 +232,7 @@ function addCopyButtons(html: string): string {
         .replace(/&quot;/g, '"')
         .replace(/&#39;/g, "'");
       const encoded = encodeURIComponent(rawCode);
-      return `<div class="eral-code-block"><div class="eral-code-header"><span class="eral-code-lang">${langLabel}</span><button class="eral-copy-btn" data-code="${encoded}">Copy</button></div><pre><code class="language-${langLabel}">${code}</code></pre></div>`;
+      return `<div class="eral-code-block"><div class="eral-code-header"><span class="eral-code-lang">${langLabel}</span><button type="button" class="eral-copy-btn" data-code="${encoded}">Copy</button></div><pre><code class="language-${langLabel}">${code}</code></pre></div>`;
     }
   );
 }
@@ -312,7 +312,7 @@ function ToolSuggestion({
           </span>
         ))}
       </span>
-      <button className="eral-tool-suggestion-dismiss" onClick={onDismiss} title="Dismiss" aria-label="Dismiss suggestion">×</button>
+      <button type="button" className="eral-tool-suggestion-dismiss" onClick={onDismiss} title="Dismiss" aria-label="Dismiss suggestion">×</button>
     </div>
   );
 }
@@ -403,7 +403,7 @@ function MessageBubble({
             {msg.durationMs != null && (
               <span className="eral-time-tag">{(msg.durationMs / 1000).toFixed(1)}s</span>
             )}
-            <button className="eral-copy-msg-btn" onClick={handleCopy} title="Copy message">
+            <button type="button" className="eral-copy-msg-btn" onClick={handleCopy} title="Copy message">
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
@@ -422,7 +422,7 @@ function MessageBubble({
           </div>
         )}
         {!isUser && !isStreaming && msg.isError && msg.retryText && onFollowUp && (
-          <button
+          <button type="button"
             onClick={() => onFollowUp(msg.retryText!)}
             style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
             onMouseOver={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.8)')}
@@ -434,7 +434,7 @@ function MessageBubble({
         {followUps.length > 0 && (
           <div className="eral-followup-chips">
             {followUps.map((s) => (
-              <button key={s} className="eral-followup-chip" onClick={() => onFollowUp!(s)}>
+              <button type="button" key={s} className="eral-followup-chip" onClick={() => onFollowUp!(s)}>
                 {s}
               </button>
             ))}
@@ -474,7 +474,7 @@ function ConvItem({
       onKeyDown={(e) => e.key === 'Enter' && onSelect()}
     >
       <span className="eral-conv-title">{conv.title}</span>
-      <button
+      <button type="button"
         className="eral-conv-delete"
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         title="Delete conversation"
@@ -905,7 +905,7 @@ export function EralPage({ userId }: { userId?: string }) {
             <span className="eral-brand-name">Eral</span>
             <span className="eral-brand-by">by WokSpec</span>
           </div>
-          <button
+          <button type="button"
             className="eral-sidebar-toggle"
             onClick={() => setSidebarOpen((v) => !v)}
             title="Toggle sidebar"
@@ -917,17 +917,17 @@ export function EralPage({ userId }: { userId?: string }) {
 
         {sidebarOpen && (
           <>
-            <button className="eral-new-chat-btn" onClick={createNewConv}>
+            <button type="button" className="eral-new-chat-btn" onClick={createNewConv}>
               <span>+</span> New chat
             </button>
 
             {/* Sidebar tabs */}
             <div className="eral-sidebar-tabs">
-              <button
+              <button type="button"
                 className={`eral-sidebar-tab${sidebarTab === 'chats' ? ' eral-sidebar-tab--active' : ''}`}
                 onClick={() => setSidebarTab('chats')}
               >Chats</button>
-              <button
+              <button type="button"
                 className={`eral-sidebar-tab${sidebarTab === 'notes' ? ' eral-sidebar-tab--active' : ''}`}
                 onClick={() => setSidebarTab('notes')}
               >Notes</button>
@@ -988,13 +988,13 @@ export function EralPage({ userId }: { userId?: string }) {
 
             {/* Quick actions */}
             <div className="eral-v2-quick-actions">
-              <button className="eral-v2-quick-btn" onClick={() => setPlanModalOpen(true)}>
+              <button type="button" className="eral-v2-quick-btn" onClick={() => setPlanModalOpen(true)}>
                 ✦ Plan Project
               </button>
-              <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/studio'; }}>
+              <button type="button" className="eral-v2-quick-btn" onClick={() => { window.location.href = '/studio'; }}>
                 Generate Assets
               </button>
-              <button className="eral-v2-quick-btn" onClick={() => { window.location.href = '/eral/simulate'; }}>
+              <button type="button" className="eral-v2-quick-btn" onClick={() => { window.location.href = '/eral/simulate'; }}>
                 Simulate
               </button>
             </div>
@@ -1073,7 +1073,7 @@ export function EralPage({ userId }: { userId?: string }) {
         {/* Top bar */}
         <div className="eral-topbar">
           {!sidebarOpen && (
-            <button
+            <button type="button"
               className="eral-sidebar-toggle-inline"
               onClick={() => setSidebarOpen(true)}
               title="Open sidebar"
@@ -1084,7 +1084,7 @@ export function EralPage({ userId }: { userId?: string }) {
 
           {/* Model selector */}
           <div className="eral-model-selector" style={{ position: 'relative' }}>
-            <button
+            <button type="button"
               className="eral-model-pill"
               onClick={() => setModelPickerOpen((v) => !v)}
             >
@@ -1096,7 +1096,7 @@ export function EralPage({ userId }: { userId?: string }) {
             {modelPickerOpen && (
               <div className="eral-model-dropdown">
                 {MODEL_OPTIONS.map((opt) => (
-                  <button
+                  <button type="button"
                     key={opt.value}
                     className={`eral-model-option ${model === opt.value ? 'eral-model-option-active' : ''}`}
                     onClick={() => { setModel(opt.value); setModelPickerOpen(false); }}
@@ -1132,7 +1132,7 @@ export function EralPage({ userId }: { userId?: string }) {
           )}
 
           {/* Director Mode toggle */}
-          <button
+          <button type="button"
             className={`eral-v2-director-toggle${directorMode ? ' eral-v2-director-toggle--on' : ''}`}
             onClick={() => setDirectorMode((v) => !v)}
             title={directorMode ? 'Director Mode ON — click to disable' : 'Enable Director Mode'}
@@ -1141,7 +1141,7 @@ export function EralPage({ userId }: { userId?: string }) {
           </button>
 
           {!rightPanelOpen && (
-            <button
+            <button type="button"
               className="eral-v2-panel-open-btn"
               onClick={() => setRightPanelOpen(true)}
               title="Open Director Panel"
@@ -1151,12 +1151,12 @@ export function EralPage({ userId }: { userId?: string }) {
           )}
 
           {/* Share (future) */}
-          <button className="eral-share-btn" disabled title="Share (coming soon)">
+          <button type="button" className="eral-share-btn" disabled title="Share (coming soon)">
             Share
           </button>
 
           {/* Call Mode toggle */}
-          <button
+          <button type="button"
             className={`eral-call-btn${callActive ? ' eral-call-btn-active' : ''}`}
             onClick={() => callActive ? endCall() : setCallActive(true)}
             title={callActive ? 'Exit Call Mode' : 'Call Mode — talk to Eral'}
@@ -1177,7 +1177,7 @@ export function EralPage({ userId }: { userId?: string }) {
 
               <div className="eral-suggestions">
                 {SUGGESTED_PROMPTS.map((s) => (
-                  <button
+                  <button type="button"
                     key={s.text}
                     className="eral-suggestion"
                     onClick={() => sendMessage(s.text)}
@@ -1198,7 +1198,7 @@ export function EralPage({ userId }: { userId?: string }) {
                     { text: '"Open my gallery"' },
                     { text: '"Explain what HD mode does"' },
                   ].map((c) => (
-                    <button key={c.text} className="eral-command-chip" onClick={() => sendMessage(c.text.replace(/"/g, ''))}>
+                    <button type="button" key={c.text} className="eral-command-chip" onClick={() => sendMessage(c.text.replace(/"/g, ''))}>
                       {c.text}
                     </button>
                   ))}
@@ -1272,11 +1272,11 @@ export function EralPage({ userId }: { userId?: string }) {
               disabled={loading}
             />
             {loading ? (
-              <button className="eral-send-btn eral-stop-btn" onClick={handleStop} title="Stop">
+              <button type="button" className="eral-send-btn eral-stop-btn" onClick={handleStop} title="Stop">
                 ■ Stop
               </button>
             ) : (
-              <button
+              <button type="button"
                 className="eral-send-btn"
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim()}
@@ -1301,7 +1301,7 @@ export function EralPage({ userId }: { userId?: string }) {
               { icon: '⤴', label: 'Analyze URL', prompt: 'Analyze this URL for me: ' },
               { icon: '+', label: 'New Project', prompt: 'Help me plan a new project for ' },
             ].map((cap) => (
-              <button
+              <button type="button"
                 key={cap.label}
                 className="eral-cap-chip"
                 onClick={() => { setInput(cap.prompt); inputRef.current?.focus(); }}
@@ -1321,7 +1321,7 @@ export function EralPage({ userId }: { userId?: string }) {
         <aside className="eral-v2-plan-panel">
           <div className="eral-v2-plan-panel__header">
             <span className="eral-v2-plan-panel__title">✦ Director Panel</span>
-            <button
+            <button type="button"
               className="eral-v2-plan-panel__close"
               onClick={() => setRightPanelOpen(false)}
               title="Close panel"
@@ -1390,7 +1390,7 @@ export function EralPage({ userId }: { userId?: string }) {
           <div className="eral-v2-plan-modal" onClick={(e) => e.stopPropagation()}>
             <div className="eral-v2-plan-modal__header">
               <h2 className="eral-v2-plan-modal__title">✦ Plan Project</h2>
-              <button className="eral-v2-plan-modal__close" onClick={() => setPlanModalOpen(false)} aria-label="Close">×</button>
+              <button type="button" className="eral-v2-plan-modal__close" onClick={() => setPlanModalOpen(false)} aria-label="Close">×</button>
             </div>
             <div className="eral-v2-plan-modal__body">
               <div className="eral-v2-plan-modal__field">
@@ -1406,7 +1406,7 @@ export function EralPage({ userId }: { userId?: string }) {
                 <label className="eral-v2-plan-modal__label">Project Type</label>
                 <div className="eral-v2-plan-modal__type-grid">
                   {['Game', 'Brand', 'Website', 'App'].map((type) => (
-                    <button
+                    <button type="button"
                       key={type}
                       className={`eral-v2-plan-modal__type-btn${planForm.type === type ? ' eral-v2-plan-modal__type-btn--active' : ''}`}
                       onClick={() => setPlanForm((f) => ({ ...f, type }))}
@@ -1426,8 +1426,8 @@ export function EralPage({ userId }: { userId?: string }) {
               </div>
             </div>
             <div className="eral-v2-plan-modal__footer">
-              <button className="eral-v2-plan-modal__cancel" onClick={() => setPlanModalOpen(false)}>Cancel</button>
-              <button
+              <button type="button" className="eral-v2-plan-modal__cancel" onClick={() => setPlanModalOpen(false)}>Cancel</button>
+              <button type="button"
                 className="eral-v2-plan-modal__submit"
                 disabled={!planForm.name.trim() || !planForm.description.trim()}
                 onClick={() => {
@@ -1535,7 +1535,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           </div>
 
           {/* Mic button */}
-          <button
+          <button type="button"
             onClick={() => {
               if (callState === 'idle') startCallListening();
               else if (callState === 'listening') { callRecognitionRef.current?.stop(); setCallState('idle'); }
@@ -1565,7 +1565,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           </button>
 
           {/* End Call */}
-          <button
+          <button type="button"
             onClick={endCall}
             style={{
               padding: '8px 24px', borderRadius: 999,

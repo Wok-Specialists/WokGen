@@ -125,7 +125,7 @@ function VoiceCard({ asset }: { asset: VoiceAsset }) {
             onEnded={() => setPlaying(false)}
             preload="none"
           />
-          <button
+          <button type="button"
             onClick={togglePlay}
             style={{
               display: 'flex', alignItems: 'center', gap: 8,
@@ -250,7 +250,7 @@ export default function VoiceGallery() {
       <div className="gallery-filters">
         <div className="gallery-pill-row">
           {VOICE_FILTERS.map(f => (
-            <button
+            <button type="button"
               key={f.id}
               className={`gallery-pill${voiceFilter === f.id ? ' active' : ''}`}
               onClick={() => setVoiceFilter(f.id)}
@@ -286,7 +286,7 @@ export default function VoiceGallery() {
           <span>!</span>
           <p>Failed to load gallery</p>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Check your connection and try again</p>
-          <button className="btn-ghost btn-sm" onClick={() => void fetchAssets(null, true)}>
+          <button type="button" className="btn-ghost btn-sm" onClick={() => void fetchAssets(null, true)}>
             Retry
           </button>
         </div>

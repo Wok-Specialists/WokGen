@@ -27,7 +27,7 @@ function LoginForm() {
         </p>
 
         <div className="login-actions">
-          <button
+          <button type="button"
             className="login-btn login-btn--google"
             onClick={() => signIn('google', { callbackUrl })}
           >
@@ -39,7 +39,7 @@ function LoginForm() {
             </svg>
             Continue with Google
           </button>
-          <button
+          <button type="button"
             className="login-btn login-btn--github"
             onClick={() => signIn('github', { callbackUrl })}
           >

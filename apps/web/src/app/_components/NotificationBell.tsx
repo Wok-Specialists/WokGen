@@ -50,7 +50,7 @@ export function NotificationBell() {
 
   return (
     <div className="notif-bell" ref={containerRef}>
-      <button
+      <button type="button"
         className="notif-bell__btn"
         aria-label={`Notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
         onClick={() => setOpen(o => !o)}
@@ -74,7 +74,7 @@ export function NotificationBell() {
           <div className="notif-bell__header">
             <span className="notif-bell__title">Notifications</span>
             {unread > 0 && (
-              <button
+              <button type="button"
                 className="notif-bell__mark-read"
                 onClick={markAllRead}
                 disabled={marking}

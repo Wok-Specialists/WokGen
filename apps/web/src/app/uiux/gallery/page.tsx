@@ -168,12 +168,12 @@ export default function UIUXGallery() {
       <div className="gallery-filters">
         {/* Tabs */}
         <div className="gallery-tabs">
-          <button
+          <button type="button"
             className={`gallery-tab${galleryTab === 'community' ? ' active' : ''}`}
             onClick={() => setGalleryTab('community')}
           >Community</button>
           {session && (
-            <button
+            <button type="button"
               className={`gallery-tab${galleryTab === 'mine' ? ' active' : ''}`}
               onClick={() => setGalleryTab('mine')}
             >Mine</button>
@@ -183,7 +183,7 @@ export default function UIUXGallery() {
         {/* Component type pills */}
         <div className="gallery-pill-row">
           {COMPONENT_FILTERS.map(f => (
-            <button
+            <button type="button"
               key={f.id}
               className={`gallery-pill${componentFilter === f.id ? ' active' : ''}`}
               onClick={() => setComponentFilter(f.id)}
@@ -196,7 +196,7 @@ export default function UIUXGallery() {
         {/* Framework pills */}
         <div className="gallery-pill-row">
           {FRAMEWORK_FILTERS.map(f => (
-            <button
+            <button type="button"
               key={f.id}
               className={`gallery-pill gallery-pill--sm${frameworkFilter === f.id ? ' active' : ''}`}
               onClick={() => setFrameworkFilter(f.id)}
@@ -228,7 +228,7 @@ export default function UIUXGallery() {
           <span>!</span>
           <p>Failed to load gallery</p>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Check your connection and try again</p>
-          <button className="btn-ghost btn-sm" onClick={() => fetchAssets(null, true)}>Retry</button>
+          <button type="button" className="btn-ghost btn-sm" onClick={() => fetchAssets(null, true)}>Retry</button>
         </div>
       ) : assets.length === 0 ? (
         <div className="gallery-empty">
@@ -240,7 +240,7 @@ export default function UIUXGallery() {
       ) : (
         <div className="gallery-grid gallery-grid--uiux">
           {assets.map(asset => (
-            <button
+            <button type="button"
               key={asset.id}
               className="gallery-card gallery-card--uiux"
               onClick={() => setSelected(asset)}
@@ -300,7 +300,7 @@ export default function UIUXGallery() {
       {selected && (
         <div className="gallery-lightbox" onClick={() => setSelected(null)}>
           <div className="gallery-lightbox-inner gallery-lightbox-inner--uiux" onClick={e => e.stopPropagation()}>
-            <button className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
+            <button type="button" className="gallery-lightbox-close" onClick={() => setSelected(null)} aria-label="Close lightbox">×</button>
 
             {/* Preview area */}
             {selected.imageUrl ? (

@@ -70,7 +70,7 @@ export function EmptyState({ icon = '✦', title, description, action, secondary
                 {action.label}
               </Link>
             ) : (
-              <button onClick={action.onClick} style={{
+              <button type="button" onClick={action.onClick} style={{
                 background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',

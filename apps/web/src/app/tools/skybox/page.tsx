@@ -123,7 +123,7 @@ export default function SkyboxPage() {
         <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Style</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
           {STYLES.map(s => (
-            <button
+            <button type="button"
               key={s.value}
               onClick={() => setStyle(s.value)}
               className={`px-3 py-2 rounded-lg border text-xs text-left transition-all ${
@@ -136,7 +136,7 @@ export default function SkyboxPage() {
             </button>
           ))}
         </div>
-        <button onClick={generate} disabled={loading || !prompt.trim() || polling} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
+        <button type="button" onClick={generate} disabled={loading || !prompt.trim() || polling} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
           {loading || polling ? 'Generating...' : 'Generate 360° Panorama'}
         </button>
 

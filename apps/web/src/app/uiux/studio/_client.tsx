@@ -575,14 +575,14 @@ export default function UIUXStudio() {
         {/* Studio / Page Builder tabs */}
         <div style={{ display: 'flex', gap: 2 }}>
           {([['studio', '◈ Studio'], ['page-builder', '⊞ Page Builder']] as [StudioTab, string][]).map(([tab, label]) => (
-            <button key={tab} onClick={() => setStudioTab(tab)} style={{ padding: '3px 12px', borderRadius: 5, border: 'none', cursor: 'pointer', fontSize: '0.75rem', background: studioTab === tab ? 'var(--accent-dim)' : 'transparent', color: studioTab === tab ? 'var(--accent)' : 'var(--text-muted)', fontWeight: studioTab === tab ? 600 : 400 }}>
+            <button type="button" key={tab} onClick={() => setStudioTab(tab)} style={{ padding: '3px 12px', borderRadius: 5, border: 'none', cursor: 'pointer', fontSize: '0.75rem', background: studioTab === tab ? 'var(--accent-dim)' : 'transparent', color: studioTab === tab ? 'var(--accent)' : 'var(--text-muted)', fontWeight: studioTab === tab ? 600 : 400 }}>
               {label}
             </button>
           ))}
         </div>
         <div style={{ flex: 1 }} />
         <QuotaBadge />
-        <button onClick={() => setHistorySidebarOpen((v) => !v)} style={{ padding: '3px 10px', borderRadius: 5, border: '1px solid var(--surface-border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '0.7rem', cursor: 'pointer' }}>
+        <button type="button" onClick={() => setHistorySidebarOpen((v) => !v)} style={{ padding: '3px 10px', borderRadius: 5, border: '1px solid var(--surface-border)', background: 'transparent', color: 'var(--text-muted)', fontSize: '0.7rem', cursor: 'pointer' }}>
           {historySidebarOpen ? '⊟ History' : '⊞ History'}
         </button>
         <Link href="/" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', padding: '3px 8px', textDecoration: 'none' }}>← Platform</Link>
@@ -622,7 +622,7 @@ export default function UIUXStudio() {
                 ) : generationHistory.map((h) => {
                   const ct = COMPONENT_TYPES.find((c) => c.id === h.componentType);
                   return (
-                    <button key={h.id} onClick={() => { setResult(h.result); setVersionHistory([]); setCurrentVersion(0); setOutputTab('preview'); }} style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '7px 12px', background: 'transparent', border: 'none', borderBottom: '1px solid var(--surface-border)', cursor: 'pointer', textAlign: 'left' }} onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-overlay)')} onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+                    <button type="button" key={h.id} onClick={() => { setResult(h.result); setVersionHistory([]); setCurrentVersion(0); setOutputTab('preview'); }} style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '7px 12px', background: 'transparent', border: 'none', borderBottom: '1px solid var(--surface-border)', cursor: 'pointer', textAlign: 'left' }} onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-overlay)')} onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         <span style={{ fontSize: '0.82rem' }}>{ct?.icon}</span>
                         <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{ct?.label}</span>
@@ -676,14 +676,14 @@ export default function UIUXStudio() {
                     <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: 5 }}>Component</div>
                     <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', marginBottom: 5 }}>
                       {COMPONENT_CATEGORIES.map((cat) => (
-                        <button key={cat} onClick={() => setCategoryFilter(cat)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${categoryFilter === cat ? 'var(--accent-muted)' : 'transparent'}`, background: categoryFilter === cat ? 'var(--accent-dim)' : 'transparent', color: categoryFilter === cat ? 'var(--accent)' : 'var(--text-muted)' }}>
+                        <button type="button" key={cat} onClick={() => setCategoryFilter(cat)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${categoryFilter === cat ? 'var(--accent-muted)' : 'transparent'}`, background: categoryFilter === cat ? 'var(--accent-dim)' : 'transparent', color: categoryFilter === cat ? 'var(--accent)' : 'var(--text-muted)' }}>
                           {cat}
                         </button>
                       ))}
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
                       {COMPONENT_TYPES.filter((c) => c.category === categoryFilter).map((ct) => (
-                        <button key={ct.id} onClick={() => setComponentType(ct.id)} className="uiux-type-btn" style={{ background: componentType === ct.id ? 'var(--accent-dim)' : 'var(--surface-raised)', border: `1px solid ${componentType === ct.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, color: componentType === ct.id ? 'var(--accent)' : 'var(--text-secondary)' }}>
+                        <button type="button" key={ct.id} onClick={() => setComponentType(ct.id)} className="uiux-type-btn" style={{ background: componentType === ct.id ? 'var(--accent-dim)' : 'var(--surface-raised)', border: `1px solid ${componentType === ct.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, color: componentType === ct.id ? 'var(--accent)' : 'var(--text-secondary)' }}>
                           <span style={{ fontSize: '0.85rem' }}>{ct.icon}</span>
                           <span style={{ fontSize: '0.7rem' }}>{ct.label}</span>
                         </button>
@@ -697,7 +697,7 @@ export default function UIUXStudio() {
                   <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: 5 }}>Framework</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     {FRAMEWORKS.map((fw) => (
-                      <button key={fw.id} onClick={() => setFramework(fw.id)} className="uiux-fw-btn" style={{ background: framework === fw.id ? 'var(--accent-dim)' : 'var(--surface-raised)', border: `1px solid ${framework === fw.id ? 'var(--accent-muted)' : 'var(--surface-border)'}` }}>
+                      <button type="button" key={fw.id} onClick={() => setFramework(fw.id)} className="uiux-fw-btn" style={{ background: framework === fw.id ? 'var(--accent-dim)' : 'var(--surface-raised)', border: `1px solid ${framework === fw.id ? 'var(--accent-muted)' : 'var(--surface-border)'}` }}>
                         <span className="uiux-fw-label" style={{ color: framework === fw.id ? 'var(--accent)' : 'var(--text-secondary)' }}>{fw.label}</span>
                         <span className="uiux-fw-desc">{fw.desc}</span>
                       </button>
@@ -710,7 +710,7 @@ export default function UIUXStudio() {
                   <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: 5 }}>Style</div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
                     {STYLE_PRESETS.map((sp) => (
-                      <button key={sp.id} onClick={() => setStyle(sp.id)} className="uiux-style-btn" style={{ border: `1px solid ${style === sp.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: style === sp.id ? 'var(--accent-dim)' : 'var(--surface-raised)' }}>
+                      <button type="button" key={sp.id} onClick={() => setStyle(sp.id)} className="uiux-style-btn" style={{ border: `1px solid ${style === sp.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: style === sp.id ? 'var(--accent-dim)' : 'var(--surface-raised)' }}>
                         <div className="uiux-style-swatches">{sp.colors.map((c, i) => <div key={i} className="uiux-style-swatch" style={{ background: c }} />)}</div>
                         <span className="uiux-style-name" style={{ color: style === sp.id ? 'var(--accent)' : 'var(--text-secondary)' }}>{sp.label}</span>
                       </button>
@@ -723,7 +723,7 @@ export default function UIUXStudio() {
                   <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: 5 }}>Model</div>
                   <div style={{ display: 'flex', gap: 4 }}>
                     {MODEL_OPTIONS.map((m) => (
-                      <button key={m.id} onClick={() => setModelTier(m.id)} title={`${m.model} — ${m.speed}`} style={{ flex: 1, padding: '5px 4px', borderRadius: 6, cursor: 'pointer', textAlign: 'center', border: `1px solid ${modelTier === m.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: modelTier === m.id ? 'var(--accent-dim)' : 'var(--surface-raised)', transition: 'all 0.1s' }}>
+                      <button type="button" key={m.id} onClick={() => setModelTier(m.id)} title={`${m.model} — ${m.speed}`} style={{ flex: 1, padding: '5px 4px', borderRadius: 6, cursor: 'pointer', textAlign: 'center', border: `1px solid ${modelTier === m.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: modelTier === m.id ? 'var(--accent-dim)' : 'var(--surface-raised)', transition: 'all 0.1s' }}>
                         <div style={{ fontSize: '0.88rem', lineHeight: 1, marginBottom: 2 }}>{m.badge}</div>
                         <div style={{ fontSize: '0.62rem', fontWeight: 600, color: modelTier === m.id ? 'var(--accent)' : 'var(--text-secondary)' }}>{m.label}</div>
                         <div style={{ fontSize: '0.55rem', color: 'var(--text-disabled)', marginTop: 1 }}>{m.speed}</div>
@@ -739,7 +739,7 @@ export default function UIUXStudio() {
                       {libraryMode ? 'Library prompt (optional)' : 'Describe what to build'}
                     </span>
                     {!libraryMode && EXAMPLE_PROMPTS[componentType] && (
-                      <button onClick={handleUseExample} style={{ fontSize: '0.62rem', color: 'var(--accent)', background: 'transparent', border: 'none', cursor: 'pointer', padding: '1px 3px' }}>Use example ↗</button>
+                      <button type="button" onClick={handleUseExample} style={{ fontSize: '0.62rem', color: 'var(--accent)', background: 'transparent', border: 'none', cursor: 'pointer', padding: '1px 3px' }}>Use example ↗</button>
                     )}
                   </div>
                   <textarea id="uiux-prompt" className="studio-textarea" value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder={libraryMode ? 'Optional theme for all components…' : (EXAMPLE_PROMPTS[componentType] ?? 'Describe the component you want to generate…')} rows={5} maxLength={600} onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !libraryMode) handleGenerate(); }} />
@@ -748,7 +748,7 @@ export default function UIUXStudio() {
 
                 {/* Advanced */}
                 <div style={{ padding: '5px 14px 8px', borderBottom: '1px solid var(--surface-border)' }}>
-                  <button onClick={() => setShowAdvanced((v) => !v)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px 0', fontSize: '0.7rem' }}>
+                  <button type="button" onClick={() => setShowAdvanced((v) => !v)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px 0', fontSize: '0.7rem' }}>
                     <span>Advanced</span>
                     <span style={{ fontSize: '0.62rem' }}>{showAdvanced ? '▲' : '▼'}</span>
                   </button>
@@ -791,7 +791,7 @@ export default function UIUXStudio() {
                         <div style={{ height: '100%', width: '40%', borderRadius: 2, background: 'linear-gradient(90deg,#a855f7,#ec4899)', animation: 'uiux-progress-slide 1.4s ease infinite' }} />
                       </div>
                     )}
-                    <button onClick={handleCancel} style={{ padding: '6px', borderRadius: 6, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.75rem', cursor: 'pointer', width: '100%' }}>Cancel</button>
+                    <button type="button" onClick={handleCancel} style={{ padding: '6px', borderRadius: 6, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.75rem', cursor: 'pointer', width: '100%' }}>Cancel</button>
                   </div>
                 ) : libraryMode ? (
                   <button type="button" onClick={handleGenerateLibrary} disabled={selectedLibraryTypes.length < 2} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: selectedLibraryTypes.length < 2 ? 'not-allowed' : 'pointer', background: 'linear-gradient(135deg,#a855f7,#ec4899)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', opacity: selectedLibraryTypes.length < 2 ? 0.5 : 1 }}>
@@ -837,7 +837,7 @@ export default function UIUXStudio() {
                       {(['preview', 'code', 'accessibility'] as OutputTab[]).map((tab) => {
                         const labels: Record<OutputTab, string> = { preview: 'Preview', code: '{ } Code', accessibility: 'A11y' };
                         return (
-                          <button key={tab} onClick={() => setOutputTab(tab)} disabled={!currentResult} style={{ padding: '3px 9px', borderRadius: 5, border: `1px solid ${outputTab === tab ? 'var(--accent-muted)' : 'transparent'}`, background: outputTab === tab ? 'var(--accent-dim)' : 'transparent', color: outputTab === tab ? 'var(--accent)' : 'var(--text-muted)', fontSize: '0.72rem', cursor: currentResult ? 'pointer' : 'not-allowed', opacity: currentResult ? 1 : 0.4 }}>
+                          <button type="button" key={tab} onClick={() => setOutputTab(tab)} disabled={!currentResult} style={{ padding: '3px 9px', borderRadius: 5, border: `1px solid ${outputTab === tab ? 'var(--accent-muted)' : 'transparent'}`, background: outputTab === tab ? 'var(--accent-dim)' : 'transparent', color: outputTab === tab ? 'var(--accent)' : 'var(--text-muted)', fontSize: '0.72rem', cursor: currentResult ? 'pointer' : 'not-allowed', opacity: currentResult ? 1 : 0.4 }}>
                             {labels[tab]}
                           </button>
                         );
@@ -848,7 +848,7 @@ export default function UIUXStudio() {
                     {outputTab === 'preview' && currentResult && (currentResult.framework === 'html-tailwind' || currentResult.framework === 'vanilla-css') && (
                       <div style={{ display: 'flex', gap: 2, marginLeft: 4, borderLeft: '1px solid var(--surface-border)', paddingLeft: 6 }}>
                         {VIEWPORT_OPTIONS.map((vp) => (
-                          <button key={vp.id} onClick={() => setViewportMode(vp.id)} title={`${vp.label}${vp.width ? ` (${vp.width}px)` : ''}`} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.68rem', cursor: 'pointer', border: `1px solid ${viewportMode === vp.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: viewportMode === vp.id ? 'var(--accent-dim)' : 'var(--surface-raised)', color: viewportMode === vp.id ? 'var(--accent)' : 'var(--text-muted)' }}>
+                          <button type="button" key={vp.id} onClick={() => setViewportMode(vp.id)} title={`${vp.label}${vp.width ? ` (${vp.width}px)` : ''}`} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.68rem', cursor: 'pointer', border: `1px solid ${viewportMode === vp.id ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: viewportMode === vp.id ? 'var(--accent-dim)' : 'var(--surface-raised)', color: viewportMode === vp.id ? 'var(--accent)' : 'var(--text-muted)' }}>
                             {vp.icon}
                           </button>
                         ))}
@@ -862,7 +862,7 @@ export default function UIUXStudio() {
                         {versionHistory.map((_, idx) => (
                           <React.Fragment key={idx}>
                             {idx > 0 && <span style={{ color: 'var(--text-disabled)', fontSize: '0.6rem' }}>→</span>}
-                            <button onClick={() => restoreVersion(idx)} title={idx === 0 ? 'Original' : `Refinement: ${versionHistory[idx].refinementPrompt}`} style={{ padding: '1px 6px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${currentVersion === idx ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: currentVersion === idx ? 'var(--accent-dim)' : 'var(--surface-raised)', color: currentVersion === idx ? 'var(--accent)' : 'var(--text-muted)' }}>
+                            <button type="button" onClick={() => restoreVersion(idx)} title={idx === 0 ? 'Original' : `Refinement: ${versionHistory[idx].refinementPrompt}`} style={{ padding: '1px 6px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${currentVersion === idx ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: currentVersion === idx ? 'var(--accent-dim)' : 'var(--surface-raised)', color: currentVersion === idx ? 'var(--accent)' : 'var(--text-muted)' }}>
                               v{idx + 1}
                             </button>
                           </React.Fragment>
@@ -887,8 +887,8 @@ export default function UIUXStudio() {
                         <button type="button" onClick={handleCopyCode} style={{ padding: '3px 7px', borderRadius: 4, background: copied ? 'rgba(34,197,94,0.1)' : 'var(--surface-raised)', color: copied ? '#22c55e' : 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer', border: copied ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--surface-border)' }}>
                           {copied ? 'Copied!' : 'Copy'}
                         </button>
-                        <button onClick={stableHandleDownload} style={{ padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer' }}>↓ Download</button>
-                        <button onClick={stableHandleZipExport} title="Export as ZIP (multi-file for React)" style={{ padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer' }}>⊞ Export</button>
+                        <button type="button" onClick={stableHandleDownload} style={{ padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer' }}>↓ Download</button>
+                        <button type="button" onClick={stableHandleZipExport} title="Export as ZIP (multi-file for React)" style={{ padding: '3px 7px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.7rem', cursor: 'pointer' }}>⊞ Export</button>
                         {session?.user && (
                           <>
                             <label style={{ display: 'flex', alignItems: 'center', gap: 3, cursor: 'pointer' }}>
@@ -1000,7 +1000,7 @@ function UIUXPreview({
           {viewportMode !== 'desktop' && <span style={{ marginRight: 5 }}>{VIEWPORT_OPTIONS.find((v) => v.id === viewportMode)?.icon} {vpWidth}px</span>}
           localhost / preview
         </div>
-        <button className="btn-ghost btn-xs" onClick={() => setIframeKey((k) => k + 1)} title="Reload preview">↺</button>
+        <button type="button" className="btn-ghost btn-xs" onClick={() => setIframeKey((k) => k + 1)} title="Reload preview">↺</button>
       </div>
       <div style={{ flex: 1, overflow: 'auto', background: vpWidth ? '#1a1a1a' : '#fff', display: 'flex', justifyContent: 'center', padding: vpWidth ? '12px 0' : 0 }}>
         <div style={{ width: vpWidth ?? '100%', height: vpWidth ? undefined : '100%', minHeight: vpWidth ? 600 : undefined, boxShadow: vpWidth ? '0 4px 24px rgba(0,0,0,0.5)' : 'none', borderRadius: vpWidth ? 8 : 0, overflow: 'hidden', flex: vpWidth ? undefined : 1 }}>
@@ -1023,7 +1023,7 @@ function UIUXCodePane({ code, ext, onCopy, copied }: { code: string; ext: string
         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>component.{ext}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: '0.62rem', color: 'var(--text-disabled)' }}>{code.split('\n').length} lines · {(new Blob([code]).size / 1024).toFixed(1)} KB</span>
-          <button className="btn-ghost btn-xs" onClick={onCopy}>{copied ? 'Copied!' : 'Copy'}</button>
+          <button type="button" className="btn-ghost btn-xs" onClick={onCopy}>{copied ? 'Copied!' : 'Copy'}</button>
         </div>
       </div>
       <pre className="uiux-code-content" dangerouslySetInnerHTML={{ __html: highlighted }} />
@@ -1081,7 +1081,7 @@ function UIUXEmptyState({ onSelect }: { onSelect: (ct: ComponentType) => void })
         {featured.map((ct) => {
           const item = COMPONENT_TYPES.find((c) => c.id === ct);
           return (
-            <button key={ct} className="uiux-empty-chip" onClick={() => onSelect(ct)}>{item?.icon} {item?.label}</button>
+            <button type="button" key={ct} className="uiux-empty-chip" onClick={() => onSelect(ct)}>{item?.icon} {item?.label}</button>
           );
         })}
       </div>
@@ -1125,7 +1125,7 @@ function UIUXLibraryResults({
         </div>
         {isGenerating && currentType && <span style={{ fontSize: '0.68rem', color: '#f472b6', whiteSpace: 'nowrap' }}>Generating {COMPONENT_TYPES.find((c) => c.id === currentType)?.label}…</span>}
         {!isGenerating && processed > 0 && (
-          <button onClick={onExportAll} style={{ padding: '3px 10px', borderRadius: 5, border: '1px solid var(--accent-muted)', background: 'var(--accent-dim)', color: 'var(--accent)', fontSize: '0.7rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>⊞ Export All</button>
+          <button type="button" onClick={onExportAll} style={{ padding: '3px 10px', borderRadius: 5, border: '1px solid var(--accent-muted)', background: 'var(--accent-dim)', color: 'var(--accent)', fontSize: '0.7rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>⊞ Export All</button>
         )}
       </div>
 
@@ -1150,11 +1150,11 @@ function UIUXLibraryResults({
                 {res && (
                   <div style={{ marginLeft: 'auto', display: 'flex', gap: 3 }}>
                     {isPreviewable && (
-                      <button onClick={() => setActiveTabs((p) => ({ ...p, [ct]: 'preview' }))} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${tab === 'preview' ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: tab === 'preview' ? 'var(--accent-dim)' : 'transparent', color: tab === 'preview' ? 'var(--accent)' : 'var(--text-muted)' }}>◈</button>
+                      <button type="button" onClick={() => setActiveTabs((p) => ({ ...p, [ct]: 'preview' }))} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${tab === 'preview' ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: tab === 'preview' ? 'var(--accent-dim)' : 'transparent', color: tab === 'preview' ? 'var(--accent)' : 'var(--text-muted)' }}>◈</button>
                     )}
-                    <button onClick={() => setActiveTabs((p) => ({ ...p, [ct]: 'code' }))} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${tab === 'code' ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: tab === 'code' ? 'var(--accent-dim)' : 'transparent', color: tab === 'code' ? 'var(--accent)' : 'var(--text-muted)' }}>{ '{ }' }</button>
-                    <button onClick={() => copyCode(ct, res.code)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: '1px solid var(--surface-border)', background: 'transparent', color: copiedId === ct ? '#22c55e' : 'var(--text-muted)' }}>{copiedId === ct ? '✓' : '⎘'}</button>
-                    <button onClick={() => triggerDownload(res.code, `wokgen-${ct}.${ext}`)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: '1px solid var(--surface-border)', background: 'transparent', color: 'var(--text-muted)' }}>↓</button>
+                    <button type="button" onClick={() => setActiveTabs((p) => ({ ...p, [ct]: 'code' }))} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: `1px solid ${tab === 'code' ? 'var(--accent-muted)' : 'var(--surface-border)'}`, background: tab === 'code' ? 'var(--accent-dim)' : 'transparent', color: tab === 'code' ? 'var(--accent)' : 'var(--text-muted)' }}>{ '{ }' }</button>
+                    <button type="button" onClick={() => copyCode(ct, res.code)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: '1px solid var(--surface-border)', background: 'transparent', color: copiedId === ct ? '#22c55e' : 'var(--text-muted)' }}>{copiedId === ct ? '✓' : '⎘'}</button>
+                    <button type="button" onClick={() => triggerDownload(res.code, `wokgen-${ct}.${ext}`)} style={{ padding: '2px 7px', borderRadius: 4, fontSize: '0.62rem', cursor: 'pointer', border: '1px solid var(--surface-border)', background: 'transparent', color: 'var(--text-muted)' }}>↓</button>
                   </div>
                 )}
               </div>
@@ -1259,9 +1259,9 @@ function UIUXPageBuilder({
                 <div style={{ fontSize: '0.62rem', color: 'var(--text-disabled)' }}>{fw?.label} · {item.result.code.split('\n').length} lines</div>
               </div>
               <div style={{ display: 'flex', gap: 3 }}>
-                <button onClick={() => onMove(id, 'up')} disabled={idx === 0} aria-label="Move up" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === 0 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↑</button>
-                <button onClick={() => onMove(id, 'down')} disabled={idx === order.length - 1} aria-label="Move down" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === order.length - 1 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === order.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↓</button>
-                <button onClick={() => onRemove(id)} aria-label="Remove" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem' }}>✕</button>
+                <button type="button" onClick={() => onMove(id, 'up')} disabled={idx === 0} aria-label="Move up" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === 0 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↑</button>
+                <button type="button" onClick={() => onMove(id, 'down')} disabled={idx === order.length - 1} aria-label="Move down" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid var(--surface-border)', background: 'transparent', color: idx === order.length - 1 ? 'var(--text-disabled)' : 'var(--text-muted)', cursor: idx === order.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.78rem' }}>↓</button>
+                <button type="button" onClick={() => onRemove(id)} aria-label="Remove" style={{ padding: '3px 6px', borderRadius: 4, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem' }}>✕</button>
               </div>
             </div>
           );

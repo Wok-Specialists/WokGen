@@ -67,7 +67,7 @@ export function StudiosDropdown() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button
+      <button type="button"
         className="nav-link nav-studios-btn"
         aria-haspopup="true"
         aria-expanded={open}

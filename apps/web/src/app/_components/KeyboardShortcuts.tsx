@@ -40,7 +40,7 @@ export default function KeyboardShortcuts() {
       <div className="ks-panel" onClick={e => e.stopPropagation()}>
         <div className="ks-header">
           <span className="ks-title">Keyboard shortcuts</span>
-          <button className="ks-close" onClick={() => setShow(false)} aria-label="Close">×</button>
+          <button type="button" className="ks-close" onClick={() => setShow(false)} aria-label="Close">×</button>
         </div>
         <ul className="ks-list">
           {SHORTCUTS.map(({ keys, label }) => (

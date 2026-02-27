@@ -166,10 +166,10 @@ function OverviewTab({ stats }: { stats: Stats }) {
         <p className="admin-section-label">Quick Actions</p>
         {actionMsg && <p className="admin-action-msg">{actionMsg}</p>}
         <div className="admin-quick-actions">
-          <button className="admin-action-btn" onClick={() => quickAction('reset_stuck_jobs')}>
+          <button type="button" className="admin-action-btn" onClick={() => quickAction('reset_stuck_jobs')}>
             Reset Stuck Jobs
           </button>
-          <button className="admin-action-btn" onClick={() => quickAction('clear_rate_limits')}>
+          <button type="button" className="admin-action-btn" onClick={() => quickAction('clear_rate_limits')}>
             Clear Rate Limits
           </button>
           <a href="/api/admin/users/export.csv" className="admin-action-btn" download>
@@ -438,7 +438,7 @@ export default function AdminPage() {
         <>
           <div className="admin-tabs">
             {TABS.map(t => (
-              <button
+              <button type="button"
                 key={t.id}
                 className={`admin-tab ${tab === t.id ? 'admin-tab--active' : ''}`}
                 onClick={() => setTab(t.id)}

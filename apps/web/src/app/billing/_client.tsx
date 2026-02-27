@@ -177,7 +177,7 @@ export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdC
       {toast && (
         <div className={`billing-toast billing-toast--${toast.type}`}>
           <span>{toast.type === 'error' ? '! ' : '✓ '}{toast.msg}</span>
-          <button className="billing-toast__dismiss" onClick={() => setToast(null)} aria-label="Dismiss">×</button>
+          <button type="button" className="billing-toast__dismiss" onClick={() => setToast(null)} aria-label="Dismiss">×</button>
         </div>
       )}
 
@@ -269,7 +269,7 @@ export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdC
                 {isCurrent ? (
                   <p className="billing-plan-current-text">Your current plan</p>
                 ) : (
-                  <button
+                  <button type="button"
                     className={`billing-plan-btn ${isPopular ? 'billing-plan-btn--popular' : 'billing-plan-btn--default'}`}
                     onClick={() => handleUpgrade(plan.id)}
                     disabled={!stripeEnabled || !!loading}
@@ -306,7 +306,7 @@ export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdC
               <p className="billing-pack-price">{pack.price}</p>
               <p className="billing-pack-credits">{pack.credits.toLocaleString()} HD credits</p>
               <p className="billing-pack-per">{pack.perCredit}/credit</p>
-              <button
+              <button type="button"
                 className="billing-pack-btn"
                 onClick={() => handleBuyPack(pack.id)}
                 disabled={!stripeEnabled || !!loading}
@@ -325,7 +325,7 @@ export default function BillingClient({ currentPlanId, stripeEnabled, plans, hdC
           <Link href="/docs#pricing">Learn more →</Link>
         </p>
         {stripeEnabled && currentPlanId !== 'free' && (
-          <button className="billing-manage-btn" onClick={handleManage} disabled={loading === 'portal'}>
+          <button type="button" className="billing-manage-btn" onClick={handleManage} disabled={loading === 'portal'}>
             {loading === 'portal' ? 'Opening…' : 'Manage billing →'}
           </button>
         )}

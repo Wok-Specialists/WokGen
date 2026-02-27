@@ -204,7 +204,7 @@ function AssetModal({
     >
       {/* Prev */}
       {hasPrev && (
-        <button
+        <button type="button"
           onClick={onPrev}
           style={{
             position: 'absolute',
@@ -235,7 +235,7 @@ function AssetModal({
 
       {/* Next */}
       {hasNext && (
-        <button
+        <button type="button"
           onClick={onNext}
           style={{
             position: 'absolute',
@@ -331,7 +331,7 @@ function AssetModal({
             >
               ✦ Make similar
             </Link>
-            <button
+            <button type="button"
               onClick={download}
               style={{
                 padding: '5px 10px',
@@ -348,7 +348,7 @@ function AssetModal({
             >
               ↓ Download
             </button>
-            <button
+            <button type="button"
               onClick={onClose}
               style={{
                 width: 32,
@@ -415,7 +415,7 @@ function AssetModal({
                 <span style={{ fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-disabled)' }}>
                   Prompt
                 </span>
-                <button
+                <button type="button"
                   onClick={copyPrompt}
                   style={{ fontSize: '0.65rem', color: copied ? 'var(--success)' : 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 0.15s ease' }}
                 >
@@ -484,7 +484,7 @@ function AssetModal({
 
 function GalleryCard({ asset, index, onClick }: { asset: GalleryAsset; index: number; onClick: () => void }) {
   return (
-    <button
+    <button type="button"
       onClick={onClick}
       className="gallery-card animate-fade-in"
       style={{
@@ -804,7 +804,7 @@ export default function VectorGalleryPage() {
               {/* Community / Mine tabs */}
               <div style={{ display: 'flex', gap: 2 }}>
                 {(['community', 'mine'] as const).map(tab => (
-                  <button
+                  <button type="button"
                     key={tab}
                     onClick={() => setGalleryTab(tab)}
                     style={{
@@ -872,7 +872,7 @@ export default function VectorGalleryPage() {
             {/* Tool filter */}
             <div style={{ display: 'flex', gap: 4 }}>
               {TOOL_FILTERS.map(f => (
-                <button
+                <button type="button"
                   key={f.id}
                   onClick={() => setToolFilter(f.id)}
                   style={{
@@ -896,7 +896,7 @@ export default function VectorGalleryPage() {
             {/* Style filter */}
             <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
               {STYLE_FILTERS.map(f => (
-                <button
+                <button type="button"
                   key={f.id}
                   onClick={() => setStyleFilter(f.id)}
                   style={{

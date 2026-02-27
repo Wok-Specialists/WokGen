@@ -36,7 +36,7 @@ export function MobileNav() {
 
   return (
     <>
-      <button
+      <button type="button"
         className="mobile-nav-toggle"
         onClick={() => setOpen(true)}
         aria-label="Open navigation menu"
@@ -68,7 +68,7 @@ export function MobileNav() {
             <span style={{ color: 'var(--text-muted)' }}>Wok</span>
             <span style={{ color: '#a78bfa' }}>Gen</span>
           </span>
-          <button
+          <button type="button"
             className="mobile-nav-drawer-close"
             onClick={() => setOpen(false)}
             aria-label="Close navigation menu"

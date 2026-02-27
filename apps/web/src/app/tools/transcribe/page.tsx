@@ -97,7 +97,7 @@ export default function TranscribePage() {
             </label>
           ))}
         </div>
-        <button onClick={transcribe} disabled={loading || !audioUrl.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
+        <button type="button" onClick={transcribe} disabled={loading || !audioUrl.trim()} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
           {loading ? 'Transcribing... (~30–60s)' : 'Transcribe Audio'}
         </button>
 
@@ -118,14 +118,14 @@ export default function TranscribePage() {
                 {result.audioDuration ? `${Math.round(result.audioDuration)}s audio` : ''} · {Math.round((result.confidence || 0) * 100)}% confidence
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <button onClick={copyText} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>
+                <button type="button" onClick={copyText} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>
                   {copied ? '✓ Copied' : 'Copy'}
                 </button>
-                <button onClick={() => exportTranscript('txt')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>TXT</button>
+                <button type="button" onClick={() => exportTranscript('txt')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>TXT</button>
                 {result.words?.length > 0 && (
-                  <button onClick={() => exportTranscript('srt')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>SRT</button>
+                  <button type="button" onClick={() => exportTranscript('srt')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>SRT</button>
                 )}
-                <button onClick={() => exportTranscript('json')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>JSON</button>
+                <button type="button" onClick={() => exportTranscript('json')} className="btn btn-secondary" style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem' }}>JSON</button>
               </div>
             </div>
             <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', maxHeight: '300px', overflowY: 'auto', fontSize: '0.9375rem', lineHeight: 1.7 }}>

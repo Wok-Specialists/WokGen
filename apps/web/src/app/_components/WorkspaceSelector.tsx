@@ -155,7 +155,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
       style={{ position: 'relative', marginBottom: '0.75rem' }}
     >
       {/* Trigger */}
-      <button
+      <button type="button"
         onClick={() => setIsOpen(v => !v)}
         style={{
           width: '100%',
@@ -198,7 +198,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
           }}
         >
           {/* All generations option */}
-          <button
+          <button type="button"
             onClick={() => handleSelect(null)}
             style={{
               width: '100%',
@@ -254,13 +254,13 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                   ) : deleteConf === ws.id ? (
                     <div style={{ padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(239,68,68,0.08)' }}>
                       <span style={{ flex: 1, fontSize: '0.72rem', color: '#fca5a5' }}>Delete "{ws.name}"?</span>
-                      <button
+                      <button type="button"
                         onClick={() => handleDelete(ws.id)}
                         style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 3, padding: '2px 8px', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 600 }}
                       >
                         Delete
                       </button>
-                      <button
+                      <button type="button"
                         onClick={() => setDeleteConf(null)}
                         style={{ background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--surface-border)', borderRadius: 3, padding: '2px 6px', fontSize: '0.68rem', cursor: 'pointer' }}
                       >
@@ -279,7 +279,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                       onMouseEnter={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
                       onMouseLeave={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                     >
-                      <button
+                      <button type="button"
                         onClick={() => handleSelect(ws.id)}
                         style={{
                           flex: 1,
@@ -307,7 +307,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                         onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
                         onMouseLeave={e => (e.currentTarget.style.opacity = '0')}
                       >
-                        <button
+                        <button type="button"
                           onClick={() => { setRenamingId(ws.id); setRenameVal(ws.name); }}
                           title="Rename"
                           style={{ background: 'transparent', border: 'none', color: 'var(--text-faint, #555)', cursor: 'pointer', padding: '2px 4px', fontSize: 11, borderRadius: 3 }}
@@ -316,7 +316,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                         >
                           Edit
                         </button>
-                        <button
+                        <button type="button"
                           onClick={() => setDeleteConf(ws.id)}
                           title="Delete workspace"
                           style={{ background: 'transparent', border: 'none', color: 'var(--text-faint, #555)', cursor: 'pointer', padding: '2px 4px', fontSize: 11, borderRadius: 3 }}
@@ -362,7 +362,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                     outline: 'none',
                   }}
                 />
-                <button
+                <button type="button"
                   onClick={handleCreate}
                   disabled={creating || !newName.trim()}
                   style={{
@@ -381,7 +381,7 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                 </button>
               </div>
             ) : (
-              <button
+              <button type="button"
                 onClick={() => { setIsCreating(true); setError(null); }}
                 style={{
                   width: '100%',

@@ -15,7 +15,7 @@ export default function ProjectsError({ error, reset }: ErrorProps) {
   return (
     <div className="seg-error" role="alert">
       <p className="seg-error-msg">Projects failed to load — your workspace is temporarily unavailable.</p>
-      <button className="seg-error-btn" onClick={reset}>Try again</button>
+      <button type="button" className="seg-error-btn" onClick={reset}>Try again</button>
     </div>
   );
 }

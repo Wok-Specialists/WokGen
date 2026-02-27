@@ -109,7 +109,7 @@ export function NavAuth() {
 
   if (!session) {
     return (
-      <button
+      <button type="button"
         className="btn-primary btn-sm"
         onClick={() => signIn(undefined, { callbackUrl: '/studio' })}
       >
@@ -130,7 +130,7 @@ export function NavAuth() {
     >
       <NavUsageMeter />
       <NotificationBell />
-      <button
+      <button type="button"
         className="nav-user-trigger"
         onClick={() => setOpen(v => !v)}
         aria-haspopup="menu"
@@ -192,7 +192,7 @@ export function NavAuth() {
           </Link>
           <div className="nav-user-menu-divider" />
           {/* Public-by-default toggle */}
-          <button
+          <button type="button"
             className="nav-user-item nav-user-item--toggle"
             role="menuitem"
             onClick={togglePublicDefault}
@@ -228,7 +228,7 @@ export function NavAuth() {
             </span>
           </button>
           <div className="nav-user-menu-divider" />
-          <button
+          <button type="button"
             className="nav-user-item nav-user-item--danger"
             role="menuitem"
             onClick={() => { setOpen(false); signOut({ callbackUrl: '/' }); }}

@@ -55,7 +55,7 @@ export default function ApiDocsPage() {
           <div key={path} className="docs-api__endpoint">
             {Object.entries(methods).map(([method, op]) => (
               <div key={method} className="docs-api__op">
-                <button
+                <button type="button"
                   className="docs-api__op-header"
                   onClick={() => setExpandedPath(expandedPath === `${method}:${path}` ? null : `${method}:${path}`)}
                 >

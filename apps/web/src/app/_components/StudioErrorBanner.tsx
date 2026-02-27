@@ -34,7 +34,7 @@ export function StudioErrorBanner({ error, onDismiss, onRetry }: Props) {
       </div>
       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
         {error.retryable && onRetry && (
-          <button
+          <button type="button"
             onClick={onRetry}
             style={{
               fontSize: 12, color: '#818cf8', background: 'none', border: '1px solid #818cf8',
@@ -44,7 +44,7 @@ export function StudioErrorBanner({ error, onDismiss, onRetry }: Props) {
             Retry
           </button>
         )}
-        <button
+        <button type="button"
           onClick={onDismiss}
           style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: 16, lineHeight: 1 }}
         >

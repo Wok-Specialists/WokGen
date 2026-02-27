@@ -71,7 +71,7 @@ export default async function UserProfilePage({ params }: Props) {
             </div>
           </div>
           <div className="profile-header__actions">
-            <button
+            <button type="button"
               className="btn-ghost btn-sm"
               onClick={undefined}
               aria-label="Share profile"

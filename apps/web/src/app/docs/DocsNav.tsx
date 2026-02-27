@@ -57,7 +57,7 @@ function CollapsibleSection({
 
   return (
     <div className="docs-sidebar-section">
-      <button
+      <button type="button"
         className="docs-sidebar-section-btn"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}

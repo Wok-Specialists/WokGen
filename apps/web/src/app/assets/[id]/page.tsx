@@ -163,7 +163,7 @@ export default async function AssetPage({ params }: Props) {
 function AssetShareButton({ shareUrl }: { shareUrl: string }) {
   // Using a form trick to work without 'use client'
   return (
-    <button
+    <button type="button"
       className="btn btn--ghost"
       onClick={undefined}
       // Handled via inline onclick for server component compatibility

@@ -93,8 +93,8 @@ function PlanItemCard({
               autoFocus
             />
             <div className="director-item__edit-actions">
-              <button className="btn btn--ghost btn--sm" onClick={() => { onEdit(item.id, 'prompt', draft); setEditingPrompt(false); }}>Save</button>
-              <button className="btn btn--ghost btn--sm" onClick={() => { setDraft(item.prompt); setEditingPrompt(false); }}>Cancel</button>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={() => { onEdit(item.id, 'prompt', draft); setEditingPrompt(false); }}>Save</button>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={() => { setDraft(item.prompt); setEditingPrompt(false); }}>Cancel</button>
             </div>
           </div>
         ) : (
@@ -116,7 +116,7 @@ function PlanItemCard({
       <div className="director-item__actions">
         {item.status !== 'done' && item.status !== 'running' && (
           <>
-            <button
+            <button type="button"
               className={`btn btn--sm ${item.approved === false ? 'btn--ghost' : 'btn--ghost'}`}
               onClick={() => onToggleApprove(item.id)}
               title={item.approved === false ? 'Include' : 'Skip'}
@@ -320,7 +320,7 @@ export default function EralDirectorClient() {
             <label className="director-brief__label">Project type</label>
             <div className="director-type-grid">
               {PROJECT_TYPES.map(pt => (
-                <button
+                <button type="button"
                   key={pt.id}
                   className={`director-type-card ${projectType === pt.id ? 'director-type-card--active' : ''}`}
                   onClick={() => setProjectType(pt.id)}
@@ -366,7 +366,7 @@ export default function EralDirectorClient() {
 
           {error && <p className="director-error">{error}</p>}
 
-          <button
+          <button type="button"
             className="btn btn--primary director-brief__submit"
             onClick={generatePlan}
             disabled={generating || !brief.trim()}
@@ -393,21 +393,21 @@ export default function EralDirectorClient() {
             </div>
             <div className="director-plan__actions">
               {!executing && doneCount < approvedCount && (
-                <button className="btn btn--primary" onClick={executePlan} disabled={approvedCount === 0}>
+                <button type="button" className="btn btn--primary" onClick={executePlan} disabled={approvedCount === 0}>
                   {doneCount > 0 ? `Continue (${approvedCount - doneCount} left)` : `Execute ${approvedCount} assets`}
                 </button>
               )}
               {!executing && failedCount > 0 && (
-                <button className="btn btn--ghost btn--sm" onClick={rerunFailed}>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={rerunFailed}>
                   Retry {failedCount} failed
                 </button>
               )}
               {doneCount > 0 && (
-                <button className="btn btn--ghost btn--sm" onClick={exportManifest} title="Download manifest.json">
+                <button type="button" className="btn btn--ghost btn--sm" onClick={exportManifest} title="Download manifest.json">
                   Export manifest
                 </button>
               )}
-              <button className="btn btn--ghost btn--sm" onClick={() => { setPlan(null); setProgress(0); }}>
+              <button type="button" className="btn btn--ghost btn--sm" onClick={() => { setPlan(null); setProgress(0); }}>
                 New plan
               </button>
             </div>
