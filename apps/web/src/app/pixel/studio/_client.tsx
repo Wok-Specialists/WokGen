@@ -2621,6 +2621,8 @@ function StudioInner() {
   // Generation presets
   const [genPresets, setGenPresets] = useState<Array<{ id: string; name: string; prompt: string; params?: Record<string, unknown> }>>([]);
   const [showGenPresets, setShowGenPresets] = useState(false);
+  const [presetNameInput, setPresetNameInput] = useState('');
+  const [showPresetNameInput, setShowPresetNameInput] = useState(false);
   const loadGenPresets = useCallback(async () => {
     try {
       const res = await fetch('/api/presets');
@@ -2628,15 +2630,16 @@ function StudioInner() {
     } catch { /* ignore */ }
   }, []);
   const saveGenPreset = useCallback(async () => {
-    const name = window.prompt('Preset name:');
-    if (!name?.trim()) return;
+    if (!presetNameInput.trim()) return;
     await fetch('/api/presets', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), mode: activeTool, prompt }),
+      body: JSON.stringify({ name: presetNameInput.trim(), mode: activeTool, prompt }),
     });
+    setPresetNameInput('');
+    setShowPresetNameInput(false);
     loadGenPresets();
-  }, [activeTool, prompt, loadGenPresets]);
+  }, [activeTool, prompt, presetNameInput, loadGenPresets]);
   const deleteGenPreset = useCallback(async (id: string) => {
     await fetch(`/api/presets/${id}`, { method: 'DELETE' });
     setGenPresets(prev => prev.filter(p => p.id !== id));
@@ -3404,14 +3407,39 @@ function StudioInner() {
                   </button>
                 </div>
               ))}
-              <button
-                onClick={saveGenPreset}
-                style={{ width: '100%', fontSize: 11, padding: '3px 0', marginTop: 4,
-                         background: 'var(--accent, #7c3aed)', color: '#fff', border: 'none',
-                         borderRadius: 4, cursor: 'pointer' }}
-              >
-                + Save current prompt
-              </button>
+              {showPresetNameInput ? (
+                <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+                  <input
+                    autoFocus
+                    value={presetNameInput}
+                    onChange={e => setPresetNameInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveGenPreset(); if (e.key === 'Escape') { setShowPresetNameInput(false); setPresetNameInput(''); } }}
+                    placeholder="Preset name"
+                    style={{ flex: 1, fontSize: 11, padding: '3px 6px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 4, color: 'var(--text)' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={saveGenPreset}
+                    disabled={!presetNameInput.trim()}
+                    style={{ fontSize: 11, padding: '3px 6px', background: 'var(--accent, #7c3aed)', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+                  >Save</button>
+                  <button
+                    type="button"
+                    onClick={() => { setShowPresetNameInput(false); setPresetNameInput(''); }}
+                    style={{ fontSize: 11, padding: '3px 6px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 4, cursor: 'pointer', color: 'var(--text-muted)' }}
+                  >✕</button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowPresetNameInput(true)}
+                  style={{ width: '100%', fontSize: 11, padding: '3px 0', marginTop: 4,
+                           background: 'var(--accent, #7c3aed)', color: '#fff', border: 'none',
+                           borderRadius: 4, cursor: 'pointer' }}
+                >
+                  + Save current prompt
+                </button>
+              )}
             </div>
           )}
         </div>
