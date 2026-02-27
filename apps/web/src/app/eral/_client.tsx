@@ -371,7 +371,7 @@ function MessageBubble({
     <div className={`eral-msg-row ${isUser ? 'eral-msg-user' : 'eral-msg-assistant'}`}>
       {!isUser && (
         <div className="eral-avatar">
-          <span style={{ fontSize: 9, fontWeight: 700, color: '#818cf8', letterSpacing: '-0.5px' }}>7c</span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-secondary, #818cf8)', letterSpacing: '-0.5px' }}>7c</span>
         </div>
       )}
       <div className="eral-bubble-wrap">
@@ -416,7 +416,7 @@ function MessageBubble({
             padding: '6px 12px',
             marginTop: 4,
             fontSize: 12,
-            color: '#818cf8',
+            color: 'var(--accent-secondary, #818cf8)',
           }}>
             {msg.wap.confirmation}
           </div>
@@ -1173,7 +1173,7 @@ export function EralPage({ userId }: { userId?: string }) {
           {isEmpty ? (
             <div className="eral-empty">
               <div className="eral-empty-logo">
-                <span className="eral-empty-icon"><span style={{fontSize:'22px',fontWeight:700,color:'#818cf8',letterSpacing:'-1px',opacity:0.7}}>7c</span></span>
+                <span className="eral-empty-icon"><span style={{fontSize:'22px',fontWeight:700,color:'var(--accent-secondary, #818cf8)',letterSpacing:'-1px',opacity:0.7}}>7c</span></span>
                 <h1 className="eral-empty-title">Eral 7c</h1>
                 <p className="eral-empty-sub">AI companion for creative work · by WokSpec</p>
               </div>
@@ -1244,7 +1244,7 @@ export function EralPage({ userId }: { userId?: string }) {
               {loading && !streamingContent && (
                 <div className="eral-msg-row eral-msg-assistant">
                   <div className="eral-avatar">
-                    <span style={{ fontSize: 9, fontWeight: 700, color: '#818cf8', letterSpacing: '-0.5px' }}>7c</span>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-secondary, #818cf8)', letterSpacing: '-0.5px' }}>7c</span>
                   </div>
                   <div className="eral-bubble-wrap">
                     <span className="eral-msg-label">Eral 7c</span>
@@ -1487,12 +1487,12 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
 
           {/* Status */}
           <div style={{ textAlign: 'center' }}>
-            <p style={{ color: '#c7d2fe', fontSize: 18, fontWeight: 600, margin: 0 }}>
+            <p style={{ color: 'var(--text, #c7d2fe)', fontSize: 18, fontWeight: 600, margin: 0 }}>
               {callState === 'idle'       ? 'Ready to talk'  :
                callState === 'listening'  ? 'Listening…'     :
                callState === 'processing' ? 'Thinking…'      : 'Speaking…'}
             </p>
-            <p style={{ color: 'rgba(167,139,250,0.6)', fontSize: 13, marginTop: 4 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>
               Eral 7c · Voice Mode
             </p>
           </div>
@@ -1506,13 +1506,13 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
             }}>
               {callTranscript.user && (
                 <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: '0 0 8px' }}>
-                  <span style={{ color: '#818cf8', fontWeight: 600 }}>You: </span>
+                  <span style={{ color: 'var(--accent-secondary, #818cf8)', fontWeight: 600 }}>You: </span>
                   {callTranscript.user}
                 </p>
               )}
               {callTranscript.eral && (
-                <p style={{ color: '#e0e7ff', fontSize: 13, margin: 0 }}>
-                  <span style={{ color: '#a78bfa', fontWeight: 600 }}>Eral: </span>
+                <p style={{ color: 'var(--text, #e0e7ff)', fontSize: 13, margin: 0 }}>
+                  <span style={{ color: 'var(--accent, #a78bfa)', fontWeight: 600 }}>Eral: </span>
                   {callTranscript.eral}
                 </p>
               )}
@@ -1521,13 +1521,13 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
 
           {/* Voice selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ color: 'rgba(167,139,250,0.7)', fontSize: 12 }}>Voice:</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>Voice:</span>
             <select
               value={callVoiceId}
               onChange={(e) => setCallVoiceId(e.target.value)}
               style={{
                 background: 'rgba(30,27,75,0.8)', border: '1px solid rgba(129,140,248,0.25)',
-                borderRadius: 6, color: '#c7d2fe', fontSize: 12, padding: '4px 8px', cursor: 'pointer',
+                borderRadius: 6, color: 'var(--text, #c7d2fe)', fontSize: 12, padding: '4px 8px', cursor: 'pointer',
               }}
             >
               <option value="21m00Tcm4TlvDq8ikWAM">Rachel</option>
@@ -1586,7 +1586,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
       {actionConfirmation && (
         <div style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 200,
-          background: '#1e1b4b', border: '1px solid #818cf8',
+          background: 'var(--surface-2, #1e1b4b)', border: '1px solid var(--accent-secondary, #818cf8)',
           borderRadius: 8, padding: '10px 18px',
           color: '#a5b4fc', fontSize: 13,
           maxWidth: 320,
@@ -1639,7 +1639,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           font-family: var(--font-heading, 'Space Grotesk', sans-serif);
           font-size: 15px;
           font-weight: 600;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           white-space: nowrap;
         }
         .eral-brand-by {
@@ -1668,7 +1668,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           background: rgba(129,140,248,0.12);
           border: 1px solid rgba(129,140,248,0.25);
           border-radius: 4px;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -1774,7 +1774,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-tools-all {
           display: block;
           font-size: 11px;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           text-decoration: none;
           text-align: center;
         }
@@ -1819,7 +1819,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           background: rgba(129,140,248,0.08);
           border: 1px solid rgba(129,140,248,0.2);
           border-radius: 20px;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -1828,7 +1828,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-model-pill:hover { background: rgba(129,140,248,0.15); }
         .eral-model-dot {
           width: 6px; height: 6px;
-          background: #818cf8;
+          background: var(--accent-secondary, #818cf8);
           border-radius: 50%;
         }
 
@@ -1861,7 +1861,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-model-option:last-child { border-bottom: none; }
         .eral-model-option:hover { background: rgba(255,255,255,0.04); }
         .eral-model-option-active { background: rgba(129,140,248,0.08) !important; }
-        .eral-model-option-label { font-size: 13px; font-weight: 500; color: #818cf8; }
+        .eral-model-option-label { font-size: 13px; font-weight: 500; color: var(--accent-secondary, #818cf8); }
         .eral-model-option-desc  { font-size: 11px; color: var(--text-muted); }
 
         .eral-project-select {
@@ -1892,7 +1892,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           background: rgba(129,140,248,0.1);
           border: 1px solid rgba(129,140,248,0.25);
           border-radius: 4px;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           font-size: 12px;
           cursor: pointer;
           transition: background 0.15s, border-color 0.15s;
@@ -1950,7 +1950,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           font-family: var(--font-heading, 'Space Grotesk', sans-serif);
           font-size: 28px;
           font-weight: 600;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           margin: 0;
         }
         .eral-empty-sub {
@@ -2049,7 +2049,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           display: inline-block;
           width: 2px;
           height: 14px;
-          background: #818cf8;
+          background: var(--accent-secondary, #818cf8);
           margin-left: 2px;
           vertical-align: text-bottom;
           animation: eral-blink 0.8s step-end infinite;
@@ -2102,8 +2102,8 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         }
         .eral-sidebar-tab:hover { color: var(--text-muted); }
         .eral-sidebar-tab--active {
-          color: #818cf8;
-          border-bottom-color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
+          border-bottom-color: var(--accent-secondary, #818cf8);
         }
 
         /* Notepad */
@@ -2235,7 +2235,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           width: 32px; height: 32px;
           border-radius: 6px;
           border: none;
-          background: #818cf8;
+          background: var(--accent-secondary, #818cf8);
           color: #fff;
           font-size: 16px;
           cursor: pointer;
@@ -2338,7 +2338,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           background: rgba(129,140,248,0.06);
           border: 1px solid rgba(129,140,248,0.2);
           border-radius: 12px;
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
           font-size: 11px;
           cursor: pointer;
           transition: background 0.15s, border-color 0.15s;
@@ -2420,7 +2420,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
         .eral-command-chip:hover {
           background: rgba(129,140,248,0.14);
           border-color: rgba(129,140,248,0.3);
-          color: #818cf8;
+          color: var(--accent-secondary, #818cf8);
         }
 
         /* Mobile */

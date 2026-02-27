@@ -302,7 +302,7 @@ export default function OnboardingModal({ onComplete }: Props) {
                   Open Project
                 </button>
               )}
-              <button type="button" className="btn-ghost" onClick={handleComplete}>
+              <button type="button" className="btn-ghost" onClick={() => { handleComplete(); router.push('/studio'); }}>
                 Go to studio
               </button>
             </div>
