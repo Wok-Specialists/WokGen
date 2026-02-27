@@ -125,7 +125,7 @@ function ProjectPicker({ projectId, onSelect }: {
             <div className="wok-proj-loading">Loading...</div>
           ) : projects.length === 0 ? (
             <div className="wok-proj-loading">
-              <a href="/projects" style={{ color: '#41a6f6', textDecoration: 'none', fontSize: '0.7rem' }}>
+              <a href="/projects" style={{ color: 'var(--accent, #a78bfa)', textDecoration: 'none', fontSize: '0.7rem' }}>
                 Create a project →
               </a>
             </div>
@@ -308,9 +308,9 @@ export default function UnifiedStudioClient({ type }: Props) {
           color: rgba(255,255,255,0.6);
         }
         .wok-studio-rail__item.--active {
-          background: rgba(65,166,246,0.06);
-          border-left-color: #41a6f6;
-          color: #41a6f6;
+          background: var(--accent-subtle, rgba(167,139,250,0.06));
+          border-left-color: var(--accent, #a78bfa);
+          color: var(--accent, #a78bfa);
         }
 
         .wok-studio-rail__abbr {
@@ -356,7 +356,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           margin-left: auto;
           transition: color 0.1s;
         }
-        .wok-studio-ctx-link:hover { color: #41a6f6; }
+        .wok-studio-ctx-link:hover { color: var(--accent, #a78bfa); }
 
         .wok-studio-ctx-meta {
           display: flex;
@@ -443,7 +443,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           transition: background 0.1s, color 0.1s;
         }
         .wok-proj-option:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.85); }
-        .wok-proj-option.--active { color: #41a6f6; }
+        .wok-proj-option.--active { color: var(--accent, #a78bfa); }
 
         .wok-proj-option__dot {
           width: 5px; height: 5px;
@@ -451,7 +451,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           border: 1px solid rgba(255,255,255,0.2);
           flex-shrink: 0;
         }
-        .wok-proj-option__dot.--filled { background: #41a6f6; border-color: #41a6f6; }
+        .wok-proj-option__dot.--filled { background: var(--accent, #a78bfa); border-color: var(--accent, #a78bfa); }
 
         .wok-proj-loading {
           padding: 8px;
@@ -472,7 +472,7 @@ export default function UnifiedStudioClient({ type }: Props) {
           width: 20px;
           height: 20px;
           border: 2px solid rgba(255,255,255,0.1);
-          border-top-color: #41a6f6;
+          border-top-color: var(--accent, #a78bfa);
           border-radius: 9999px;
           animation: spin 0.7s linear infinite;
         }
