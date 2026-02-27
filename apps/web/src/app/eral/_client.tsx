@@ -994,10 +994,10 @@ export function EralPage({ userId }: { userId?: string }) {
               <button type="button" className="eral-v2-quick-btn" onClick={() => setPlanModalOpen(true)}>
                 ✦ Plan Project
               </button>
-              <button type="button" className="eral-v2-quick-btn" onClick={() => { window.location.href = '/studio'; }}>
+              <button type="button" className="eral-v2-quick-btn" onClick={() => router.push('/studio?type=pixel')}>
                 Generate Assets
               </button>
-              <button type="button" className="eral-v2-quick-btn" onClick={() => { window.location.href = '/eral/simulate'; }}>
+              <button type="button" className="eral-v2-quick-btn" onClick={() => router.push('/eral/simulate')}>
                 Simulate
               </button>
             </div>

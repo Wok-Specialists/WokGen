@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -343,6 +344,7 @@ function DocumentsPanel({
   loaded: boolean;
   onRefresh: () => void;
 }) {
+  const router = useRouter();
   const [creating, setCreating] = useState(false);
 
   const createDoc = async (template?: string) => {
@@ -355,7 +357,7 @@ function DocumentsPanel({
       });
       if (res.ok) {
         const { document: doc } = await res.json();
-        window.location.href = `/projects/${projectId}/docs/${doc.id}`;
+        router.push(`/projects/${projectId}/docs/${doc.id}`);
       } else {
         const d = await res.json().catch(() => null);
         toast.error(d?.error ?? 'Failed to create document');

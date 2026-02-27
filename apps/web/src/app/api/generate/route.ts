@@ -1031,9 +1031,9 @@ export const POST = withErrorHandler(async (req) => {
               prompt: String(prompt).trim(),
               ts: Date.now(),
             },
-          }).catch(() => {});
+          }).catch((err: unknown) => { logger.warn({ err, url: hook.url }, '[webhook] delivery failed'); });
         }
-      }).catch(() => {});
+      }).catch((err: unknown) => { logger.warn({ err }, '[webhook] hook lookup failed'); });
       prisma.userPreference.upsert({
         where: { userId: authedUserId },
         create: {
