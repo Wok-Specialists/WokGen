@@ -94,6 +94,14 @@ export function MobileNav() {
 
         <div className="mobile-nav-drawer-footer">
           <a
+            href="https://wokspec.org"
+            className="mobile-nav-footer-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ← WokSpec
+          </a>
+          <a
             href="https://github.com/WokSpec/WokGen"
             className="mobile-nav-footer-link"
             target="_blank"

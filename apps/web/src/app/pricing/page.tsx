@@ -200,7 +200,9 @@ export default function PricingPage() {
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Dedicated infrastructure, SSO, audit logs, and white-label options for teams.</p>
             </div>
             <a
-              href="mailto:enterprise@wokspec.ai?subject=WokGen%20Enterprise%20Inquiry"
+              href="https://wokspec.org/consult"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: 'block',
                 textAlign: 'center',

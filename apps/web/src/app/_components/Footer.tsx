@@ -22,6 +22,7 @@ const SUPPORT_LINKS = [
   { label: 'Donate',      href: '/support',                    ext: false },
   { label: 'Discord',     href: 'https://discord.gg/wokgen',   ext: true  },
   { label: 'Twitter / X', href: 'https://twitter.com/WokSpec', ext: true  },
+  { label: 'WokSpec',     href: 'https://wokspec.org',          ext: true  },
 ];
 
 const MODEL_CHIPS = ['FLUX', 'Stable Diffusion', 'Llama 3.3', 'Kokoro'];
@@ -75,7 +76,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[var(--border)]">
           <p className="text-xs text-[var(--text-faint)]">
-            © {new Date().getFullYear()} WokGen
+            © {new Date().getFullYear()} <a href="https://wokspec.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-muted)] transition-colors">WokSpec</a> · WokGen
           </p>
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="text-xs text-[var(--text-faint)] mr-1">Powered by open source</span>

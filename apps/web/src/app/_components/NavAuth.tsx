@@ -187,9 +187,6 @@ export function NavAuth() {
           <Link href="/account/usage" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
             Usage &amp; limits
           </Link>
-          <Link href="/billing" className="nav-user-item" role="menuitem" onClick={() => setOpen(false)}>
-            Billing & Plans
-          </Link>
           <div className="nav-user-menu-divider" />
           {/* Public-by-default toggle */}
           <button type="button"

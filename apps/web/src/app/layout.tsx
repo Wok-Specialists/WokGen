@@ -58,12 +58,11 @@ const spaceGrotesk = Space_Grotesk({
 // ---------------------------------------------------------------------------
 export const metadata: Metadata = {
   title: {
-    default: 'WokGen — AI Asset Generation Platform',
-    template: '%s · WokGen',
+    template: '%s — WokGen',
+    default: 'WokGen — AI Asset Generation',
   },
-  description:
-    'WokGen Studio — one platform for AI asset generation: pixel art, business branding, ' +
-    'vector icons, UI/UX components, voice, and text. Free to start. Powered by WokSpec.',
+  description: 'Generate pixel art, vectors, UI mockups, brand assets, voice, 3D models and more with AI.',
+  metadataBase: new URL('https://wokgen.wokspec.org'),
   keywords: [
     'AI asset generator',
     'pixel art generator',
@@ -115,6 +114,18 @@ function NavBar() {
       style={{ background: 'rgba(10,10,10,0.92)', fontFamily: 'var(--font-heading)' }}
       aria-label="Main navigation"
     >
+      {/* Back to WokSpec */}
+      <a
+        href="https://wokspec.org"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex-shrink-0 hidden sm:flex items-center gap-1 text-[0.7rem] font-medium px-2 py-1 rounded mr-1 border border-[var(--border)] text-[var(--text-faint)] hover:text-[var(--text-muted)] transition-colors"
+        style={{ textDecoration: 'none' }}
+        aria-label="Back to WokSpec"
+      >
+        ← WokSpec
+      </a>
+
       {/* Wordmark */}
       <Link
         href="/"
