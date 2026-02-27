@@ -14329,6 +14329,11 @@ select:focus-visible {
   }
 }
 
+/* ── Cmd+K nav button ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .nav-cmdk-label { display: none; }
+}
+
 /* ── Mobile Nav Overlay ────────────────────────────────────────── */
 .mobile-nav-overlay {
   position: fixed;

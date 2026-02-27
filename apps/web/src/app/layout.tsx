@@ -15,6 +15,7 @@ import { Toaster } from 'sonner';
 import { PageLoadingBar } from '@/components/PageLoadingBar';
 import AppThemeToggle from '@/components/AppThemeToggle';
 import { StudiosDropdown } from './_components/StudiosDropdown';
+import { CmdKButton } from './_components/CmdKButton';
 
 const EralCompanion = nextDynamic(
   () => import('@/components/EralCompanion').then((m) => ({ default: m.EralCompanion })),
@@ -146,6 +147,7 @@ function NavBar() {
 
       {/* Right side */}
       <div className="flex items-center gap-2 ml-auto">
+        <CmdKButton />
         <AppThemeToggle />
         <NavAuth />
         <MobileNav />

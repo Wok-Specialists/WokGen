@@ -163,6 +163,7 @@ export default function CommandPalette() {
           </Command.List>
 
           <div className="cmdk-footer">
+            <span className="cmdk-footer-hint"><kbd>⌘K</kbd> open/close</span>
             <span className="cmdk-footer-hint"><kbd>↑↓</kbd> navigate</span>
             <span className="cmdk-footer-hint"><kbd>↵</kbd> select</span>
             <span className="cmdk-footer-hint"><kbd>ESC</kbd> close</span>
