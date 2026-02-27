@@ -32,14 +32,14 @@ export async function GET(req: NextRequest) {
     // Clean up expired rate limit records
     await prisma.rateLimit.deleteMany({
       where: { reset_at: { lt: BigInt(Date.now()) } }
-    }).catch(() => {}); // non-fatal
+    }).catch((e) => logger.warn({ err: e }, 'cron: rateLimit cleanup failed'));
 
     // Clean up old guest usage records (older than 2 days)
     const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
     const cutoffDate = twoDaysAgo.toISOString().slice(0, 10); // YYYY-MM-DD
     await prisma.guestUsage.deleteMany({
       where: { date: { lt: cutoffDate } }
-    }).catch(() => {}); // non-fatal
+    }).catch((e) => logger.warn({ err: e }, 'cron: guestUsage cleanup failed'));
 
     // Reset stuck running jobs (older than 5 minutes) to failed
     const stuckCutoff = new Date(Date.now() - 5 * 60_000);

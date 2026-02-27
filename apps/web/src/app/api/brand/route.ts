@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
           message: `Brand kit "${name}" created`,
           refId: kit.id,
         },
-      }).catch(() => {});
+      }).catch((e) => log.warn({ err: e }, 'brand: activity log failed'));
     }
 
     return NextResponse.json({ kit }, { status: 201 });

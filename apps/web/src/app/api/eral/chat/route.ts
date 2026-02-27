@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
@@ -461,7 +462,7 @@ export async function POST(req: NextRequest) {
         message: `Started Eral conversation`,
         refId: conv.id,
       },
-    }).catch(() => {});
+    }).catch((e) => log.warn({ err: e }, 'eral: activity log failed'));
   }
 
   // Build message list
@@ -651,7 +652,7 @@ export async function POST(req: NextRequest) {
     prisma.eralConversation.update({
       where: { id: conv.id },
       data: { title },
-    }).catch(() => {});
+    }).catch((e) => log.warn({ err: e }, 'eral: conv title update failed'));
   }
 
   // ── Pollinations fallback (no API key configured) ─────────────────────────
@@ -668,7 +669,7 @@ export async function POST(req: NextRequest) {
           modelUsed: 'pollinations-openai',
           durationMs: 0,
         },
-      }).catch(() => {});
+      }).catch((e) => log.warn({ err: e }, 'eral: message save failed'));
       return NextResponse.json({
         reply: cleanReply,
         wap: wap ?? null,
@@ -773,7 +774,7 @@ export async function POST(req: NextRequest) {
               modelUsed: model,
               durationMs,
             },
-          }).catch(() => {});
+          }).catch((e) => log.warn({ err: e }, 'eral: assistant message save failed'));
         }
       },
     });

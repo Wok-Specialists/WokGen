@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { seedAdminUser } from '@/lib/admin-seed';
+import { log } from '@/lib/logger';
 
 // ---------------------------------------------------------------------------
 // GET /api/health
@@ -34,7 +35,7 @@ const VERSION = process.env.npm_package_version ?? '0.1.0';
 
 export async function GET() {
   // Fire-and-forget admin seed on first health check
-  void seedAdminUser().catch(() => {});
+  void seedAdminUser().catch((e) => log.warn({ err: e }, 'admin seed failed'));
 
   const startMs = Date.now();
   const checks: Record<string, { ok: boolean; latencyMs?: number; error?: string }> = {};
