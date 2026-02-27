@@ -28,29 +28,29 @@ export type BadgeVariant =
 
 const VARIANT_STYLES: Record<BadgeVariant, CSSProperties> = {
   default: {
-    background: 'rgba(65,166,246,0.12)',
-    border:     '1px solid rgba(65,166,246,0.3)',
-    color:      '#41A6F6',
+    background: 'var(--info-bg)',
+    border:     '1px solid var(--info-bg)',
+    color:      'var(--blue)',
   },
   accent: {
-    background: 'rgba(65,166,246,0.15)',
-    border:     '1px solid rgba(65,166,246,0.4)',
-    color:      '#73EFF7',
+    background: 'var(--info-bg)',
+    border:     '1px solid var(--info-bg)',
+    color:      'var(--teal)',
   },
   success: {
-    background: 'rgba(56,183,100,0.12)',
-    border:     '1px solid rgba(56,183,100,0.3)',
-    color:      '#38B764',
+    background: 'var(--success-bg)',
+    border:     '1px solid var(--success-glow)',
+    color:      'var(--success)',
   },
   warning: {
-    background: 'rgba(255,205,117,0.12)',
-    border:     '1px solid rgba(255,205,117,0.3)',
-    color:      '#FFCD75',
+    background: 'var(--warning-bg)',
+    border:     '1px solid var(--warning-bg)',
+    color:      'var(--yellow)',
   },
   danger: {
-    background: 'rgba(177,62,83,0.12)',
-    border:     '1px solid rgba(177,62,83,0.3)',
-    color:      '#EF7D57',
+    background: 'var(--danger-bg)',
+    border:     '1px solid var(--danger-border)',
+    color:      'var(--danger)',
   },
   muted: {
     background: 'rgba(86,108,134,0.15)',

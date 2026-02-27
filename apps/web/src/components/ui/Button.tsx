@@ -56,7 +56,7 @@ const VARIANT_STYLES: Record<ButtonVariant, CSSProperties> = {
   primary: {
     background:  'var(--accent)',
     borderColor: 'var(--accent)',
-    color:       '#0d0d14',
+    color:       'var(--text-on-accent, #0d0d14)',
   },
   secondary: {
     background:  'var(--surface-overlay, #1a1a2e)',
@@ -69,14 +69,14 @@ const VARIANT_STYLES: Record<ButtonVariant, CSSProperties> = {
     color:       'var(--text-muted, #566C86)',
   },
   danger: {
-    background:  'rgba(177,62,83,0.15)',
-    borderColor: 'rgba(177,62,83,0.4)',
-    color:       '#EF7D57',
+    background:  'var(--danger-bg)',
+    borderColor: 'var(--danger-border)',
+    color:       'var(--danger)',
   },
   success: {
-    background:  'rgba(56,183,100,0.15)',
-    borderColor: 'rgba(56,183,100,0.4)',
-    color:       '#38B764',
+    background:  'var(--success-bg)',
+    borderColor: 'var(--success-glow)',
+    color:       'var(--success)',
   },
   outline: {
     background:  'transparent',
@@ -96,7 +96,7 @@ const VARIANT_HOVER_STYLES: Record<ButtonVariant, CSSProperties> = {
   primary: {
     background:  'var(--accent-hover, #73EFF7)',
     borderColor: 'var(--accent-hover, #73EFF7)',
-    color:       '#0d0d14',
+    color:       'var(--text-on-accent, #0d0d14)',
   },
   secondary: {
     background:  'var(--surface-hover, #1e1e30)',
@@ -109,14 +109,14 @@ const VARIANT_HOVER_STYLES: Record<ButtonVariant, CSSProperties> = {
     color:       'var(--text-primary, #F4F4F4)',
   },
   danger: {
-    background:  'rgba(177,62,83,0.25)',
-    borderColor: 'rgba(239,125,87,0.5)',
-    color:       '#EF7D57',
+    background:  'var(--danger-bg)',
+    borderColor: 'var(--danger-border)',
+    color:       'var(--danger)',
   },
   success: {
-    background:  'rgba(56,183,100,0.25)',
-    borderColor: 'rgba(167,240,112,0.5)',
-    color:       '#A7F070',
+    background:  'var(--success-bg)',
+    borderColor: 'var(--success-glow)',
+    color:       'var(--success)',
   },
   outline: {
     background:  'var(--surface-overlay, #1a1a2e)',
@@ -221,7 +221,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const spinnerColor =
       variant === 'primary'
-        ? '#0d0d14'
+        ? 'var(--text-on-accent, #0d0d14)'
         : variant === 'danger'
         ? '#EF7D57'
         : variant === 'success'

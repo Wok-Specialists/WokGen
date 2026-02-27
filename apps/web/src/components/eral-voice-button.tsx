@@ -346,7 +346,7 @@ export function EralVoiceButton() {
             lineHeight: 1.4,
             pointerEvents: 'auto',
             backdropFilter: 'blur(8px)',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+            boxShadow: 'var(--shadow-md)',
             position: 'relative',
           }}
         >
@@ -424,14 +424,14 @@ export function EralVoiceButton() {
             height: 48,
             borderRadius: '50%',
             background: bgColor,
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--border)',
             cursor: state === 'processing' ? 'default' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'background 0.2s, box-shadow 0.2s, transform 0.1s',
             boxShadow: state === 'idle'
-              ? '0 2px 12px rgba(0,0,0,0.4)'
+              ? 'var(--shadow-sm)'
               : '0 2px 20px var(--accent-glow)',
             outline: 'none',
           }}
@@ -443,7 +443,7 @@ export function EralVoiceButton() {
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.boxShadow = state === 'idle'
-              ? '0 2px 12px rgba(0,0,0,0.4)'
+              ? 'var(--shadow-sm)'
               : '0 2px 20px var(--accent-glow)';
             (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
           }}
