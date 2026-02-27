@@ -88,7 +88,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="10. Contact">
-        <p>Questions? Email us at <a href="mailto:team@wokspec.org" style={{ color: '#a78bfa', textDecoration: 'none' }}>team@wokspec.org</a>.</p>
+        <p>Questions? Email us at <a href="mailto:team@wokspec.org" style={{ color: 'var(--accent, #a78bfa)', textDecoration: 'none' }}>team@wokspec.org</a>.</p>
       </Section>
 
       <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>

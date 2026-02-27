@@ -17,7 +17,7 @@ function LoginForm() {
         <div className="login-brand">
           <h1 className="login-title">
             <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-            <span style={{ color: '#a78bfa' }}>Gen</span>
+            <span style={{ color: 'var(--accent, #a78bfa)' }}>Gen</span>
           </h1>
           <p className="login-sub">by Wok Specialists</p>
         </div>
