@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies & generate Prisma client
         working-directory: apps/web
         run: |
-          npm install --legacy-peer-deps
-          npx prisma generate
+          npm install --legacy-peer-deps --ignore-scripts
+          PRISMA_GENERATE_SKIP_AUTOINSTALL=1 npx prisma generate
 
       - name: Build check
         working-directory: apps/web
