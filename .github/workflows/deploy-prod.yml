@@ -2,7 +2,6 @@ name: Deploy WokGen to Vercel (prod)
 
 # MANUAL ONLY — never auto-trigger on push.
 # Rationale: Vercel free tier = 100 deploys/day.
-# Run locally via: bash scripts/predeploy.sh
 on:
   workflow_dispatch:
 
@@ -20,24 +19,14 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --ignore-scripts
 
-      - name: Generate Prisma client
-        run: PRISMA_GENERATE_SKIP_AUTOINSTALL=1 ./node_modules/.bin/prisma generate --schema=apps/web/prisma/schema.prisma
-
-      - name: Build check
-        working-directory: apps/web
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DATABASE_URL }}
-          NEXT_PUBLIC_BASE_URL: "https://wokgen.wokspec.org"
-          NEXT_TELEMETRY_DISABLED: "1"
-        run: npx next build
-
       # Vercel deploy — requires VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID secrets
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_URL }}
         run: |
           npm install -g vercel
           vercel pull --yes --environment=production --token=$VERCEL_TOKEN
