@@ -2413,9 +2413,9 @@ body {
 }
 .studio-tool-tab:hover { background: rgba(255,255,255,0.05); color: var(--text); }
 .studio-tool-tab.active {
-  background: var(--info-bg);
-  color: var(--info);
-  font-weight: 500;
+  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent);
+  color: var(--studio-accent, var(--accent));
+  font-weight: 600;
 }
 .studio-tool-icon { font-size: 0.875rem; flex-shrink: 0; }
 .studio-tool-label { font-size: 0.8125rem; }
