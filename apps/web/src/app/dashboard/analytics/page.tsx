@@ -76,51 +76,29 @@ export default async function AnalyticsPage() {
   const recentActivity = recentJobs.slice(0, 10);
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>Your Analytics</h1>
-      <p style={{ opacity: 0.5, marginBottom: '2rem', fontSize: '0.875rem' }}>
-        Personal usage stats for your WokGen account.
-      </p>
+    <main className="analytics-page">
+      <h1 className="analytics-h1">Your Analytics</h1>
+      <p className="analytics-sub">Personal usage stats for your WokGen account.</p>
 
       {/* ── Stats cards ── */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '1rem',
-          marginBottom: '2rem',
-        }}
-      >
+      <div className="analytics-stat-grid">
         {[
           { label: 'TOTAL GENERATIONS', value: formatNumber(totalGenerations) },
           { label: 'TOOLS USED', value: formatNumber(uniqueTools) },
           { label: 'ERAL MESSAGES', value: formatNumber(eralMessages) },
           { label: 'CREDITS THIS MONTH', value: formatNumber(creditsUsed) },
         ].map(({ label, value }) => (
-          <div key={label} className="card" style={{ padding: '1.25rem' }}>
-            <div style={{ fontSize: '0.7rem', letterSpacing: '0.05em', opacity: 0.5, marginBottom: '0.5rem' }}>
-              {label}
-            </div>
-            <div style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1 }}>{value}</div>
+          <div key={label} className="card analytics-stat-card">
+            <div className="analytics-stat-label">{label}</div>
+            <div className="analytics-stat-value">{value}</div>
           </div>
         ))}
       </div>
 
       {/* ── Activity heatmap ── */}
-      <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Activity — last 90 days</h2>
-        {/* GitHub-style grid: auto-flow column, 7 rows = days of week */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateRows: 'repeat(7, 14px)',
-            gridAutoFlow: 'column',
-            gridAutoColumns: '14px',
-            gap: '3px',
-            overflowX: 'auto',
-          }}
-        >
-          {/* Padding cells to align first day to correct weekday */}
+      <div className="card analytics-card">
+        <h2 className="analytics-card-h2">Activity — last 90 days</h2>
+        <div className="analytics-heatmap">
           {Array.from({ length: padCells }).map((_, i) => (
             <div key={`pad-${i}`} />
           ))}
@@ -128,32 +106,15 @@ export default async function AnalyticsPage() {
             <div
               key={date}
               title={`${date}: ${count} generation${count !== 1 ? 's' : ''}`}
-              style={{
-                width: '14px',
-                height: '14px',
-                borderRadius: '2px',
-                backgroundColor: heatColour(count),
-              }}
+              className="analytics-heatmap-cell"
+              style={{ backgroundColor: heatColour(count) }}
             />
           ))}
         </div>
-        {/* Legend */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            marginTop: '0.75rem',
-            fontSize: '0.7rem',
-            opacity: 0.45,
-          }}
-        >
+        <div className="analytics-heatmap-legend">
           <span>Less</span>
           {[0, 1, 2, 4, 6].map((v, i) => (
-            <div
-              key={i}
-              style={{ width: '12px', height: '12px', borderRadius: '2px', backgroundColor: heatColour(v) }}
-            />
+            <div key={i} className="analytics-heatmap-cell" style={{ backgroundColor: heatColour(v) }} />
           ))}
           <span>More</span>
         </div>
@@ -161,27 +122,18 @@ export default async function AnalyticsPage() {
 
       {/* ── Top tools ── */}
       {topToolsRaw.length > 0 && (
-        <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Top Tools</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+        <div className="card analytics-card">
+          <h2 className="analytics-card-h2">Top Tools</h2>
+          <div className="analytics-tools-list">
             {topToolsRaw.map((t) => {
               const pct = totalGenerations > 0 ? Math.round((t._count._all / totalGenerations) * 100) : 0;
               return (
-                <div key={t.tool} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div style={{ width: '80px', fontSize: '0.8rem', opacity: 0.7, flexShrink: 0 }}>{t.tool}</div>
-                  <div style={{ flex: 1, height: '6px', borderRadius: '3px', backgroundColor: 'var(--surface-raised)' }}>
-                    <div
-                      style={{
-                        height: '100%',
-                        borderRadius: '3px',
-                        width: `${pct}%`,
-                        backgroundColor: 'var(--accent)',
-                      }}
-                    />
+                <div key={t.tool} className="analytics-tool-row">
+                  <div className="analytics-tool-name">{t.tool}</div>
+                  <div className="analytics-tool-bar-track">
+                    <div className="analytics-tool-bar-fill" style={{ width: `${pct}%` }} />
                   </div>
-                  <div style={{ width: '40px', textAlign: 'right', fontSize: '0.8rem', opacity: 0.6 }}>
-                    {t._count._all}
-                  </div>
+                  <div className="analytics-tool-count">{t._count._all}</div>
                 </div>
               );
             })}
@@ -190,17 +142,14 @@ export default async function AnalyticsPage() {
       )}
 
       {/* ── Recent generations ── */}
-      <div className="card" style={{ padding: '1.5rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Recent Generations</h2>
+      <div className="card analytics-card">
+        <h2 className="analytics-card-h2">Recent Generations</h2>
         {recentActivity.length === 0 ? (
-          <p style={{ opacity: 0.45, textAlign: 'center', padding: '2rem 0', fontSize: '0.875rem' }}>
-            No generations yet — head to the studio to create something!
-          </p>
+          <p className="analytics-empty">No generations yet — head to the studio to create something!</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="analytics-recents">
             {recentActivity.map((job) => (
-              <div key={job.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                {/* Thumbnail */}
+              <div key={job.id} className="analytics-recent-row">
                 {job.resultUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -208,32 +157,14 @@ export default async function AnalyticsPage() {
                     alt={job.prompt?.slice(0, 50) || 'Generated asset'}
                     width={48}
                     height={48}
-                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }}
+                    className="analytics-recent-thumb"
                   />
                 ) : (
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: '4px',
-                      backgroundColor: 'var(--surface-raised)',
-                      flexShrink: 0,
-                    }}
-                  />
+                  <div className="analytics-recent-thumb analytics-recent-thumb--empty" />
                 )}
-                {/* Info */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      fontSize: '0.85rem',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {job.prompt.slice(0, 90)}
-                  </div>
-                  <div style={{ fontSize: '0.72rem', opacity: 0.45, marginTop: '0.2rem' }}>
+                <div className="analytics-recent-info">
+                  <div className="analytics-recent-prompt">{job.prompt.slice(0, 90)}</div>
+                  <div className="analytics-recent-meta">
                     {job.tool} · {job.mode} ·{' '}
                     {new Date(job.createdAt).toLocaleDateString(undefined, {
                       month: 'short',
