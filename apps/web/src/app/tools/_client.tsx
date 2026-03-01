@@ -49,12 +49,11 @@ function ToolCard({ tool, starred, onStar, onVisit }: ToolCardProps) {
               borderRadius: 6,
               background: 'var(--surface-card)',
               color: 'var(--text)',
-              fontFamily: 'monospace',
-              fontSize: 12,
+              fontSize: 18,
               border: '1px solid var(--border)',
             }}
           >
-            {String(tool.icon).trim().slice(0, 3)}
+            {tool.icon}
           </span>
         </span>
       </div>
