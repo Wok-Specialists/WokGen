@@ -2410,8 +2410,8 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.45rem 0.625rem;
-  border-radius: 0.25rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -2423,9 +2423,10 @@ body {
 }
 .studio-tool-tab:hover { background: rgba(255,255,255,0.05); color: var(--text); }
 .studio-tool-tab.active {
-  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent);
+  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 14%, transparent);
   color: var(--studio-accent, var(--accent));
   font-weight: 600;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--studio-accent, var(--accent)) 20%, transparent);
 }
 .studio-tool-icon { font-size: 0.875rem; flex-shrink: 0; }
 .studio-tool-label { font-size: 0.8125rem; }
@@ -2462,7 +2463,7 @@ body {
   width: 100%;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 0.25rem;
+  border-radius: 8px;
   padding: 0.625rem 0.75rem;
   font-size: 0.8rem;
   color: var(--text);
@@ -2474,14 +2475,14 @@ body {
 }
 .studio-textarea::placeholder { color: var(--text-faint); }
 .studio-textarea:focus {
-  border-color: rgba(96,165,250,0.4);
-  box-shadow: 0 0 0 3px rgba(96,165,250,0.08);
+  border-color: color-mix(in srgb, var(--studio-accent, var(--accent)) 50%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent);
 }
 .studio-select {
   width: 100%;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 0.25rem;
+  border-radius: 8px;
   padding: 0.5rem 0.75rem;
   font-size: 0.8rem;
   color: var(--text);
@@ -2495,14 +2496,14 @@ body {
   background-position: right 0.75rem center;
   padding-right: 2rem;
 }
-.studio-select:focus { border-color: rgba(96,165,250,0.4); box-shadow: 0 0 0 3px rgba(96,165,250,0.08); }
+.studio-select:focus { border-color: color-mix(in srgb, var(--studio-accent, var(--accent)) 50%, var(--border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent); }
 .studio-select option { background: var(--bg-elevated); }
 
 .studio-input {
   width: 100%;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 0.25rem;
+  border-radius: 8px;
   padding: 0.5rem 0.75rem;
   font-size: 0.8rem;
   color: var(--text);
@@ -2511,7 +2512,7 @@ body {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .studio-input::placeholder { color: var(--text-faint); }
-.studio-input:focus { border-color: rgba(96,165,250,0.4); box-shadow: 0 0 0 3px rgba(96,165,250,0.08); }
+.studio-input:focus { border-color: color-mix(in srgb, var(--studio-accent, var(--accent)) 50%, var(--border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent); }
 
 /* ── Preset button grid ───────────────────────────────────────────────────── */
 .studio-preset-grid {
@@ -2554,9 +2555,24 @@ body {
 /* ── Generate button ──────────────────────────────────────────────────────── */
 .btn-generate {
   width: 100%;
-  padding: 0.625rem 1rem;
+  padding: 0.7rem 1rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
+  background: var(--studio-accent, var(--accent));
+  color: #fff;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 16px color-mix(in srgb, var(--studio-accent, var(--accent)) 35%, transparent);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.btn-generate:hover {
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--studio-accent, var(--accent)) 50%, transparent);
+  transform: translateY(-1px);
+}
+.btn-generate:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ── XS button ────────────────────────────────────────────────────────────── */
