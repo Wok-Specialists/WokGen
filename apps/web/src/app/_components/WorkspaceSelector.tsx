@@ -150,85 +150,33 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
   }
 
   return (
-    <div
-      ref={dropRef}
-      style={{ position: 'relative', marginBottom: '0.75rem' }}
-    >
+    <div ref={dropRef} className="ws-selector">
       {/* Trigger */}
-      <button type="button"
-        onClick={() => setIsOpen(v => !v)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.45rem 0.6rem',
-          background: 'var(--surface)',
-          border: '1px solid var(--surface-border)',
-          borderRadius: 6,
-          cursor: 'pointer',
-          fontSize: '0.78rem',
-          color: 'var(--text-muted)',
-          transition: 'border-color 0.15s',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--accent-muted, #4c1d95)')}
-        onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--surface-border)')}
-      >
-        <span style={{ fontSize: 10, opacity: 0.6 }}>⊡</span>
-        <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {activeName ?? 'All Generations'}
-        </span>
-        <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>{isOpen ? '▲' : '▼'}</span>
+      <button type="button" onClick={() => setIsOpen(v => !v)} className="ws-trigger">
+        <span className="ws-trigger__icon" aria-hidden="true">⊡</span>
+        <span className="ws-trigger__label">{activeName ?? 'All Generations'}</span>
+        <span className="ws-trigger__chevron" aria-hidden="true">{isOpen ? '▲' : '▼'}</span>
       </button>
 
       {/* Dropdown */}
       {isOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 4px)',
-            left: 0,
-            right: 0,
-            background: 'var(--surface-overlay, #161616)',
-            border: '1px solid var(--surface-border)',
-            borderRadius: 8,
-            boxShadow: '0 8px 24px var(--overlay-40)',
-            zIndex: 200,
-            overflow: 'hidden',
-          }}
-        >
+        <div className="ws-dropdown">
           {/* All generations option */}
-          <button type="button"
-            onClick={() => handleSelect(null)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 0.75rem',
-              background: activeWorkspaceId === null ? 'var(--accent-dim, rgba(109,40,217,0.15))' : 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '0.78rem',
-              color: activeWorkspaceId === null ? 'var(--accent)' : 'var(--text-muted)',
-              textAlign: 'left',
-              transition: 'background 0.1s',
-            }}
-            onMouseEnter={e => { if (activeWorkspaceId !== null) (e.currentTarget as HTMLElement).style.background = 'var(--surface-card)'; }}
-            onMouseLeave={e => { if (activeWorkspaceId !== null) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+          <button type="button" onClick={() => handleSelect(null)}
+            className={`ws-option${activeWorkspaceId === null ? ' ws-option--active' : ''}`}
           >
-            <span style={{ fontSize: 10, opacity: 0.5 }}>∞</span>
-            <span style={{ flex: 1 }}>All Generations</span>
-            {activeWorkspaceId === null && <span style={{ fontSize: 10 }}>{'\u2713'}</span>}
+            <span className="ws-option__icon" aria-hidden="true">∞</span>
+            <span className="ws-option__name">All Generations</span>
+            {activeWorkspaceId === null && <span className="ws-option__check" aria-hidden="true">✓</span>}
           </button>
 
           {/* Workspace list */}
           {workspaces.length > 0 && (
-            <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.25rem' }}>
+            <div className="ws-list">
               {workspaces.map(ws => (
-                <div key={ws.id} style={{ position: 'relative' }}>
+                <div key={ws.id}>
                   {renamingId === ws.id ? (
-                    <div style={{ padding: '0.35rem 0.75rem', display: 'flex', gap: '0.35rem' }}>
+                    <div className="ws-rename-row">
                       <input
                         ref={renameRef}
                         value={renameVal}
@@ -239,92 +187,30 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                         }}
                         onBlur={() => handleRename(ws.id)}
                         maxLength={40}
-                        style={{
-                          flex: 1,
-                          background: 'var(--surface-overlay)',
-                          border: '1px solid var(--accent-muted, #4c1d95)',
-                          borderRadius: 4,
-                          padding: '0.2rem 0.4rem',
-                          color: 'var(--text)',
-                          fontSize: '0.78rem',
-                          outline: 'none',
-                        }}
+                        className="ws-rename-input"
                       />
                     </div>
                   ) : deleteConf === ws.id ? (
-                    <div style={{ padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'var(--danger-bg)' }}>
-                      <span style={{ flex: 1, fontSize: '0.72rem', color: 'var(--danger)' }}>Delete "{ws.name}"?</span>
-                      <button type="button"
-                        onClick={() => handleDelete(ws.id)}
-                        style={{ background: 'var(--danger)', color: 'var(--text-on-accent)', border: 'none', borderRadius: 3, padding: '2px 8px', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 600 }}
-                      >
-                        Delete
-                      </button>
-                      <button type="button"
-                        onClick={() => setDeleteConf(null)}
-                        style={{ background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--surface-border)', borderRadius: 3, padding: '2px 6px', fontSize: '0.68rem', cursor: 'pointer' }}
-                      >
-                        Cancel
-                      </button>
+                    <div className="ws-delete-confirm">
+                      <span className="ws-delete-confirm__label">Delete &ldquo;{ws.name}&rdquo;?</span>
+                      <button type="button" onClick={() => handleDelete(ws.id)} className="ws-btn ws-btn--danger">Delete</button>
+                      <button type="button" onClick={() => setDeleteConf(null)} className="ws-btn ws-btn--ghost">Cancel</button>
                     </div>
                   ) : (
-                    <div
-                      role="group"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '0 0.75rem',
-                        background: activeWorkspaceId === ws.id ? 'var(--accent-dim, rgba(109,40,217,0.15))' : 'transparent',
-                      }}
-                      onMouseEnter={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'var(--surface-card)'; }}
-                      onMouseLeave={e => { if (activeWorkspaceId !== ws.id) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-                    >
-                      <button type="button"
-                        onClick={() => handleSelect(ws.id)}
-                        style={{
-                          flex: 1,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          padding: '0.45rem 0',
-                          background: 'transparent',
-                          border: 'none',
-                          cursor: 'pointer',
-                          fontSize: '0.78rem',
-                          color: activeWorkspaceId === ws.id ? 'var(--accent)' : 'var(--text-muted)',
-                          textAlign: 'left',
-                        }}
+                    <div role="group" className={`ws-item${activeWorkspaceId === ws.id ? ' ws-item--active' : ''}`}>
+                      <button type="button" onClick={() => handleSelect(ws.id)}
+                        className="ws-item__btn"
                       >
-                        <span style={{ fontSize: 10, opacity: 0.5 }}>⊡</span>
-                        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ws.name}</span>
-                        <span style={{ fontSize: '0.68rem', color: 'var(--text-faint, #555)', marginLeft: 'auto', paddingLeft: '0.5rem' }}>{ws.jobCount}</span>
-                        {activeWorkspaceId === ws.id && <span style={{ fontSize: 10, marginLeft: '0.25rem' }}>{'\u2713'}</span>}
+                        <span className="ws-option__icon" aria-hidden="true">⊡</span>
+                        <span className="ws-item__name">{ws.name}</span>
+                        <span className="ws-item__count">{ws.jobCount}</span>
+                        {activeWorkspaceId === ws.id && <span className="ws-option__check" aria-hidden="true">✓</span>}
                       </button>
-                      {/* Rename + delete icons on hover */}
-                      <span
-                        className="ws-action-icons"
-                        style={{ display: 'flex', gap: '0.1rem', marginLeft: '0.25rem', opacity: 0, transition: 'opacity 0.1s' }}
-                        onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                        onMouseLeave={e => (e.currentTarget.style.opacity = '0')}
-                      >
-                        <button type="button"
-                          onClick={() => { setRenamingId(ws.id); setRenameVal(ws.name); }}
-                          title="Rename"
-                          style={{ background: 'transparent', border: 'none', color: 'var(--text-faint, #555)', cursor: 'pointer', padding: '2px 4px', fontSize: 11, borderRadius: 3 }}
-                          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-muted)')}
-                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
-                        >
-                          Edit
-                        </button>
-                        <button type="button"
-                          onClick={() => setDeleteConf(ws.id)}
-                          title="Delete workspace"
-                          style={{ background: 'transparent', border: 'none', color: 'var(--text-faint, #555)', cursor: 'pointer', padding: '2px 4px', fontSize: 11, borderRadius: 3 }}
-                          onMouseEnter={e => (e.currentTarget.style.color = 'var(--danger)')}
-                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
-                        >
-                          ×
-                        </button>
+                      <span className="ws-action-icons">
+                        <button type="button" onClick={() => { setRenamingId(ws.id); setRenameVal(ws.name); }}
+                          title="Rename" className="ws-action-btn">Edit</button>
+                        <button type="button" onClick={() => setDeleteConf(ws.id)}
+                          title="Delete workspace" className="ws-action-btn ws-action-btn--del">×</button>
                       </span>
                     </div>
                   )}
@@ -334,12 +220,10 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
           )}
 
           {/* Create workspace */}
-          <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.25rem', paddingBottom: '0.25rem' }}>
-            {error && (
-              <p style={{ fontSize: '0.68rem', color: 'var(--danger)', padding: '0.25rem 0.75rem', margin: 0 }}>{error}</p>
-            )}
+          <div className="ws-create">
+            {error && <p className="ws-error">{error}</p>}
             {isCreating ? (
-              <div style={{ padding: '0.35rem 0.75rem', display: 'flex', gap: '0.35rem' }}>
+              <div className="ws-rename-row">
                 <input
                   ref={newInputRef}
                   value={newName}
@@ -351,67 +235,26 @@ export default function WorkspaceSelector({ mode, activeWorkspaceId, onChange }:
                   maxLength={40}
                   placeholder="Workspace name…"
                   disabled={creating}
-                  style={{
-                    flex: 1,
-                    background: 'var(--surface-overlay)',
-                    border: '1px solid var(--accent-muted, #4c1d95)',
-                    borderRadius: 4,
-                    padding: '0.2rem 0.4rem',
-                    color: 'var(--text)',
-                    fontSize: '0.78rem',
-                    outline: 'none',
-                  }}
+                  className="ws-rename-input"
                 />
-                <button type="button"
-                  onClick={handleCreate}
+                <button type="button" onClick={handleCreate}
                   disabled={creating || !newName.trim()}
-                  style={{
-                    background: 'var(--accent)',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: 4,
-                    padding: '0.2rem 0.5rem',
-                    fontSize: '0.72rem',
-                    cursor: creating ? 'wait' : 'pointer',
-                    fontWeight: 600,
-                    opacity: (!newName.trim() || creating) ? 0.5 : 1,
-                  }}
+                  className="ws-btn ws-btn--create"
                 >
                   {creating ? '…' : 'OK'}
                 </button>
               </div>
             ) : (
-              <button type="button"
-                onClick={() => { setIsCreating(true); setError(null); }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.45rem 0.75rem',
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '0.78rem',
-                  color: 'var(--text-faint, #555)',
-                  textAlign: 'left',
-                  transition: 'color 0.1s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-muted)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-faint, #555)')}
+              <button type="button" onClick={() => { setIsCreating(true); setError(null); }}
+                className="ws-option ws-option--new"
               >
-                <span style={{ fontSize: 12, fontWeight: 300 }}>+</span>
+                <span aria-hidden="true">+</span>
                 New workspace
               </button>
             )}
           </div>
         </div>
       )}
-
-      {/* Hover fix: show action icons on row hover */}
-      <style>{`
-        [role="group"]:hover .ws-action-icons { opacity: 1 !important; }
-      `}</style>
     </div>
   );
 }

@@ -137,56 +137,38 @@ export default function PricingPage() {
       </section>
 
       {/* Tier comparison */}
-      <section style={{ maxWidth: '1060px', margin: '0 auto', padding: '0 1.5rem 2rem' }}>
+      <section className="pricing-tiers-section">
 
         {/* 10 free integrations callout */}
-        <div style={{
-          border: '1px solid rgba(129,140,248,0.3)',
-          borderRadius: '12px',
-          padding: '1rem 1.5rem',
-          background: 'rgba(129,140,248,0.07)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.875rem',
-          flexWrap: 'wrap',
-          marginBottom: '1.75rem',
-        }}>
-          <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>🔌</span>
+        <div className="pricing-integrations-callout">
+          <span className="pricing-callout-icon" aria-hidden="true">🔌</span>
           <div>
-            <strong style={{ color: 'var(--accent)' }}>All plans include 10 free AI service integrations.</strong>
-            <span style={{ color: 'var(--text-secondary)', marginLeft: '0.5rem', fontSize: '0.875rem' }}>
+            <strong className="pricing-callout-strong">All plans include 10 free AI service integrations.</strong>
+            <span className="pricing-callout-desc">
               Connect FAL, Replicate, Stability AI, and more — free tier keys included, no account required.
             </span>
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+        <div className="pricing-tier-grid">
 
           {/* FREE */}
-          <div style={{
-            border: '2px solid rgba(var(--accent-rgb, 129,140,248), 0.4)',
-            borderRadius: '14px',
-            padding: '1.75rem',
-            background: 'rgba(var(--accent-rgb, 129,140,248), 0.05)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-          }}>
+          <div className="pricing-tier pricing-tier--free">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent)' }}>FREE</span>
-                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '99px', background: 'var(--accent-glow)', color: 'var(--accent)', fontWeight: 600 }}>Forever</span>
+              <div className="pricing-tier__header">
+                <span className="pricing-tier__name">FREE</span>
+                <span className="pricing-tier__badge pricing-tier__badge--accent">Forever</span>
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>The full WokGen experience. Always free, no credit card required.</p>
+              <div className="pricing-tier__price">$0<span className="pricing-tier__period"> / mo</span></div>
+              <p className="pricing-tier__desc">The full WokGen experience. Always free, no credit card required.</p>
             </div>
-            <Link href="/studio" className="btn-primary" style={{ textAlign: 'center' }}>
+            <Link href="/studio" className="btn-primary pricing-tier__cta">
               Start creating →
             </Link>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            <ul className="pricing-tier__features">
               {FREE_FEATURES.map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                <li key={f} className="pricing-feature pricing-feature--accent">
+                  <span className="pricing-feature__check" aria-hidden="true">✓</span>
                   {f}
                 </li>
               ))}
@@ -194,31 +176,20 @@ export default function PricingPage() {
           </div>
 
           {/* PRO */}
-          <div style={{
-            border: '2px solid var(--blue)',
-            borderRadius: '14px',
-            padding: '1.75rem',
-            background: 'var(--surface-card)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-            position: 'relative',
-          }}>
-            <div style={{ position: 'absolute', top: '-13px', left: '50%', transform: 'translateX(-50%)', background: 'var(--surface-raised)', border: '1px solid var(--blue)', borderRadius: '99px', padding: '0.2rem 0.875rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--blue)', whiteSpace: 'nowrap' }}>
-              Coming Soon
-            </div>
+          <div className="pricing-tier pricing-tier--pro">
+            <div className="pricing-tier__coming-soon">Coming Soon</div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--blue)' }}>PRO</span>
+              <div className="pricing-tier__header">
+                <span className="pricing-tier__name pricing-tier__name--blue">PRO</span>
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1, color: 'var(--text-muted)' }}>TBD<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}> / mo</span></div>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Power-user features with unlimited generation and private workspace.</p>
+              <div className="pricing-tier__price pricing-tier__price--muted">TBD<span className="pricing-tier__period"> / mo</span></div>
+              <p className="pricing-tier__desc">Power-user features with unlimited generation and private workspace.</p>
             </div>
             <ProWaitlistForm />
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            <ul className="pricing-tier__features">
               {PRO_FEATURES.map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                  <span style={{ color: 'var(--blue)', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                <li key={f} className="pricing-feature pricing-feature--blue">
+                  <span className="pricing-feature__check" aria-hidden="true">✓</span>
                   {f}
                 </li>
               ))}
@@ -226,45 +197,26 @@ export default function PricingPage() {
           </div>
 
           {/* ENTERPRISE */}
-          <div style={{
-            border: '2px solid var(--green)',
-            borderRadius: '14px',
-            padding: '1.75rem',
-            background: 'var(--surface-card)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-          }}>
+          <div className="pricing-tier pricing-tier--enterprise">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--green)' }}>ENTERPRISE</span>
+              <div className="pricing-tier__header">
+                <span className="pricing-tier__name pricing-tier__name--green">ENTERPRISE</span>
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>Custom</div>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Dedicated infrastructure, SSO, audit logs, and white-label options for teams.</p>
+              <div className="pricing-tier__price">Custom</div>
+              <p className="pricing-tier__desc">Dedicated infrastructure, SSO, audit logs, and white-label options for teams.</p>
             </div>
             <a
               href="https://wokspec.org/consult"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: 'block',
-                textAlign: 'center',
-                padding: '0.625rem 1.25rem',
-                borderRadius: '8px',
-                border: '1px solid var(--green)',
-                color: 'var(--green)',
-                fontWeight: 600,
-                fontSize: '0.9375rem',
-                textDecoration: 'none',
-                background: 'var(--success-bg)',
-              }}
+              className="pricing-tier__cta pricing-tier__cta--green"
             >
               Contact us →
             </a>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            <ul className="pricing-tier__features">
               {ENTERPRISE_FEATURES.map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                  <span style={{ color: 'var(--green)', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                <li key={f} className="pricing-feature pricing-feature--green">
+                  <span className="pricing-feature__check" aria-hidden="true">✓</span>
                   {f}
                 </li>
               ))}
@@ -275,30 +227,12 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ maxWidth: '740px', margin: '0 auto', padding: '0 1.5rem 4rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>
-          FAQ
-        </h2>
+      <section className="pricing-faq-section">
+        <h2 className="pricing-faq-h2">FAQ</h2>
         {FAQ_ITEMS.map(({ q, a }) => (
-          <details key={q} style={{ borderBottom: '1px solid var(--border)', padding: '1rem 0' }}>
-            <summary style={{
-              fontSize: '0.9375rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              color: 'var(--text)',
-              listStyle: 'none',
-              userSelect: 'none',
-            }}>
-              {q}
-            </summary>
-            <p style={{
-              marginTop: '0.75rem',
-              fontSize: '0.9375rem',
-              color: 'var(--text-secondary)',
-              lineHeight: 1.65,
-            }}>
-              {a}
-            </p>
+          <details key={q} className="pricing-faq-item">
+            <summary className="pricing-faq-summary">{q}</summary>
+            <p className="pricing-faq-answer">{a}</p>
           </details>
         ))}
       </section>
@@ -316,7 +250,7 @@ export default function PricingPage() {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+          <div className="manifesto-models-cta">
             <Link href="/open-source" className="btn-ghost">
               View full model registry →
             </Link>
