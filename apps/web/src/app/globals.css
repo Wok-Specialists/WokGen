@@ -28242,3 +28242,188 @@ textarea.studio-prompt:focus {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ── Pass 17b: Account page CSS classes ── */
+.acct-help--top { margin-top: 4px; }
+.acct-save-error {
+  color: var(--danger);
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+}
+.acct-revoke-cancel {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0 4px;
+}
+.acct-revoke-cancel:hover { color: var(--text-secondary); }
+.acct-coming-soon-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+.acct-completion-panel {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-card);
+}
+.acct-completion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.acct-completion-label { font-size: 0.8125rem; font-weight: 600; }
+.acct-completion-pct { font-size: 0.8125rem; color: var(--accent); }
+.acct-completion-track {
+  height: 4px;
+  background: var(--surface-raised);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.acct-completion-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.acct-completion-hints {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.acct-completion-hint { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ── Pass 18: Global Visual Refinement ── */
+
+/* Studio sidebar pill nav items */
+.studio-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-secondary, var(--text-muted));
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+}
+.studio-nav-item:hover {
+  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 10%, transparent);
+  color: var(--text-primary, var(--text));
+}
+.studio-nav-item.active,
+.studio-nav-item[aria-current="page"] {
+  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 15%, transparent);
+  color: var(--studio-accent, var(--accent));
+  font-weight: 600;
+}
+
+/* Card hover depth effect */
+.card,
+.dash-card,
+.stat-card,
+.gallery-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.card:hover,
+.dash-card:hover,
+.stat-card:hover,
+.gallery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 10%, rgba(0,0,0,0.3));
+}
+
+/* Better form inputs globally */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="search"],
+select,
+textarea {
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* Premium skeleton loader */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-card, var(--surface)) 25%,
+    color-mix(in srgb, var(--border) 60%, var(--surface-card, var(--surface))) 50%,
+    var(--surface-card, var(--surface)) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Smooth page transitions for Next.js route changes */
+main, .page-root {
+  animation: pageEnter 0.2s ease;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.badge--accent {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.badge--success {
+  background: color-mix(in srgb, #34d399 12%, transparent);
+  color: #34d399;
+  border: 1px solid color-mix(in srgb, #34d399 25%, transparent);
+}
+.badge--warning {
+  background: color-mix(in srgb, var(--warning, #f59e0b) 12%, transparent);
+  color: var(--warning, #f59e0b);
+  border: 1px solid color-mix(in srgb, var(--warning, #f59e0b) 25%, transparent);
+}
+.badge--danger {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 25%, transparent);
+}

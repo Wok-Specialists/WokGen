@@ -107,24 +107,24 @@ function ProfileTab({ user }: { user: Props['user'] }) {
           <p className="acct-profile-name">{user.name ?? '—'}</p>
           <p className="acct-profile-email">{user.email ?? '—'}</p>
           {user.image && (
-            <p className="acct-help" style={{ marginTop: '4px' }}>Avatar synced from GitHub</p>
+            <p className="acct-help acct-help--top">Avatar synced from GitHub</p>
           )}
         </div>
       </div>
 
       {/* Profile completion indicator */}
       {completionPct < 100 && (
-        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-card)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 600 }}>Profile completion</span>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--accent)' }}>{completionPct}%</span>
+        <div className="acct-completion-panel">
+          <div className="acct-completion-header">
+            <span className="acct-completion-label">Profile completion</span>
+            <span className="acct-completion-pct">{completionPct}%</span>
           </div>
-          <div style={{ height: '4px', background: 'var(--surface-raised)', borderRadius: '2px', overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${completionPct}%`, background: 'var(--accent)', borderRadius: '2px', transition: 'width 0.3s' }} />
+          <div className="acct-completion-track">
+            <div className="acct-completion-fill" style={{ width: `${completionPct}%` }} />
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+          <div className="acct-completion-hints">
             {completionItems.filter(i => !i.done).map(i => (
-              <span key={i.label} style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <span key={i.label} className="acct-completion-hint">
                 + Add {i.label}
               </span>
             ))}
@@ -167,7 +167,7 @@ function ProfileTab({ user }: { user: Props['user'] }) {
       <button type="button" className="acct-btn-primary" onClick={save} disabled={saving}>
         {saving ? 'Saving…' : saved ? '✓ Saved' : 'Save Profile'}
       </button>
-      {saveError && <p style={{ color: 'var(--danger)', fontSize: '0.8125rem', marginTop: '0.5rem' }}>{saveError}</p>}
+      {saveError && <p className="acct-save-error">{saveError}</p>}
 
       <div className="acct-divider" />
 
@@ -608,7 +608,7 @@ function ApiKeysTab() {
                 style={{ fontWeight: confirmRevoke === k.id ? 700 : undefined }}
               >{confirmRevoke === k.id ? 'Confirm?' : 'Revoke'}</button>
               {confirmRevoke === k.id && (
-                <button type="button" onClick={() => setConfirmRevoke(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', padding: '0 4px' }}>Cancel</button>
+                <button type="button" onClick={() => setConfirmRevoke(null)} className="acct-revoke-cancel">Cancel</button>
               )}
             </div>
           ))}
@@ -645,7 +645,7 @@ function IntegrationsTab() {
             <p className="account-v2-integration-card__name">Discord</p>
             <p className="account-v2-integration-card__desc">Connect Discord to use the WokGen bot in your server.</p>
           </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '4px', padding: '3px 8px' }}>Coming soon</span>
+          <span className="acct-coming-soon-badge">Coming soon</span>
         </div>
 
         <div className="account-v2-integration-card">
