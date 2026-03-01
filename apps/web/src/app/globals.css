@@ -28427,3 +28427,84 @@ main, .page-root {
   color: var(--danger);
   border: 1px solid color-mix(in srgb, var(--danger) 25%, transparent);
 }
+
+/* ── Pass 18b: MobileNav + TopBar refinements ── */
+.mobile-nav-wordmark-base { color: var(--text-muted); }
+.mobile-nav-wordmark-accent { color: var(--accent); font-weight: 800; }
+.mobile-nav-section-label--spaced { margin-top: 1rem; }
+
+/* TopBar logo gradient wordmark */
+.topbar__logo-base { color: var(--text-secondary); }
+.topbar__logo-accent {
+  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #c084fc));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* Topbar backdrop blur when scrolled */
+.topbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.topbar--scrolled {
+  background: color-mix(in srgb, var(--surface) 85%, transparent) !important;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* Studio sidebar width and shadow */
+.studio-sidebar,
+.studio-shell__left-panel {
+  box-shadow: 1px 0 0 var(--border);
+}
+
+/* Gallery card image hover zoom */
+.gallery-card__image img,
+.gallery-card .object-cover {
+  transition: transform 0.3s ease;
+}
+.gallery-card:hover .gallery-card__image img,
+.gallery-card:hover .object-cover {
+  transform: scale(1.04);
+}
+
+/* Notification dot pulse */
+.notif-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: notifPulse 2s ease infinite;
+}
+@keyframes notifPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent); }
+  50%       { box-shadow: 0 0 0 4px transparent; }
+}
+
+/* Chip / tag */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--surface-raised, var(--surface-hover));
+  color: var(--text-secondary, var(--text-muted));
+  border: 1px solid var(--border);
+  cursor: default;
+  transition: background 0.15s, border-color 0.15s;
+}
+.chip:hover {
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised, var(--surface-hover)));
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  color: var(--text-primary, var(--text));
+}
+.chip--active {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+}

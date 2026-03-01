@@ -64,8 +64,8 @@ export function MobileNav() {
       >
         <div className="mobile-nav-drawer-header">
           <span className="mobile-nav-drawer-title">
-            <span style={{ color: 'var(--text-muted)' }}>Wok</span>
-            <span style={{ color: 'var(--accent)' }}>Gen</span>
+            <span className="mobile-nav-wordmark-base">Wok</span>
+            <span className="mobile-nav-wordmark-accent">Gen</span>
           </span>
           <button type="button"
             className="mobile-nav-drawer-close"
@@ -97,7 +97,7 @@ export function MobileNav() {
           ))}
 
           {/* General navigation */}
-          <p className="mobile-nav-section-label" style={{ marginTop: '1rem' }}>Platform</p>
+          <p className="mobile-nav-section-label mobile-nav-section-label--spaced">Platform</p>
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
