@@ -108,19 +108,19 @@ export default function SkyboxPage() {
         <p className="tool-page-desc">Generate immersive 360° panoramic backgrounds for games, VR, and 3D scenes using Blockade Labs Skybox AI.</p>
       </div>
       <div className="tool-section">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.75rem', marginBottom: '0.75rem', alignItems: 'end' }}>
+        <div className="tool-skybox-prompt-row">
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.375rem' }}>Describe the environment</label>
+            <label className="tool-field-label">Describe the environment</label>
             <input
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && generate()}
               placeholder="e.g. ancient forest temple at dusk, neon cyberpunk city skyline"
-              style={{ width: '100%', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0.625rem 0.875rem', color: 'var(--text-primary)', fontSize: '0.9375rem', outline: 'none' }}
+              className="tool-field-input"
             />
           </div>
         </div>
-        <label style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Style</label>
+        <label className="tool-field-label">Style</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
           {STYLES.map(s => (
             <button type="button"
@@ -136,34 +136,34 @@ export default function SkyboxPage() {
             </button>
           ))}
         </div>
-        <button type="button" onClick={generate} disabled={loading || !prompt.trim() || polling} className="btn btn-primary" style={{ padding: '0.625rem 1.5rem' }}>
+        <button type="button" onClick={generate} disabled={loading || !prompt.trim() || polling} className="btn btn-primary tool-submit-btn">
           {loading || polling ? 'Generating...' : 'Generate 360° Panorama'}
         </button>
 
         {polling && (
-          <div style={{ marginTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid var(--accent-glow)', borderTopColor: 'var(--accent)', animation: 'spin 600ms linear infinite' }} />
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Rendering panorama... (~30–60 seconds)</span>
+          <div className="tool-progress-card">
+            <div className="tool-spinner" aria-hidden="true" />
+            <span className="tool-progress-msg">Rendering panorama... (~30–60 seconds)</span>
           </div>
         )}
 
         {error && (
-          <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid var(--danger-border)', borderRadius: '8px', background: 'var(--danger-bg)' }}>
-            <p style={{ color: 'var(--danger)', fontSize: '0.875rem' }}>{error}</p>
+          <div className="tool-error-card">
+            <p className="tool-error">{error}</p>
             {error.includes('SKYBOX_API_KEY') && (
-              <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                Get a free key at <a href="https://skybox.blockadelabs.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>skybox.blockadelabs.com</a>
+              <p className="tool-error-hint">
+                Get a free key at <a href="https://skybox.blockadelabs.com/" target="_blank" rel="noopener noreferrer" className="tool-link">skybox.blockadelabs.com</a>
               </p>
             )}
           </div>
         )}
 
         {result?.fileUrl && (
-          <div className="rounded overflow-hidden border border-white/10" style={{ marginTop: '1.5rem' }}>
-            <div ref={viewerRef} style={{ width: '100%', height: 400 }} />
-            <div style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--overlay-30)' }}>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Click and drag to look around</p>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="rounded overflow-hidden border border-white/10 tool-result">
+            <div ref={viewerRef} className="tool-skybox-viewer" />
+            <div className="tool-skybox-footer">
+              <p className="tool-skybox-hint">Click and drag to look around</p>
+              <div className="tool-result-actions">
                 <a href={result.fileUrl} download="skybox-panorama.jpg"
                    className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-[var(--text)]/70"
                    style={{ textDecoration: 'none' }}>

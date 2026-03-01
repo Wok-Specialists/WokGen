@@ -27803,3 +27803,21 @@ textarea.studio-prompt:focus {
 .tool-about-section { margin-top: 1.5rem; }
 .tool-about-h3 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.75rem; }
 .tool-about-p { font-size: 0.875rem; color: var(--text-secondary, var(--text-muted)); line-height: 1.6; }
+
+/* ── Skybox-specific tool classes ── */
+.tool-skybox-prompt-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: end;
+}
+.tool-skybox-viewer { width: 100%; height: 400px; }
+.tool-skybox-footer {
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--overlay-30, rgba(0,0,0,0.3));
+}
+.tool-skybox-hint { font-size: 0.75rem; color: var(--text-muted); }
