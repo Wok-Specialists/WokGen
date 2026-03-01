@@ -879,7 +879,7 @@ body {
 .gallery-card {
   background: var(--surface-raised);
   border: 1px solid var(--surface-border);
-  border-radius: var(--radius);
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.15s ease;
@@ -889,8 +889,8 @@ body {
 }
 .gallery-card:hover {
   transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.45), 0 0 0 1px var(--accent-glow);
-  border-color: var(--accent-glow);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--surface-border));
 }
 .gallery-card:focus-visible {
   outline: 2px solid var(--accent);
@@ -2664,8 +2664,13 @@ body {
   max-width: 100%;
   max-height: 65vh;
   object-fit: contain;
-  border-radius: var(--radius);
+  border-radius: 10px;
   border: 1px solid var(--border);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+  transition: box-shadow 0.2s;
+}
+.studio-output-img:hover {
+  box-shadow: 0 8px 48px rgba(0,0,0,0.55);
 }
 .studio-output-toolbar {
   display: flex;
@@ -2684,8 +2689,8 @@ body {
 .studio-spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--accent-subtle);
-  border-top-color: var(--accent);
+  border: 2px solid color-mix(in srgb, var(--studio-accent, var(--accent)) 20%, transparent);
+  border-top-color: var(--studio-accent, var(--accent));
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
   flex-shrink: 0;
