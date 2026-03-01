@@ -24271,3 +24271,12 @@ input[type="range"].studio-range {
   gap: 6px;
   width: 100%;
 }
+
+/* ── Voice studio extras ─────────────────────────────────────────────────── */
+.voice-min-height { min-height: calc(100vh - 60px); }
+.voice-section-label--sm { margin-bottom: 6px; font-size: 0.68rem; }
+.voice-studio-body--gapped { gap: 1.25rem; }
+.voice-footer-hint { font-size: 0.75rem; color: var(--text-muted); margin: 0; opacity: 0.6; }
+.voice-audio-player { width: 100%; border-radius: 8px; }
+.voice-output-title { font-size: 0.875rem; font-weight: 600; margin: 0; }
+.voice-output-subtitle { font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 0; }

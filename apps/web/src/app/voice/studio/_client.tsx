@@ -285,11 +285,11 @@ function VoiceStudioInner() {
 
   return (
     <div className="text-studio-layout"
-      style={{ fontFamily: 'var(--font-sans, system-ui)' }}
+      
     >
       {/* Main layout */}
       <div
-        style={{ minHeight: 'calc(100vh - 60px)' }}
+        className="voice-min-height"
         className="studio-grid-2col"
       >
         {/* ── Left panel ─────────────────────────────────────────────── */}
@@ -319,7 +319,7 @@ function VoiceStudioInner() {
 
             {/* Character presets — quick access shortcuts for common use cases */}
             <div style={{ marginTop: 12 }}>
-              <div className="voice-studio__section-label" style={{ marginBottom: 6, fontSize: '0.68rem' }}>
+              <div className="voice-studio__section-label voice-section-label--sm">
                 Character Presets
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -514,7 +514,7 @@ function VoiceStudioInner() {
         </div>
 
         {/* ── Right panel ─────────────────────────────────────────────── */}
-        <div className="voice-studio-body" style={{ gap: '1.25rem' }}>
+        <div className="voice-studio-body voice-studio-body--gapped">
 
           {/* Error banners */}
           <StudioErrorBanner
@@ -558,9 +558,9 @@ function VoiceStudioInner() {
                 }}
               >
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>Generated Audio</p>
-                  <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>
-                    {voiceName && <><strong style={{ color: 'var(--text)' }}>{voiceName}</strong> voice</>}
+                  <p className="voice-output-title">Generated Audio</p>
+                  <p className="voice-output-subtitle">
+                    {voiceName && <><strong >{voiceName}</strong> voice</>}
                     {provider && (
                       <span
                         style={{
@@ -618,7 +618,7 @@ function VoiceStudioInner() {
                 ref={audioRef}
                 controls
                 src={audioUrl}
-                style={{ width: '100%', borderRadius: 8 }}
+                className="voice-audio-player"
               />
             </div>
           )}
@@ -631,7 +631,7 @@ function VoiceStudioInner() {
                 Enter text and click{' '}
                 <strong style={{ color: ACCENT }}>Generate Voice</strong> to create premium audio.
               </p>
-              <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0, opacity: 0.6 }}>
+              <p className="voice-footer-hint">
                 Powered by ElevenLabs · Near-human quality TTS
               </p>
             </div>
