@@ -26285,3 +26285,201 @@ textarea.studio-prompt:focus {
 .quota-badge__bar-fill {
   background: linear-gradient(90deg, var(--studio-accent, var(--accent)) 0%, color-mix(in srgb, var(--studio-accent, var(--accent)) 80%, #fff) 100%);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VISUAL ENHANCEMENT PASS 11 — Providers grid, demo cards, section polish
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Free services: card as "provider pill" with icon area ───────────────── */
+.home-service-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto auto;
+  align-items: start;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 14px 16px;
+  gap: 2px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.home-service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg,
+    var(--accent) 0%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.home-service-card:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.home-service-card:hover::before { opacity: 1; }
+.home-service-card strong {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  grid-column: 1;
+  letter-spacing: -0.01em;
+}
+.home-service-card span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  grid-column: 1;
+}
+.home-service-card small {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  grid-column: 1;
+  opacity: 0.8;
+}
+.home-service-badge {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #4ade80;
+  background: rgba(74,222,128,0.12);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 5px;
+  padding: 2px 6px;
+  align-self: center;
+}
+.home-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+/* ── API code block: syntax-like coloring ────────────────────────────────── */
+.landing-code-block {
+  background: transparent;
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+.landing-code-block code {
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── Demo card: stronger frosted glass ───────────────────────────────────── */
+.landing-demo-card {
+  background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.03);
+}
+.landing-demo-card__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.landing-demo-msg--user {
+  font-size: 0.8rem;
+  background: color-mix(in srgb, var(--accent) 12%, rgba(255,255,255,0.04));
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, rgba(255,255,255,0.05));
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.landing-demo-msg--ai {
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ── Landing h2: consistent font weight ─────────────────────────────────── */
+.landing-section-h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.landing-section-h2 .accent {
+  background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 75%, #fff) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Homepage section spacing: consistent rhythm ─────────────────────────── */
+.homepage-root > section {
+  position: relative;
+}
+.homepage-root > section + section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 640px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+}
+
+/* ── Bottom CTA section: stronger ────────────────────────────────────────── */
+.cta-box {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent) 10%, var(--bg-elevated)) 0%,
+    color-mix(in srgb, var(--accent) 4%, var(--bg-elevated)) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, rgba(255,255,255,0.06));
+  border-radius: 16px;
+  padding: 48px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 50%, transparent), transparent);
+}
+.cta-box__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.cta-box__desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* ── Hero wordmark: bigger on desktop ────────────────────────────────────── */
+.hero-wordmark {
+  font-size: clamp(4rem, 12vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin-bottom: 16px;
+}
