@@ -204,7 +204,7 @@ export default function StudioToolsPage() {
                       <div className="tool-card__top">
                         <div className="tool-card__icon-wrap">
                           {isEmojiIcon
-                            ? <span style={{ fontSize: 16 }}>{tool.icon as string}</span>
+                            ? <span className="tool-card__emoji-icon">{tool.icon as string}</span>
                             : (() => { const Icon = tool.icon as React.ElementType; return <Icon size={16} strokeWidth={1.5} />; })()
                           }
                         </div>
