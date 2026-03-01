@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const PATH_LABELS: Record<string, string> = {
-  pixel: 'Pixel mode',
-  business: 'Business mode',
-  vector: 'Vector mode',
-  uiux: 'UI/UX mode',
-  voice: 'Voice mode',
-  text: 'Text mode',
+  pixel: 'Pixel',
+  business: 'Business',
+  vector: 'Vector',
+  uiux: 'UI/UX',
+  voice: 'Voice',
+  text: 'Text',
+  code: 'Code',
   studio: 'Studio',
   tools: 'Tools',
   docs: 'Docs',
@@ -32,6 +33,13 @@ const PATH_LABELS: Record<string, string> = {
   privacy: 'Privacy',
   terms: 'Terms',
   usage: 'Usage',
+  dashboard: 'Dashboard',
+  'prompt-lab': 'Prompt Lab',
+  upscale: 'Upscaler',
+  music: 'Music',
+  sfx: 'SFX',
+  assets: 'Assets',
+  interrogate: 'Interrogate',
 };
 
 interface BreadcrumbItem {
