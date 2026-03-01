@@ -49,6 +49,58 @@ export default async function DashboardPage() {
   return (
     <div className="dash-root">
 
+      {/* ── Stats row ───────────────────────────────────────── */}
+      <div className="dash-stats">
+        <div className="dash-stat-card">
+          <div className="dash-stat-card__icon" style={{ background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <div className="dash-stat-card__body">
+            <div className="dash-stat-card__value">{generationsToday}</div>
+            <div className="dash-stat-card__label">Today&apos;s generations</div>
+          </div>
+          <span
+            className="dash-stat-card__badge"
+            style={{ background: 'var(--accent-subtle)', color: 'var(--accent)' }}
+          >
+            {generationsToday > 0 ? '↑ active' : '—'}
+          </span>
+        </div>
+        <div className="dash-stat-card">
+          <div className="dash-stat-card__icon" style={{ background: 'color-mix(in srgb, var(--success) 12%, transparent)', color: 'var(--success)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <circle cx="9" cy="9" r="2" />
+              <path d="m21 15-5-5L5 21" />
+            </svg>
+          </div>
+          <div className="dash-stat-card__body">
+            <div className="dash-stat-card__value">{totalAssets}</div>
+            <div className="dash-stat-card__label">Assets stored</div>
+          </div>
+        </div>
+        <div className="dash-stat-card">
+          <div className="dash-stat-card__icon" style={{ background: 'color-mix(in srgb, var(--yellow) 12%, transparent)', color: 'var(--yellow)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <div className="dash-stat-card__body">
+            <div className="dash-stat-card__value" style={{ textTransform: 'capitalize' }}>{planId}</div>
+            <div className="dash-stat-card__label">Current plan</div>
+          </div>
+          {planId === 'free' && (
+            <a href="/pricing" className="dash-stat-card__badge" style={{ background: 'color-mix(in srgb, var(--yellow) 12%, transparent)', color: 'var(--yellow)', textDecoration: 'none' }}>
+              Upgrade
+            </a>
+          )}
+        </div>
+      </div>
+
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="dash-header">
         {user.image ? (
