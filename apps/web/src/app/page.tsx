@@ -150,6 +150,31 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+
+        {/* Stats strip */}
+        <div className="relative z-10 flex justify-center">
+          <div className="hero-stats-strip">
+            <div className="hero-stats-strip__item">
+              <span className="hero-stats-strip__value">10+</span>
+              <span className="hero-stats-strip__label">Free AI Providers</span>
+            </div>
+            <div className="hero-stats-strip__divider" aria-hidden="true" />
+            <div className="hero-stats-strip__item">
+              <span className="hero-stats-strip__value">80+</span>
+              <span className="hero-stats-strip__label">Tools</span>
+            </div>
+            <div className="hero-stats-strip__divider" aria-hidden="true" />
+            <div className="hero-stats-strip__item">
+              <span className="hero-stats-strip__value">6</span>
+              <span className="hero-stats-strip__label">Studios</span>
+            </div>
+            <div className="hero-stats-strip__divider" aria-hidden="true" />
+            <div className="hero-stats-strip__item">
+              <span className="hero-stats-strip__value">$0</span>
+              <span className="hero-stats-strip__label">Cost to Start</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── Studio Modes ─────────────────────────────────────── */}
@@ -167,10 +192,12 @@ export default function HomePage() {
                 className="mode-card"
                 style={{ '--card-accent': accent } as React.CSSProperties}
               >
-                <div className="mode-card__icon">
-                  <Icon />
-                </div>
+                {/* Accent top bar */}
+                <div className="mode-card__icon" aria-hidden="true" />
                 <div className="mode-card__body">
+                  <div className="mode-card__icon-wrap" aria-hidden="true">
+                    <Icon />
+                  </div>
                   <span className="mode-card__name">
                     {mode.label}
                     {mode.status !== 'stable' && (
@@ -181,7 +208,6 @@ export default function HomePage() {
                   </span>
                   <span className="mode-card__desc">{meta?.desc ?? ''}</span>
                 </div>
-                <div className="mode-card__arrow">→</div>
               </Link>
             );
           })}
