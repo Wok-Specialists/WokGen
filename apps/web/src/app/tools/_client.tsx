@@ -39,22 +39,7 @@ function ToolCard({ tool, starred, onStar, onVisit }: ToolCardProps) {
     <Link href={tool.href} className="toolhub-card" onClick={() => onVisit(tool.id)}>
       <div className="toolhub-card-top">
         <span className="toolhub-card-icon" aria-hidden="true">
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 36,
-              height: 36,
-              borderRadius: 6,
-              background: 'var(--surface-card)',
-              color: 'var(--text)',
-              fontSize: 18,
-              border: '1px solid var(--border)',
-            }}
-          >
-            {tool.icon}
-          </span>
+          {tool.icon}
         </span>
       </div>
       <div className="toolhub-card-body">
@@ -289,7 +274,6 @@ export default function ToolsPage() {
             {' · '}
             <button type="button"
               className="toolhub-footer-link"
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               onClick={startTut}
             >
               ? Take a tour

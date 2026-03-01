@@ -860,7 +860,7 @@ function BusinessStudioInner() {
         )}
 
         {/* Audio panel */}
-        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+        <div className="studio-control-section studio-control-section--flush">
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-150"
             onClick={() => setShowAudioPanel((v) => !v)}
@@ -870,7 +870,7 @@ function BusinessStudioInner() {
             aria-expanded={showAudioPanel}
           >
             <span className="studio-control-label" style={{ fontWeight: 600 }}>Audio</span>
-            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>
+            <span className="studio-section-toggle__chevron">
               {showAudioPanel ? '▾' : '▸'}
             </span>
           </div>
@@ -1025,7 +1025,7 @@ function BusinessStudioInner() {
         </div>
 
         {/* QR Code panel */}
-        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+        <div className="studio-control-section studio-control-section--flush">
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer"
             onClick={() => setShowQrPanel(v => !v)}
@@ -1034,7 +1034,7 @@ function BusinessStudioInner() {
             onKeyDown={e => e.key === 'Enter' && setShowQrPanel(v => !v)}
           >
             <span className="studio-control-label" style={{ fontWeight: 600 }}>QR Code</span>
-            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showQrPanel ? '▾' : '▸'}</span>
+            <span className="studio-section-toggle__chevron">{showQrPanel ? '▾' : '▸'}</span>
           </div>
           {showQrPanel && (
             <div className="px-4 pb-4">
@@ -1044,7 +1044,7 @@ function BusinessStudioInner() {
         </div>
 
         {/* Font Pairing panel */}
-        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+        <div className="studio-control-section studio-control-section--flush">
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer"
             onClick={() => setShowFontPanel(v => !v)}
@@ -1053,7 +1053,7 @@ function BusinessStudioInner() {
             onKeyDown={e => e.key === 'Enter' && setShowFontPanel(v => !v)}
           >
             <span className="studio-control-label" style={{ fontWeight: 600 }}>Font Pairing</span>
-            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showFontPanel ? '▾' : '▸'}</span>
+            <span className="studio-section-toggle__chevron">{showFontPanel ? '▾' : '▸'}</span>
           </div>
           {showFontPanel && (
             <div className="px-4 pb-4">
@@ -1063,7 +1063,7 @@ function BusinessStudioInner() {
         </div>
 
         {/* Brand Copy panel */}
-        <div className="studio-control-section" style={{ padding: 0, borderTop: '1px solid var(--surface-border)' }}>
+        <div className="studio-control-section studio-control-section--flush">
           <div
             className="px-4 py-3 flex items-center justify-between cursor-pointer"
             onClick={() => setShowCopyPanel(v => !v)}
@@ -1072,7 +1072,7 @@ function BusinessStudioInner() {
             onKeyDown={e => e.key === 'Enter' && setShowCopyPanel(v => !v)}
           >
             <span className="studio-control-label" style={{ fontWeight: 600 }}>Brand Copy</span>
-            <span style={{ color: 'var(--text-disabled)', fontSize: 12 }}>{showCopyPanel ? '▾' : '▸'}</span>
+            <span className="studio-section-toggle__chevron">{showCopyPanel ? '▾' : '▸'}</span>
           </div>
           {showCopyPanel && (
             <div className="px-4 pb-4 flex flex-col gap-3">
@@ -1091,14 +1091,14 @@ function BusinessStudioInner() {
                 <p className="text-xs" style={{ color: 'var(--error, #ef4444)' }}>{copyError}</p>
               )}
               {brandCopy && (
-                <div className="flex flex-col gap-3" style={{ fontSize: '0.78rem' }}>
+                <div className="biz-copy-section">
                   <div>
-                    <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Taglines</p>
+                    <p className="biz-copy-group__label">Taglines</p>
                     {brandCopy.taglines.map((t, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '3px 0', borderBottom: '1px solid var(--surface-border)' }}>
-                        <span style={{ color: 'var(--text-primary)', flex: 1 }}>{t}</span>
+                      <div key={i} className="biz-copy-tagline-row">
+                        <span className="biz-copy-tagline-text">{t}</span>
                         <button type="button"
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
+                          className="biz-copy-copy-btn"
                           onClick={() => { navigator.clipboard.writeText(t); toastSuccess('Copied'); }}
                         >Copy</button>
                       </div>
@@ -1106,20 +1106,22 @@ function BusinessStudioInner() {
                   </div>
                   {brandCopy.pitch && (
                     <div>
-                      <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Elevator Pitch</p>
-                      <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.pitch}</p>
+                      <p className="biz-copy-group__label">Elevator Pitch</p>
+                      <p className="biz-copy-pitch-text">{brandCopy.pitch}</p>
                       <button type="button"
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
+                        className="biz-copy-copy-btn"
+                        style={{ marginTop: 4 }}
                         onClick={() => { navigator.clipboard.writeText(brandCopy.pitch); toastSuccess('Copied'); }}
                       >Copy</button>
                     </div>
                   )}
                   {brandCopy.bio && (
                     <div>
-                      <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Social Bio</p>
-                      <p style={{ color: 'var(--text-primary)', lineHeight: 1.5 }}>{brandCopy.bio}</p>
+                      <p className="biz-copy-group__label">Social Bio</p>
+                      <p className="biz-copy-bio-text">{brandCopy.bio}</p>
                       <button type="button"
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-disabled)', fontSize: '0.7rem', marginTop: 4 }}
+                        className="biz-copy-copy-btn"
+                        style={{ marginTop: 4 }}
                         onClick={() => { navigator.clipboard.writeText(brandCopy.bio); toastSuccess('Copied'); }}
                       >Copy</button>
                     </div>
