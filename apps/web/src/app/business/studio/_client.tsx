@@ -1145,7 +1145,7 @@ function BusinessStudioInner() {
           <button
             type="button"
             data-generate-btn
-            className="btn btn-primary btn-generate"
+            className="btn btn-generate"
             onClick={() => handleGenerate()}
             disabled={jobStatus === 'running' || !prompt.trim()}
             aria-label="Generate"

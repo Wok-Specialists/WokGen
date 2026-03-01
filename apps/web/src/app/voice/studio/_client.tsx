@@ -666,41 +666,12 @@ function VoiceStudioInner() {
               onClick={handleGenerate}
               disabled={!text.trim() || generating || isOverLimit}
               aria-label="Generate voice"
-              style={{
-                flex: 1,
-                padding: '12px 0',
-                borderRadius: 8,
-                border: 'none',
-                background:
-                  !text.trim() || generating || isOverLimit
-                    ? 'var(--surface-border)'
-                    : ACCENT,
-                color:
-                  !text.trim() || generating || isOverLimit
-                    ? 'var(--text-muted)'
-                    : '#000',
-                fontWeight: 700,
-                fontSize: 14,
-                cursor:
-                  !text.trim() || generating || isOverLimit
-                    ? 'not-allowed'
-                    : 'pointer',
-                transition: 'background 0.15s',
-              }}
+              className="btn btn-generate"
+              style={{ flex: 1 }}
             >
               {generating ? (
-                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <span
-                    style={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: '50%',
-                      border: `2px solid var(--overlay-30)`,
-                      borderTopColor: '#000',
-                      animation: 'spin 0.7s linear infinite',
-                      display: 'inline-block',
-                    }}
-                  />
+                <span className="flex items-center justify-center gap-2">
+                  <span className="studio-spinner studio-spinner--sm" />
                   Generating…
                 </span>
               ) : (
@@ -710,15 +681,7 @@ function VoiceStudioInner() {
             {(text || audioUrl) && (
               <button type="button"
                 onClick={handleClear}
-                style={{
-                  padding: '12px 14px',
-                  borderRadius: 8,
-                  border: '1px solid var(--surface-border)',
-                  background: 'var(--surface)',
-                  color: 'var(--text-muted)',
-                  fontSize: 14,
-                  cursor: 'pointer',
-                }}
+                className="btn btn-secondary"
                 title="Clear all"
               >
                 ✕
@@ -743,11 +706,8 @@ function VoiceStudioInner() {
               <p className="studio-error-card__msg">{error}</p>
               <button type="button"
                 onClick={handleGenerate}
-                style={{
-                  padding: '8px 20px', borderRadius: 6, border: 'none',
-                  background: ACCENT, color: '#fff', fontSize: 13,
-                  fontWeight: 600, cursor: 'pointer',
-                }}
+                className="btn btn-secondary"
+                style={{ fontSize: '0.8rem' }}
               >
                 ↻ Retry
               </button>

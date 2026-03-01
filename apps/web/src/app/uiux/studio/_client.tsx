@@ -794,13 +794,13 @@ export default function UIUXStudio() {
                     <button type="button" onClick={handleCancel} style={{ padding: '6px', borderRadius: 6, border: '1px solid var(--surface-border)', background: 'var(--surface-raised)', color: 'var(--text-secondary)', fontSize: '0.75rem', cursor: 'pointer', width: '100%' }}>Cancel</button>
                   </div>
                 ) : libraryMode ? (
-                  <button type="button" onClick={handleGenerateLibrary} disabled={selectedLibraryTypes.length < 2} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: selectedLibraryTypes.length < 2 ? 'not-allowed' : 'pointer', background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', opacity: selectedLibraryTypes.length < 2 ? 0.5 : 1 }}>
+                  <button type="button" onClick={handleGenerateLibrary} disabled={selectedLibraryTypes.length < 2} className="btn btn-generate">
                     ✦ Generate Library ({selectedLibraryTypes.length})
                   </button>
                 ) : (
-                  <button type="button" onClick={handleGenerate} disabled={isLoading} style={{ width: '100%', padding: '9px', borderRadius: 7, border: 'none', cursor: 'pointer', background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: '0.83rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <button type="button" onClick={handleGenerate} disabled={isLoading} className="btn btn-generate">
                     <span>Generate {FRAMEWORKS.find((f) => f.id === framework)?.label ?? 'Code'}</span>
-                    <span style={{ fontSize: '0.6rem', opacity: 0.7 }}>⌘↵</span>
+                    <span style={{ fontSize: '0.6rem', opacity: 0.7, marginLeft: 'auto' }}>⌘↵</span>
                   </button>
                 )}
                 <div style={{ fontSize: '0.62rem', textAlign: 'center', color: 'var(--text-disabled)', marginTop: 5 }}>
