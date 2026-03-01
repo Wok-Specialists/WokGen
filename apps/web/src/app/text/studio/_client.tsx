@@ -380,14 +380,8 @@ export default function TextStudio() {
             onClick={handleGenerate}
             disabled={!prompt.trim() || status === 'generating'}
             aria-label="Generate text"
-            style={{
-              width: '100%', padding: '12px 0', borderRadius: 8, border: 'none',
-              background: !prompt.trim() || status === 'generating' ? 'var(--surface-border)' : ACCENT,
-              color: !prompt.trim() || status === 'generating' ? 'var(--text-muted)' : '#fff',
-              fontWeight: 700, fontSize: 15,
-              cursor: !prompt.trim() || status === 'generating' ? 'not-allowed' : 'pointer',
-              transition: 'background 0.15s',
-            }}
+            className="btn btn-generate"
+            style={{ width: '100%' }}
           >
             {status === 'generating' ? 'Generating…' : 'Generate Text'}
           </button>
@@ -535,11 +529,8 @@ export default function TextStudio() {
                 </button>
                 <button type="button"
                   onClick={() => { setStatus('idle'); void handleGenerate(); }}
-                  style={{
-                    padding: '8px 16px', borderRadius: 6, border: 'none',
-                    background: 'var(--surface-border)', color: 'var(--text)',
-                    fontSize: 13, cursor: 'pointer',
-                  }}
+                  className="btn btn-secondary"
+                  style={{ fontSize: '0.8rem' }}
                 >
                   ↻ Regenerate
                 </button>

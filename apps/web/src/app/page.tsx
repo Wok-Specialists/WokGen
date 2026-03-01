@@ -109,10 +109,7 @@ export default function HomePage() {
         <div className="hero-glow" aria-hidden="true" />
 
         {/* Status badge */}
-        <div
-          className="relative z-10 inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full border border-[var(--border)] text-[var(--text-muted)] mb-8"
-          style={{ background: 'var(--surface-raised)' }}
-        >
+        <div className="relative z-10 hero-status-badge">
           <span
             style={{
               width: 6,
@@ -140,34 +137,19 @@ export default function HomePage() {
           WokGen
         </h1>
 
-        <p
-          className="relative z-10 max-w-md mb-10 leading-relaxed"
-          style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}
-        >
+        <p className="relative z-10 hero-desc text-center">
           Generate pixel art, vectors, UI components, voice, music, and business assets —
           powered by 10+ free AI services. No credit card, no limits.
         </p>
 
         <div className="relative z-10 flex gap-3 flex-wrap justify-center">
-          <Link
-            href="/pixel/studio"
-            className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg transition-all text-sm"
-            style={{
-              background: 'var(--accent)',
-              color: 'var(--text-on-accent)',
-              boxShadow: '0 0 24px rgba(99,102,241,0.35)',
-            }}
-          >
+          <Link href="/pixel/studio" className="hero-btn-primary">
             Start Creating
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M3 7h8M8 4l3 3-3 3" />
             </svg>
           </Link>
-          <Link
-            href="/tools"
-            className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg transition-all text-sm border border-[var(--border)]"
-            style={{ background: 'var(--surface-raised)', color: 'var(--text)' }}
-          >
+          <Link href="/tools" className="hero-btn-secondary">
             Browse Tools
           </Link>
         </div>
@@ -181,12 +163,7 @@ export default function HomePage() {
             { label: 'Pricing component',  href: '/uiux/studio?prompt=pricing+card+with+3+tiers%2C+Tailwind%2C+dark+theme' },
             { label: 'Voiceover',          href: '/voice/studio?prompt=Welcome+to+our+platform%2C+warm+and+professional' },
           ].map((ex) => (
-            <Link
-              key={ex.label}
-              href={ex.href}
-              className="text-[0.72rem] px-3 py-1 rounded-full border border-[var(--border)] text-[var(--text-muted)] transition-colors"
-              style={{ background: 'var(--surface-raised)' }}
-            >
+            <Link key={ex.label} href={ex.href} className="hero-prompt-chip">
               {ex.label} →
             </Link>
           ))}
@@ -195,9 +172,7 @@ export default function HomePage() {
 
       {/* ── Studio Modes ─────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-6 pb-20">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-4">
-          Studios
-        </p>
+        <span className="landing-section-label">Studios</span>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
           {MODES_LIST.map((mode) => {
             const Icon = MODE_ICONS[mode.id] ?? PixelCardIcon;
@@ -239,9 +214,7 @@ export default function HomePage() {
 
       {/* ── How it works ─────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-6 pb-20">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-4">
-          How it works
-        </p>
+        <span className="landing-section-label">How it works</span>
         <div className="how-it-works">
           <div className="how-step">
             <div className="how-step__num">1</div>
@@ -263,27 +236,33 @@ export default function HomePage() {
 
       {/* ── Features ─────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-6 pb-20">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-4">
-          Why WokGen
-        </p>
+        <span className="landing-section-label">Why WokGen</span>
         <div className="features-grid">
           <div className="feature-card">
-            <span className="feature-card__icon" aria-hidden="true">⚡</span>
+            <span className="feature-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </span>
             <div className="feature-card__title">Free by default</div>
             <div className="feature-card__desc">No credit card required. 10+ free AI services integrated. Generate all day without spending a cent.</div>
           </div>
           <div className="feature-card">
-            <span className="feature-card__icon" aria-hidden="true">🎨</span>
+            <span className="feature-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"><circle cx="13.5" cy="6.5" r="4.5"/><path d="M9 12L3 21h8l2-3 2 3h8l-6-9"/></svg>
+            </span>
             <div className="feature-card__title">All asset types</div>
             <div className="feature-card__desc">Pixel art, vectors, UI components, voice narration, music, business assets, and generated code — one platform.</div>
           </div>
           <div className="feature-card">
-            <span className="feature-card__icon" aria-hidden="true">🔌</span>
+            <span className="feature-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </span>
             <div className="feature-card__title">API access</div>
             <div className="feature-card__desc">Programmatic generation via REST API. TypeScript SDK, webhook support, and full endpoint reference included.</div>
           </div>
           <div className="feature-card">
-            <span className="feature-card__icon" aria-hidden="true">🗂️</span>
+            <span className="feature-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            </span>
             <div className="feature-card__title">Team workspace</div>
             <div className="feature-card__desc">Projects, brand kits, shared gallery, export pipelines. Collaborate across your team on one asset library.</div>
           </div>
@@ -325,38 +304,25 @@ export default function HomePage() {
       <section className="max-w-4xl mx-auto px-6 pb-20">
         <div className="grid md:grid-cols-2 gap-10 items-start">
           <div>
-            <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-[var(--accent)] mb-3">AI Director</p>
+            <span className="landing-section-label" style={{ color: 'var(--accent)' }}>AI Director</span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3" style={{ fontFamily: 'var(--font-display)' }}>Eral</h2>
             <p className="text-[var(--text-muted)] leading-relaxed mb-6 max-w-xs text-sm">
               Describe what you&apos;re building. Eral plans your asset pipeline, routes tasks to the right studio, and maintains context across your project.
             </p>
-            <Link
-              href="/eral"
-              className="inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition text-sm"
-              style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
-            >
+            <Link href="/eral" className="btn btn-primary btn-sm">
               Open Eral
             </Link>
           </div>
-          <div
-            className="rounded-xl border border-[var(--border)] overflow-hidden"
-            style={{ background: 'var(--bg-elevated)', boxShadow: '0 4px 24px rgba(0,0,0,0.4)' }}
-          >
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--border)]">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent)', boxShadow: '0 0 6px var(--accent)' }} />
+          <div className="landing-demo-card">
+            <div className="landing-demo-card__header">
+              <div className="landing-demo-card__dot" />
               <span className="text-xs font-semibold text-[var(--text-muted)]">Eral</span>
             </div>
             <div className="p-4 space-y-3">
-              <div
-                className="ml-auto max-w-[80%] rounded-lg rounded-tr-sm px-3 py-2 text-[var(--text-muted)] text-xs leading-relaxed"
-                style={{ background: 'var(--surface-raised)' }}
-              >
+              <div className="landing-demo-msg landing-demo-msg--user">
                 I need assets for a dark fantasy RPG main menu.
               </div>
-              <div
-                className="max-w-[85%] rounded-lg rounded-tl-sm px-3 py-2 text-xs leading-relaxed text-[var(--text-secondary)] border border-[var(--border)]"
-                style={{ background: 'var(--bg-surface)' }}
-              >
+              <div className="landing-demo-msg landing-demo-msg--ai">
                 Here&apos;s what I&apos;d queue:<br /><br />
                 <strong>1.</strong> Hero background — Pixel mode<br />
                 <strong>2.</strong> Logo with runic type — Brand mode<br />
@@ -372,39 +338,27 @@ export default function HomePage() {
       <section className="max-w-4xl mx-auto px-6 pb-20">
         <div className="grid md:grid-cols-2 gap-10 items-start">
           <div>
-            <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-[var(--accent)] mb-3">Programmatic</p>
+            <span className="landing-section-label" style={{ color: 'var(--accent)' }}>Programmatic</span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3" style={{ fontFamily: 'var(--font-display)' }}>API</h2>
             <p className="text-[var(--text-muted)] leading-relaxed mb-6 max-w-xs text-sm">
               Programmatic access to every studio. Integrate generation into your own tools, pipelines, and workflows.
             </p>
             <div className="flex gap-3 flex-wrap">
-              <a
-                href="/developers"
-                className="inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition text-sm"
-                style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
-              >
+              <a href="/developers" className="btn btn-primary btn-sm">
                 Docs
               </a>
-              <a
-                href="/account/api-keys"
-                className="inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition text-sm border border-[var(--border)] text-[var(--text)]"
-                style={{ background: 'var(--surface-raised)' }}
-              >
+              <a href="/account/api-keys" className="btn btn-secondary btn-sm">
                 API Keys
               </a>
             </div>
           </div>
-          <div
-            className="rounded-xl border border-[var(--border)] overflow-hidden"
-            style={{ background: 'var(--bg-elevated)', boxShadow: '0 4px 24px rgba(0,0,0,0.4)' }}
-          >
-            <div
-              className="flex items-center gap-1.5 px-4 py-3 border-b border-[var(--border)]"
-              style={{ background: 'var(--bg-surface)' }}
-            >
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#ff5f57' }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#febc2e' }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} />
+          <div className="landing-demo-card">
+            <div className="landing-demo-card__header">
+              <div className="landing-demo-card__dots">
+                <div className="landing-demo-card__dot landing-demo-card__dot--red" />
+                <div className="landing-demo-card__dot landing-demo-card__dot--amber" />
+                <div className="landing-demo-card__dot landing-demo-card__dot--green" />
+              </div>
               <span className="ml-2 text-xs text-[var(--text-faint)]">@wokspec/sdk</span>
             </div>
             <pre
@@ -427,24 +381,9 @@ console.log(asset.url);`}</code>
       </section>
 
       {/* ── Bottom CTA ───────────────────────────────────────── */}
-      <section
-        className="max-w-4xl mx-auto px-6 pb-16"
-      >
-        <div
-          className="rounded-2xl p-10 sm:p-14 text-center relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--bg-elevated)) 0%, var(--bg-elevated) 100%)',
-            border: '1px solid color-mix(in srgb, var(--accent) 20%, var(--border))',
-          }}
-        >
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute', inset: 0,
-              background: 'radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%)',
-              pointerEvents: 'none',
-            }}
-          />
+      <section className="max-w-4xl mx-auto px-6 pb-16">
+        <div className="landing-cta-box">
+          <div className="landing-cta-box__glow" aria-hidden="true" />
           <h2
             className="relative font-bold tracking-tight mb-3 gradient-text"
             style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontFamily: 'var(--font-display)' }}
@@ -455,18 +394,10 @@ console.log(asset.url);`}</code>
             No account required for basic generation. 10+ free AI services, all asset types, no watermarks.
           </p>
           <div className="relative flex gap-3 justify-center flex-wrap">
-            <Link
-              href="/pixel/studio"
-              className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg text-sm transition-all"
-              style={{ background: 'var(--accent)', color: 'var(--text-on-accent)', boxShadow: '0 0 24px rgba(99,102,241,0.4)' }}
-            >
+            <Link href="/pixel/studio" className="hero-btn-primary">
               Open Pixel Studio
             </Link>
-            <Link
-              href="/prompt-lab"
-              className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg text-sm border border-[var(--border)] text-[var(--text)] transition-all"
-              style={{ background: 'var(--surface-raised)' }}
-            >
+            <Link href="/prompt-lab" className="hero-btn-secondary">
               ✦ Prompt Lab
             </Link>
           </div>
