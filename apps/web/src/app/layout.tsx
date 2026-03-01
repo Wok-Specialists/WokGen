@@ -11,6 +11,7 @@ import { Providers } from './_components/Providers';
 import { Toaster } from 'sonner';
 import { PageLoadingBar } from '@/components/PageLoadingBar';
 import { ERAL_ENABLED } from '@/lib/eral-integration';
+import { PromptFAB } from './_components/PromptFAB';
 
 // Eral is a standalone product — only mount the companion widget when enabled.
 // Set NEXT_PUBLIC_ERAL_ENABLED=true in .env.local to activate.
@@ -132,6 +133,7 @@ export default function RootLayout({
             </div>
           </div>
           {EralCompanion && <EralCompanion />}
+          <PromptFAB />
           <CommandPalette />
           <KeyboardShortcuts />
           <OnboardingGate />

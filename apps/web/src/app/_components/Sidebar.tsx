@@ -81,6 +81,27 @@ function SparkleIcon() {
   );
 }
 
+function SfxIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 5h2l2-3v11l-2-3H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+      <path d="M10 5.5a3 3 0 0 1 0 4" />
+      <path d="M12 3a6 6 0 0 1 0 9" />
+    </svg>
+  );
+}
+
+function AssetsIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" aria-hidden="true">
+      <rect x="1" y="1" width="13" height="13" rx="1.5" />
+      <circle cx="5" cy="5" r="1.5" />
+      <path d="M1 10.5 4.5 7 7.5 10 10.5 7.5 14 10.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+
 function MusicNoteIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -300,6 +321,12 @@ export function Sidebar() {
       </SidebarItem>
       <SidebarItem href="/tools/music" label="Music" active={isActive('/tools/music')}>
         <MusicNoteIcon />
+      </SidebarItem>
+      <SidebarItem href="/tools/sfx" label="SFX" active={isActive('/tools/sfx')}>
+        <SfxIcon />
+      </SidebarItem>
+      <SidebarItem href="/tools/assets" label="Assets" active={isActive('/tools/assets')}>
+        <AssetsIcon />
       </SidebarItem>
       <SidebarItem href="/eral" label="Eral" active={isActive('/eral')}>
         <EralIcon />

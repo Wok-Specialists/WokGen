@@ -7,6 +7,7 @@ import Image from 'next/image';
 import NotificationSettingsClient from './_client';
 import { AppearanceSettings } from './_components/AppearanceSettings';
 import BillingSection from './_components/BillingSection';
+import { AiServicesSettings } from './_components/AiServicesSettings';
 
 export const metadata: Metadata = {
   title: 'Settings | WokGen',
@@ -72,6 +73,13 @@ export default async function SettingsPage() {
 
         {/* Appearance */}
         <AppearanceSettings />
+
+        {/* AI Services / BYOK */}
+        <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.375rem' }}>AI Services</h2>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Bring your own API keys (BYOK) for external AI and media services.</p>
+          <AiServicesSettings />
+        </section>
 
         {/* API Access / Developer */}
         <section style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', background: 'var(--surface-card)' }}>

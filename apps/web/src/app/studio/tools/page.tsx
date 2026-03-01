@@ -46,6 +46,9 @@ const CATEGORIES: Category[] = [
       { id: 'upscale', label: '4× Upscaler', href: '/tools/upscale', description: 'Real-ESRGAN 4× image upscaling — free, no limits', status: 'live', icon: '🔍', isNew: true },
       { id: 'interrogate', label: 'Image Interrogator', href: '/tools/interrogate', description: 'Reverse-engineer any image into a generation prompt', status: 'live', icon: '🔬', isNew: true },
       { id: 'music-gen', label: 'Music Generator', href: '/tools/music', description: 'Generate AI background music from text — free with HF token', status: 'live', icon: '🎵', isNew: true },
+      { id: 'sfx', label: 'SFX Library', href: '/tools/sfx', description: 'Search 600K+ CC-licensed sound effects', status: 'live', icon: '🎧', isNew: true },
+      { id: 'assets', label: 'Asset Library', href: '/tools/assets', description: 'Browse 5M+ free CC0 images and vectors', status: 'live', icon: '🖼️', isNew: true },
+      { id: 'palette', label: 'Color Palette Generator', href: '/tools/palette', description: 'Generate harmonious color palettes with export', status: 'live', icon: '🎨', isNew: true },
     ],
   },
   {

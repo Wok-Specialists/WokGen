@@ -407,6 +407,9 @@ model UserPreference {
   // Favorite prompts (JSON array)
   favoritePrompts String? @db.Text
 
+  // BYOK: User-provided external API keys (JSON, encrypted at rest by application layer)
+  byokKeys String? @db.Text
+
   // Notification settings (booleans as JSON or individual flags)
   notifyEmailJobDone Boolean @default(true)
   notifyEmailComment Boolean @default(true)
