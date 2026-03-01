@@ -19,10 +19,10 @@ export const metadata: Metadata = {
 };
 
 const FEATURES = [
-  { label: 'Free Forever', desc: 'Unlimited standard generation, no account required for basic use.' },
-  { label: 'HD Quality',   desc: 'Replicate FLUX for crisp, high-detail pixel art on paid plans.' },
-  { label: 'GIF Animation', desc: 'Generate multi-frame sprite animations as looping GIFs.' },
-  { label: 'Game-Ready',   desc: 'Pixel-perfect sizes: 32px, 64px, 128px, 256px, 512px.' },
+  { icon: '🆓', label: 'Free Forever', desc: 'Unlimited standard generation, no account required for basic use.' },
+  { icon: '🔮', label: 'HD Quality',   desc: 'Replicate FLUX for crisp, high-detail pixel art on paid plans.' },
+  { icon: '🎞️', label: 'GIF Animation', desc: 'Generate multi-frame sprite animations as looping GIFs.' },
+  { icon: '🎮', label: 'Game-Ready',   desc: 'Pixel-perfect sizes: 32px, 64px, 128px, 256px, 512px.' },
 ];
 
 const TOOLS = [
@@ -78,7 +78,7 @@ export default function PixelLanding() {
       <section className="landing-features">
         {FEATURES.map(f => (
           <div key={f.label} className="landing-feature-card">
-            <span className="landing-feature-icon"></span>
+            <span className="landing-feature-icon">{f.icon}</span>
             <div>
               <div className="landing-feature-label">{f.label}</div>
               <div className="landing-feature-desc">{f.desc}</div>

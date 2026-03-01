@@ -1328,6 +1328,12 @@ body {
 .mode-landing {
   min-height: 100vh;
 }
+.mode-landing--pixel    { --accent: var(--accent-pixel);    }
+.mode-landing--vector   { --accent: var(--accent-vector);   }
+.mode-landing--business { --accent: var(--accent-business); }
+.mode-landing--uiux     { --accent: var(--accent-uiux);     }
+.mode-landing--voice    { --accent: var(--accent-voice);    }
+.mode-landing--code     { --accent: #f97316; }
 
 /* ── Landing hero ────────────────────────────────────────────────── */
 .landing-hero {

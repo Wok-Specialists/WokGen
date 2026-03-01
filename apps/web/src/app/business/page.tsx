@@ -19,10 +19,10 @@ export const metadata: Metadata = {
 };
 
 const FEATURES = [
-  { label: 'Logo Generation',  desc: 'Minimal brand marks and symbol icons, clean isolated backgrounds.' },
-  { label: 'Brand Kit (4×)',   desc: 'Generate a coherent 4-image brand set in one click.' },
-  { label: 'Slide Visuals',    desc: '16:9, 4:3, and square backgrounds for decks and keynotes.' },
-  { label: 'Social Banners',   desc: 'Platform-correct sizes: Twitter, Instagram, LinkedIn, YouTube, OG.' },
+  { icon: '🏷️', label: 'Logo Generation',  desc: 'Minimal brand marks and symbol icons, clean isolated backgrounds.' },
+  { icon: '🎨', label: 'Brand Kit (4×)',   desc: 'Generate a coherent 4-image brand set in one click.' },
+  { icon: '🖼️', label: 'Slide Visuals',    desc: '16:9, 4:3, and square backgrounds for decks and keynotes.' },
+  { icon: '📐', label: 'Social Banners',   desc: 'Platform-correct sizes: Twitter, Instagram, LinkedIn, YouTube, OG.' },
 ];
 
 const TOOLS = [
@@ -107,7 +107,7 @@ export default function BusinessLanding() {
       <section className="landing-features">
         {FEATURES.map(f => (
           <div key={f.label} className="landing-feature-card">
-            <span className="landing-feature-icon"></span>
+            <span className="landing-feature-icon">{f.icon}</span>
             <div>
               <div className="landing-feature-label">{f.label}</div>
               <div className="landing-feature-desc">{f.desc}</div>
