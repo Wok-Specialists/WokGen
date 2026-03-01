@@ -171,6 +171,26 @@ export default function HomePage() {
             Browse Tools
           </Link>
         </div>
+
+        {/* Quick-try prompt examples */}
+        <div className="relative z-10 flex flex-wrap justify-center gap-2 mt-8">
+          {[
+            { label: 'RPG warrior sprite', href: '/pixel/studio?prompt=RPG+warrior+sprite%2C+64x64%2C+pixel+art' },
+            { label: 'Startup logo',       href: '/business/studio?prompt=minimal+startup+logo%2C+clean+and+modern' },
+            { label: 'SVG icon set',       href: '/vector/studio?prompt=dashboard+UI+icons%2C+24px%2C+outline+style' },
+            { label: 'Pricing component',  href: '/uiux/studio?prompt=pricing+card+with+3+tiers%2C+Tailwind%2C+dark+theme' },
+            { label: 'Voiceover',          href: '/voice/studio?prompt=Welcome+to+our+platform%2C+warm+and+professional' },
+          ].map((ex) => (
+            <Link
+              key={ex.label}
+              href={ex.href}
+              className="text-[0.72rem] px-3 py-1 rounded-full border border-[var(--border)] text-[var(--text-muted)] transition-colors"
+              style={{ background: 'var(--surface-raised)' }}
+            >
+              {ex.label} →
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* ── Studio Modes ─────────────────────────────────────── */}
@@ -402,6 +422,53 @@ const asset = await wok.generate({
 
 console.log(asset.url);`}</code>
             </pre>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Bottom CTA ───────────────────────────────────────── */}
+      <section
+        className="max-w-4xl mx-auto px-6 pb-16"
+      >
+        <div
+          className="rounded-2xl p-10 sm:p-14 text-center relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--bg-elevated)) 0%, var(--bg-elevated) 100%)',
+            border: '1px solid color-mix(in srgb, var(--accent) 20%, var(--border))',
+          }}
+        >
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute', inset: 0,
+              background: 'radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }}
+          />
+          <h2
+            className="relative font-bold tracking-tight mb-3 gradient-text"
+            style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontFamily: 'var(--font-display)' }}
+          >
+            Start generating for free
+          </h2>
+          <p className="relative text-[var(--text-muted)] text-sm mb-8 max-w-sm mx-auto leading-relaxed">
+            No account required for basic generation. 10+ free AI services, all asset types, no watermarks.
+          </p>
+          <div className="relative flex gap-3 justify-center flex-wrap">
+            <Link
+              href="/pixel/studio"
+              className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg text-sm transition-all"
+              style={{ background: 'var(--accent)', color: 'var(--text-on-accent)', boxShadow: '0 0 24px rgba(99,102,241,0.4)' }}
+            >
+              Open Pixel Studio
+            </Link>
+            <Link
+              href="/prompt-lab"
+              className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg text-sm border border-[var(--border)] text-[var(--text)] transition-all"
+              style={{ background: 'var(--surface-raised)' }}
+            >
+              ✦ Prompt Lab
+            </Link>
           </div>
         </div>
       </section>

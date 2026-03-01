@@ -1339,6 +1339,16 @@ body {
 .landing-hero {
   padding: 5rem 1.5rem 4rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 70%);
+  pointer-events: none;
 }
 .landing-hero-inner {
   max-width: 720px;
@@ -1356,11 +1366,12 @@ body {
   gap: 0.5rem;
   padding: 0.35rem 0.875rem;
   border-radius: 9999px;
-  border: 1px solid var(--surface-border, #1f1f1f);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--surface-border, #1f1f1f));
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-muted, #888);
   letter-spacing: 0.02em;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 .landing-badge-dot {
   width: 6px;
@@ -1461,14 +1472,18 @@ body {
 .landing-tool-card {
   background: var(--surface-card, #111);
   border: 1px solid var(--surface-border, #1f1f1f);
-  border-radius: var(--radius);
+  border-radius: 8px;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
-.landing-tool-card:hover { border-color: var(--surface-raised, #2a2a2a); }
+.landing-tool-card:hover {
+  border-color: var(--accent-muted);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transform: translateY(-1px);
+}
 .landing-tool-header {
   display: flex;
   align-items: center;
@@ -1527,15 +1542,18 @@ body {
 .landing-showcase-card {
   background: var(--surface-card, #111);
   border: 1px solid var(--surface-border, #1f1f1f);
-  border-radius: var(--radius);
+  border-radius: 8px;
   padding: 1.25rem;
   text-decoration: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, transform 0.15s;
 }
-.landing-showcase-card:hover { border-color: var(--surface-raised, #2a2a2a); }
+.landing-showcase-card:hover {
+  border-color: var(--accent-muted);
+  transform: translateY(-1px);
+}
 .landing-showcase-label {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -21927,8 +21945,8 @@ select:focus-visible {
 }
 .mode-card:hover {
   transform: translateY(-2px);
-  border-color: var(--border-strong);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent)) 30%, var(--border));
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45), 0 0 0 1px color-mix(in srgb, var(--card-accent, var(--accent)) 12%, transparent);
 }
 .mode-card:hover::before { opacity: 1; }
 .mode-card__icon {
@@ -21987,14 +22005,15 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--accent-subtle);
-  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 60%, #f472b6) 100%);
+  color: white;
   font-size: 0.75rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 .how-step__title { font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: var(--text); }
 .how-step__desc  { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
@@ -22011,11 +22030,12 @@ select:focus-visible {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 12px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 .feature-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+  transform: translateY(-1px);
 }
 .feature-card__icon {
   font-size: 1.25rem;
