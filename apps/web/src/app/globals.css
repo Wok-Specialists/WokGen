@@ -23754,3 +23754,78 @@ input[type="range"].studio-range {
   color: var(--text-disabled);
   cursor: not-allowed;
 }
+
+/* ── Pixel studio output states ─────────────────────────────────────────── */
+.pixel-loading-icon {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+.pixel-loading-msg { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+.pixel-loading-elapsed { color: var(--text-muted); }
+.pixel-loading-hint { font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-muted); }
+.pixel-fail-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background: var(--danger-muted);
+  border: 1px solid var(--danger);
+}
+.pixel-fail-title { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--danger-hover, #f87171); }
+.pixel-fail-hint { font-size: 0.75rem; margin-bottom: 0.5rem; color: var(--text-muted); }
+.pixel-fail-msg {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-family: monospace;
+  word-break: break-word;
+  color: var(--text-muted);
+  background: var(--danger-muted);
+  border: 1px solid var(--danger);
+}
+
+/* ── Pixel studio output toolbar ────────────────────────────────────────── */
+.pixel-output-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.pixel-zoom-btn {
+  min-width: 28px;
+  font-weight: 400;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+}
+.pixel-zoom-btn.active {
+  font-weight: 700;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent-muted);
+}
+.pixel-grid-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+}
+.pixel-grid-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent-muted);
+}

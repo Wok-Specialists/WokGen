@@ -839,21 +839,14 @@ function OutputPanel({
     return (
       <div className="output-canvas flex-1 flex flex-col gap-6 items-center justify-center p-8">
         <div className="flex flex-col items-center gap-4">
-          <div
-            className="w-20 h-20 rounded flex items-center justify-center"
-            style={{
-              background: 'var(--surface-overlay)',
-              border: '1px solid var(--surface-border)',
-              animation: 'pulse-glow 2s ease-in-out infinite',
-            }}
-          >
+          <div className="pixel-loading-icon">
             <Spinner size="lg" />
           </div>
           <div className="text-center">
-            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-              {loadingMsg} {elapsed > 0 && <span style={{ color: 'var(--text-muted)' }}>{elapsed}s</span>}
+            <p className="pixel-loading-msg">
+              {loadingMsg} {elapsed > 0 && <span className="pixel-loading-elapsed">{elapsed}s</span>}
             </p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+            <p className="pixel-loading-hint">
               Usually 3–15 seconds
             </p>
           </div>
@@ -872,42 +865,20 @@ function OutputPanel({
 
     return (
       <div className="output-canvas flex-1 flex flex-col gap-4 items-center justify-center p-8">
-        <div
-          className="w-16 h-16 rounded flex items-center justify-center text-2xl"
-          style={{
-            background: 'var(--danger-muted)',
-            border: '1px solid var(--danger)',
-          }}
-        >
-          ✕
-        </div>
+        <div className="pixel-fail-icon">✕</div>
         <div className="text-center max-w-sm">
-          <p className="text-sm font-semibold mb-2" style={{ color: 'var(--danger-hover)' }}>
-            Generation failed
-          </p>
-          {isCredits && (
-            <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-              HD credits exhausted. Use standard mode (free) or top up your credits.
-            </p>
-          )}
-          {isRateLimit && (
-            <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-              You&apos;re generating too fast. Wait a moment and try again.
-            </p>
-          )}
-          {isProvider && !isCredits && (
-            <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-              Provider unavailable. Standard (free) generation will retry automatically.
-            </p>
-          )}
-          <p
-            className="text-xs leading-relaxed p-3 rounded-lg font-mono"
-            style={{
-              color: 'var(--text-muted)',
-              background: 'var(--danger-muted)',
-              border: '1px solid var(--danger)',
-              wordBreak: 'break-word',
-            }}
+          <p className="pixel-fail-title">Generation failed</p>
+          {isCredits && <p className="pixel-fail-hint">HD credits exhausted. Use standard mode (free) or top up your credits.</p>}
+          {isRateLimit && <p className="pixel-fail-hint">You&apos;re generating too fast. Wait a moment and try again.</p>}
+          {isProvider && !isCredits && <p className="pixel-fail-hint">Provider unavailable. Standard (free) generation will retry automatically.</p>}
+          <p className="pixel-fail-msg">{error ?? 'An unknown error occurred.'}</p>
+        </div>
+        <button type="button" className="btn-secondary" onClick={onReroll}>
+          ↻ Retry
+        </button>
+      </div>
+    );
+  }
           >
             {error ?? 'An unknown error occurred.'}
           </p>
@@ -925,23 +896,13 @@ function OutputPanel({
   return (
     <div className="flex flex-col h-full overflow-hidden animate-fade-in">
       {/* Toolbar */}
-      <div
-        className="flex items-center gap-2 px-4 py-2 flex-shrink-0 flex-wrap"
-        style={{ borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-raised)' }}
-      >
+      <div className="pixel-output-toolbar">
         {/* Zoom — snap buttons */}
         <div className="flex items-center gap-1">
           {([1, 2, 4] as const).map((z) => (
             <button type="button"
               key={z}
-              className="btn-ghost btn-xs"
-              style={{
-                fontWeight: zoom === z ? 700 : 400,
-                background: zoom === z ? 'var(--accent-dim)' : 'transparent',
-                color: zoom === z ? 'var(--accent)' : 'var(--text-muted)',
-                border: zoom === z ? '1px solid var(--accent-muted)' : '1px solid transparent',
-                minWidth: 28,
-              }}
+              className={`btn-ghost btn-xs pixel-zoom-btn${zoom === z ? ' active' : ''}`}
               onClick={() => setZoom(z)}
             >{z}×</button>
           ))}
@@ -949,12 +910,7 @@ function OutputPanel({
 
         {/* Pixel grid toggle */}
         <button type="button"
-          className="btn-ghost btn-xs"
-          style={{
-            background: showPixelGrid ? 'var(--accent-dim)' : 'transparent',
-            color: showPixelGrid ? 'var(--accent)' : 'var(--text-muted)',
-            border: showPixelGrid ? '1px solid var(--accent-muted)' : '1px solid transparent',
-          }}
+          className={`btn-ghost btn-xs pixel-grid-btn${showPixelGrid ? ' active' : ''}`}
           onClick={() => setShowPixelGrid?.(!showPixelGrid)}
           title="Toggle pixel grid overlay"
         >Grid</button>
@@ -998,20 +954,7 @@ function OutputPanel({
           </div>
         )}
         {result?.guestDownloadGated ? (
-          <a
-            href="/api/auth/signin"
-            style={{
-              padding: '4px 10px',
-              borderRadius: 6,
-              background: 'var(--warning-subtle, rgba(245,158,11,0.1))',
-              border: '1px solid var(--warning-border, rgba(245,158,11,0.33))',
-              color: 'var(--warning)',
-              fontSize: 11,
-              fontWeight: 600,
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <a href="/api/auth/signin" className="btn-sign-gate">
             Sign in to download →
           </a>
         ) : (
