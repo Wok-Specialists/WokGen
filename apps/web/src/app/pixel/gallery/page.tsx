@@ -294,64 +294,30 @@ function AssetModal({
           </div>
 
           {/* Metadata */}
-          <div
-            style={{
-              padding: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-              borderTop: '1px solid var(--surface-border)',
-            }}
-          >
+          <div className="pg-detail__meta">
             {/* Title */}
             {asset.title && (
-              <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+              <h2 className="pg-detail__title">
                 {asset.title}
               </h2>
             )}
 
             {/* Prompt */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span
-                  style={{
-                    fontSize: '0.65rem',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: 'var(--text-disabled)',
-                  }}
-                >
+            <div className="pg-detail__prompt">
+              <div className="pg-detail__prompt-header">
+                <span className="pg-detail__section-label">
                   Prompt
                 </span>
                 <button type="button"
                   onClick={copyPrompt}
-                  style={{
-                    fontSize: '0.65rem',
-                    color: copied ? 'var(--success)' : 'var(--text-muted)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0,
-                    transition: 'color 0.15s ease',
-                  }}
+                  className="pg-detail__copy-btn"
+                  style={{ color: copied ? 'var(--success)' : 'var(--text-muted)' }}
                 >
                   {copied ? 'Copied' : 'Copy'}
                 </button>
               </div>
               <p
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--text-secondary)',
-                  lineHeight: 1.6,
-                  margin: 0,
-                  padding: '8px 10px',
-                  background: 'var(--surface-overlay)',
-                  borderRadius: 6,
-                  border: '1px solid var(--surface-border)',
-                  fontFamily: 'inherit',
-                  cursor: 'pointer',
-                }}
+                className="pg-detail__prompt-text"
                 onClick={copyPrompt}
                 title="Click to copy"
               >
@@ -361,18 +327,11 @@ function AssetModal({
 
             {/* Tags */}
             {asset.tags?.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div className="pg-card__tags">
                 {asset.tags.slice(0, 10).map((tag) => (
                   <span
                     key={tag}
-                    style={{
-                      fontSize: '0.65rem',
-                      padding: '2px 7px',
-                      borderRadius: 99,
-                      background: 'var(--surface-overlay)',
-                      border: '1px solid var(--surface-border)',
-                      color: 'var(--text-muted)',
-                    }}
+                    className="pg-card__tag"
                   >
                     {tag}
                   </span>
@@ -381,30 +340,14 @@ function AssetModal({
             )}
 
             {/* Meta row */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                flexWrap: 'wrap',
-                paddingTop: 4,
-                borderTop: '1px solid var(--surface-border)',
-              }}
-            >
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-disabled)' }}>
+            <div className="pg-detail__meta-row">
+              <span className="pg-detail__meta-item">
                 {capitalize(asset.tool)}
               </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-disabled)' }}>
+              <span className="pg-detail__meta-item">
                 {timeAgo(asset.createdAt)}
               </span>
-              <span
-                style={{
-                  marginLeft: 'auto',
-                  fontSize: '0.65rem',
-                  fontFamily: 'monospace',
-                  color: 'var(--text-disabled)',
-                }}
-              >
+              <span className="pg-detail__id">
                 {asset.id.slice(0, 12)}…
               </span>
             </div>
@@ -437,15 +380,12 @@ function GalleryCard({
   return (
     <button type="button"
       onClick={onClick}
-      className={`gallery-card animate-fade-in${selected ? ' gallery-card--selected' : ''}`}
+      className={`gallery-card pg-card animate-fade-in${selected ? ' gallery-card--selected' : ''}`}
       style={{
         animationDelay: `${Math.min(index * 0.03, 0.4)}s`,
         boxShadow: rarityColor
           ? `0 0 0 1px ${rarityColor}25`
           : undefined,
-        textAlign: 'left',
-        width: '100%',
-        padding: 0,
       }}
       aria-label={asset.title ?? asset.prompt}
     >
@@ -469,12 +409,7 @@ function GalleryCard({
           src={asset.thumbUrl ?? asset.imageUrl}
           alt={asset.title ?? asset.prompt}
           loading="lazy"
-          style={{
-            imageRendering: 'pixelated',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain',
-          }}
+          className="pg-card__img"
         />
 
         {/* Rarity corner */}
@@ -511,37 +446,18 @@ function GalleryCard({
 
       {/* Overlay on hover */}
       <div className="gallery-card-overlay">
-        <p
-          className="line-clamp-2"
-          style={{
-            fontSize: '0.65rem',
-            color: 'var(--text-secondary)',
-            lineHeight: 1.4,
-            marginBottom: 4,
-          }}
-        >
+        <p className="line-clamp-2 pg-card__overlay-prompt">
           {asset.prompt}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span
-            style={{
-              fontSize: '0.6rem',
-              color: 'var(--text-disabled)',
-              fontFamily: 'monospace',
-            }}
-          >
+        <div className="pg-card__overlay-meta">
+          <span className="pg-card__overlay-size">
             {asset.size}px
           </span>
           <span
-            style={{
-              width: 4,
-              height: 4,
-              borderRadius: '50%',
-              background: PROVIDER_COLORS[asset.provider] ?? '#666',
-              flexShrink: 0,
-            }}
+            className="pg-provider-dot"
+            style={{ background: PROVIDER_COLORS[asset.provider] ?? '#666' }}
           />
-          <span style={{ fontSize: '0.6rem', color: 'var(--text-disabled)' }}>
+          <span className="pg-card__overlay-time">
             {timeAgo(asset.createdAt)}
           </span>
         </div>
@@ -573,38 +489,32 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
   return (
     <a
       href={`/studio?prompt=${encodeURIComponent(item.prompt)}`}
-      className="gallery-card"
+      className="gallery-card pg-showcase-card"
       style={{
-        textDecoration: 'none',
         animationDelay: `${index * 0.04}s`,
       }}
     >
       <div className="gallery-card-image">
         {/* Placeholder pixel grid */}
-        <div aria-hidden="true" style={{
-          width: '100%', height: '100%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          opacity: 0.25,
-        }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 12px)', gap: 3 }}>
+        <div aria-hidden="true" className="pg-thumb-preview">
+          <div className="pg-thumb-grid">
             {Array.from({ length: 36 }).map((_, i) => (
-              <div key={i} style={{
-                width: 12, height: 12, borderRadius: 2,
+              <div key={i} className="pg-thumb-cell" style={{
                 background: [0, 5, 12, 17, 23, 30, 35].includes(i) ? 'var(--accent)' : '#333',
               }} />
             ))}
           </div>
         </div>
       </div>
-      <div className="gallery-card-overlay" style={{ opacity: 1, background: 'linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.2) 60%, transparent 100%)' }}>
-        <p style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 6 }}>
+      <div className="gallery-card-overlay pg-showcase-overlay">
+        <p className="pg-card__overlay-prompt">
           {item.prompt}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: '0.58rem', color: 'var(--accent)', background: 'rgba(167,139,250,.15)', border: '1px solid rgba(167,139,250,.25)', borderRadius: 3, padding: '1px 5px' }}>
+        <div className="pg-card__overlay-meta">
+          <span className="pg-showcase-cta">
             Try this →
           </span>
-          <span style={{ fontSize: '0.58rem', color: 'var(--text-disabled)' }}>{item.size}px</span>
+          <span className="pg-card__overlay-size">{item.size}px</span>
         </div>
       </div>
     </a>
@@ -614,7 +524,7 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
 function EmptyState({ search }: { search: string }) {
   if (search) {
     return (
-      <div className="empty-state" style={{ gridColumn: '1 / -1', padding: '80px 20px' }}>
+      <div className="empty-state pg-empty">
         <div className="empty-state-icon"></div>
         <h3 className="empty-state-title">No results for &ldquo;{search}&rdquo;</h3>
         <p className="empty-state-body">Try a different search term or clear filters.</p>
@@ -623,19 +533,15 @@ function EmptyState({ search }: { search: string }) {
   }
   return (
     <>
-      <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2.5rem 0 1.25rem' }}>
+      <div className="pg-empty-intro">
         <div className="gallery-empty-icon"></div>
-        <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.35rem' }}>
+        <p className="pg-empty__title">
           No pixel assets yet
         </p>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem', maxWidth: 300, margin: '0 auto 1rem' }}>
+        <p className="pg-empty__body">
           Generate your first pixel art in Pixel mode.
         </p>
-        <a href="/pixel/studio" style={{
-          display: 'inline-block', padding: '0.45rem 1.1rem',
-          background: 'var(--accent)', color: 'white', borderRadius: 6,
-          fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none',
-        }}>
+        <a href="/pixel/studio" className="pg-empty__cta">
           Go to Pixel mode →
         </a>
       </div>
@@ -792,55 +698,26 @@ export default function GalleryPage() {
   const selectedAsset = selectedIndex !== null ? assets[selectedIndex] : null;
 
   return (
-    <div style={{ minHeight: 'calc(100dvh - 56px)', background: 'var(--surface-base)' }}>
+    <div className="pg-wrapper">
 
       {/* ── Page header ────────────────────────────────────────────────────── */}
-      <div
-        style={{
-          background: 'var(--surface-raised)',
-          borderBottom: '1px solid var(--surface-border)',
-          padding: '20px 24px 0',
-          position: 'sticky',
-          top: 56,
-          zIndex: 40,
-        }}
-      >
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div className="pg-header">
+        <div className="pg-header__inner">
           {/* Title row */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 16 }}>
+          <div className="pg-hero">
             <div>
-              <h1
-                style={{
-                  fontSize: '1.4rem',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  margin: 0,
-                  lineHeight: 1.2,
-                }}
-              >
+              <h1 className="pg-title">
                 Gallery
               </h1>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 3 }}>
+              <p className="pg-subtitle">
                 Publicly saved pixel art assets
               </p>
             </div>
 
-            <div style={{ marginLeft: 'auto' }}>
+            <div className="pg-header__action">
               <a
                 href="/pixel/studio"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '7px 14px',
-                  borderRadius: 6,
-                  background: 'var(--accent)',
-                  color: 'var(--text-on-accent)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                }}
+                className="pg-new-asset-btn"
               >
                 ✦ New Asset
               </a>
@@ -848,44 +725,27 @@ export default function GalleryPage() {
           </div>
 
           {/* Filter bar */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              flexWrap: 'wrap',
-              paddingBottom: 16,
-            }}
-          >
+          <div className="pg-filter-bar">
             {/* Search */}
-            <div style={{ position: 'relative', flex: '1', minWidth: 180, maxWidth: 300 }}>
+            <div className="pg-search-wrap">
               <span
-                style={{
-                  position: 'absolute',
-                  left: 9,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-disabled)',
-                  fontSize: 13,
-                  pointerEvents: 'none',
-                }}
+                className="pg-search-icon"
                 aria-hidden="true"
               >
                 ⌕
               </span>
               <input
                 type="search"
-                className="input"
+                className="input pg-search-input"
                 placeholder="Search prompts…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                style={{ paddingLeft: 28, height: 34, fontSize: '0.8rem' }}
                 aria-label="Search gallery"
               />
             </div>
 
             {/* Tool filter */}
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div className="pg-filter-group">
               {TOOL_FILTERS.map((f) => (
                 <button type="button"
                   key={f.id}
@@ -909,7 +769,7 @@ export default function GalleryPage() {
             </div>
 
             {/* Rarity filter */}
-            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+            <div className="pg-filter-group">
               {RARITY_FILTERS.map((f) => (
                 <button type="button"
                   key={f.id}
@@ -937,10 +797,9 @@ export default function GalleryPage() {
 
             {/* Sort */}
             <select
-              className="select"
+              className="select pg-sort-select"
               value={sort}
               onChange={(e) => setSort(e.target.value as 'newest' | 'oldest')}
-              style={{ height: 34, fontSize: '0.78rem', minWidth: 130, marginLeft: 'auto' }}
               aria-label="Sort order"
             >
               {SORT_OPTIONS.map((o) => (
@@ -954,20 +813,10 @@ export default function GalleryPage() {
       </div>
 
       {/* ── Grid ────────────────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px' }}>
+      <div className="pg-grid-wrap">
         {/* Error banner */}
         {error && (
-          <div
-            style={{
-              padding: '12px 16px',
-              borderRadius: 8,
-              background: 'var(--danger-muted)',
-              border: '1px solid var(--danger)',
-              color: 'var(--danger-hover)',
-              fontSize: '0.82rem',
-              marginBottom: 16,
-            }}
-          >
+          <div className="pg-error-banner">
             Failed to load gallery: {error}
           </div>
         )}
@@ -978,10 +827,8 @@ export default function GalleryPage() {
             {Array.from({ length: 16 }, (_, i) => (
               <div
                 key={i}
-                className="skeleton"
+                className="skeleton pg-skeleton-item"
                 style={{
-                  aspectRatio: '1',
-                  borderRadius: 8,
                   animationDelay: `${i * 0.04}s`,
                 }}
               />
@@ -1026,34 +873,17 @@ export default function GalleryPage() {
         )}
 
         {/* Load more / infinite scroll sentinel */}
-        <div ref={sentinelRef} style={{ height: 1, marginTop: 32 }} />
+        <div ref={sentinelRef} className="pg-sentinel" />
 
         {loadingMore && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 10,
-              padding: '20px 0',
-              color: 'var(--text-muted)',
-              fontSize: '0.82rem',
-            }}
-          >
+          <div className="pg-load-more">
             <Spinner />
             Loading more…
           </div>
         )}
 
         {!loading && !hasMore && assets.length > 0 && (
-          <p
-            style={{
-              textAlign: 'center',
-              fontSize: '0.75rem',
-              color: 'var(--text-disabled)',
-              padding: '20px 0',
-            }}
-          >
+          <p className="pg-gallery-end">
             {assets.length} asset{assets.length !== 1 ? 's' : ''} · end of gallery
           </p>
         )}
