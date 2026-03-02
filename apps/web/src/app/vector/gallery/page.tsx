@@ -102,41 +102,16 @@ function capitalize(s: string): string {
 
 function Spinner() {
   return (
-    <span
-      style={{
-        display: 'inline-block',
-        width: 20,
-        height: 20,
-        borderRadius: '50%',
-        border: '2px solid var(--surface-border)',
-        borderTopColor: ACCENT,
-        animation: 'spin 0.7s linear infinite',
-        flexShrink: 0,
-      }}
-      aria-hidden="true"
-    />
+    <span className="vg2-spinner" aria-hidden="true" />
   );
 }
 
 function ProviderDot({ provider }: { provider: string }) {
   return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        fontSize: '0.62rem',
-        color: 'var(--text-disabled)',
-      }}
-    >
+    <span className="vg2-provider-dot">
       <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: PROVIDER_COLORS[provider] ?? '#666',
-          flexShrink: 0,
-        }}
+        className="vg2-provider-dot__dot"
+        style={{ background: PROVIDER_COLORS[provider] ?? '#666' }}
       />
       {PROVIDER_LABELS[provider] ?? provider}
     </span>
@@ -189,45 +164,15 @@ function AssetModal({
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 60,
-        background: 'var(--overlay-80)',
-        backdropFilter: 'blur(6px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 16,
-      }}
+      className="vg2-modal-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* Prev */}
       {hasPrev && (
         <button type="button"
           onClick={onPrev}
-          style={{
-            position: 'absolute',
-            left: 16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'var(--surface-overlay)',
-            border: '1px solid var(--surface-border)',
-            color: 'var(--text-secondary)',
-            borderRadius: 8,
-            width: 40,
-            height: 40,
-            fontSize: 18,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-            transition: 'all 0.15s ease',
-          }}
+          className="vg2-modal-nav vg2-modal-nav--prev"
           aria-label="Previous image"
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-overlay)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
         >
           ←
         </button>
@@ -237,28 +182,8 @@ function AssetModal({
       {hasNext && (
         <button type="button"
           onClick={onNext}
-          style={{
-            position: 'absolute',
-            right: 16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'var(--surface-overlay)',
-            border: '1px solid var(--surface-border)',
-            color: 'var(--text-secondary)',
-            borderRadius: 8,
-            width: 40,
-            height: 40,
-            fontSize: 18,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-            transition: 'all 0.15s ease',
-          }}
+          className="vg2-modal-nav vg2-modal-nav--next"
           aria-label="Next image"
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-overlay)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
         >
           →
         </button>
@@ -266,106 +191,36 @@ function AssetModal({
 
       {/* Modal card */}
       <div
-        style={{
-          background: 'var(--surface-raised)',
-          border: '1px solid var(--surface-border)',
-          borderRadius: 12,
-          overflow: 'hidden',
-          width: '100%',
-          maxWidth: 680,
-          maxHeight: '90dvh',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 24px 80px var(--overlay-70)',
-          animation: 'scale-in 0.18s ease-out both',
-        }}
+        className="vg2-detail-panel"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '12px 16px',
-            borderBottom: '1px solid var(--surface-border)',
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+        <div className="vg2-modal-header">
+          <div className="vg2-modal-header__left">
+            <span className="vg2-modal-size">
               {asset.size}×{asset.size}px
             </span>
-            <span
-              style={{
-                fontSize: '0.65rem',
-                padding: '2px 6px',
-                borderRadius: 4,
-                background: 'var(--accent-subtle)',
-                color: ACCENT,
-                border: '1px solid var(--accent-glow)',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-              }}
-            >
+            <span className="vg2-modal-tool-badge">
               {capitalize(asset.tool)}
             </span>
             <ProviderDot provider={asset.provider} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="vg2-modal-header__right">
             <Link
               href={`/studio?prompt=${encodeURIComponent(asset.prompt)}`}
-              style={{
-                padding: '5px 10px',
-                borderRadius: 6,
-                background: 'var(--accent-subtle)',
-                border: '1px solid var(--accent-glow)',
-                color: ACCENT,
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                transition: 'all 0.15s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className="vg2-modal-make-similar"
             >
               ✦ Make similar
             </Link>
             <button type="button"
               onClick={download}
-              style={{
-                padding: '5px 10px',
-                borderRadius: 6,
-                background: 'var(--surface-overlay)',
-                border: '1px solid var(--surface-border)',
-                color: 'var(--text-secondary)',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-overlay)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
+              className="vg2-modal-dl-btn"
             >
               ↓ Download
             </button>
             <button type="button"
               onClick={onClose}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: 'transparent',
-                border: '1px solid transparent',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-                fontSize: 16,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; }}
+              className="vg2-modal-close"
               aria-label="Close"
             >
               ✕
@@ -374,67 +229,41 @@ function AssetModal({
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div className="vg2-modal-body">
           {/* Canvas */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 32,
-              background: 'var(--surface-base)',
-              backgroundImage: 'linear-gradient(rgba(52,211,153,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,0.04) 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-              minHeight: 240,
-            }}
-          >
+          <div className="vg2-modal-canvas">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={asset.imageUrl}
               alt={asset.title ?? asset.prompt}
-              style={{
-                imageRendering: 'auto',
-                maxWidth: '100%',
-                maxHeight: 400,
-                objectFit: 'contain',
-              }}
+              className="vg2-modal-img"
             />
           </div>
 
           {/* Metadata */}
-          <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 12, borderTop: '1px solid var(--surface-border)' }}>
+          <div className="vg2-detail__section">
             {asset.title && (
-              <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+              <h2 className="vg2-detail__title">
                 {asset.title}
               </h2>
             )}
 
             {/* Prompt */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-disabled)' }}>
+            <div className="vg2-prompt-section">
+              <div className="vg2-prompt-row">
+                <span className="vg2-prompt-label">
                   Prompt
                 </span>
                 <button type="button"
                   onClick={copyPrompt}
-                  style={{ fontSize: '0.65rem', color: copied ? 'var(--success)' : 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 0.15s ease' }}
+                  className="vg2-copy-btn"
+                  style={{ color: copied ? 'var(--success)' : 'var(--text-muted)' }}
                 >
                   {copied ? 'Copied' : 'Copy'}
                 </button>
               </div>
               <p
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--text-secondary)',
-                  lineHeight: 1.6,
-                  margin: 0,
-                  padding: '8px 10px',
-                  background: 'var(--surface-overlay)',
-                  borderRadius: 6,
-                  border: '1px solid var(--surface-border)',
-                  fontFamily: 'inherit',
-                  cursor: 'pointer',
-                }}
+                className="vg2-card__prompt"
                 onClick={copyPrompt}
                 title="Click to copy"
               >
@@ -444,19 +273,9 @@ function AssetModal({
 
             {/* Tags */}
             {asset.tags?.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div className="vg2-card__tags">
                 {asset.tags.slice(0, 10).map(tag => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: '0.65rem',
-                      padding: '2px 7px',
-                      borderRadius: 99,
-                      background: 'var(--surface-overlay)',
-                      border: '1px solid var(--surface-border)',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
+                  <span key={tag} className="vg2-card__tag">
                     {tag}
                   </span>
                 ))}
@@ -464,10 +283,10 @@ function AssetModal({
             )}
 
             {/* Meta row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', paddingTop: 4, borderTop: '1px solid var(--surface-border)' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-disabled)' }}>{capitalize(asset.tool)}</span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-disabled)' }}>{timeAgo(asset.createdAt)}</span>
-              <span style={{ marginLeft: 'auto', fontSize: '0.65rem', fontFamily: 'monospace', color: 'var(--text-disabled)' }}>
+            <div className="vg2-modal-meta-row">
+              <span className="vg2-modal-meta-item">{capitalize(asset.tool)}</span>
+              <span className="vg2-modal-meta-item">{timeAgo(asset.createdAt)}</span>
+              <span className="vg2-modal-meta-id">
                 {asset.id.slice(0, 12)}…
               </span>
             </div>
@@ -486,13 +305,8 @@ function GalleryCard({ asset, index, onClick }: { asset: GalleryAsset; index: nu
   return (
     <button type="button"
       onClick={onClick}
-      className="gallery-card animate-fade-in"
-      style={{
-        animationDelay: `${Math.min(index * 0.03, 0.4)}s`,
-        textAlign: 'left',
-        width: '100%',
-        padding: 0,
-      }}
+      className="gallery-card vg2-card animate-fade-in"
+      style={{ animationDelay: `${Math.min(index * 0.03, 0.4)}s` }}
       aria-label={asset.title ?? asset.prompt}
     >
       <div className="gallery-card-image">
@@ -501,12 +315,7 @@ function GalleryCard({ asset, index, onClick }: { asset: GalleryAsset; index: nu
           src={asset.thumbUrl ?? asset.imageUrl}
           alt={asset.title ?? asset.prompt}
           loading="lazy"
-          style={{
-            imageRendering: 'auto',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain',
-          }}
+          className="vg2-card__img"
         />
       </div>
 
@@ -525,24 +334,18 @@ function GalleryCard({ asset, index, onClick }: { asset: GalleryAsset; index: nu
       </div>
 
       <div className="gallery-card-overlay">
-        <p
-          className="line-clamp-2"
-          style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 4 }}
-        >
+        <p className="line-clamp-2 vg2-card__overlay-prompt">
           {asset.prompt}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: '0.6rem', color: 'var(--text-disabled)', fontFamily: 'monospace' }}>
+        <div className="vg2-card__info-row">
+          <span className="vg2-card__size-label">
             {asset.size}px
           </span>
           <span
-            style={{
-              width: 4, height: 4, borderRadius: '50%',
-              background: PROVIDER_COLORS[asset.provider] ?? '#666',
-              flexShrink: 0,
-            }}
+            className="vg2-card__provider-dot"
+            style={{ background: PROVIDER_COLORS[asset.provider] ?? '#666' }}
           />
-          <span style={{ fontSize: '0.6rem', color: 'var(--text-disabled)' }}>
+          <span className="vg2-card__time-label">
             {timeAgo(asset.createdAt)}
           </span>
         </div>
@@ -570,22 +373,22 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
   return (
     <a
       href={`/studio?prompt=${encodeURIComponent(item.prompt)}&tool=${item.tool}`}
-      className="gallery-card"
-      style={{ textDecoration: 'none', animationDelay: `${index * 0.04}s` }}
+      className="gallery-card vg2-showcase-card"
+      style={{ animationDelay: `${index * 0.04}s` }}
     >
       <div className="gallery-card-image">
-        <div aria-hidden="true" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}>
-          <span style={{ fontSize: 48, color: ACCENT }}>
+        <div aria-hidden="true" className="vg2-showcase-placeholder">
+          <span className="vg2-showcase-icon">
             {''}
           </span>
         </div>
       </div>
-      <div className="gallery-card-overlay" style={{ opacity: 1, background: 'linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.2) 60%, transparent 100%)' }}>
-        <p style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 6 }}>
+      <div className="gallery-card-overlay vg2-showcase-overlay">
+        <p className="vg2-showcase-prompt">
           {item.prompt}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: '0.58rem', color: ACCENT, background: 'var(--accent-subtle)', border: '1px solid var(--accent-glow)', borderRadius: 3, padding: '1px 5px' }}>
+        <div className="vg2-showcase-cta-row">
+          <span className="vg2-showcase-cta">
             Try this →
           </span>
         </div>
@@ -597,7 +400,7 @@ function ShowcaseCard({ item, index }: { item: typeof SHOWCASE_PROMPTS[number]; 
 function EmptyState({ search }: { search: string }) {
   if (search) {
     return (
-      <div className="empty-state" style={{ gridColumn: '1 / -1', padding: '80px 20px' }}>
+      <div className="empty-state vg2-empty-search">
         <div className="empty-state-icon"></div>
         <h3 className="empty-state-title">No results for &ldquo;{search}&rdquo;</h3>
         <p className="empty-state-body">Try a different search term or clear filters.</p>
@@ -606,29 +409,15 @@ function EmptyState({ search }: { search: string }) {
   }
   return (
     <>
-      <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '80px 20px' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: 16, color: 'var(--text-disabled)' }}>⬡</div>
-        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
+      <div className="vg2-empty">
+        <div className="vg2-empty__icon">⬡</div>
+        <h3 className="vg2-empty__title">
           No vector assets yet
         </h3>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: 20 }}>
+        <p className="vg2-empty__body">
           Generate your first vector in Vector mode.
         </p>
-        <a
-          href="/vector/studio"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '8px 18px',
-            borderRadius: 6,
-            background: 'var(--accent)',
-            color: 'var(--text-on-accent)',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
+        <a href="/vector/studio" className="vg2-empty__cta">
           ✦ Open Vector mode
         </a>
       </div>
@@ -767,53 +556,31 @@ export default function VectorGalleryPage() {
   void session;
 
   return (
-    <div style={{ minHeight: 'calc(100dvh - 56px)', background: 'var(--surface-base)' }}>
+    <div className="vg2-wrapper">
 
       {/* ── Page header ──────────────────────────────────────────────────── */}
-      <div
-        style={{
-          background: 'var(--surface-raised)',
-          borderBottom: '1px solid var(--surface-border)',
-          padding: '20px 24px 0',
-          position: 'sticky',
-          top: 56,
-          zIndex: 40,
-        }}
-      >
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div className="vg2-header">
+        <div className="vg2-inner">
           {/* Title row */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 16 }}>
-            <div>
-              <h1
-                style={{
-                  fontSize: '1.4rem',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  margin: 0,
-                  lineHeight: 1.2,
-                }}
-              >
+          <div className="vg2-title-row">
+            <div className="vg2-header__title-section">
+              <h1 className="vg2-title">
                 Vector Gallery
               </h1>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 3 }}>
+              <p className="vg2-subtitle">
                 Vector-style icons, illustrations, and design system components
               </p>
             </div>
 
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className="vg2-header__actions">
               {/* Community / Mine tabs */}
-              <div style={{ display: 'flex', gap: 2 }}>
+              <div className="vg2-tab-group">
                 {(['community', 'mine'] as const).map(tab => (
                   <button type="button"
                     key={tab}
                     onClick={() => setGalleryTab(tab)}
+                    className="vg2-tab-btn"
                     style={{
-                      padding: '6px 12px',
-                      borderRadius: 6,
-                      fontSize: '0.78rem',
-                      fontWeight: 500,
-                      cursor: 'pointer',
-                      transition: 'all 0.14s ease',
                       background: galleryTab === tab ? 'var(--accent-subtle)' : 'var(--surface-overlay)',
                       border: `1px solid ${galleryTab === tab ? ACCENT + '50' : 'var(--surface-border)'}`,
                       color: galleryTab === tab ? ACCENT : 'var(--text-muted)',
@@ -824,68 +591,40 @@ export default function VectorGalleryPage() {
                 ))}
               </div>
 
-              <a
-                href="/vector/studio"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '7px 14px',
-                  borderRadius: 6,
-                  background: ACCENT,
-                  color: 'var(--text-on-accent)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+              <a href="/vector/studio" className="vg2-new-asset-btn">
                 ✦ New Asset
               </a>
             </div>
           </div>
 
           {/* Filter bar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', paddingBottom: 16 }}>
+          <div className="vg2-filter-bar">
             {/* Search */}
-            <div style={{ position: 'relative', flex: '1', minWidth: 180, maxWidth: 300 }}>
-              <span
-                style={{
-                  position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)',
-                  color: 'var(--text-disabled)', fontSize: 13, pointerEvents: 'none',
-                }}
-                aria-hidden="true"
-              >
+            <div className="vg2-search-wrap">
+              <span className="vg2-search-icon" aria-hidden="true">
                 ⌕
               </span>
               <input
                 type="search"
-                className="input"
+                className="input vg2-search-input"
                 placeholder="Search prompts…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                style={{ paddingLeft: 28, height: 34, fontSize: '0.8rem' }}
                 aria-label="Search gallery"
               />
             </div>
 
             {/* Tool filter */}
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div className="vg2-filter-group">
               {TOOL_FILTERS.map(f => (
                 <button type="button"
                   key={f.id}
                   onClick={() => setToolFilter(f.id)}
+                  className="vg2-filter-pill"
                   style={{
-                    padding: '5px 10px',
-                    borderRadius: 6,
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.14s ease',
                     background: toolFilter === f.id ? 'var(--accent-subtle)' : 'var(--surface-overlay)',
                     border: `1px solid ${toolFilter === f.id ? ACCENT + '50' : 'var(--surface-border)'}`,
                     color: toolFilter === f.id ? ACCENT : 'var(--text-muted)',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   {f.label}
@@ -894,22 +633,16 @@ export default function VectorGalleryPage() {
             </div>
 
             {/* Style filter */}
-            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+            <div className="vg2-filter-group vg2-filter-group--wrap">
               {STYLE_FILTERS.map(f => (
                 <button type="button"
                   key={f.id}
                   onClick={() => setStyleFilter(f.id)}
+                  className="vg2-filter-pill"
                   style={{
-                    padding: '5px 8px',
-                    borderRadius: 6,
-                    fontSize: '0.72rem',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.14s ease',
                     background: styleFilter === f.id ? 'var(--accent-subtle)' : 'var(--surface-overlay)',
                     border: `1px solid ${styleFilter === f.id ? ACCENT + '50' : 'var(--surface-border)'}`,
                     color: styleFilter === f.id ? ACCENT : 'var(--text-muted)',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   {f.label}
@@ -919,10 +652,9 @@ export default function VectorGalleryPage() {
 
             {/* Sort */}
             <select
-              className="select"
+              className="select vg2-sort-select"
               value={sort}
               onChange={e => setSort(e.target.value as 'newest' | 'oldest')}
-              style={{ height: 34, fontSize: '0.78rem', minWidth: 130, marginLeft: 'auto' }}
               aria-label="Sort order"
             >
               {SORT_OPTIONS.map(o => (
@@ -934,20 +666,10 @@ export default function VectorGalleryPage() {
       </div>
 
       {/* ── Grid ────────────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px' }}>
+      <div className="vg2-grid-container">
         {/* Error */}
         {error && (
-          <div
-            style={{
-              padding: '12px 16px',
-              borderRadius: 8,
-              background: 'var(--danger-muted)',
-              border: '1px solid var(--danger)',
-              color: 'var(--danger-hover)',
-              fontSize: '0.82rem',
-              marginBottom: 16,
-            }}
-          >
+          <div className="vg2-error">
             Failed to load gallery: {error}
           </div>
         )}
@@ -958,8 +680,8 @@ export default function VectorGalleryPage() {
             {Array.from({ length: 16 }, (_, i) => (
               <div
                 key={i}
-                className="skeleton"
-                style={{ aspectRatio: '1', borderRadius: 8, animationDelay: `${i * 0.04}s` }}
+                className="skeleton vg2-skeleton-item"
+                style={{ animationDelay: `${i * 0.04}s` }}
               />
             ))}
           </div>
@@ -984,17 +706,17 @@ export default function VectorGalleryPage() {
         )}
 
         {/* Sentinel */}
-        <div ref={sentinelRef} style={{ height: 1, marginTop: 32 }} />
+        <div ref={sentinelRef} className="vg2-sentinel" />
 
         {loadingMore && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10, padding: '20px 0', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+          <div className="vg2-loading-more">
             <Spinner />
             Loading more…
           </div>
         )}
 
         {!loading && !hasMore && assets.length > 0 && (
-          <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-disabled)', padding: '20px 0' }}>
+          <p className="vg2-end-msg">
             {assets.length} asset{assets.length !== 1 ? 's' : ''} · end of gallery
           </p>
         )}

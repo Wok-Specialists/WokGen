@@ -89,61 +89,37 @@ function TextCard({ asset }: { asset: TextAsset }) {
   };
 
   return (
-    <div style={{
-      padding: 16, borderRadius: 10,
-      background: 'var(--surface)', border: '1px solid var(--surface-border)',
-      display: 'flex', flexDirection: 'column', gap: 10,
-    }}>
+    <div className="tg-card">
       {/* Top row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 16 }}></span>
-          <span style={{
-            padding: '2px 8px', borderRadius: 4, fontSize: 11,
-            background: 'var(--accent-subtle)', color: ACCENT, fontWeight: 600,
-            textTransform: 'capitalize',
-          }}>
+      <div className="tg-card__top">
+        <div className="tg-card__meta">
+          <span className="tg-card__icon"></span>
+          <span className="tg-card__type">
             {contentType.replace('-', ' ')}
           </span>
           {tone && (
-            <span style={{
-              padding: '2px 6px', borderRadius: 4, fontSize: 11,
-              background: 'var(--surface-border)', color: 'var(--text-muted)',
-            }}>
+            <span className="tg-card__tag">
               {tone}
             </span>
           )}
-          <span style={{
-            padding: '2px 6px', borderRadius: 4, fontSize: 11,
-            background: 'var(--surface-border)', color: 'var(--text-muted)',
-          }}>
+          <span className="tg-card__tag">
             {words}w
           </span>
         </div>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)', flexShrink: 0 }}>
+        <span className="tg-card__time">
           {timeAgo(asset.createdAt)}
         </span>
       </div>
 
       {/* Content excerpt */}
-      <p style={{
-        fontSize: 13, color: 'var(--text)', lineHeight: 1.5,
-        margin: 0,
-        fontFamily: contentType === 'code-snippet' ? 'monospace' : 'inherit',
-      }}>
-        {excerpt || <em style={{ color: 'var(--text-muted)' }}>No content</em>}
+      <p className={`tg-card__text${contentType === 'code-snippet' ? ' tg-card__text--mono' : ''}`}>
+        {excerpt || <em className="tg-card__no-content">No content</em>}
       </p>
 
       {/* Copy button */}
       <button type="button"
         onClick={handleCopy}
-        style={{
-          alignSelf: 'flex-start',
-          padding: '5px 12px', borderRadius: 6, border: 'none', fontSize: 12,
-          background: copied ? 'var(--accent-subtle)' : 'var(--surface-border)',
-          color: copied ? ACCENT : 'var(--text)', cursor: 'pointer',
-          fontWeight: copied ? 600 : 400,
-        }}
+        className={`tg-card__copy${copied ? ' tg-card__copy--copied' : ''}`}
       >
         {copied ? 'Copied' : 'Copy'}
       </button>
@@ -253,7 +229,7 @@ export default function TextGallery() {
 
       {/* Filters */}
       <div className="gallery-filters">
-        <div className="gallery-pill-row" style={{ flexWrap: 'wrap' }}>
+        <div className="gallery-pill-row gallery-pill-row--wrap">
           {CONTENT_FILTERS.map(f => (
             <button type="button"
               key={f.id}
@@ -276,21 +252,16 @@ export default function TextGallery() {
 
       {/* Content */}
       {loading ? (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 16,
-          padding: '24px',
-        }}>
+        <div className="gallery-grid gallery-grid--text">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="gallery-card--skeleton-tall" style={{ animationDelay: `${i * 0.07}s`, minHeight: 130 }} />
+            <div key={i} className="gallery-card--skeleton-tall" style={{ animationDelay: `${i * 0.07}s` }} />
           ))}
         </div>
       ) : error ? (
         <div className="gallery-error">
           <span>!</span>
           <p>Failed to load gallery</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Check your connection and try again</p>
+          <p className="gallery-error__sub">Check your connection and try again</p>
           <button type="button" className="btn-ghost btn-sm" onClick={() => void fetchAssets(null, true)}>
             Retry
           </button>
@@ -307,12 +278,7 @@ export default function TextGallery() {
           </Link>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 16,
-          padding: '24px',
-        }}>
+        <div className="gallery-grid gallery-grid--text">
           {assets.map(asset => (
             <TextCard key={asset.id} asset={asset} />
           ))}
@@ -320,12 +286,12 @@ export default function TextGallery() {
       )}
 
       {loadingMore && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+        <div className="gallery-load-more-spinner">
           <div className="studio-spinner" />
         </div>
       )}
 
-      <div ref={sentinelRef} style={{ height: 1 }} />
+      <div ref={sentinelRef} className="gallery-sentinel" />
     </div>
   );
 }

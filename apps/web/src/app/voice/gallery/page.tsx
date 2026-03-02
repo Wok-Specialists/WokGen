@@ -80,40 +80,24 @@ function VoiceCard({ asset }: { asset: VoiceAsset }) {
   };
 
   return (
-    <div style={{
-      padding: 16, borderRadius: 10,
-      background: 'var(--surface)', border: '1px solid var(--surface-border)',
-      display: 'flex', flexDirection: 'column', gap: 10,
-    }}>
+    <div className="vg-card">
       {/* Top row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 18 }}></span>
-          <span style={{
-            padding: '2px 8px', borderRadius: 4, fontSize: 11,
-            background: 'var(--accent-subtle)', color: ACCENT, fontWeight: 600,
-            textTransform: 'capitalize',
-          }}>
+      <div className="vg-card__top">
+        <div className="vg-card__meta">
+          <span className="vg-card__icon"></span>
+          <span className="vg-card__type">
             {voiceType}
           </span>
-          <span style={{
-            padding: '2px 6px', borderRadius: 4, fontSize: 11,
-            background: 'var(--surface-border)', color: 'var(--text-muted)',
-          }}>
+          <span className="vg-card__lang">
             {language.toUpperCase()}
           </span>
         </div>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{timeAgo(asset.createdAt)}</span>
+        <span className="vg-card__time">{timeAgo(asset.createdAt)}</span>
       </div>
 
       {/* Text excerpt */}
-      <p style={{
-        fontSize: 13, color: 'var(--text)', lineHeight: 1.4,
-        overflow: 'hidden', display: '-webkit-box',
-        WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-        margin: 0,
-      }}>
-        {text || <em style={{ color: 'var(--text-muted)' }}>No text</em>}
+      <p className="vg-card__text">
+        {text || <em className="vg-card__no-text">No text</em>}
       </p>
 
       {/* Audio player */}
@@ -127,20 +111,13 @@ function VoiceCard({ asset }: { asset: VoiceAsset }) {
           />
           <button type="button"
             onClick={togglePlay}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '7px 14px', borderRadius: 6, border: 'none',
-              background: playing ? 'var(--accent-subtle)' : 'var(--surface-border)',
-              color: playing ? ACCENT : 'var(--text)',
-              fontSize: 13, cursor: 'pointer', width: 'fit-content',
-              fontWeight: 600,
-            }}
+            className={`vg-card__play${playing ? ' vg-card__play--playing' : ''}`}
           >
             {playing ? '⏸ Pause' : '▶ Play'}
           </button>
         </>
       ) : (
-        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Audio unavailable</span>
+        <span className="vg-card__no-audio">Audio unavailable</span>
       )}
     </div>
   );
@@ -271,21 +248,16 @@ export default function VoiceGallery() {
 
       {/* Content */}
       {loading ? (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 16,
-          padding: '24px',
-        }}>
+        <div className="gallery-grid gallery-grid--voice">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="gallery-card--skeleton-tall" style={{ animationDelay: `${i * 0.07}s`, minHeight: 140 }} />
+            <div key={i} className="gallery-card--skeleton-tall" style={{ animationDelay: `${i * 0.07}s` }} />
           ))}
         </div>
       ) : error ? (
         <div className="gallery-error">
           <span>!</span>
           <p>Failed to load gallery</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Check your connection and try again</p>
+          <p className="gallery-error__sub">Check your connection and try again</p>
           <button type="button" className="btn-ghost btn-sm" onClick={() => void fetchAssets(null, true)}>
             Retry
           </button>
@@ -302,12 +274,7 @@ export default function VoiceGallery() {
           </Link>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 16,
-          padding: '24px',
-        }}>
+        <div className="gallery-grid gallery-grid--voice">
           {assets.map(asset => (
             <VoiceCard key={asset.id} asset={asset} />
           ))}
@@ -315,12 +282,12 @@ export default function VoiceGallery() {
       )}
 
       {loadingMore && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+        <div className="gallery-load-more-spinner">
           <div className="studio-spinner" />
         </div>
       )}
 
-      <div ref={sentinelRef} style={{ height: 1 }} />
+      <div ref={sentinelRef} className="gallery-sentinel" />
     </div>
   );
 }

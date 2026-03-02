@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>
+    <h2 id={id} className="docs-h2 docs-anchor">
       {children}
     </h2>
   );
@@ -22,7 +22,7 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 
 function H3({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <h3 id={id} className="docs-h3" style={{ scrollMarginTop: 80 }}>
+    <h3 id={id} className="docs-h3 docs-anchor">
       {children}
     </h3>
   );
@@ -113,7 +113,7 @@ export default function TextDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: "var(--success)" }} />
+              <span className="landing-badge-dot landing-badge-dot--success" />
               WokGen Text
             </div>
             <h1 className="docs-title">Text Documentation</h1>
@@ -229,7 +229,7 @@ export default function TextDocs() {
                   <tr key={tone}>
                     <td><strong>{tone}</strong></td>
                     <td>{desc}</td>
-                    <td><em style={{ color: 'var(--text-muted)' }}>{ex}</em></td>
+                    <td><em className="docs-muted">{ex}</em></td>
                   </tr>
                 ))}
               </tbody>

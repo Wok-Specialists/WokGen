@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>
+    <h2 id={id} className="docs-h2 docs-anchor">
       {children}
     </h2>
   );
@@ -22,7 +22,7 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 
 function H3({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <h3 id={id} className="docs-h3" style={{ scrollMarginTop: 80 }}>
+    <h3 id={id} className="docs-h3 docs-anchor">
       {children}
     </h3>
   );
@@ -110,7 +110,7 @@ export default function VoiceDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: "var(--warning)" }} />
+              <span className="landing-badge-dot landing-badge-dot--warning" />
               WokGen Voice
             </div>
             <h1 className="docs-title">Voice Documentation</h1>

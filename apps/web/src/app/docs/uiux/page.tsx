@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>
+    <h2 id={id} className="docs-h2 docs-anchor">
       {children}
     </h2>
   );
@@ -15,7 +15,7 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 
 function H3({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <h3 id={id} className="docs-h3" style={{ scrollMarginTop: 80 }}>
+    <h3 id={id} className="docs-h3 docs-anchor">
       {children}
     </h3>
   );
@@ -43,7 +43,7 @@ function UL({ children }: { children: React.ReactNode }) {
 
 function OL({ children }: { children: React.ReactNode }) {
   return (
-    <ol className="docs-ul" style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }}>
+    <ol className="docs-ul docs-ol">
       {children}
     </ol>
   );
@@ -119,7 +119,7 @@ export default function UIUXDocsPage() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: "var(--accent)" }} />
+              <span className="landing-badge-dot landing-badge-dot--accent" />
               WokGen UI/UX
             </div>
             <h1 className="docs-title">UI/UX Documentation</h1>
@@ -839,7 +839,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
             add <Code>dark:</Code> variants to the relevant Tailwind utility classes.
           </P>
 
-          <div className="docs-section docs-section--cta" style={{ marginTop: '3rem' }}>
+          <div className="docs-section docs-section--cta" className="docs-section--mt">
             <P>
               Ready to generate your first component?{' '}
               <Link href="/studio" className="docs-link-primary">

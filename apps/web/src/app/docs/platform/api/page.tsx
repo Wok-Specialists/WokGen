@@ -59,23 +59,23 @@ export default function ApiDocsPage() {
                   className="docs-api__op-header"
                   onClick={() => setExpandedPath(expandedPath === `${method}:${path}` ? null : `${method}:${path}`)}
                 >
-                  <span className="docs-api__method" style={{ color: METHOD_COLORS[method] ?? '#aaa', textTransform: 'uppercase', fontFamily: 'monospace', fontSize: 12, fontWeight: 700, minWidth: 52 }}>{method}</span>
-                  <span className="docs-api__path" style={{ fontFamily: 'monospace', fontSize: 13 }}>{path}</span>
-                  <span className="docs-api__summary" style={{ color: 'var(--text-muted)', fontSize: 13, marginLeft: 'auto', paddingLeft: 16 }}>{op.summary}</span>
+                  <span className="docs-api__method" style={{ color: METHOD_COLORS[method] ?? '#aaa' }}>{method}</span>
+                  <span className="docs-api__path docs-api__path--mono">{path}</span>
+                  <span className="docs-api__summary">{op.summary}</span>
                 </button>
                 {expandedPath === `${method}:${path}` && (
                   <div className="docs-api__op-body">
-                    {op.description && <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>{op.description}</p>}
+                    {op.description && <p className="docs-api__desc">{op.description}</p>}
                     {op.security && op.security.length > 0 && (
-                      <div style={{ fontSize: 12, color: 'var(--warning)', marginTop: 8 }}>Requires authentication</div>
+                      <div className="docs-api__auth-note">Requires authentication</div>
                     )}
-                    <div style={{ marginTop: 12 }}>
-                      <strong style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Responses</strong>
-                      <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div className="docs-api__responses">
+                      <strong className="docs-api__responses-label">Responses</strong>
+                      <div className="docs-api__response-list">
                         {Object.entries(op.responses ?? {}).map(([code, res]) => (
-                          <div key={code} style={{ display: 'flex', gap: 8, fontSize: 12 }}>
-                            <span style={{ fontFamily: 'monospace', color: code.startsWith('2') ? 'var(--success)' : 'var(--danger)', fontWeight: 600, minWidth: 36 }}>{code}</span>
-                            <span style={{ color: 'var(--text-muted)' }}>{res.description}</span>
+                          <div key={code} className="docs-api__response-row">
+                            <span className={`docs-api__response-code${code.startsWith('2') ? ' docs-api__response-code--ok' : ' docs-api__response-code--err'}`}>{code}</span>
+                            <span className="docs-api__response-desc">{res.description}</span>
                           </div>
                         ))}
                       </div>

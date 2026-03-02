@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
-  return <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>{children}</h2>;
+  return <h2 id={id} className="docs-h2 docs-anchor">{children}</h2>;
 }
 function H3({ children }: { children: React.ReactNode }) {
   return <h3 className="docs-h3">{children}</h3>;

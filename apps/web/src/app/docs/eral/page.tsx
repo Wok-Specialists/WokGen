@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>
+    <h2 id={id} className="docs-h2 docs-anchor">
       {children}
     </h2>
   );
@@ -22,7 +22,7 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 
 function H3({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <h3 id={id} className="docs-h3" style={{ scrollMarginTop: 80 }}>
+    <h3 id={id} className="docs-h3 docs-anchor">
       {children}
     </h3>
   );
@@ -45,7 +45,7 @@ function UL({ children }: { children: React.ReactNode }) {
 }
 
 function OL({ children }: { children: React.ReactNode }) {
-  return <ol className="docs-ul" style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }}>{children}</ol>;
+  return <ol className="docs-ul docs-ol">{children}</ol>;
 }
 
 function LI({ children }: { children: React.ReactNode }) {
@@ -94,7 +94,7 @@ export default function EralDocs() {
 
       <div className="docs-content-header">
         <div className="landing-badge">
-          <span className="landing-badge-dot" style={{ background: "var(--info)" }} />
+          <span className="landing-badge-dot landing-badge-dot--info" />
           <span>AI Director</span>
         </div>
         <h1 className="docs-title">WokGen Eral</h1>

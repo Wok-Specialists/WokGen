@@ -142,7 +142,7 @@ export default function DocsHub() {
             ))}
           </div>
         </div>
-        <div style={{ marginTop: '0.75rem' }}>
+        <div className="docs-hub-cta-wrap">
           <Link href="/docs/getting-started" className="docs-hub-card-cta">
             Full Getting Started guide →
           </Link>

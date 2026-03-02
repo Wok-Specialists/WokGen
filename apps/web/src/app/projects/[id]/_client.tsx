@@ -240,9 +240,9 @@ function BriefPanel({ projectId, brief, mode, onSaved }: {
           </div>
           <div className="brief-panel__field">
             <label>Primary color</label>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <input type="color" value={form.colorHex ?? 'var(--accent)'} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} style={{ width: 36, height: 36, border: 'none', background: 'none', cursor: 'pointer' }} />
-              <input className="input" style={{ flex: 1 }} value={form.colorHex ?? ''} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} placeholder="var(--accent)" />
+            <div className="proj-det-color-row">
+              <input type="color" value={form.colorHex ?? 'var(--accent)'} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} className="proj-det-color-swatch" />
+              <input className="input proj-det-color-field" value={form.colorHex ?? ''} onChange={e => setForm(f => ({ ...f, colorHex: e.target.value }))} onBlur={() => handleBlur(form)} placeholder="var(--accent)" />
             </div>
           </div>
           <div className="brief-panel__field">
@@ -251,37 +251,36 @@ function BriefPanel({ projectId, brief, mode, onSaved }: {
           </div>
         </>
       )}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div className="proj-det-action-bar">
         <button type="button" className="btn btn--primary btn--sm" onClick={() => save(form)} disabled={saving}>
           {saving ? 'Saving…' : 'Save brief'}
         </button>
         {saved && !saving && (
-          <span style={{ color: 'var(--success)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <span className="proj-det-save-feedback">
             ✓ Saved
           </span>
         )}
       </div>
-      <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
-        <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--danger)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Danger Zone</h4>
+      <div className="proj-det-danger-zone">
+        <h4 className="proj-det-danger__title">Danger Zone</h4>
         {!confirmDelete ? (
           <button
             type="button"
-            className="btn btn--sm"
-            style={{ background: 'var(--danger-bg)', color: 'var(--danger)', border: '1px solid var(--danger-border)', cursor: 'pointer' }}
+            className="btn btn--sm proj-det-danger__btn"
             onClick={() => setConfirmDelete(true)}
           >
             Delete project
           </button>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--danger)', margin: 0 }}>
+          <div className="proj-det-danger__confirm">
+            <p className="proj-det-danger__warning">
               This will permanently delete the project and all its assets. This cannot be undone.
             </p>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="proj-det-danger__btns">
               <button
                 type="button"
-                className="btn btn--sm"
-                style={{ background: 'var(--danger)', color: '#fff', border: 'none', cursor: 'pointer', opacity: deleting ? 0.6 : 1 }}
+                className="btn btn--sm proj-det-danger__confirm-btn"
+                style={{ opacity: deleting ? 0.6 : 1 }}
                 disabled={deleting}
                 onClick={async () => {
                   setDeleting(true);
@@ -343,7 +342,7 @@ function AssetLightbox({ job, onClose }: { job: Job; onClose: () => void }) {
         <button type="button" className="lightbox__close" onClick={onClose} aria-label="Close">&times;</button>
         <div className="lightbox__image-wrap">
           {job.resultUrl ? (
-            <div className="lightbox__image" style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <div className="proj-det-lightbox-img">
               <Image src={job.resultUrl} alt={job.prompt.slice(0, 80)} fill className="object-contain" sizes="(max-width: 1024px) 100vw, 80vw" placeholder="blur" blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" />
             </div>
           ) : (
@@ -428,14 +427,14 @@ function DocumentsPanel({
   }
 
   if (!loaded) {
-    return <div style={{ padding: '2rem', color: 'var(--text-faint)' }}>Loading documents…</div>;
+    return <div className="proj-det-load">Loading documents…</div>;
   }
 
   return (
-    <div style={{ padding: '1.5rem' }}>
+    <div className="proj-det-section">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-        <h2 style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+      <div className="proj-det-section__header">
+        <h2 className="proj-det-section__title">
           Documents
         </h2>
         <button type="button"
@@ -449,11 +448,11 @@ function DocumentsPanel({
 
       {/* Templates */}
       {documents.length === 0 && (
-        <div style={{ marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-faint)', marginBottom: '0.75rem' }}>
+        <div className="proj-det-tags-section">
+          <p className="proj-det-tags__hint">
             Start from a template:
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className="proj-det-tags">
             {[
               { key: 'gdd',     label: 'GDD'           },
               { key: 'brand',   label: 'Brand Book'    },
@@ -463,10 +462,9 @@ function DocumentsPanel({
             ].map(t => (
               <button type="button"
                 key={t.key}
-                className="btn btn--ghost btn--sm"
+                className="btn btn--ghost btn--sm proj-det-tag"
                 onClick={() => createDoc(t.key)}
                 disabled={creating}
-                style={{ fontSize: '0.72rem' }}
               >
                 {t.label}
               </button>
@@ -477,30 +475,20 @@ function DocumentsPanel({
 
       {/* Document list */}
       {documents.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div className="proj-det-doc-list">
           {documents.map(doc => (
             <a
               key={doc.id}
               href={`/projects/${projectId}/docs/${doc.id}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '10px 12px',
-                background: 'var(--surface-raised)',
-                border: '1px solid var(--surface-border)',
-                borderRadius: 'var(--radius)',
-                textDecoration: 'none',
-                transition: 'border-color 0.1s',
-              }}
+              className="proj-det-doc-item"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--text-muted)', flexShrink: 0 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="proj-det-doc-item__icon">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
               </svg>
-              <span style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500, flex: 1 }}>
+              <span className="proj-det-doc-item__name">
                 {doc.title}
               </span>
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-faint)' }}>
+              <span className="proj-det-doc-item__time">
                 {new Date(doc.updatedAt).toLocaleDateString()}
               </span>
             </a>
@@ -509,7 +497,7 @@ function DocumentsPanel({
       )}
 
       {documents.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)', fontSize: '0.78rem' }}>
+        <div className="proj-det-doc-empty">
           No documents yet. Create one to start organizing your project.
         </div>
       )}
@@ -841,7 +829,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
       </div>
 
       <div className="project-dashboard__body">
-        {error && <div style={{ padding: '1rem', color: 'var(--color-danger, #ef4444)' }}>Error: {error}</div>}
+        {error && <div className="proj-det-error">Error: {error}</div>}
         {/* Left: main content */}
         <div className="project-dashboard__main">
           {view === 'settings' ? (
@@ -965,7 +953,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                   return (
                     <div key={r.id} className="project-rel-row">
                       <div className="project-rel-row__asset">
-                        {from?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={from.resultUrl} alt={from?.prompt?.slice(0, 50) || 'Source asset'} fill className="object-cover" sizes="64px" /></div>}
+                        {from?.resultUrl && <div className="project-rel-row__thumb"><Image src={from.resultUrl} alt={from?.prompt?.slice(0, 50) || 'Source asset'} fill className="object-cover" sizes="64px" /></div>}
                         <span className="project-rel-row__prompt">{from?.prompt.slice(0, 40)}…</span>
                       </div>
                       <span
@@ -975,7 +963,7 @@ export default function ProjectDashboard({ projectId, projectName, projectMode, 
                         ──{REL_LABELS[r.type]}──▶
                       </span>
                       <div className="project-rel-row__asset">
-                        {to?.resultUrl && <div className="project-rel-row__thumb" style={{ position: 'relative' }}><Image src={to.resultUrl} alt={to?.prompt?.slice(0, 50) || 'Target asset'} fill className="object-cover" sizes="64px" /></div>}
+                        {to?.resultUrl && <div className="project-rel-row__thumb"><Image src={to.resultUrl} alt={to?.prompt?.slice(0, 50) || 'Target asset'} fill className="object-cover" sizes="64px" /></div>}
                         <span className="project-rel-row__prompt">{to?.prompt.slice(0, 40)}…</span>
                       </div>
                     </div>

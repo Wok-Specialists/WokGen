@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="docs-h2" style={{ scrollMarginTop: 80 }}>
+    <h2 id={id} className="docs-h2 docs-anchor">
       {children}
     </h2>
   );
@@ -49,7 +49,7 @@ function LI({ children }: { children: React.ReactNode }) {
 }
 
 function OL({ children }: { children: React.ReactNode }) {
-  return <ol className="docs-ul" style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }}>{children}</ol>;
+  return <ol className="docs-ul docs-ol">{children}</ol>;
 }
 
 function Callout({ children, type = 'info' }: { children: React.ReactNode; type?: 'info' | 'tip' | 'warn' }) {
@@ -115,7 +115,7 @@ export default function BusinessDocs() {
 
           <div className="docs-content-header">
             <div className="landing-badge">
-              <span className="landing-badge-dot" style={{ background: "var(--blue)" }} />
+              <span className="landing-badge-dot landing-badge-dot--blue" />
               WokGen Business
             </div>
             <h1 className="docs-title">Business Documentation</h1>
@@ -555,7 +555,7 @@ neon green and white, abstract node graph texture`}</Pre>
           <H3>CSS integration</H3>
           <Pre>{`/* Tailwind CSS */
 <div className="relative w-full h-screen bg-cover bg-center"
-     style={{ backgroundImage: "url('/hero.png')" }}>
+     className="docs-hero-bg">
   <div className="absolute inset-0 bg-black/40" />  {/* optional overlay */}
   <div className="relative z-10 ...">
     <h1>Your headline here</h1>

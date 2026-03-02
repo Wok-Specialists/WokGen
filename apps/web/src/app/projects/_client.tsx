@@ -94,14 +94,14 @@ export default function ProjectsClient() {
     });
 
   if (loading) {
-    return <div className="projects-page"><p style={{ color: 'var(--text-muted, #6b7280)', padding: '2rem' }}>Loading…</p></div>;
+    return <div className="projects-page"><p className="proj-loading">Loading…</p></div>;
   }
 
   return (
     <div className="projects-page">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-        <h1 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--text-primary)' }}>Projects</h1>
-        <Link href="/projects/new" style={{ background: 'var(--accent)', color: '#fff', padding: '8px 16px', borderRadius: 6, textDecoration: 'none', fontSize: 14 }}>
+      <div className="proj-header">
+        <h1 className="proj-title">Projects</h1>
+        <Link href="/projects/new" className="proj-new-btn">
           + New project
         </Link>
       </div>
@@ -129,7 +129,7 @@ export default function ProjectsClient() {
       </div>
 
       {error ? (
-        <div style={{ color: 'var(--color-danger, #ef4444)', padding: '1rem' }}>Error loading projects: {error}</div>
+        <div className="proj-error">Error loading projects: {error}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
           title={searchQuery ? 'No matching projects' : 'No projects yet'}
@@ -139,78 +139,70 @@ export default function ProjectsClient() {
       ) : (
         <>
           {deleteError && (
-            <div style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 6, padding: '0.625rem 1rem', marginBottom: '1rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="proj-delete-error">
               <span>{deleteError}</span>
-              <button type="button" onClick={() => setDeleteError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', opacity: 0.6, fontSize: '1rem', lineHeight: 1, padding: '0 4px' }}>✕</button>
+              <button type="button" onClick={() => setDeleteError(null)} className="proj-delete-error__close">✕</button>
             </div>
           )}
-        <div style={{ display: 'grid', gap: '1rem' }}>
-          {filtered.map(p => (
-            <div
-              key={p.id}
-              style={{ background: 'var(--bg-surface)', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}
-            >
-              {/* Asset thumbnail preview strip */}
-              <div className="grid grid-cols-4 gap-1 overflow-hidden" style={{ background: 'var(--overlay-30)' }}>
-                {[0, 1, 2, 3].map(i => {
-                  const asset = p.recentAssets?.[i];
-                  return (
-                    <div key={i} className="aspect-square bg-white/5 relative overflow-hidden">
-                      {asset && (
-                        <Image
-                          src={asset.thumbUrl ?? asset.imageUrl}
-                          alt=""
-                          width={80}
-                          height={80}
-                          className="w-full h-full object-cover"
-                          placeholder="blur"
-                          blurDataURL={BLUR_PLACEHOLDER}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Card body */}
-              <div style={{ padding: '0.875rem 1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                  <span style={{ fontWeight: 600, color: 'var(--text)' }}>{p.name}</span>
-                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{p._count.jobs} asset{p._count.jobs !== 1 ? 's' : ''}</span>
+          <div className="proj-grid">
+            {filtered.map(p => (
+              <div key={p.id} className="proj-card">
+                {/* Asset thumbnail preview strip */}
+                <div className="grid grid-cols-4 gap-1 overflow-hidden proj-card__strip">
+                  {[0, 1, 2, 3].map(i => {
+                    const asset = p.recentAssets?.[i];
+                    return (
+                      <div key={i} className="aspect-square bg-white/5 relative overflow-hidden">
+                        {asset && (
+                          <Image
+                            src={asset.thumbUrl ?? asset.imageUrl}
+                            alt=""
+                            width={80}
+                            height={80}
+                            className="w-full h-full object-cover"
+                            placeholder="blur"
+                            blurDataURL={BLUR_PLACEHOLDER}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-                {p.description && <p style={{ margin: '0 0 0.5rem', fontSize: 13, color: 'var(--text-secondary)' }}>{p.description}</p>}
-                <p style={{ margin: '0 0 0.75rem', fontSize: 11, color: 'var(--text-faint)' }}>{p.mode} · updated {new Date(p.updatedAt).toLocaleDateString()}</p>
 
-                {/* Quick action buttons */}
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <Link
-                    href={`/projects/${p.id}`}
-                    style={{ fontSize: 12, background: 'var(--accent)', color: 'var(--text-on-accent, #fff)', padding: '5px 12px', borderRadius: 6, textDecoration: 'none' }}
-                  >
-                    Open
-                  </Link>
-                  <Link
-                    href={`/library?projectId=${p.id}`}
-                    style={{ fontSize: 12, background: 'var(--surface-raised)', color: 'var(--text-secondary)', padding: '5px 12px', borderRadius: 6, textDecoration: 'none', border: '1px solid var(--border)' }}
-                  >
-                    Assets
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => deleteProject(p.id, p.name)}
-                    style={{ marginLeft: 'auto', fontSize: 12, background: confirmDelete?.id === p.id ? 'var(--danger-bg)' : 'transparent', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.25)', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: confirmDelete?.id === p.id ? 700 : 400 }}
-                    title={confirmDelete?.id === p.id ? 'Click again to confirm' : 'Delete project'}
-                  >
-                    {confirmDelete?.id === p.id ? 'Confirm?' : 'Delete'}
-                  </button>
-                  {confirmDelete?.id === p.id && (
-                    <button type="button" onClick={() => setConfirmDelete(null)} style={{ fontSize: 12, background: 'transparent', color: 'var(--text-muted)', border: 'none', padding: '5px 6px', cursor: 'pointer' }}>Cancel</button>
-                  )}
+                {/* Card body */}
+                <div className="proj-card__body">
+                  <div className="proj-card__meta">
+                    <span className="proj-card__name">{p.name}</span>
+                    <span className="proj-card__count">{p._count.jobs} asset{p._count.jobs !== 1 ? 's' : ''}</span>
+                  </div>
+                  {p.description && <p className="proj-card__desc">{p.description}</p>}
+                  <p className="proj-card__date">{p.mode} · updated {new Date(p.updatedAt).toLocaleDateString()}</p>
+
+                  {/* Quick action buttons */}
+                  <div className="proj-card__actions">
+                    <Link href={`/projects/${p.id}`} className="proj-card__open">
+                      Open
+                    </Link>
+                    <Link href={`/library?projectId=${p.id}`} className="proj-card__assets-link">
+                      Assets
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => deleteProject(p.id, p.name)}
+                      className="proj-card__delete-btn"
+                      style={{ background: confirmDelete?.id === p.id ? 'var(--danger-bg)' : 'transparent', fontWeight: confirmDelete?.id === p.id ? 700 : 400 }}
+                      title={confirmDelete?.id === p.id ? 'Click again to confirm' : 'Delete project'}
+                    >
+                      {confirmDelete?.id === p.id ? 'Confirm?' : 'Delete'}
+                    </button>
+                    {confirmDelete?.id === p.id && (
+                      <button type="button" onClick={() => setConfirmDelete(null)} className="proj-card__cancel-btn">Cancel</button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </>
       )}
     </div>

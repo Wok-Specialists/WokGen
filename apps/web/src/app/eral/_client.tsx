@@ -373,7 +373,7 @@ function MessageBubble({
     <div className={`eral-msg-row ${isUser ? 'eral-msg-user' : 'eral-msg-assistant'}`}>
       {!isUser && (
         <div className="eral-avatar">
-          <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-secondary, var(--accent))', letterSpacing: '-0.5px' }}>7c</span>
+          <span className="eral-avatar__label">7c</span>
         </div>
       )}
       <div className="eral-bubble-wrap">
@@ -382,7 +382,7 @@ function MessageBubble({
         )}
         <div className={`eral-bubble ${isUser ? 'eral-bubble-user' : 'eral-bubble-assistant'}`}>
           {isUser ? (
-            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+            <p className="eral-user-text">{msg.content}</p>
           ) : (
             <div
               ref={contentRef}
@@ -411,24 +411,14 @@ function MessageBubble({
           </div>
         )}
         {!isUser && !isStreaming && msg.wap && (
-          <div style={{
-            background: 'var(--accent-subtle)',
-            border: '1px solid var(--accent-glow)',
-            borderRadius: 6,
-            padding: '6px 12px',
-            marginTop: 4,
-            fontSize: 12,
-            color: 'var(--accent-secondary, var(--accent))',
-          }}>
+          <div className="eral-wap-confirmation">
             {msg.wap.confirmation}
           </div>
         )}
         {!isUser && !isStreaming && msg.isError && msg.retryText && onFollowUp && (
           <button type="button"
             onClick={() => onFollowUp(msg.retryText!)}
-            style={{ marginTop: 6, fontSize: 12, color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
-            onMouseOver={e => (e.currentTarget.style.color = 'var(--text)')}
-            onMouseOut={e => (e.currentTarget.style.color = 'var(--text-faint)')}
+            className="eral-retry-btn"
           >
             ↺ Retry
           </button>
@@ -445,7 +435,7 @@ function MessageBubble({
       </div>
       {isUser && (
         <div className="eral-avatar eral-avatar-user">
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>You</span>
+          <span className="eral-avatar-you-label">You</span>
         </div>
       )}
     </div>
@@ -963,7 +953,7 @@ export function EralPage({ userId }: { userId?: string }) {
               <p className="eral-v2-memory-panel__title">
                 Memory
                 {Object.values(memory).filter(Boolean).length > 0 && (
-                  <span style={{ marginLeft: 6, fontSize: '0.7rem', padding: '1px 6px', borderRadius: 10, background: 'var(--accent-subtle, var(--accent-glow))', color: 'var(--accent)', fontWeight: 600 }}>
+                  <span className="eral-memory-count-badge">
                     {Object.values(memory).filter(Boolean).length}
                   </span>
                 )}
@@ -1088,14 +1078,14 @@ export function EralPage({ userId }: { userId?: string }) {
           )}
 
           {/* Model selector */}
-          <div className="eral-model-selector" style={{ position: 'relative' }}>
+          <div className="eral-model-selector eral-model-selector--wrap">
             <button type="button"
               className="eral-model-pill"
               onClick={() => setModelPickerOpen((v) => !v)}
             >
               <span className="eral-model-dot" />
               {activeModel.label}
-              <span style={{ opacity: 0.5, fontSize: 10 }}>▾</span>
+              <span className="eral-model-chevron">▾</span>
             </button>
 
             {modelPickerOpen && (
@@ -1114,7 +1104,7 @@ export function EralPage({ userId }: { userId?: string }) {
             )}
           </div>
 
-          <div style={{ flex: 1 }} />
+          <div className="eral-spacer" />
 
           {/* Project selector */}
           {projects.length > 0 && (
@@ -1175,7 +1165,7 @@ export function EralPage({ userId }: { userId?: string }) {
           {isEmpty ? (
             <div className="eral-empty">
               <div className="eral-empty-logo">
-                <span className="eral-empty-icon"><span style={{fontSize:'22px',fontWeight:700,color:'var(--accent-secondary, var(--accent))',letterSpacing:'-1px',opacity:0.7}}>7c</span></span>
+                <span className="eral-empty-icon"><span className="eral-empty-logo-text">7c</span></span>
                 <h1 className="eral-empty-title">Eral</h1>
                 <p className="eral-empty-sub">AI companion for creative work · by WokSpec</p>
               </div>
@@ -1246,7 +1236,7 @@ export function EralPage({ userId }: { userId?: string }) {
               {loading && !streamingContent && (
                 <div className="eral-msg-row eral-msg-assistant">
                   <div className="eral-avatar">
-                    <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-secondary, var(--accent))', letterSpacing: '-0.5px' }}>7c</span>
+                    <span className="eral-avatar__label">7c</span>
                   </div>
                   <div className="eral-bubble-wrap">
                     <span className="eral-msg-label">Eral</span>
@@ -1460,61 +1450,41 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
 
       {/* ── Call Mode overlay ──────────────────────────────────────── */}
       {callActive && (
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 100,
-          background: 'var(--bg)',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          gap: 24, backdropFilter: 'blur(12px)',
-        }}>
+        <div className="eral-call-overlay">
           {/* Avatar */}
-          <div style={{ position: 'relative' }}>
+          <div className="eral-call-avatar-wrap">
             {callState === 'speaking' && (
-              <span style={{
-                position: 'absolute', inset: -12, borderRadius: '50%',
-                border: '2px solid var(--accent-glow)',
-                animation: 'call-ring 1.2s ease-out infinite',
-              }} />
+              <span className="eral-call-ring" />
             )}
-            <div style={{
-              width: 120, height: 120, borderRadius: '50%',
-              background: 'var(--accent-muted)',
-              border: '3px solid var(--accent-glow)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 52, boxShadow: '0 0 40px var(--accent-glow)',
-            }}>
+            <div className="eral-call-avatar">
               Eral
             </div>
           </div>
 
           {/* Status */}
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ color: 'var(--text, var(--accent-2))', fontSize: 18, fontWeight: 600, margin: 0 }}>
+          <div className="eral-call-status">
+            <p className="eral-call-status__title">
               {callState === 'idle'       ? 'Ready to talk'  :
                callState === 'listening'  ? 'Listening…'     :
                callState === 'processing' ? 'Thinking…'      : 'Speaking…'}
             </p>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>
+            <p className="eral-call-status__sub">
               Eral · Voice Mode
             </p>
           </div>
 
           {/* Transcript */}
           {callTranscript && (
-            <div style={{
-              background: 'var(--surface-raised)', borderRadius: 12,
-              padding: '14px 20px', maxWidth: 420, width: '90%',
-              border: '1px solid var(--accent-glow)',
-            }}>
+            <div className="eral-call-transcript">
               {callTranscript.user && (
-                <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: '0 0 8px' }}>
-                  <span style={{ color: 'var(--accent-secondary, var(--accent))', fontWeight: 600 }}>You: </span>
+                <p className="eral-call-transcript__line">
+                  <span className="eral-call-transcript__you">You: </span>
                   {callTranscript.user}
                 </p>
               )}
               {callTranscript.eral && (
-                <p style={{ color: 'var(--text, var(--accent-subtle))', fontSize: 13, margin: 0 }}>
-                  <span style={{ color: 'var(--accent)', fontWeight: 600 }}>Eral: </span>
+                <p className="eral-call-transcript__line eral-call-transcript__line--eral">
+                  <span className="eral-call-transcript__speaker">Eral: </span>
                   {callTranscript.eral}
                 </p>
               )}
@@ -1522,15 +1492,12 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           )}
 
           {/* Voice selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>Voice:</span>
+          <div className="eral-call-voice-row">
+            <span className="eral-call-voice-label">Voice:</span>
             <select
               value={callVoiceId}
               onChange={(e) => setCallVoiceId(e.target.value)}
-              style={{
-                background: 'var(--surface-raised)', border: '1px solid var(--accent-glow)',
-                borderRadius: 6, color: 'var(--text, var(--accent-2))', fontSize: 12, padding: '4px 8px', cursor: 'pointer',
-              }}
+              className="eral-call-voice-select"
             >
               <option value="21m00Tcm4TlvDq8ikWAM">Rachel</option>
               <option value="pNInz6obpgDQGcFmaJgB">Adam</option>
@@ -1552,16 +1519,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
               }
             }}
             disabled={callState === 'processing'}
-            style={{
-              width: 72, height: 72, borderRadius: '50%',
-              background: callState === 'listening' ? 'var(--danger)' :
-                          callState === 'speaking' ? 'var(--accent-muted)' : 'transparent',
-              border: '2px solid var(--accent-glow)',
-              cursor: callState === 'processing' ? 'default' : 'pointer',
-              fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 20px var(--accent-glow)',
-              transition: 'background 0.2s',
-            }}
+            className={`eral-call-mic-btn eral-call-mic-btn--${callState}`}
             title={callState === 'idle' ? 'Tap to speak' : 'Tap to stop'}
           >
             {callState === 'processing' ? '⏳' :
@@ -1572,12 +1530,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
           {/* End Call */}
           <button type="button"
             onClick={endCall}
-            style={{
-              padding: '8px 24px', borderRadius: 999,
-              background: 'var(--danger)', border: '1px solid var(--danger)',
-              color: 'white', fontSize: 14, cursor: 'pointer',
-              fontWeight: 600,
-            }}
+            className="eral-call-end-btn"
           >
             End Call
           </button>
@@ -1586,14 +1539,7 @@ Use these WokGen Studio modes: Pixel (sprites/pixel art/icons), Business (brandi
 
       {/* ── Action confirmation toast ─────────────────────────────── */}
       {actionConfirmation && (
-        <div style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 200,
-          background: 'var(--surface-2, var(--surface-1))', border: '1px solid var(--accent-secondary, var(--accent))',
-          borderRadius: 8, padding: '10px 18px',
-          color: 'var(--accent)', fontSize: 13,
-          maxWidth: 320,
-          pointerEvents: 'none',
-        }}>
+        <div className="eral-action-toast">
           {actionConfirmation}
         </div>
       )}

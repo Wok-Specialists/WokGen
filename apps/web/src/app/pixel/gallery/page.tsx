@@ -112,19 +112,7 @@ function capitalize(s: string): string {
 
 function Spinner() {
   return (
-    <span
-      style={{
-        display: 'inline-block',
-        width: 20,
-        height: 20,
-        borderRadius: '50%',
-        border: '2px solid var(--surface-border)',
-        borderTopColor: 'var(--accent)',
-        animation: 'spin 0.7s linear infinite',
-        flexShrink: 0,
-      }}
-      aria-hidden="true"
-    />
+    <span className="pg-spinner" aria-hidden="true" />
   );
 }
 
@@ -132,21 +120,8 @@ function RarityBadge({ rarity }: { rarity: string }) {
   const color = RARITY_COLORS[rarity] ?? 'var(--text-muted)';
   return (
     <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        padding: '2px 6px',
-        borderRadius: 4,
-        fontSize: '0.62rem',
-        fontWeight: 600,
-        letterSpacing: '0.04em',
-        textTransform: 'uppercase',
-        background: `${color}18`,
-        color,
-        border: `1px solid ${color}40`,
-        lineHeight: 1,
-      }}
+      className="pg-rarity-badge"
+      style={{ background: `${color}18`, color, border: `1px solid ${color}40` }}
     >
       {capitalize(rarity)}
     </span>
@@ -155,23 +130,10 @@ function RarityBadge({ rarity }: { rarity: string }) {
 
 function ProviderDot({ provider }: { provider: string }) {
   return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        fontSize: '0.62rem',
-        color: 'var(--text-disabled)',
-      }}
-    >
+    <span className="pg-provider-badge">
       <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: PROVIDER_COLORS[provider] ?? '#666',
-          flexShrink: 0,
-        }}
+        className="pg-provider-dot"
+        style={{ background: PROVIDER_COLORS[provider] ?? '#666' }}
       />
       {PROVIDER_LABELS[provider] ?? provider}
     </span>
@@ -229,42 +191,14 @@ function AssetModal({
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 60,
-        background: 'var(--overlay-80)',
-        backdropFilter: 'blur(6px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 16,
-      }}
+      className="pg-detail-panel"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* Prev */}
       {hasPrev && (
         <button type="button"
           onClick={onPrev}
-          style={{
-            position: 'absolute',
-            left: 16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'var(--surface-overlay)',
-            border: '1px solid var(--surface-border)',
-            color: 'var(--text-secondary)',
-            borderRadius: 8,
-            width: 40,
-            height: 40,
-            fontSize: 18,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-            transition: 'all 0.15s ease',
-          }}
+          className="pg-modal-nav pg-modal-nav--prev"
           aria-label="Previous image"
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)';
@@ -283,25 +217,7 @@ function AssetModal({
       {hasNext && (
         <button type="button"
           onClick={onNext}
-          style={{
-            position: 'absolute',
-            right: 16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'var(--surface-overlay)',
-            border: '1px solid var(--surface-border)',
-            color: 'var(--text-secondary)',
-            borderRadius: 8,
-            width: 40,
-            height: 40,
-            fontSize: 18,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-            transition: 'all 0.15s ease',
-          }}
+          className="pg-modal-nav pg-modal-nav--next"
           aria-label="Next image"
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)';
@@ -318,104 +234,34 @@ function AssetModal({
 
       {/* Modal card */}
       <div
-        style={{
-          background: 'var(--surface-raised)',
-          border: '1px solid var(--surface-border)',
-          borderRadius: 12,
-          overflow: 'hidden',
-          width: '100%',
-          maxWidth: 680,
-          maxHeight: '90dvh',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 24px 80px var(--overlay-70)',
-          animation: 'scale-in 0.18s ease-out both',
-        }}
+        className="pg-detail-panel__card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '12px 16px',
-            borderBottom: '1px solid var(--surface-border)',
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="pg-detail__header">
+          <div className="pg-detail__header-left">
             {asset.rarity && <RarityBadge rarity={asset.rarity} />}
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+            <span className="pg-detail__size">
               {asset.size}×{asset.size}px
             </span>
             <ProviderDot provider={asset.provider} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="pg-detail__header-right">
             <Link
               href={`/studio?prompt=${encodeURIComponent(asset.prompt)}`}
-              style={{
-                padding: '5px 10px',
-                borderRadius: 6,
-                background: 'var(--accent-muted, var(--accent-subtle))',
-                border: '1px solid var(--accent-border, var(--accent-glow))',
-                color: 'var(--accent)',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                transition: 'all 0.15s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className="pg-detail__make-similar"
             >
               ✦ Make similar
             </Link>
             <button type="button"
               onClick={download}
-              style={{
-                padding: '5px 10px',
-                borderRadius: 6,
-                background: 'var(--surface-overlay)',
-                border: '1px solid var(--surface-border)',
-                color: 'var(--text-secondary)',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)';
-                (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--surface-overlay)';
-                (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-              }}
+              className="pg-detail__download-btn"
             >
               ↓ Download
             </button>
             <button type="button"
               onClick={onClose}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: 'transparent',
-                border: '1px solid transparent',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-                fontSize: 16,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--surface-hover)';
-                (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'transparent';
-                (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
-              }}
+              className="pg-detail__close-btn"
               aria-label="Close"
             >
               ✕
@@ -425,54 +271,25 @@ function AssetModal({
 
         {/* Image area */}
         <div
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
+          className="pg-detail__scroll"
         >
           {/* Canvas */}
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 32,
-              background: 'var(--surface-base)',
-              backgroundImage:
-                'linear-gradient(rgba(65,166,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(65,166,246,0.04) 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-              minHeight: 240,
-              cursor: zoom < 8 ? 'zoom-in' : 'zoom-out',
-            }}
+            className="pg-detail__canvas"
+            style={{ cursor: zoom < 8 ? 'zoom-in' : 'zoom-out' }}
             onClick={() => setZoom(nextZoom)}
             title={`Click to zoom (${zoom}×) — next: ${nextZoom}×`}
           >
             <img
               src={asset.imageUrl}
               alt={asset.title ?? asset.prompt}
-              style={{
-                imageRendering: 'pixelated',
-                maxWidth: '100%',
-                maxHeight: 400,
-                transform: `scale(${zoom})`,
-                transformOrigin: 'center',
-                transition: 'transform 0.15s ease',
-              }}
+              className="pg-detail__img"
+              style={{ transform: `scale(${zoom})` }}
             />
           </div>
 
           {/* Zoom hint */}
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: '0.65rem',
-              color: 'var(--text-disabled)',
-              padding: '4px 0 8px',
-              background: 'var(--surface-base)',
-            }}
-          >
+          <div className="pg-detail__zoom-hint">
             Click image to zoom ({zoom}×) · ← → to browse
           </div>
 
