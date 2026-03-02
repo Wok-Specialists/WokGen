@@ -66,7 +66,7 @@ export default function MetricsDashboard() {
             </p>
           )}
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div className="adm-m-header">
           <button type="button" className="admin-action-btn" onClick={load}>Refresh</button>
           <Link href="/admin" className="admin-header__back">← Admin</Link>
         </div>
@@ -78,7 +78,7 @@ export default function MetricsDashboard() {
       {data && !loading && (
         <>
           {/* ── Stats row ── */}
-          <section style={{ marginBottom: '2rem' }}>
+          <section className="adm-m-section">
             <p className="admin-section-label">Platform overview</p>
             <div className="admin-grid">
               <StatCard label="Total users"       value={data.totalUsers.toLocaleString()} />
@@ -91,7 +91,7 @@ export default function MetricsDashboard() {
 
           {/* ── Top tools bar chart ── */}
           {data.topTools.length > 0 && (
-            <section style={{ marginBottom: '2rem' }}>
+            <section className="adm-m-section">
               <p className="admin-section-label">Top tools by usage</p>
               <div className="admin-provider-chart">
                 {data.topTools.map(row => {
@@ -114,10 +114,7 @@ export default function MetricsDashboard() {
           <section>
             <p className="admin-section-label">Recent signups</p>
             <div className="admin-table-wrap">
-              <div
-                className="admin-table-row admin-table-row--header"
-                style={{ gridTemplateColumns: '2fr 1fr auto' }}
-              >
+              <div className="admin-table-row admin-table-row--header adm-m-grid">
                 <span className="admin-table-cell admin-table-cell--head">User</span>
                 <span className="admin-table-cell admin-table-cell--head">Email</span>
                 <span className="admin-table-cell admin-table-cell--head">Joined</span>
@@ -125,8 +122,7 @@ export default function MetricsDashboard() {
               {data.recentSignups.map((u, i) => (
                 <div
                   key={u.id}
-                  className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`}
-                  style={{ gridTemplateColumns: '2fr 1fr auto' }}
+                  className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'} adm-m-grid`}
                 >
                   <span className="admin-table-cell">{u.name ?? '—'}</span>
                   <span className="admin-table-cell admin-table-cell--muted">{u.email}</span>

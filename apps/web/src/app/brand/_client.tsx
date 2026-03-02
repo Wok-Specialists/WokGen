@@ -34,14 +34,14 @@ function ColorSwatch({ hex, onChange }: { hex: string; onChange: (h: string) => 
   return (
     <div ref={ref} className="color-swatch-wrap">
       <button type="button"
-        className="color-swatch-btn"
-        style={{ background: hex, border: '2px solid var(--border)', borderRadius: 6, width: 32, height: 32, cursor: 'pointer', flexShrink: 0 }}
+        className="color-swatch-btn brand-swatch-btn"
+        style={{ background: hex }}
         onClick={() => setOpen(v => !v)}
         title="Pick color"
         aria-label={`Color picker: current color ${hex}`}
       />
       {open && (
-        <div className="color-swatch-picker" style={{ position: 'absolute', zIndex: 200, top: 36, left: 0, background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: 8, padding: 12, boxShadow: '0 8px 32px var(--overlay-50)' }}>
+        <div className="color-swatch-picker brand-swatch-popup">
           <HexColorPicker color={hex} onChange={onChange} />
         </div>
       )}
@@ -63,23 +63,15 @@ function PaletteEditor({
   return (
     <div className="palette-editor">
       {colors.map((c, i) => (
-        <div key={i} className="palette-editor__row" style={{ position: 'relative' }}>
+        <div key={i} className="palette-editor__row palette-editor__row--rel">
           <ColorSwatch hex={c.hex} onChange={hex => update(i, 'hex', hex)} />
           <input
-            className="input input--sm"
-            value={c.hex}
-            onChange={e => update(i, 'hex', e.target.value)}
-            placeholder="#000000"
-            style={{ width: 90 }}
+            className="input input--sm brand-hex-input"
           />
           <input
-            className="input input--sm"
-            value={c.name}
-            onChange={e => update(i, 'name', e.target.value)}
-            placeholder="Name"
-            style={{ flex: 1 }}
+            className="input input--sm brand-name-input"
           />
-          <select className="input input--sm" value={c.role} onChange={e => update(i, 'role', e.target.value)} style={{ width: 110 }}>
+          <select className="input input--sm brand-role-select" value={c.role} onChange={e => update(i, 'role', e.target.value)}>
             {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
           <button type="button" className="btn btn--ghost btn--sm btn--icon" onClick={() => remove(i)} title="Remove" aria-label="Remove color">×</button>
@@ -268,7 +260,7 @@ export default function BrandClient() {
 
       {loading ? (
         <div className="brand-skeleton">
-          {[...Array(3)].map((_, i) => <div key={i} className="skeleton-block" style={{ height: 120 }} />)}
+          {[...Array(3)].map((_, i) => <div key={i} className="skeleton-block brand-kit-skeleton" />)}
         </div>
       ) : kits.length === 0 ? (
         <div className="brand-empty">

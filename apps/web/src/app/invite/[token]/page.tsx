@@ -17,10 +17,10 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
 
   if (!member) {
     return (
-      <div style={{ maxWidth: 480, margin: '80px auto', padding: 24, textAlign: 'center' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 16 }}>Invalid or expired invite</h1>
+      <div className="inv-wrap">
+        <h1 className="inv-title">Invalid or expired invite</h1>
         <p style={{ color: 'var(--text-muted)' }}>This invite link has already been used or has expired.</p>
-        <a href="/projects" style={{ display: 'inline-block', marginTop: 24, padding: '10px 24px', background: 'var(--accent)', color: '#fff', borderRadius: 6, textDecoration: 'none' }}>Go to Projects</a>
+        <a href="/projects" className="inv-link" style={{ background: 'var(--accent)' }}>Go to Projects</a>
       </div>
     );
   }

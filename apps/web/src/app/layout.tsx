@@ -130,7 +130,7 @@ export default function RootLayout({
             <div className="app-shell__body">
               <TopBar />
               <GenerationStatus />
-              <main id="main-content" style={{ flex: 1 }}>{children}</main>
+              <main id="main-content" className="app-main-content">{children}</main>
               <Footer />
             </div>
           </div>

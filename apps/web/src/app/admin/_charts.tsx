@@ -30,7 +30,6 @@ export default function AdminCharts() {
   if (error)   return <div className="admin-error">{error}</div>;
   if (!data)   return null;
 
-  const chartStyle = { background: 'var(--surface-card)', borderRadius: 8, padding: '1rem' };
   // Recharts SVG attrs don't support CSS vars — use matching token values
   const C = {
     grid:    '#252538',
@@ -41,10 +40,10 @@ export default function AdminCharts() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="adm-m-charts">
       <section>
         <p className="admin-section-label">Daily generation volume (last 7 days)</p>
-        <div style={chartStyle}>
+        <div className="adm-m-chart-wrap">
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={data.dailyVolume} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={C.grid} />
@@ -62,7 +61,7 @@ export default function AdminCharts() {
 
       <section>
         <p className="admin-section-label">Provider distribution (last 7 days)</p>
-        <div style={chartStyle}>
+        <div className="adm-m-chart-wrap">
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={data.providerBreakdown} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={C.grid} />

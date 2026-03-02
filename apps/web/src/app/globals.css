@@ -33685,3 +33685,82 @@ img.loaded, img:not([loading]) { opacity: 1; }
 .adm-cell-sub  { margin: 0.1rem 0 0; font-size: 0.7rem; }
 .adm-capitalize { text-transform: capitalize; }
 .adm-section-label--mb { margin-bottom: 1rem; }
+
+/* ── Layout main content ── */
+.app-main-content { flex: 1; }
+
+/* ── Admin Metrics (adm-m-*) ── */
+.adm-m-page {}
+.adm-m-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.adm-m-section {
+  margin-bottom: 2rem;
+}
+.adm-m-grid {
+  grid-template-columns: 2fr 1fr auto;
+}
+.adm-m-grid-2col {
+  grid-template-columns: 1fr 1fr;
+}
+.adm-m-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.adm-m-chart-wrap {
+  background: var(--surface-card);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* ── Brand studio ── */
+.palette-editor__row--rel { position: relative; }
+.brand-hex-input { width: 90px; }
+.brand-name-input { flex: 1; }
+.brand-role-select { width: 110px; }
+.brand-swatch-btn {
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.brand-swatch-popup {
+  position: absolute;
+  z-index: 200;
+  top: 36px; left: 0;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 8px 32px var(--overlay-50, rgba(0,0,0,0.5));
+}
+.brand-kit-skeleton { height: 120px; }
+.app-main-content { flex: 1; }
+
+/* ── community/loading.tsx ─────────────────────────────── */
+.cml-wrap            { max-width: 1200px; margin: 0 auto; padding-bottom: 3rem; }
+.cml-header-skeletons { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+.cml-header-skel-title { height: 28px; width: 160px; }
+.cml-header-skel-btn   { height: 36px; width: 200px; }
+.cml-filter-row      { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.cml-filter-item     { height: 30px; }
+.cml-grid            { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.cml-card            { aspect-ratio: 1; border-radius: 8px; }
+
+/* ── automations/loading.tsx ───────────────────────────── */
+.aml-wrap  { max-width: 900px; margin: 0 auto; }
+.aml-title { height: 28px; width: 180px; margin-bottom: 1.5rem; }
+.aml-list  { display: flex; flex-direction: column; gap: 0.75rem; }
+.aml-item  { height: 72px; border-radius: 8px; }
+
+/* ── text/studio/loading.tsx ───────────────────────────── */
+.tsl-center { height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+/* ── invite/[token]/page.tsx ───────────────────────────── */
+.inv-wrap  { max-width: 480px; margin: 80px auto; padding: 24px; text-align: center; }
+.inv-title { font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+.inv-link  { display: inline-block; margin-top: 24px; padding: 10px 24px; color: #fff; border-radius: 6px; text-decoration: none; }
