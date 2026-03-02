@@ -30,7 +30,7 @@ const PAGE_SIZE = 20;
 function SkeletonAssetCard() {
   return (
     <div className="assets-card assets-card--skeleton">
-      <div style={{ paddingBottom: '75%', background: 'var(--surface-raised)', borderRadius: 'var(--radius-md)', animation: 'pulse 1.5s ease-in-out infinite' }} />
+      <div className="tat-skeleton-inner" />
     </div>
   );
 }
@@ -45,23 +45,22 @@ function AssetCard({ asset }: { asset: PixabayResult }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={imageUrl} alt={tags[0] ?? 'Asset'} loading="lazy" />
       <div className="assets-card__overlay">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
+        <div className="tat-card-tags">
           {tags.slice(0, 4).map((t) => (
-            <span key={t} style={{ fontSize: 11, background: 'rgba(0,0,0,0.5)', padding: '2px 6px', borderRadius: 4, color: '#fff' }}>{t}</span>
+            <span key={t} className="tat-card-tag">{t}</span>
           ))}
         </div>
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>by {asset.user}</span>
-        <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+        <span className="tat-card-author">by {asset.user}</span>
+        <div className="tat-card-actions">
           <a
             href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="tool-page__btn-primary"
-            style={{ padding: '4px 10px', fontSize: 12, textDecoration: 'none', display: 'inline-flex' }}
+            className="tool-page__btn-primary tat-card-download"
           >
             ↓ Download
           </a>
-          <span style={{ fontSize: 10, background: 'var(--success-bg)', color: 'var(--success)', border: '1px solid var(--success-glow)', borderRadius: 4, padding: '4px 6px', alignSelf: 'center' }}>CC0</span>
+          <span className="tat-card-cc0">CC0</span>
         </div>
       </div>
     </div>
@@ -146,14 +145,13 @@ export function AssetsClient() {
           ))}
         </div>
 
-        <div className="sfx-filters" style={{ marginTop: 8 }}>
-          <span style={{ fontSize: 12, color: 'var(--text-faint)', marginRight: 8 }}>Orientation:</span>
+        <div className="sfx-filters tat-filters">
+          <span className="tat-filter-label">Orientation:</span>
           {ORIENTATION_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
-              className={`notify-channel-btn${orientation === opt.value ? ' notify-channel-btn--active' : ''}`}
-              style={{ fontSize: 12, padding: '4px 10px' }}
+              className={`notify-channel-btn tat-filter-btn${orientation === opt.value ? ' notify-channel-btn--active' : ''}`}
               onClick={() => { setOrientation(opt.value); if (hasSearched) search(query, 1, type, opt.value); }}
             >
               {opt.label}
@@ -174,35 +172,35 @@ export function AssetsClient() {
           ))}
         </div>
 
-        {error && <div className="tool-page__error" style={{ marginTop: 16 }}>{error}</div>}
+        {error && <div className="tool-page__error tat-error">{error}</div>}
 
         {loading && (
-          <div className="assets-grid" style={{ marginTop: 24 }}>
+          <div className="assets-grid tat-grid-loading">
             {Array.from({ length: 12 }).map((_, i) => <SkeletonAssetCard key={i} />)}
           </div>
         )}
 
         {!loading && !hasSearched && (
-          <div className="tool-page__card" style={{ textAlign: 'center', padding: '48px 24px', marginTop: 24 }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🖼️</div>
-            <p style={{ color: 'var(--text-faint)' }}>Search for an asset to get started</p>
+          <div className="tool-page__card tat-empty-state">
+            <div className="tat-empty-icon">🖼️</div>
+            <p className="tat-empty-text">Search for an asset to get started</p>
           </div>
         )}
 
         {!loading && hasSearched && results.length === 0 && !error && (
-          <div className="tool-page__card" style={{ textAlign: 'center', padding: '48px 24px', marginTop: 24 }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
-            <p style={{ color: 'var(--text-faint)' }}>No results found. Try a different search term.</p>
+          <div className="tool-page__card tat-empty-state">
+            <div className="tat-empty-icon">🔍</div>
+            <p className="tat-empty-text">No results found. Try a different search term.</p>
           </div>
         )}
 
         {!loading && results.length > 0 && (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, marginBottom: 12 }}>
-              <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+            <div className="tat-results-header">
+              <span className="tat-results-count">
                 Found {totalCount.toLocaleString()} {type}s
               </span>
-              <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>
+              <span className="tat-results-license">
                 All assets are CC0 — free to use without attribution
               </span>
             </div>
@@ -210,21 +208,19 @@ export function AssetsClient() {
               {results.map((r) => <AssetCard key={r.id} asset={r} />)}
             </div>
             {totalPages > 1 && (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: 20 }}>
+              <div className="tat-pagination">
                 <button
                   type="button"
-                  className="tool-page__btn-primary"
-                  style={{ padding: '6px 14px', fontSize: 13 }}
+                  className="tool-page__btn-primary tat-pagination-btn"
                   disabled={page <= 1}
                   onClick={() => search(query, page - 1)}
                 >
                   ← Prev
                 </button>
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{page} / {totalPages}</span>
+                <span className="tat-pagination-info">{page} / {totalPages}</span>
                 <button
                   type="button"
-                  className="tool-page__btn-primary"
-                  style={{ padding: '6px 14px', fontSize: 13 }}
+                  className="tool-page__btn-primary tat-pagination-btn"
                   disabled={page >= totalPages}
                   onClick={() => search(query, page + 1)}
                 >
@@ -235,7 +231,7 @@ export function AssetsClient() {
           </>
         )}
 
-        <p className="tool-page__note" style={{ marginTop: 24 }}>
+        <p className="tool-page__note tat-note">
           Assets from <a href="https://pixabay.com" target="_blank" rel="noopener noreferrer">Pixabay</a> — CC0 License
         </p>
       </div>

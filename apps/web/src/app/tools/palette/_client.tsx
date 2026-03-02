@@ -108,15 +108,15 @@ function SwatchCard({ color, index }: { color: string; index: number }) {
       <div className="palette-swatch__info" style={{ color: textColor }}>
         <button
           type="button"
-          className="palette-swatch__hex"
+          className="palette-swatch__hex pal-swatch-hex-btn"
           onClick={copyHex}
-          style={{ color: textColor, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 700, fontSize: 13 }}
+          style={{ color: textColor }}
           title="Click to copy hex"
         >
           {color.toUpperCase()}
         </button>
-        <span style={{ fontSize: 11, opacity: 0.75 }}>rgb({r},{g},{b})</span>
-        <span style={{ fontSize: 11, opacity: 0.6 }}>--color-{index + 1}</span>
+        <span className="pal-swatch-rgb">rgb({r},{g},{b})</span>
+        <span className="pal-swatch-var">--color-{index + 1}</span>
       </div>
     </div>
   );
@@ -128,15 +128,16 @@ function PalettePreview({ palette }: { palette: string[] }) {
   if (palette.length < 3) return null;
   const [bg, surface, accent, text] = [palette[0], palette[1], palette[palette.length - 1], palette[Math.floor(palette.length / 2)]];
   return (
-    <div className="tool-page__card" style={{ background: bg, padding: 0, overflow: 'hidden' }}>
-      <div style={{ padding: '16px 20px', background: surface, borderBottom: `1px solid ${accent}22` }}>
-        <span style={{ color: text, fontWeight: 600, fontSize: 14 }}>Preview Card</span>
+    <div className="tool-page__card pal-preview-card" style={{ background: bg }}>
+      <div className="pal-preview-header" style={{ background: surface, borderBottom: `1px solid ${accent}22` }}>
+        <span className="pal-preview-title" style={{ color: text }}>Preview Card</span>
       </div>
-      <div style={{ padding: '16px 20px' }}>
-        <p style={{ color: text, fontSize: 13, marginBottom: 12 }}>Your palette applied to a sample UI component.</p>
+      <div className="pal-preview-body">
+        <p className="pal-preview-text" style={{ color: text }}>Your palette applied to a sample UI component.</p>
         <button
           type="button"
-          style={{ background: accent, color: bg, border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+          className="pal-preview-btn"
+          style={{ background: accent, color: bg }}
         >
           Action Button
         </button>
@@ -195,24 +196,23 @@ export function PaletteClient() {
         </div>
 
         <div className="tool-page__card palette-controls">
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <div className="pal-controls-row">
             <div>
               <label className="tool-page__label">Base Color</label>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <div className="pal-color-picker-row">
                 <input
                   type="color"
                   value={baseColor}
                   onChange={(e) => { setBaseColor(e.target.value); setHexInput(e.target.value); }}
-                  style={{ width: 44, height: 36, cursor: 'pointer', border: 'none', borderRadius: 6, background: 'none' }}
+                  className="pal-color-input"
                   aria-label="Pick base color"
                 />
                 <input
-                  className="input"
+                  className="input pal-hex-input"
                   type="text"
                   value={hexInput}
                   onChange={(e) => handleHexInput(e.target.value)}
                   placeholder="#3b82f6"
-                  style={{ width: 100 }}
                   maxLength={7}
                 />
               </div>
@@ -221,16 +221,15 @@ export function PaletteClient() {
             <div>
               <label className="tool-page__label">Harmony</label>
               <select
-                className="input"
+                className="input pal-harmony-select"
                 value={harmony}
                 onChange={(e) => setHarmony(e.target.value)}
-                style={{ minWidth: 180 }}
               >
                 {HARMONY_OPTIONS.map((h) => <option key={h} value={h}>{h}</option>)}
               </select>
             </div>
 
-            <div style={{ flex: 1, minWidth: 140 }}>
+            <div className="pal-size-group">
               <label className="tool-page__label">Size: <strong>{size}</strong></label>
               <input
                 type="range"
@@ -238,16 +237,14 @@ export function PaletteClient() {
                 max={12}
                 value={size}
                 onChange={(e) => setSize(Number(e.target.value))}
-                className="tool-music__slider"
-                style={{ margin: 0, marginTop: 8 }}
+                className="tool-music__slider pal-size-slider"
               />
             </div>
 
             <button
               type="button"
-              className="tool-page__btn-primary"
+              className="tool-page__btn-primary pal-generate-btn"
               onClick={generate}
-              style={{ alignSelf: 'flex-end' }}
             >
               Generate
             </button>
@@ -266,10 +263,10 @@ export function PaletteClient() {
               <button type="button" className="tool-page__btn-primary" onClick={exportCSS}>
                 Export CSS Variables
               </button>
-              <button type="button" className="tool-page__btn-primary" onClick={exportJSON} style={{ background: 'var(--surface-raised)', color: 'var(--text)', border: '1px solid var(--border)' }}>
+              <button type="button" className="tool-page__btn-primary pal-export-btn-secondary" onClick={exportJSON}>
                 Export JSON
               </button>
-              <button type="button" className="tool-page__btn-primary" onClick={exportTailwind} style={{ background: 'var(--surface-raised)', color: 'var(--text)', border: '1px solid var(--border)' }}>
+              <button type="button" className="tool-page__btn-primary pal-export-btn-secondary" onClick={exportTailwind}>
                 Export Tailwind
               </button>
             </div>
@@ -277,9 +274,9 @@ export function PaletteClient() {
         )}
 
         {!generated && (
-          <div className="tool-page__card" style={{ textAlign: 'center', padding: '40px 24px', marginTop: 16 }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🎨</div>
-            <p style={{ color: 'var(--text-faint)' }}>Pick a color and click Generate to create your palette</p>
+          <div className="tool-page__card pal-empty-state">
+            <div className="pal-empty-icon">🎨</div>
+            <p className="pal-empty-text">Pick a color and click Generate to create your palette</p>
           </div>
         )}
       </div>

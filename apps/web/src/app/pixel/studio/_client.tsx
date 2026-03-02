@@ -941,20 +941,19 @@ function OutputPanel({
                 <button type="button"
                   key={i}
                   onClick={() => setActiveUrl(url)}
-                  className="output-image-frame p-2 transition-all duration-150"
+                  className="output-image-frame p-2 transition-all duration-150 pxs-2-grid-output-btn"
                   style={{
                     border: activeUrl === url
                       ? '2px solid var(--accent)'
                       : '1px solid var(--surface-border)',
                     boxShadow: activeUrl === url ? 'var(--glow-md)' : undefined,
-                    background: 'transparent',
                   }}
                 >
                   <img
                     src={url}
                     alt={`Result ${i + 1}`}
-                    className="pixel-art"
-                    style={{ maxWidth: 200, maxHeight: 200, objectFit: 'contain', transform: `scale(${zoom})`, transformOrigin: 'center', transition: 'transform 0.15s ease' }}
+                    className="pixel-art pxs-2-grid-output-img"
+                    style={{ transform: `scale(${zoom})` }}
                   />
                 </button>
               ))}
@@ -996,9 +995,8 @@ function OutputPanel({
             {showPixelGrid && (
               <div
                 aria-hidden="true"
-                className="pixel-grid-overlay"
+                className="pixel-grid-overlay pxs-2-grid-overlay"
                 style={{
-                  backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),var(--surface-raised) calc(100%/var(--grid-cells))), repeating-linear-gradient(90deg,transparent,transparent calc(100%/var(--grid-cells) - 1px),var(--surface-raised) calc(100%/var(--grid-cells)))',
                   // @ts-expect-error CSS custom prop
                   '--grid-cells': result?.width ?? 64,
                 }}

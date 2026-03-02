@@ -105,7 +105,7 @@ export default async function SupportPage() {
 
       {/* Mission */}
       <section className="support-mission">
-        <h2 className="landing-h2" style={{ marginBottom: '1rem' }}>Our open-source mission</h2>
+        <h2 className="landing-h2 sup-mission-header">Our open-source mission</h2>
         <p>
           WokGen is built on the belief that AI creative tools should be accessible to everyone —
           indie developers, artists, students, and hobbyists alike. Every model we run is open-source,
@@ -121,7 +121,7 @@ export default async function SupportPage() {
 
       {/* Wallet grid */}
       <section className="support-wallet-section">
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div className="sup-donate-header">
           <p className="pricing-eyebrow">Donate Crypto</p>
           <h2 className="landing-h2">Choose your coin</h2>
           <p className="pricing-sub">
@@ -156,7 +156,7 @@ export default async function SupportPage() {
               </div>
 
               <div className="support-wallet-address">
-                <span style={{ flex: 1 }}>{truncateAddress(wallet.address)}</span>
+                <span className="sup-address-text">{truncateAddress(wallet.address)}</span>
               </div>
 
               <CopyButton address={wallet.address} />
@@ -167,7 +167,7 @@ export default async function SupportPage() {
 
       {/* Why we do this */}
       <section className="support-values-section">
-        <div style={{ textAlign: 'center' }}>
+        <div className="sup-values-header">
           <p className="pricing-eyebrow">Why we do this</p>
           <h2 className="landing-h2">Built on principles, not profit</h2>
         </div>

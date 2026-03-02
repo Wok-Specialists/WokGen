@@ -103,7 +103,7 @@ export function MusicClient() {
           </div>
 
           {/* Duration slider */}
-          <div style={{ marginTop: 16 }}>
+          <div className="mus-duration-wrap">
             <label className="tool-page__label">
               Duration: <strong>{duration}s</strong>
             </label>
@@ -123,11 +123,10 @@ export function MusicClient() {
           {error && <div className="tool-page__error">{error}</div>}
 
           <button
-            className="tool-page__btn-primary"
+            className="tool-page__btn-primary mus-btn-mt"
             onClick={handleGenerate}
             disabled={loading || !prompt.trim()}
             type="button"
-            style={{ marginTop: 16 }}
           >
             {loading ? (
               <span className="tool-music__loading">
@@ -148,16 +147,15 @@ export function MusicClient() {
             </div>
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio controls src={result.audioUrl} className="tool-music__audio" />
-            <div style={{ display: 'flex', gap: 12, marginTop: 12, alignItems: 'center' }}>
+            <div className="mus-player-actions">
               <a
                 href={result.audioUrl}
                 download="music.wav"
-                className="tool-page__btn-primary"
-                style={{ textDecoration: 'none', display: 'inline-flex' }}
+                className="tool-page__btn-primary mus-download-link"
               >
                 ↓ Download
               </a>
-              <span className="tool-page__note" style={{ margin: 0 }}>{result.durationMs}ms</span>
+              <span className="tool-page__note mus-gen-time">{result.durationMs}ms</span>
             </div>
           </div>
         )}
@@ -165,16 +163,16 @@ export function MusicClient() {
         {/* History */}
         {history.length > 0 && (
           <div className="tool-page__card">
-            <div className="tool-page__result-title" style={{ marginBottom: 12 }}>Recent tracks</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="tool-page__result-title mus-recent-header">Recent tracks</div>
+            <div className="mus-history-list">
               {history.map((h, i) => (
                 <div key={i} className="tool-music__history-item">
                   <div>
                     <span className="tool-music__history-prompt">{h.prompt}</span>
-                    <span className="tool-page__note" style={{ marginLeft: 8 }}>{h.duration}s</span>
+                    <span className="tool-page__note mus-history-duration">{h.duration}s</span>
                   </div>
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                  <audio controls src={h.audioUrl} style={{ height: 28 }} />
+                  <audio controls src={h.audioUrl} className="mus-history-audio" />
                 </div>
               ))}
             </div>
