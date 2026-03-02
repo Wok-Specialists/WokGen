@@ -105,7 +105,7 @@ export default function HomePage() {
     <div className="homepage-root min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-16 sm:pt-28 pb-16 sm:pb-24 overflow-hidden">
+      <section className="hero-section relative flex flex-col items-center justify-center text-center px-6 pt-16 sm:pt-28 pb-16 sm:pb-24 overflow-hidden">
         <div className="hero-glow" aria-hidden="true" />
 
         {/* Status badge */}
@@ -115,7 +115,7 @@ export default function HomePage() {
         </div>
 
         {/* Wordmark */}
-        <h1 className="relative z-10 hero-wordmark gradient-text">
+        <h1 className="relative z-10 hero-wordmark hero-headline gradient-text">
           WokGen
         </h1>
 

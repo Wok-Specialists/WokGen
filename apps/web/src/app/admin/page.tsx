@@ -93,7 +93,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
 
   return (
     <>
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="adm-section">
         <p className="admin-section-label">Users</p>
         <div className="admin-grid">
           <StatCard label="Total users" value={stats.users.total} />
@@ -105,7 +105,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
         </div>
       </section>
 
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="adm-section">
         <p className="admin-section-label">Generations</p>
         <div className="admin-grid">
           <StatCard label="Total jobs" value={formatNumber(stats.jobs.total)} />
@@ -116,7 +116,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
       </section>
 
       {/* Provider Usage Chart */}
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="adm-section">
         <p className="admin-section-label">Provider usage (recent jobs)</p>
         <div className="admin-provider-chart">
           {Object.entries(providerCounts).map(([provider, count]) => {
@@ -137,20 +137,20 @@ function OverviewTab({ stats }: { stats: Stats }) {
 
       {/* Recent Errors */}
       {failedJobs.length > 0 && (
-        <section style={{ marginBottom: '2rem' }}>
+        <section className="adm-section">
           <p className="admin-section-label admin-section-label--error">Recent errors (last 5 failed jobs)</p>
           <div className="admin-table-wrap">
-            <div className="admin-table-row admin-table-row--header" style={{ gridTemplateColumns: '2fr 1fr 1fr auto' }}>
+            <div className="admin-table-row admin-table-row--header adm-cols-err">
               <span className="admin-table-cell admin-table-cell--head">Prompt / User</span>
               <span className="admin-table-cell admin-table-cell--head">Mode</span>
               <span className="admin-table-cell admin-table-cell--head">Provider</span>
               <span className="admin-table-cell admin-table-cell--head">Time</span>
             </div>
             {failedJobs.map((job, i) => (
-              <div key={job.id} className={`admin-table-row admin-table-row--error ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`} style={{ gridTemplateColumns: '2fr 1fr 1fr auto' }}>
+              <div key={job.id} className={`admin-table-row admin-table-row--error ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}adm-cols-err`}>
                 <div>
-                  <p className="admin-table-cell" style={{ margin: 0 }}>{job.prompt.slice(0, 60)}</p>
-                  <p className="admin-table-cell admin-table-cell--faint" style={{ margin: '0.1rem 0 0', fontSize: '0.7rem' }}>{job.user?.email ?? 'guest'}</p>
+                  <p className="admin-table-cell adm-cell-main">{job.prompt.slice(0, 60)}</p>
+                  <p className="admin-table-cell admin-table-cell--faint adm-cell-sub">{job.user?.email ?? 'guest'}</p>
                 </div>
                 <span className={`admin-table-cell ${job.provider === 'replicate' ? 'admin-table-cell--hd' : 'admin-table-cell--std'}`}>{job.provider}</span>
                 <span className="admin-table-cell admin-table-cell--fail">failed</span>
@@ -162,7 +162,7 @@ function OverviewTab({ stats }: { stats: Stats }) {
       )}
 
       {/* Quick Actions */}
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="adm-section">
         <p className="admin-section-label">Quick Actions</p>
         {actionMsg && <p className="admin-action-msg">{actionMsg}</p>}
         <div className="admin-quick-actions">
@@ -181,17 +181,17 @@ function OverviewTab({ stats }: { stats: Stats }) {
       <section>
         <p className="admin-section-label">Recent generations</p>
         <div className="admin-table-wrap">
-          <div className="admin-table-row admin-table-row--header" style={{ gridTemplateColumns: '1fr auto auto auto' }}>
+          <div className="admin-table-row admin-table-row--header adm-cols-recent">
             <span className="admin-table-cell admin-table-cell--head">Prompt / User</span>
             <span className="admin-table-cell admin-table-cell--head">Provider</span>
             <span className="admin-table-cell admin-table-cell--head">Status</span>
             <span className="admin-table-cell admin-table-cell--head">Date</span>
           </div>
           {stats.recentJobs.map((job, i) => (
-            <div key={job.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`} style={{ gridTemplateColumns: '1fr auto auto auto' }}>
+            <div key={job.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}adm-cols-recent`}>
               <div>
-                <p className="admin-table-cell" style={{ margin: 0 }}>{job.prompt}</p>
-                <p className="admin-table-cell admin-table-cell--faint" style={{ margin: '0.1rem 0 0', fontSize: '0.7rem' }}>{job.user?.email ?? 'guest'}</p>
+                <p className="admin-table-cell adm-cell-main">{job.prompt}</p>
+                <p className="admin-table-cell admin-table-cell--faint adm-cell-sub">{job.user?.email ?? 'guest'}</p>
               </div>
               <span className={`admin-table-cell ${job.provider === 'replicate' ? 'admin-table-cell--hd' : 'admin-table-cell--std'}`}>
                 {job.provider === 'replicate' ? 'HD' : 'std'}
@@ -228,7 +228,7 @@ function UsersTab() {
 
   return (
     <div className="admin-table-wrap">
-      <div className="admin-table-row admin-table-row--header" style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
+      <div className="admin-table-row admin-table-row--header adm-cols-users-tab">
         <span className="admin-table-cell admin-table-cell--head">User</span>
         <span className="admin-table-cell admin-table-cell--head">Plan</span>
         <span className="admin-table-cell admin-table-cell--head">Jobs</span>
@@ -236,10 +236,10 @@ function UsersTab() {
         <span className="admin-table-cell admin-table-cell--head">Joined</span>
       </div>
       {users.map((u, i) => (
-        <div key={u.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`} style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
+        <div key={u.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}adm-cols-users-tab`}>
           <div>
-            <p className="admin-table-cell" style={{ margin: 0 }}>{u.name ?? '—'}</p>
-            <p className="admin-table-cell admin-table-cell--faint" style={{ margin: '0.1rem 0 0', fontSize: '0.7rem' }}>{u.email}</p>
+            <p className="admin-table-cell adm-cell-main">{u.name ?? '—'}</p>
+            <p className="admin-table-cell admin-table-cell--faint adm-cell-sub">{u.email}</p>
           </div>
           <span><span className={`admin-badge admin-badge--${u.planId}`}>{u.planId}</span></span>
           <span className="admin-table-cell">{formatNumber(u.jobCount)}</span>
@@ -256,7 +256,7 @@ function UsersTab() {
 function JobsTab({ stats }: { stats: Stats }) {
   return (
     <>
-      <div className="admin-grid" style={{ marginBottom: '2rem' }}>
+      <div className="admin-grid adm-mb">
         <StatCard label="Total" value={formatNumber(stats.jobs.total)} />
         <StatCard label="Today" value={formatNumber(stats.jobs.today)} />
         <StatCard label="HD jobs" value={formatNumber(stats.jobs.hd)} sub="Replicate provider" />
@@ -264,7 +264,7 @@ function JobsTab({ stats }: { stats: Stats }) {
       </div>
       <p className="admin-section-label">Recent (last 10)</p>
       <div className="admin-table-wrap">
-        <div className="admin-table-row admin-table-row--header" style={{ gridTemplateColumns: '1fr 1fr auto auto auto' }}>
+        <div className="admin-table-row admin-table-row--header adm-cols-jobs-tab">
           <span className="admin-table-cell admin-table-cell--head">Prompt</span>
           <span className="admin-table-cell admin-table-cell--head">User</span>
           <span className="admin-table-cell admin-table-cell--head">Provider</span>
@@ -272,7 +272,7 @@ function JobsTab({ stats }: { stats: Stats }) {
           <span className="admin-table-cell admin-table-cell--head">Date</span>
         </div>
         {stats.recentJobs.map((job, i) => (
-          <div key={job.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`} style={{ gridTemplateColumns: '1fr 1fr auto auto auto' }}>
+          <div key={job.id} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}adm-cols-jobs-tab`}>
             <span className="admin-table-cell">{job.prompt}</span>
             <span className="admin-table-cell admin-table-cell--muted">{job.user?.email ?? 'guest'}</span>
             <span className={`admin-table-cell ${job.provider === 'replicate' ? 'admin-table-cell--hd' : 'admin-table-cell--std'}`}>{job.provider}</span>
@@ -306,19 +306,19 @@ function RevenueTab() {
 
   return (
     <>
-      <div className="admin-grid" style={{ marginBottom: '2rem' }}>
+      <div className="admin-grid adm-mb">
         <StatCard label="MRR (est.)" value={`$${(rev.mrr / 100).toFixed(2)}`} sub="active subscriptions × price" />
         <StatCard label="Active subs" value={rev.activeSubscriptions} />
       </div>
       <p className="admin-section-label">By plan</p>
       <div className="admin-table-wrap">
-        <div className="admin-table-row admin-table-row--header" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+        <div className="admin-table-row admin-table-row--header adm-cols-plan">
           <span className="admin-table-cell admin-table-cell--head">Plan</span>
           <span className="admin-table-cell admin-table-cell--head">Subscribers</span>
           <span className="admin-table-cell admin-table-cell--head">Revenue/mo</span>
         </div>
         {Object.entries(rev.byPlan).map(([plan, d], i) => (
-          <div key={plan} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}`} style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+          <div key={plan} className={`admin-table-row ${i % 2 === 0 ? 'admin-table-row--odd' : 'admin-table-row--even'}adm-cols-plan`}>
             <span><span className={`admin-badge admin-badge--${plan}`}>{plan}</span></span>
             <span className="admin-table-cell">{d.count}</span>
             <span className="admin-table-cell admin-table-cell--hd">${(d.revenue / 100).toFixed(2)}</span>
@@ -336,7 +336,7 @@ function ProviderHealthTab({ stats }: { stats: Stats }) {
 
   return (
     <>
-      <p className="admin-section-label" style={{ marginBottom: '1rem' }}>
+      <p className="admin-section-label adm-section-label--mb">
         Provider health — last 24 hours
       </p>
       <div className="admin-system-grid">
@@ -350,7 +350,7 @@ function ProviderHealthTab({ stats }: { stats: Stats }) {
                                             'admin-system-card__dot--warn'
               }`} />
               <div>
-                <p className="admin-system-card__label" style={{ textTransform: 'capitalize' }}>
+                <p className="admin-system-card__label adm-capitalize">
                   {entry.provider}
                 </p>
                 <p className="admin-system-card__sub">

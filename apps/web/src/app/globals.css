@@ -33461,3 +33461,227 @@ img.loaded, img:not([loading]) { opacity: 1; }
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
 }
+
+/* ── Mode card selector fix (name vs title) ── */
+.mode-card__name {
+  font-size: 1.0rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+.mode-card__desc {
+  font-size: 0.82rem !important;
+  line-height: 1.6 !important;
+  color: rgba(255,255,255,0.52) !important;
+}
+/* Fix --mc variable name — mode-card uses --card-accent */
+.mode-card__icon-wrap {
+  filter: drop-shadow(0 4px 12px var(--card-accent, rgba(139, 92, 246, 0.4)));
+  transition: filter 0.25s ease;
+}
+.mode-card:hover .mode-card__icon-wrap {
+  filter: drop-shadow(0 6px 20px var(--card-accent, rgba(139, 92, 246, 0.6))) !important;
+}
+
+/* ── Admin panel shared (adm-*) ───────────────────────────────────────────── */
+.adm-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+.adm-page--wide {
+  max-width: 1200px;
+  padding: 2rem;
+}
+.adm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+.adm-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.adm-subtitle {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+.adm-section {
+  margin-bottom: 2rem;
+}
+.adm-mb {
+  margin-bottom: 2rem;
+}
+.adm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.adm-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.adm-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.adm-stat {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.adm-stat-item {
+  padding: 0.75rem;
+  border: 1px solid var(--surface-raised);
+  border-radius: 8px;
+  background: var(--surface-card);
+}
+.adm-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.adm-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.125rem;
+}
+.adm-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.adm-row--head {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-card);
+}
+.adm-row {
+  border-bottom: 1px solid var(--surface-card);
+}
+.adm-th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+.adm-td {
+  padding: 0.875rem 1rem;
+}
+.adm-td--secondary { color: var(--text-secondary); }
+.adm-td--muted     { color: var(--text-muted); }
+.adm-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 1px solid var(--accent-glow);
+}
+.adm-badge--user {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.adm-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.adm-search {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  width: 240px;
+  outline: none;
+}
+.adm-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+.adm-empty {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+.adm-back-link {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+.adm-loading {
+  color: var(--text-muted);
+}
+.adm-pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.adm-pagination__info {
+  padding: 0.5rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+.adm-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.adm-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.adm-avatar-fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.adm-notes-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.adm-notes-links {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.625rem;
+}
+.adm-notes-link {
+  font-size: 0.875rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+.adm-separator {
+  color: var(--border);
+}
+/* Grid column layouts for admin-table-row grids */
+.adm-cols-err       { grid-template-columns: 2fr 1fr 1fr auto; }
+.adm-cols-recent    { grid-template-columns: 1fr auto auto auto; }
+.adm-cols-users-tab { grid-template-columns: 2fr 1fr 1fr 1fr auto; }
+.adm-cols-plan      { grid-template-columns: 1fr 1fr 1fr; }
+.adm-cols-jobs-tab  { grid-template-columns: 1fr 1fr auto auto auto; }
+/* Cell content utilities */
+.adm-cell-main { margin: 0; }
+.adm-cell-sub  { margin: 0.1rem 0 0; font-size: 0.7rem; }
+.adm-capitalize { text-transform: capitalize; }
+.adm-section-label--mb { margin-bottom: 1rem; }

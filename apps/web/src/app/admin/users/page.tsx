@@ -58,71 +58,36 @@ export default async function AdminUsersPage({
   ]);
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '2rem',
-          gap: '1rem',
-        }}
-      >
+    <div className="adm-page">
+      <div className="adm-header">
         <div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Users</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+          <h1 className="adm-title">Users</h1>
+          <p className="adm-subtitle">
             {total} total users
           </p>
         </div>
-        <form style={{ display: 'flex', gap: '0.5rem' }}>
+        <form className="adm-actions">
           <input
             name="q"
             defaultValue={q}
             placeholder="Search name or email..."
-            style={{
-              background: 'var(--surface-hover)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              padding: '0.5rem 0.875rem',
-              fontSize: '0.875rem',
-              color: 'var(--text-primary)',
-              width: '240px',
-              outline: 'none',
-            }}
+            className="adm-search"
           />
           <button
             type="submit"
-            className="btn btn-secondary"
-            style={{ padding: '0.5rem 1rem' }}
+            className="btn btn-secondary adm-btn"
           >
             Search
           </button>
         </form>
       </div>
 
-      <div
-        style={{ border: '1px solid var(--border)', borderRadius: '10px', overflow: 'hidden' }}
-      >
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+      <div className="adm-table-wrap">
+        <table className="adm-table">
           <thead>
-            <tr
-              style={{
-                borderBottom: '1px solid var(--border)',
-                background: 'var(--surface-card)',
-              }}
-            >
+            <tr className="adm-row adm-row--head">
               {['User', 'Email', 'Joined', 'Role'].map((h) => (
-                <th
-                  key={h}
-                  style={{
-                    padding: '0.75rem 1rem',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                    color: 'var(--text-muted)',
-                    fontSize: '0.8125rem',
-                    letterSpacing: '0.02em',
-                  }}
-                >
+                <th key={h} className="adm-th">
                   {h}
                 </th>
               ))}
@@ -130,65 +95,35 @@ export default async function AdminUsersPage({
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr
-                key={user.id}
-                style={{ borderBottom: '1px solid var(--surface-card)' }}
-              >
-                <td style={{ padding: '0.875rem 1rem' }}>
-                  <div
-                    style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}
-                  >
+              <tr key={user.id} className="adm-row">
+                <td className="adm-td">
+                  <div className="adm-user-cell">
                     {user.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={user.image}
                         alt={user.name || 'User avatar'}
-                        style={{ width: '28px', height: '28px', borderRadius: '50%' }}
+                        className="adm-avatar"
                       />
                     ) : (
-                      <div
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          borderRadius: '50%',
-                          background: 'var(--accent-glow)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          color: 'var(--accent)',
-                        }}
-                      >
+                      <div className="adm-avatar-fallback">
                         {(user.name || user.email || 'U')[0].toUpperCase()}
                       </div>
                     )}
-                    <span style={{ color: 'var(--text-primary)' }}>{user.name || 'No name'}</span>
+                    <span>{user.name || 'No name'}</span>
                   </div>
                 </td>
-                <td style={{ padding: '0.875rem 1rem', color: 'var(--text-secondary)' }}>
+                <td className="adm-td adm-td--secondary">
                   {user.email || '-'}
                 </td>
-                <td style={{ padding: '0.875rem 1rem', color: 'var(--text-muted)' }}>
+                <td className="adm-td adm-td--muted">
                   {formatDate(user.createdAt)}
                 </td>
-                <td style={{ padding: '0.875rem 1rem' }}>
+                <td className="adm-td">
                   {user.isAdmin ? (
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        padding: '0.2rem 0.625rem',
-                        borderRadius: '999px',
-                        background: 'var(--accent-subtle)',
-                        color: 'var(--accent)',
-                        border: '1px solid var(--accent-glow)',
-                      }}
-                    >
-                      Admin
-                    </span>
+                    <span className="adm-badge">Admin</span>
                   ) : (
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>User</span>
+                    <span className="adm-badge--user">User</span>
                   )}
                 </td>
               </tr>
@@ -196,38 +131,27 @@ export default async function AdminUsersPage({
           </tbody>
         </table>
         {total === 0 && (
-          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-            No users found.
-          </div>
+          <div className="adm-empty">No users found.</div>
         )}
       </div>
 
       {total > perPage && (
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            justifyContent: 'center',
-            marginTop: '1.5rem',
-          }}
-        >
+        <div className="adm-pagination">
           {page > 1 && (
             <a
               href={`?q=${q}&page=${page - 1}`}
-              className="btn btn-secondary"
-              style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+              className="btn btn-secondary adm-btn"
             >
               Previous
             </a>
           )}
-          <span style={{ padding: '0.5rem 1rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+          <span className="adm-pagination__info">
             Page {page} of {Math.ceil(total / perPage)}
           </span>
           {page < Math.ceil(total / perPage) && (
             <a
               href={`?q=${q}&page=${page + 1}`}
-              className="btn btn-secondary"
-              style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+              className="btn btn-secondary adm-btn"
             >
               Next
             </a>
