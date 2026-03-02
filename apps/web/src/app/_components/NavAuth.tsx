@@ -196,31 +196,12 @@ export function NavAuth() {
             disabled={savingDefault}
             title="When on, new generations default to public in the community gallery"
           >
-            <span style={{ flex: 1, textAlign: 'left' }}>Public generations</span>
+            <span className="nav-toggle-label">Public generations</span>
             <span
-              style={{
-                width: 28,
-                height: 16,
-                borderRadius: 8,
-                background: publicDefault ? 'var(--accent)' : 'var(--surface-border)',
-                position: 'relative',
-                display: 'inline-block',
-                flexShrink: 0,
-                transition: 'background 0.2s ease',
-                opacity: savingDefault ? 0.5 : 1,
-              }}
+              className={`nav-toggle-track${publicDefault ? ' nav-toggle-track--on' : ''}${savingDefault ? ' nav-toggle-track--saving' : ''}`}
             >
               <span
-                style={{
-                  position: 'absolute',
-                  top: 2,
-                  left: publicDefault ? 14 : 2,
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  background: '#fff',
-                  transition: 'left 0.2s ease',
-                }}
+                className={`nav-toggle-thumb${publicDefault ? ' nav-toggle-thumb--on' : ''}`}
               />
             </span>
           </button>

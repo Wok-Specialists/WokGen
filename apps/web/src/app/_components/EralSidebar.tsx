@@ -51,7 +51,7 @@ function SidebarBubble({ msg, isStreaming }: { msg: SidebarMessage; isStreaming?
   return (
     <div className={`esb-msg ${isUser ? 'esb-msg-user' : 'esb-msg-assistant'}`}>
       {isUser ? (
-        <span style={{ whiteSpace: 'pre-wrap', fontSize: 13 }}>{msg.content}</span>
+            <span className="esb-msg-user-text">{msg.content}</span>
       ) : (
         <div
           className="esb-prose"
@@ -329,7 +329,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
               <div className="esb-empty">
                 <p>Hi! I&apos;m Eral — your AI companion for WokGen Studio.</p>
                 {mode && (
-                  <p style={{ marginTop: 6, fontSize: 11, color: 'var(--text-faint)' }}>
+                  <p className="esb-context-hint">
                     Context: {mode} mode{tool ? ` · ${tool}` : ''}
                   </p>
                 )}
@@ -404,15 +404,7 @@ export function EralSidebar({ mode, tool, prompt, studioContext }: EralSidebarPr
 
       {/* ── Action confirmation toast ─────────────────────────────── */}
       {actionConfirmation && (
-        <div style={{
-          position: 'fixed', bottom: 80, right: 24, zIndex: 200,
-          background: 'var(--surface-1)', border: '1px solid var(--accent)',
-          borderRadius: 8, padding: '8px 16px',
-          color: 'var(--accent)', fontSize: 13,
-          animation: 'esb-slide-in 0.3s ease',
-          maxWidth: 280,
-          pointerEvents: 'none',
-        }}>
+        <div className="eral-action-toast eral-action-toast--sidebar">
           {actionConfirmation}
         </div>
       )}
