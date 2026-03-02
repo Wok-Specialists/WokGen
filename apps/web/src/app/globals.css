@@ -31257,3 +31257,298 @@ main, .page-root {
   color: var(--text-disabled);
   padding: 20px 0;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PASS 22 — Premium Visual Depth & Micro-Polish
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Global body depth ── */
+body {
+  background: var(--bg, #080810);
+}
+
+/* ── Topbar premium feel ── */
+.app-topbar {
+  background: color-mix(in srgb, var(--bg, #080810) 80%, transparent) !important;
+  backdrop-filter: saturate(180%) blur(20px) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 8%, var(--border)) !important;
+}
+
+/* ── Mode switcher premium ── */
+.mode-switcher {
+  background: color-mix(in srgb, var(--surface) 90%, transparent) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 6%, var(--border)) !important;
+}
+
+/* ── Studio sidebar glow ── */
+.studio-sidebar {
+  background: color-mix(in srgb, var(--bg, #080810) 95%, transparent) !important;
+  border-right: 1px solid color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, var(--border)) !important;
+  box-shadow: 2px 0 20px color-mix(in srgb, var(--studio-accent, var(--accent)) 4%, transparent) !important;
+}
+
+/* ── Hero wordmark ── */
+.hero-wordmark {
+  font-size: clamp(3.5rem, 10vw, 8rem) !important;
+  font-weight: 900 !important;
+  line-height: 0.95 !important;
+  background: linear-gradient(135deg,
+    #fff 0%,
+    color-mix(in srgb, var(--accent) 80%, #fff) 40%,
+    color-mix(in srgb, var(--accent) 50%, #c084fc) 70%,
+    #fff 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 60px color-mix(in srgb, var(--accent) 30%, transparent)) !important;
+}
+
+/* ── Mode cards enhanced ── */
+.mode-card {
+  background: color-mix(in srgb, var(--surface) 70%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border)) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.mode-card:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  border-color: color-mix(in srgb, var(--studio-accent, var(--accent)) 40%, var(--border)) !important;
+  box-shadow:
+    0 8px 32px color-mix(in srgb, var(--studio-accent, var(--accent)) 15%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--studio-accent, var(--accent)) 20%, transparent) !important;
+}
+
+/* ── Feature cards premium ── */
+.feature-card {
+  background: color-mix(in srgb, var(--surface) 60%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 8%, var(--border)) !important;
+  backdrop-filter: blur(8px) !important;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+}
+.feature-card:hover {
+  transform: translateY(-3px) !important;
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border)) !important;
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+
+/* ── Gallery cards ── */
+.gallery-card,
+.asset-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+}
+.gallery-card:hover,
+.asset-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--studio-accent, var(--accent)) 30%, var(--border)) !important;
+}
+
+/* ── Gallery grid card hover zoom on image ── */
+.gallery-grid-card:hover .gallery-card-img,
+.gallery-grid-card:hover img {
+  transform: scale(1.04) !important;
+}
+
+/* ── Tool section cards ── */
+.tool-section {
+  background: color-mix(in srgb, var(--surface) 65%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 8%, var(--border)) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* ── CTA / landing section polish ── */
+.landing-cta-box {
+  background: color-mix(in srgb, var(--surface) 50%, transparent) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border)) !important;
+  box-shadow: 0 0 80px color-mix(in srgb, var(--accent) 8%, transparent) !important;
+}
+
+/* ── How steps ── */
+.how-step {
+  background: color-mix(in srgb, var(--surface) 70%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 8%, var(--border)) !important;
+  backdrop-filter: blur(8px) !important;
+  transition: border-color 0.2s, transform 0.2s !important;
+}
+.how-step:hover {
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--border)) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── Buttons global premium ── */
+.btn-primary,
+.hero-btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after,
+.hero-btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover::after,
+.hero-btn-primary:hover::after {
+  opacity: 0;
+}
+
+/* ── Form inputs global polish ── */
+.input,
+input[type="text"],
+input[type="search"],
+input[type="email"],
+textarea,
+select {
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+.input:focus,
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent) !important;
+  outline: none !important;
+}
+
+/* ── Sidebar nav item active indicator ── */
+.sidebar-nav-item.active,
+.sidebar-nav-item[data-active="true"] {
+  background: color-mix(in srgb, var(--studio-accent, var(--accent)) 12%, transparent) !important;
+  border-right: 2px solid var(--studio-accent, var(--accent)) !important;
+  color: var(--studio-accent, var(--accent)) !important;
+}
+
+/* ── Studio canvas area ── */
+.studio-canvas,
+.studio-main {
+  background: color-mix(in srgb, var(--bg, #080810) 97%, var(--accent)) !important;
+}
+
+/* ── Tool page title gradient per mode ── */
+[data-mode="pixel"] .tool-page-title,
+[data-mode="pixel"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-pixel, #a78bfa) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+[data-mode="vector"] .tool-page-title,
+[data-mode="vector"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-vector, #34d399) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+[data-mode="voice"] .tool-page-title,
+[data-mode="voice"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-voice, #f59e0b) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+[data-mode="uiux"] .tool-page-title,
+[data-mode="uiux"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-uiux, #f472b6) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+[data-mode="business"] .tool-page-title,
+[data-mode="business"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-business, #60a5fa) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+[data-mode="code"] .tool-page-title,
+[data-mode="code"] .tool-page__title {
+  background: linear-gradient(135deg, #fff 20%, var(--accent-code, #10b981) 80%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* ── Scroll animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.gallery-grid .gallery-card,
+.gallery-grid .vg-card,
+.gallery-grid .tg-card,
+.gallery-grid .pg-card {
+  animation: fadeInUp 0.35s ease both;
+}
+
+/* ── Homepage stats strip shine ── */
+.hero-stats-strip {
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--surface) 50%, transparent) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+/* ── Provider chip polish ── */
+.provider-chip {
+  background: color-mix(in srgb, var(--surface) 70%, transparent) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border)) !important;
+  transition: border-color 0.15s, transform 0.15s !important;
+}
+.provider-chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ── Eral chat premium ── */
+.eral-bubble-assistant {
+  background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border)) !important;
+  backdrop-filter: blur(8px) !important;
+}
+.eral-bubble-user {
+  background: color-mix(in srgb, var(--accent) 15%, var(--surface)) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent) !important;
+}
+
+/* ── Studio generate button pulse on hover ── */
+.studio-gen-btn,
+.tool-generate-btn {
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+.studio-gen-btn:hover,
+.tool-generate-btn:hover {
+  transform: translateY(-1px) scale(1.01) !important;
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--studio-accent, var(--accent)) 35%, transparent) !important;
+}
+
+/* ── Global scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 20%, var(--border));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+/* ── Focus ring global ── */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent) !important;
+  outline-offset: 2px !important;
+}
+
+/* ── Selection highlight ── */
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: inherit;
+}
