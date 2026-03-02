@@ -34710,3 +34710,220 @@ pre {
   transform: translateY(-4px) !important;
   border-color: rgba(139,92,246,0.25) !important;
 }
+
+/* ═══════════════════════════════════════════════════
+   PASS 35 — Typography, Docs & Tools Hub Polish
+   ═══════════════════════════════════════════════════ */
+
+/* ── Global heading system ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, inherit);
+  letter-spacing: -0.02em;
+}
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; }
+h2 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+
+/* ── Page section spacing ── */
+.page-section {
+  padding: 4rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.page-section--wide { max-width: 1200px; }
+.page-section--narrow { max-width: 640px; }
+
+/* ── Docs improvements ── */
+.docs-page {
+  background: var(--bg);
+}
+.docs-sidebar {
+  background: rgba(8,8,12,0.98) !important;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
+}
+.docs-sidebar__item {
+  border-radius: 6px !important;
+  transition: background 0.12s ease, color 0.12s ease !important;
+  font-size: 0.85rem !important;
+}
+.docs-sidebar__item:hover { background: rgba(255,255,255,0.05) !important; }
+.docs-sidebar__item--active {
+  background: rgba(139,92,246,0.12) !important;
+  color: #c4b5fd !important;
+}
+.docs-content h1, .docs-content h2, .docs-content h3 {
+  color: var(--text) !important;
+}
+.docs-content h2 {
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+.docs-content p { line-height: 1.8; color: var(--text-muted); }
+.docs-content a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+.docs-content a:hover { opacity: 0.8; text-decoration: underline; }
+.docs-content ul, .docs-content ol {
+  padding-left: 1.5rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+.docs-content code {
+  background: rgba(139,92,246,0.1) !important;
+  border: 1px solid rgba(139,92,246,0.2) !important;
+  padding: 2px 6px !important;
+  border-radius: 5px !important;
+  font-size: 0.87em !important;
+  color: #c4b5fd !important;
+}
+
+/* ── Tools hub improvements ── */
+.tool-section__title {
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(255,255,255,0.4) !important;
+  margin-bottom: 12px !important;
+}
+.tool-page__header {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 1.5rem;
+}
+.tool-page__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.tool-page__desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+/* ── Provider logo chips ── */
+.provider-logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.provider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Account page improvements ── */
+.account-section {
+  background: var(--surface-card);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+.account-section:hover { border-color: rgba(255,255,255,0.12); }
+.account-section__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+/* ── Input focus system ── */
+.input, .textarea {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease !important;
+}
+.input:hover, .textarea:hover {
+  border-color: rgba(255,255,255,0.16) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+.input:focus, .textarea:focus {
+  border-color: rgba(139,92,246,0.45) !important;
+  background: rgba(139,92,246,0.04) !important;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.1) !important;
+  outline: none !important;
+}
+
+/* ── Notification/toast improvements ── */
+.toast, .notification {
+  border-radius: 12px !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5) !important;
+}
+
+/* ── Modal improvements ── */
+.modal-overlay {
+  background: rgba(0,0,0,0.7) !important;
+  backdrop-filter: blur(8px) !important;
+}
+.modal-box, .modal-content {
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  background: rgba(18,18,25,0.98) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6) !important;
+}
+
+/* ── Link improvements ── */
+a.accent-link {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+a.accent-link:hover { opacity: 0.75; }
+
+/* ── Dividers ── */
+hr {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 2rem 0;
+}
+
+/* ── Loading spinner ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Success / Error states ── */
+.state-success {
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.2);
+  color: #34d399;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+.state-error {
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.2);
+  color: #f87171;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+.state-info {
+  background: rgba(96,165,250,0.1);
+  border: 1px solid rgba(96,165,250,0.2);
+  color: #60a5fa;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
