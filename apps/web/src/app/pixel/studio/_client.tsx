@@ -832,16 +832,6 @@ function OutputPanel({
       </div>
     );
   }
-          >
-            {error ?? 'An unknown error occurred.'}
-          </p>
-        </div>
-        <button type="button" className="btn-secondary" onClick={onReroll}>
-          ↻ Retry
-        </button>
-      </div>
-    );
-  }
 
   // Succeeded
   const urls = result?.resultUrls ?? (result?.resultUrl ? [result.resultUrl] : []);
@@ -1498,6 +1488,7 @@ function GenerateForm({
             onChange={(e) => setPrompt(e.target.value.slice(0, 200))}
             rows={3}
             maxLength={200}
+          />
           <div className="flex justify-end mt-1">
             <button
               type="button"

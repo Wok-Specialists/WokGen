@@ -5,11 +5,11 @@ import PixelEditorTool from '@/components/pixel-editor/PixelEditorTool';
 export const metadata: Metadata = {
   title: 'Pixel Editor — WokGen',
   description:
-    'Browser-based pixel art editor. Grid canvas with pencil, fill, eraser, eyedropper, and palette. ' +
-    'Export as PNG. No install required.',
+    'Full-featured browser pixel art editor. Draw, fill, erase, line, rectangle, circle. ' +
+    'Undo/redo, animation frames, GIF export, PNG spritesheet, palette management. No install.',
   openGraph: {
     title: 'Pixel Editor — WokGen',
-    description: 'Draw pixel art in the browser. Export PNG. Free, no account needed.',
+    description: 'Draw pixel art in the browser. Animation frames, GIF export, undo/redo. Free.',
   },
 };
 
@@ -25,8 +25,8 @@ export default function PixelEditorPage() {
             </Link>
           </div>
           <p className="page-subtitle">
-            Draw pixel art in the browser — pencil, fill, eraser, eyedropper, and custom palette.
-            Export as PNG at native resolution.
+            Draw pixel art in the browser — pencil, eraser, fill, line, rectangle, circle, eyedropper.
+            Undo/redo, mirror mode, animation frames, GIF &amp; PNG export. No install required.
           </p>
         </div>
       </div>

@@ -33,6 +33,37 @@ const TOOLS = [
   { id: 'inpaint',  label: 'Inpaint',  desc: 'Edit or extend an existing pixel art image with a brush mask.', example: 'add a glowing sword to the existing warrior sprite' },
 ];
 
+const BROWSER_TOOLS = [
+  {
+    href: '/editor',
+    icon: '✏️',
+    label: 'Pixel Editor',
+    desc: 'Full canvas editor with undo/redo, animation frames, GIF export, 8 tools, zoom, mirror mode.',
+    badge: null,
+  },
+  {
+    href: '/pixel/palette',
+    icon: '🎨',
+    label: 'Palette Studio',
+    desc: 'Browse 10+ curated palettes (PICO-8, NES, Game Boy…), create custom palettes, or extract colors from any image.',
+    badge: null,
+  },
+  {
+    href: '/pixel/atlas',
+    icon: '📦',
+    label: 'Atlas Packer',
+    desc: 'Upload multiple PNG sprites and pack them into a texture atlas with JSON manifest (Phaser / TexturePacker compatible).',
+    badge: null,
+  },
+  {
+    href: '/pixel/docs',
+    icon: '📖',
+    label: 'Docs & Guides',
+    desc: 'Prompting tips, provider comparison, tool reference, and keyboard shortcuts.',
+    badge: null,
+  },
+];
+
 const SHOWCASE = [
   { prompt: 'RPG warrior with shield, pixel art, 64x64, NES style', label: 'RPG Warrior' },
   { prompt: 'Dungeon stone tileset, seamless, dark atmosphere', label: 'Dungeon Tiles' },
@@ -128,6 +159,25 @@ export default function PixelLanding() {
                 <div className="landing-showcase-label">{s.label}</div>
                 <div className="landing-showcase-prompt">{s.prompt}</div>
                 <div className="landing-showcase-cta">Try this →</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Browser Tools ─────────────────────────────────────────────── */}
+      <section className="landing-section">
+        <div className="landing-section-inner">
+          <h2 className="landing-h2">Browser Tools</h2>
+          <p className="landing-section-desc">No account needed — all tools run entirely in your browser.</p>
+          <div className="landing-tools-grid">
+            {BROWSER_TOOLS.map(t => (
+              <Link key={t.href} href={t.href} className="landing-tool-card">
+                <div className="landing-tool-header">
+                  <span style={{ fontSize: '1.4rem' }}>{t.icon}</span>
+                  <span className="landing-tool-label">{t.label}</span>
+                </div>
+                <p className="landing-tool-desc">{t.desc}</p>
               </Link>
             ))}
           </div>

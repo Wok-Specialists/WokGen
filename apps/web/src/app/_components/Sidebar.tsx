@@ -430,6 +430,35 @@ export function Sidebar() {
         <AssetsIcon />
       </SidebarItem>
 
+      {/* Palette Studio */}
+      <SidebarItem href="/pixel/palette" label="Palette Studio" active={isActive('/pixel/palette')}>
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="7" r="2" fill="currentColor"/>
+          <circle cx="14" cy="7" r="2" fill="currentColor"/>
+          <circle cx="6" cy="13" r="2" fill="currentColor"/>
+          <circle cx="14" cy="13" r="2" fill="currentColor"/>
+          <circle cx="10" cy="10" r="2.5" fill="currentColor" opacity=".5"/>
+        </svg>
+      </SidebarItem>
+
+      {/* Sprite Atlas */}
+      <SidebarItem href="/pixel/atlas" label="Atlas Packer" active={isActive('/pixel/atlas')}>
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="7" height="7" rx="1" fill="currentColor" opacity=".7"/>
+          <rect x="11" y="2" width="7" height="7" rx="1" fill="currentColor" opacity=".7"/>
+          <rect x="2" y="11" width="7" height="7" rx="1" fill="currentColor" opacity=".7"/>
+          <rect x="11" y="11" width="7" height="7" rx="1" fill="currentColor" opacity=".7"/>
+        </svg>
+      </SidebarItem>
+
+      {/* Docs */}
+      <SidebarItem href="/pixel/docs" label="Docs" active={isActive('/pixel/docs')}>
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+          <path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+        </svg>
+      </SidebarItem>
+
       <div className="sidebar-divider" aria-hidden="true" />
 
       {/* App navigation */}
