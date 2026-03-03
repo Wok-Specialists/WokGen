@@ -1,12 +1,14 @@
 # WokGen
 
-**Multi-mode generative asset platform for creators, developers, and teams.**
+**Free, open-source pixel art studio — AI-powered generation for images, vectors, UI, voice, 3D, and more.**
 
-WokGen is a production Next.js 14 platform for AI-powered asset generation across multiple creative domains — images, vectors, UI mockups, 3D models, skyboxes, voice, and more. Built with a focus on developer experience, team workspaces, and production reliability.
+WokGen is a production Next.js 14 platform focused on AI-powered creative asset generation. Built with a focus on developer experience, team workspaces, and production reliability.
 
 **WokGen is open-source.** Run locally for development — connect to the cloud API.
 
 **Live:** [wokgen.wokspec.org](https://wokgen.wokspec.org) · **Eral 7c** — site-wide AI companion
+
+> 🛠️ **Looking for dev & design tools?** They live at **[WokTool](https://github.com/WokSpec/WokTool)** — 80+ free browser-based tools.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
@@ -27,14 +29,6 @@ WokGen is a production Next.js 14 platform for AI-powered asset generation acros
 | **Text Studio** | Copy, brand voice, structured content | Groq, Together, OpenAI |
 | **3D Studio** | 3D models (GLB/FBX/OBJ) from text/image | Meshy |
 | **Skybox** | 360° environment panoramas | Blockade Labs |
-
-### Tools
-- **Background Remover** — SSRF-protected, before/after slider
-- **Vectorize** — Raster-to-SVG with local file upload
-- **Transcribe** — Audio-to-text with word-level confidence (AssemblyAI)
-- **Exa Search** — Semantic web search with filters and export
-- **Link Scraper** — Firecrawl-powered full-page scrape
-- **JSON Toolkit** — Format, validate, minify with line numbers
 
 ### Eral 7c
 Site-wide AI companion with persistent memory, project/brand context, WAP (Workflow Action Protocol) — Eral can trigger generation jobs, manage projects, and inject brand kit into generations. Powered by Llama 3.3 70B (Groq), with 8 model variants.
