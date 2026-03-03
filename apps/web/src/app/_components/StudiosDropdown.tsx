@@ -5,46 +5,39 @@ import { useState, useRef } from 'react';
 
 const STUDIOS = [
   {
-    href: '/studio?type=pixel',
-    name: 'Pixel',
-    tagline: 'Game assets & sprite sheets',
-    color: 'var(--yellow, #f59e0b)',
+    href: '/pixel/studio',
+    name: 'AI Generator',
+    tagline: 'Sprites, tilesets & game assets',
+    color: 'var(--accent, #a78bfa)',
     beta: false,
   },
   {
-    href: '/studio?type=business',
-    name: 'Business',
-    tagline: 'Logos, branding & brand kits',
-    color: 'var(--blue, #3b82f6)',
+    href: '/pixel/studio?tool=animate',
+    name: 'Animator',
+    tagline: 'Animated sprite GIFs, walk & idle cycles',
+    color: 'var(--accent, #a78bfa)',
     beta: false,
   },
   {
-    href: '/studio?type=vector',
-    name: 'Vector',
-    tagline: 'Scalable icons & illustrations',
-    color: 'var(--green, #10b981)',
+    href: '/pixel/studio?tool=scene',
+    name: 'Scene Builder',
+    tagline: 'Tilesets & environmental scenes',
+    color: 'var(--accent, #a78bfa)',
     beta: false,
   },
   {
-    href: '/studio?type=uiux',
-    name: 'UI/UX',
-    tagline: 'Components & design systems',
-    color: 'var(--pink, #ec4899)',
+    href: '/editor',
+    name: 'Pixel Editor',
+    tagline: 'Browser-based canvas editor',
+    color: 'var(--accent, #a78bfa)',
     beta: false,
   },
   {
-    href: '/studio?type=voice',
-    name: 'Voice',
-    tagline: 'AI voices & audio assets',
-    color: 'var(--accent)',
-    beta: true,
-  },
-  {
-    href: '/studio?type=code',
-    name: 'Text / Code',
-    tagline: 'Copy, docs & content',
-    color: 'var(--orange, #f97316)',
-    beta: true,
+    href: '/pixel/gallery',
+    name: 'Gallery',
+    tagline: 'Browse community pixel art',
+    color: 'var(--accent, #a78bfa)',
+    beta: false,
   },
 ] as const;
 
@@ -91,10 +84,10 @@ export function StudiosDropdown() {
       {open && (
         <div className="studios-dropdown" role="menu">
           <div className="studios-dropdown-header">
-            <span>WokGen Studio</span>
-            <span className="studios-dropdown-header-sub">Select a mode</span>
+            <span>WokGen Pixel Studio</span>
+            <span className="studios-dropdown-header-sub">Create pixel art with AI</span>
           </div>
-          <div className="studios-dropdown-modes-label">Modes</div>
+          <div className="studios-dropdown-modes-label">Tools</div>
           <div className="studios-dropdown-grid">
             {STUDIOS.map((studio) => (
               <Link

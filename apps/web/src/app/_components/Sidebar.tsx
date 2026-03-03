@@ -180,12 +180,7 @@ function CommunityIcon() {
 // ── Mode icon map ─────────────────────────────────────────────────────────────
 
 const MODE_ICONS: Record<ModeId, () => React.JSX.Element> = {
-  pixel:    PixelIcon,
-  vector:   VectorIcon,
-  business: BrandIcon,
-  uiux:     UiuxIcon,
-  voice:    VoiceIcon,
-  code:     CodeIcon,
+  pixel: PixelIcon,
 };
 
 // ── SidebarItem ───────────────────────────────────────────────────────────────
@@ -430,13 +425,18 @@ export function Sidebar() {
         <SparkleIcon />
       </SidebarItem>
 
+      {/* Browser pixel editor */}
+      <SidebarItem href="/editor" label="Pixel Editor" active={isActive('/editor')}>
+        <AssetsIcon />
+      </SidebarItem>
+
       <div className="sidebar-divider" aria-hidden="true" />
 
       {/* App navigation */}
       <SidebarItem href="/dashboard" label="Dashboard" active={isActive('/dashboard')}>
         <DashboardIcon />
       </SidebarItem>
-      <SidebarItem href="https://tools.wokspec.org" label="WokTool" active={false}>
+      <SidebarItem href="https://vecto.wokspec.org" label="Vecto" active={false}>
         <ToolsIcon />
       </SidebarItem>
       <SidebarItem href="/gallery" label="Gallery" active={isActive('/library') || isActive('/gallery')}>
