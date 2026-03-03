@@ -2029,7 +2029,7 @@ function StudioInner() {
   const [lockSeed, setLockSeed]       = useState(false);
   const [steps, setSteps]             = useState(4);
   const [guidance, setGuidance]       = useState(3.5);
-  const [provider, setProvider]       = useState<Provider>('together');
+  const [provider, setProvider]       = useState<Provider>('pollinations');
   const [isPublic, setIsPublic]       = useState(false);
   const [batchCount, setBatchCount]   = useState<1|2|4>(1);
   const [batchResults, setBatchResults] = useState<GenerationResult[]>([]);
@@ -2130,7 +2130,14 @@ function StudioInner() {
   // UI state
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory]   = useState(false);
-  const [history, setHistory]           = useState<HistoryItem[]>([]);
+  const [history, setHistory]           = useState<HistoryItem[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const stored = localStorage.getItem('wokgen:pixel:history');
+      return stored ? (JSON.parse(stored) as HistoryItem[]) : [];
+    } catch { return []; }
+  });
+  const [exportScale, setExportScale] = useState<1|2|4|8>(1);
   const [providers, setProviders]       = useState<ProviderInfo[]>([]);
 
   // HD credit balance (hosted mode)
@@ -2152,6 +2159,7 @@ function StudioInner() {
   const [showFavMenu, setShowFavMenu]   = useState(false);
   const [favSaved, setFavSaved]         = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
 
   // ── Prompt history state ───────────────────────────────────────────────────
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
@@ -2234,6 +2242,15 @@ function StudioInner() {
       .then(d => { if (d?.favorites) setFavPrompts(d.favorites); })
       .catch(() => {});
   }, []);
+
+  // Persist history to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('wokgen:pixel:history', JSON.stringify(history.slice(0, 50)));
+      } catch { /* quota */ }
+    }
+  }, [history]);
 
   const savePromptAsFavorite = useCallback(async () => {
     if (!prompt.trim()) return;
@@ -2557,24 +2574,85 @@ function StudioInner() {
     animationType, animFrameCount, animFps, animLoop, maskUrl, mapSize,
   ]);
 
+  // Keyboard shortcuts: G=generate, H=history, S=settings, ?=help
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      switch (e.key) {
+        case 'g': case 'G': e.preventDefault(); handleGenerate(); break;
+        case 'h': case 'H': e.preventDefault(); setShowHistory(s => !s); break;
+        case 's': case 'S': e.preventDefault(); setShowSettings(s => !s); break;
+        case '?': e.preventDefault(); setShowShortcutsHelp(s => !s); break;
+        case 'Escape':
+          setShowHistory(false);
+          setShowSettings(false);
+          setShowShortcutsHelp(false);
+          break;
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [handleGenerate]);
+
   // ── Download ───────────────────────────────────────────────────────────────
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async (scale: 1|2|4|8 = exportScale) => {
     const url =
       result?.resultUrl ??
       result?.resultUrls?.[0];
     if (!url) return;
 
-    // Smart filename: wokgen-pixel-{first-5-words}-{timestamp}.ext
     const words = prompt.trim().split(/\s+/).slice(0, 5).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '');
     const ext = url.startsWith('data:image/gif') || url.includes('.gif') ? 'gif' : 'png';
-    const filename = `wokgen-pixel-${words || 'asset'}-${Date.now()}.${ext}`;
+    const filename = `wokgen-pixel-${words || 'asset'}-${scale > 1 ? `${scale}x-` : ''}${Date.now()}.${ext}`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    toastSuccess('Image downloaded');
-  }, [result, prompt, toastSuccess]);
+    if (scale === 1 || ext === 'gif') {
+      // Direct download for 1x or GIF (can't upscale GIF client-side easily)
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      toastSuccess(`Downloaded${ext === 'gif' ? ' (GIF)' : ''}`);
+      return;
+    }
+
+    // Nearest-neighbor upscale via canvas
+    try {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((res, rej) => {
+        img.onload = () => res();
+        img.onerror = rej;
+        img.src = url;
+      });
+      const sw = img.naturalWidth;
+      const sh = img.naturalHeight;
+      const dw = sw * scale;
+      const dh = sh * scale;
+      const canvas = document.createElement('canvas');
+      canvas.width = dw;
+      canvas.height = dh;
+      const ctx = canvas.getContext('2d')!;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, dw, dh);
+      const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png'));
+      if (!blob) throw new Error('Canvas toBlob failed');
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+      toastSuccess(`Downloaded at ${scale}× (${dw}×${dh}px)`);
+    } catch {
+      // Fallback to direct download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      toastSuccess('Downloaded');
+    }
+  }, [result, prompt, toastSuccess, exportScale]);
 
   // ── Save to gallery ────────────────────────────────────────────────────────
   const handleSaveToGallery = useCallback(async () => {
@@ -2735,6 +2813,7 @@ function StudioInner() {
               History
             </button>
             {/* Settings button removed — cloud-only mode */}
+            <button type="button" className="btn-ghost btn-icon" title="Keyboard shortcuts (?)" onClick={() => setShowShortcutsHelp(s => !s)}>?</button>
           </div>
         </div>
 
@@ -3290,14 +3369,25 @@ function StudioInner() {
           const resultUrl = result.resultUrl!;
           return (
             <div className="pixel-studio-actions-bar">
-              <button
-                type="button"
-                className="pixel-studio-action-btn"
-                onClick={handleDownload}
-                title="Download PNG"
-              >
-                ↓ Download PNG
-              </button>
+              {/* Export scale selector */}
+              <div className="export-scale-row">
+                <span className="export-scale-label">Export scale</span>
+                <div className="export-scale-btns">
+                  {([1,2,4,8] as const).map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      className={`export-scale-btn ${exportScale === s ? 'export-scale-btn--active' : ''}`}
+                      onClick={() => setExportScale(s)}
+                    >
+                      {s}×
+                    </button>
+                  ))}
+                </div>
+                <button type="button" className="btn-primary btn-sm" onClick={() => handleDownload(exportScale)}>
+                  Download
+                </button>
+              </div>
               <Link
                 href={`/tools/pixel-editor?imageUrl=${encodeURIComponent(bgDisplayUrl ?? resultUrl)}`}
                 className="pixel-studio-action-btn"
@@ -3377,6 +3467,33 @@ function StudioInner() {
         </div>
       )}
       <EralSidebar mode="pixel" tool={activeTool} prompt={prompt} />
+
+      {/* Keyboard shortcuts help */}
+      {showShortcutsHelp && (
+        <div className="pixel-modal-overlay" onClick={() => setShowShortcutsHelp(false)}>
+          <div className="panel p-6 max-w-sm w-full animate-scale-in" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold pixel-text-primary">Keyboard Shortcuts</h2>
+              <button type="button" className="btn-ghost btn-icon" onClick={() => setShowShortcutsHelp(false)}>✕</button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {[
+                ['G', 'Generate'],
+                ['H', 'Toggle History'],
+                ['S', 'Toggle Settings'],
+                ['?', 'This help'],
+                ['Esc', 'Close panels'],
+              ].map(([key, label]) => (
+                <div key={key} className="flex items-center justify-between text-xs">
+                  <span className="pixel-text-muted">{label}</span>
+                  <kbd className="px-2 py-0.5 rounded bg-white/10 border border-white/15 font-mono text-xs pixel-text-primary">{key}</kbd>
+                </div>
+              ))}
+            </div>
+            <p className="text-2xs pixel-text-muted mt-4">Shortcuts are disabled when a text input is focused.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

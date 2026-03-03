@@ -487,6 +487,13 @@ export function Sidebar() {
       {/* Push bottom items down */}
       <div className="sidebar-spacer" aria-hidden="true" />
 
+      <SidebarItem href="/explore" label="Explore" active={isActive('/explore')}>
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="7.5" cy="7.5" r="6" />
+          <path d="M7.5 1.5v2M7.5 11.5v2M1.5 7.5h2M11.5 7.5h2" />
+          <circle cx="7.5" cy="7.5" r="2" />
+        </svg>
+      </SidebarItem>
       <SidebarItem href="/community" label="Community" active={isActive('/community')}>
         <CommunityIcon />
       </SidebarItem>
