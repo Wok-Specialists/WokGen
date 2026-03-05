@@ -1,0 +1,20 @@
+version: 1
+gha_enabled: true
+description: "WokGen is an AI pixel art generation platform. Next.js 14 + Prisma + NextAuth v5. AI providers: Fal.ai, Replicate, Groq. Queue: BullMQ + Redis."
+rules:
+  - "All new API routes must include auth guard using NextAuth session"
+  - "Generation jobs must be queued via BullMQ, never executed inline in API routes"
+  - "AI provider API keys come from environment variables — never hardcode"
+  - "New Prisma schema changes must include a migration file"
+  - "Client components must be marked with 'use client'"
+  - "Do not modify Prisma schema without explicit user instruction"
+  - "Rate limiting must be applied to all public-facing AI endpoints"
+  - "Canvas operations in pixel editor are browser-only — guard with typeof window !== 'undefined'"
+blocked_dirs:
+  - node_modules
+  - .next
+  - prisma/migrations
+  - .wrangler
+sandbox:
+  install: "cd apps/web && npm ci"
+  check: "cd apps/web && npx tsc --noEmit && npx eslint . --max-warnings 0"

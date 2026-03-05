@@ -1,0 +1,25 @@
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+path_instructions:
+  - path: "apps/web/src/app/api/**"
+    instructions: "Check for auth guard on protected routes. Ensure BullMQ jobs are properly queued and not executed inline. Verify AI provider calls have proper error handling and fallbacks. Rate limiting should be applied."
+  - path: "apps/web/src/app/(auth)/**"
+    instructions: "NextAuth v5 patterns only. Session tokens must use the configured provider. No raw password handling."
+  - path: "apps/web/src/app/pixel/**"
+    instructions: "Pixel editor is browser-only — no server-side canvas rendering. Check for canvas API usage that won't work in SSR."
+  - path: "prisma/**"
+    instructions: "Schema changes require migration files. Check for missing indexes on foreign keys. Validate cascade delete rules."
+  - path: ".github/workflows/**"
+    instructions: "Ensure secrets are referenced via vars/secrets context, not hardcoded. Check timeout-minutes are set."
+  - path: "apps/web/src/lib/**"
+    instructions: "Shared utilities — ensure they're pure functions where possible. AI provider clients should be singletons."
+chat:
+  auto_reply: true
