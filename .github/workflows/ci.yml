@@ -74,5 +74,6 @@ jobs:
           gitleaks git \
             --redact \
             --verbose \
+            --config .gitleaks.toml \
             --report-format sarif \
             --report-path gitleaks.sarif

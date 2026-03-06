@@ -1,0 +1,18 @@
+title = "WokGen Gitleaks Configuration"
+
+[[allowlists]]
+description = "Allow documented placeholder tokens and example auth headers."
+regexes = [
+  '''Authorization: Bearer YOUR_API_KEY''',
+  '''UPSTASH_REDIS_REST_TOKEN=''',
+  '''HF_TOKEN=''',
+  '''sk_live_\.\.\.''',
+  '''pk_live_\.\.\.''',
+  '''whsec_\.\.\.''',
+]
+paths = [
+  '''(^|/)CLAUDE\.md$''',
+  '''(^|/)apps/web/src/app/developers/_client\.tsx$''',
+  '''(^|/)apps/web/src/app/docs/pixel/page\.tsx$''',
+  '''(^|/)apps/web/src/lib/providers/huggingface\.ts$''',
+]
