@@ -553,8 +553,9 @@ export default function PixelEditorTool() {
             rgba[i]=rgba[i+1]=rgba[i+2]=0; rgba[i+3]=0;
           }
         }
-        const palette_ = quantize(rgba, 256, { format:'rgba4444' });
-        const index = applyPalette(rgba, palette_, 'rgba4444');
+        const rgbaBytes = Uint8Array.from(rgba);
+        const palette_ = quantize(rgbaBytes, 256, { format:'rgba4444' });
+        const index = applyPalette(rgbaBytes, palette_, 'rgba4444');
         gif.writeFrame(index, w, h, { palette: palette_, delay: Math.round(100/fps) });
       }
       gif.finish();

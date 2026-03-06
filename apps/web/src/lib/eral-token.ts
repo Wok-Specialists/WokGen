@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 interface WokGenUser {
-  id: string;
+  id?: string | null;
   email?: string | null;
   name?: string | null;
   image?: string | null;
@@ -17,7 +17,7 @@ interface WokGenUser {
  */
 export function signEralToken(user: WokGenUser): string | null {
   const secret = process.env.ERAL_JWT_SECRET;
-  if (!secret) return null;
+  if (!secret || !user.id) return null;
 
   const now = Math.floor(Date.now() / 1000);
   const payload = {

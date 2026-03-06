@@ -14,6 +14,24 @@ export const dynamic = 'force-dynamic';
 
 const ERAL_API = process.env.ERAL_API_URL ?? 'https://eral.wokspec.org/api';
 
+function getMetadata(value: unknown): Record<string, string | number | boolean> | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const metadata = Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).filter(([, entry]) => {
+      return (
+        typeof entry === 'string' ||
+        typeof entry === 'number' ||
+        typeof entry === 'boolean'
+      );
+    }),
+  ) as Record<string, string | number | boolean>;
+
+  return Object.keys(metadata).length > 0 ? metadata : undefined;
+}
+
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -49,6 +67,15 @@ export async function POST(req: NextRequest) {
       pageContext: body.context != null
         ? JSON.stringify(body.context)
         : (body.studioContext as string | undefined),
+      integration: {
+        name: 'WokGen',
+        kind: 'creative-studio',
+        capabilities: ['asset-generation', 'project-chat'],
+        metadata: {
+          surface: 'web-app',
+          ...(getMetadata(body.context) ?? {}),
+        },
+      },
     }),
   });
 

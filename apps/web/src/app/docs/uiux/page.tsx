@@ -839,7 +839,7 @@ Password link, Sign In button. OAuth row: GitHub and Google. Link to sign up.`}<
             add <Code>dark:</Code> variants to the relevant Tailwind utility classes.
           </P>
 
-          <div className="docs-section docs-section--cta" className="docs-section--mt">
+          <div className="docs-section docs-section--cta docs-section--mt">
             <P>
               Ready to generate your first component?{' '}
               <Link href="/studio" className="docs-link-primary">

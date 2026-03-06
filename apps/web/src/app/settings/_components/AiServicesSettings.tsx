@@ -106,7 +106,6 @@ function ApiKeyRow({ service, isSet, onSave }: {
       <div className="api-key-row__input-group">
         <input
           type="password"
-          className="input"
           placeholder={isSet ? '••••••••••••••••' : service.placeholder}
           value={value}
           onChange={(e) => setValue(e.target.value)}

@@ -18,6 +18,24 @@ const VOICE_CONTEXT =
   'Respond with a brief, conversational answer suitable for voice output. ' +
   'Keep your reply under 3 sentences. Avoid markdown, lists, and code blocks.';
 
+function getMetadata(value: unknown): Record<string, string | number | boolean> | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const metadata = Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).filter(([, entry]) => {
+      return (
+        typeof entry === 'string' ||
+        typeof entry === 'number' ||
+        typeof entry === 'boolean'
+      );
+    }),
+  ) as Record<string, string | number | boolean>;
+
+  return Object.keys(metadata).length > 0 ? metadata : undefined;
+}
+
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -56,6 +74,15 @@ export async function POST(req: NextRequest) {
       sessionId: (body.conversationId ?? body.sessionId ?? 'wokgen-voice') as string,
       product: 'wokgen',
       pageContext: VOICE_CONTEXT,
+      integration: {
+        name: 'WokGen Voice',
+        kind: 'voice-assistant',
+        capabilities: ['voice-chat'],
+        metadata: {
+          surface: 'voice',
+          ...(getMetadata(body.context) ?? {}),
+        },
+      },
     }),
   });
 

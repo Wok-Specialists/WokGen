@@ -68,7 +68,7 @@ export function EralNotepad({ onSendToEral, onGenerateFromNote, contextTag }: Er
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const saveTimer = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const activeNote = notes.find((n) => n.id === activeId) ?? null;
 

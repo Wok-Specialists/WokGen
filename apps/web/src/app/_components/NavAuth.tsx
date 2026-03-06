@@ -38,7 +38,7 @@ export function NavAuth() {
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleMouseEnter = () => {
     clearTimeout(closeTimer.current);
@@ -298,4 +298,3 @@ export function NavAuth() {
     </div>
   );
 }
-

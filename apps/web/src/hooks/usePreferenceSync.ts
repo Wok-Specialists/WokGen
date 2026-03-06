@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
  * Debounced to prevent excessive API calls. Silently fails if user isn't authed.
  */
 export function usePreferenceSync(mode: string, prefs: Record<string, unknown>) {
-  const saveTimer = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const prevPrefsRef = useRef<string>('');
 
   useEffect(() => {

@@ -1175,8 +1175,6 @@ function GenerateForm({
   }, [prompt, isEnhancing, setPrompt]);
 
   // react-dropzone for reference image upload
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error react-dropzone v12 accept format differs from older typings
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] },
     maxFiles: 1,
@@ -1700,7 +1698,6 @@ function GenerateForm({
                   {...getRootProps()}
                   className={`studio-dropzone${isDragActive ? ' studio-dropzone--active' : ''}`}
                 >
-                  {/* @ts-expect-error react-dropzone v12 input props type compat */}
                   <input {...getInputProps()} />
                   {isDragActive
                     ? <span>Drop image here</span>

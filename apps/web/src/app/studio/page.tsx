@@ -15,7 +15,7 @@ interface Props {
   searchParams: Promise<{ type?: string }>;
 }
 
-const VALID_TYPES = ['pixel', 'vector', 'uiux', 'voice', 'business', 'code'] as const;
+const VALID_TYPES = ['pixel'] as const;
 type StudioType = (typeof VALID_TYPES)[number];
 
 function isValidType(t: string | undefined): t is StudioType {
@@ -29,7 +29,7 @@ export default async function StudioPage({ searchParams }: Props) {
   return (
     <ErrorBoundary context="Studio">
       <Suspense>
-        <UnifiedStudioClient type={type} />
+        <UnifiedStudioClient />
       </Suspense>
     </ErrorBoundary>
   );

@@ -61,6 +61,13 @@ const GenerateBodySchema = z.object({
   brandKitId:    z.string().optional(),
 }).passthrough();
 
+const LEGACY_MODES = ['pixel', 'business', 'vector', 'uiux', 'voice', 'code'] as const;
+type LegacyMode = (typeof LEGACY_MODES)[number];
+
+function isLegacyMode(value: unknown): value is LegacyMode {
+  return typeof value === 'string' && LEGACY_MODES.includes(value as LegacyMode);
+}
+
 // ---------------------------------------------------------------------------
 // POST /api/generate
 //
@@ -390,14 +397,14 @@ export const POST = withErrorHandler(async (req) => {
   }
 
   // Resolve and validate mode — reject unknown modes with a 400
-  if (mode !== undefined && mode !== null && !isSupportedMode(mode)) {
+  if (mode !== undefined && mode !== null && !isLegacyMode(mode)) {
     return NextResponse.json(
       { error: `Invalid mode "${mode}". Must be one of: pixel, business, vector, uiux` },
       { status: 400 },
     );
   }
-  const resolvedMode = isSupportedMode(mode) ? mode : 'pixel';
-  const modeContract = getMode(resolvedMode);
+  const resolvedMode: LegacyMode = isLegacyMode(mode) ? mode : 'pixel';
+  const modeContract = isSupportedMode(resolvedMode) ? getMode(resolvedMode) : null;
 
   // Voice and text modes have dedicated endpoints — reject early with a helpful message
   if (resolvedMode === 'voice') {
@@ -418,13 +425,13 @@ export const POST = withErrorHandler(async (req) => {
   const resolvedByokHost: null = null;
   // Always use quality-aware provider matrix
   const resolvedProvider: ProviderName = resolveOptimalProvider(
-        isSupportedMode(mode) ? String(mode) : 'pixel',
+        resolvedMode,
         typeof tool === 'string' ? tool : 'generate',
         useHD,
       );
 
   // Override model for HD if mode specifies a specific model
-  const effectiveModelOverride = useHD && modeContract.models.hdModelId && !modelOverride
+  const effectiveModelOverride = useHD && modeContract?.models.hdModelId && !modelOverride
     ? modeContract.models.hdModelId
     : (typeof modelOverride === 'string' ? modelOverride : undefined);
 

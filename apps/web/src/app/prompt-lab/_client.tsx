@@ -74,7 +74,7 @@ export function PromptLabClient() {
     } finally {
       setLoading(false);
     }
-  }, [prompt, mode, style, saveHistory]);
+  }, [prompt, style, saveHistory]);
 
   const copyText = useCallback((text: string, key: string) => {
     navigator.clipboard.writeText(text).then(() => {

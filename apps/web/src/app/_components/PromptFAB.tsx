@@ -91,7 +91,6 @@ export function PromptFAB() {
               Mode: <strong className="prompt-fab__mode-name">{mode}</strong>
             </label>
             <textarea
-              className="studio-textarea"
               placeholder="Enter a prompt to enhance…"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -102,6 +101,8 @@ export function PromptFAB() {
             <button
               type="button"
               className="btn btn-generate prompt-fab__btn"
+              onClick={enhance}
+              disabled={loading || !prompt.trim()}
             >
               {loading ? 'Enhancing…' : '✨ Enhance'}
             </button>

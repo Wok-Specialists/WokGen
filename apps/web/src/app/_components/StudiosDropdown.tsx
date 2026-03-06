@@ -64,7 +64,7 @@ const STUDIOS = [
 
 export function StudiosDropdown() {
   const [open, setOpen] = useState(false);
-  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleMouseEnter = () => {
     clearTimeout(closeTimer.current);
